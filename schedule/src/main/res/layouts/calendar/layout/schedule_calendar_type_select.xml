@@ -19,7 +19,7 @@
         android:layout_toRightOf="@id/v_calendar_color"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="@dimen/content_title_textsize" />
 
     <ImageView

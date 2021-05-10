@@ -3,7 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_bg_common"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -74,7 +74,7 @@
                     android:layout_height="18dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="12dp"
-                    android:src="@drawable/schedule_event_meeting_normal_ic" />
+                    android:src="@drawable/schedule_event_meeting_normal_ic_new" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                         android:id="@+id/tv_schedule_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -140,7 +140,7 @@
                 android:drawableLeft="@drawable/schedule_meeting_time_ic"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
             <View
@@ -156,7 +156,7 @@
                 android:drawableLeft="@drawable/schedule_meeting_remind_ic"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
             <View
@@ -188,7 +188,7 @@
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/iv_location_icon"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <View
@@ -213,7 +213,7 @@
                     android:drawableLeft="@drawable/schedule_meeting_attendee_ic"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -246,7 +246,7 @@
                     android:drawableLeft="@drawable/schedule_meeting_attendee_ic"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -280,7 +280,7 @@
                     android:drawableLeft="@drawable/schedule_meeting_recorder_ic"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -314,7 +314,7 @@
                     android:drawableLeft="@drawable/schedule_meeting_liaison_ic"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -355,7 +355,7 @@
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/iv_note_icon"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <View
@@ -381,7 +381,7 @@
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
                     android:text="@string/schedule_schedule_calendar"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -400,7 +400,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <View
@@ -425,7 +425,7 @@
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
                     android:text="@string/schedule_meeting_attend_or_not"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView

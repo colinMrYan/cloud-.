@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="@dimen/header_textsize" />
 
     <ProgressBar

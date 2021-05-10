@@ -83,7 +83,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/modify_password"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -120,7 +120,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/modify_reset_password"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -157,7 +157,7 @@
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
                 android:text="@string/setting_safe_gesture_face"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
             <ImageView
@@ -192,7 +192,7 @@
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
                 android:text="@string/setting_safe_face_id_unlock"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
             <ImageView
@@ -241,7 +241,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/settings_device_manager"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView

@@ -81,7 +81,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_hard_link_title"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <TextView
@@ -213,7 +213,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_wifi_link_title"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <TextView
@@ -330,7 +330,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_dns_link_title"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <RelativeLayout

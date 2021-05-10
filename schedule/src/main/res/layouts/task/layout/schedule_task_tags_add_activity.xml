@@ -67,6 +67,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
+                android:textColor="?attr/text_color_e1"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="16sp" />
 

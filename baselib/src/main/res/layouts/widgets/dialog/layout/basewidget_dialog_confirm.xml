@@ -14,7 +14,7 @@
         android:gravity="left"
         android:paddingLeft="20dp"
         android:paddingTop="20dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="16sp" />
 
     <CheckBox
@@ -29,7 +29,7 @@
         android:scaleX="0.85"
         android:scaleY="0.85"
         android:text="@string/battery_tip_ishide"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="18sp" />
 
     <RelativeLayout

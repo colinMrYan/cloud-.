@@ -8,7 +8,7 @@
     app:bl_arrowWidth="14dp"
     app:bl_bubbleColor="?attr/text_ll_color_nor"
     app:bl_cornersRadius="6dp"
-    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeColor="?attr/color_stroke_46_aa"
     app:bl_strokeWidth="1px">
 
     <ImageView

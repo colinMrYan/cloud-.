@@ -12,7 +12,7 @@
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:text="@string/baselib_share_send_to"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -39,7 +39,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingRight="16dp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -52,7 +52,7 @@
         android:layout_marginRight="22dp"
         android:layout_marginBottom="30dp"
         android:background="?attr/content_bg_30"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:gravity="left"
         android:maxLines="3"
         android:padding="5dp" />

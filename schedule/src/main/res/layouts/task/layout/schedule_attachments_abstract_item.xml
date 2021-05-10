@@ -24,7 +24,7 @@
         android:paddingTop="4dp"
         android:singleLine="true"
         android:text="文件名称及后缀"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="16sp" />
 
     <TextView

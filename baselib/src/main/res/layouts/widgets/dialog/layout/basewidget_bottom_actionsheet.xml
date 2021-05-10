@@ -31,7 +31,7 @@
             android:textSize="21sp"
             android:layout_marginTop="47dp"
             android:layout_marginBottom="31dp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:layout_gravity="center_horizontal"
             android:text="浪潮通用软件有限公司"/>
 

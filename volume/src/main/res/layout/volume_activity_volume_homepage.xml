@@ -69,7 +69,7 @@
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="1"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="5sp" />
             </RelativeLayout>
 

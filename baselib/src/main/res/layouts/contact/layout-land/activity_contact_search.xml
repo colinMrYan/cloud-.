@@ -223,7 +223,7 @@
                                 android:layout_toRightOf="@id/struct_img"
                                 android:gravity="center_vertical"
                                 android:text="@string/origanization_struct"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="16sp" />
                         </RelativeLayout>
 
@@ -255,7 +255,7 @@
                                 android:layout_toRightOf="@id/channel_group_img"
                                 android:gravity="center_vertical"
                                 android:text="@string/channel_group"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="@dimen/content_title_textsize" />
                         </RelativeLayout>
 
@@ -365,7 +365,7 @@
                                 android:background="?attr/text_ll_color_nor"
                                 android:gravity="center"
                                 android:text="@string/no_search_term"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="@dimen/content_title_textsize" />
 
                             <ListView
@@ -428,7 +428,7 @@
                                 android:background="?attr/text_ll_color_nor"
                                 android:gravity="center"
                                 android:text="@string/no_search_term"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="@dimen/content_title_textsize" />
 
                             <ListView

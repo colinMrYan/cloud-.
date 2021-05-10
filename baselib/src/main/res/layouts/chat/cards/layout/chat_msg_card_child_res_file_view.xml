@@ -9,7 +9,7 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeColor="?attr/color_stroke_46_aa"
     app:bl_strokeWidth="0.5px">
 
     <LinearLayout
@@ -63,7 +63,7 @@
                 android:layout_weight="3.5"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="15sp" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="15sp" />
         </LinearLayout>
 

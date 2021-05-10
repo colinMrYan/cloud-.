@@ -56,7 +56,7 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="14dp"
                 android:paddingRight="15dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textColorHint="@color/color_text_tip"
                 android:textSize="16sp" />
 
@@ -74,7 +74,7 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textColorHint="@color/color_text_tip"
                 android:textSize="16sp" />
 
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/setting_feed_back_without_name"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -100,19 +100,21 @@
                     android:layout_width="51dp"
                     android:layout_height="31dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@id/tv_anonymous" />
+                    android:layout_toRightOf="@id/tv_anonymous"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
             </RelativeLayout>
 
             <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
                 android:id="@+id/bt_submit_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/rl_add_menu"
+                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="25dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="25dp"
                 android:layout_marginBottom="25dp"
-                android:layout_marginTop="20dp"
                 android:elevation="1dp"
                 android:gravity="center"
                 android:onClick="onClick"

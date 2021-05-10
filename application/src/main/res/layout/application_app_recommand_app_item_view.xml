@@ -17,7 +17,7 @@
             android:layout_marginLeft="14dp"
             android:layout_marginTop="13dp"
             android:text="热门推荐"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/content_normal_textsize" />
 
         <TextView

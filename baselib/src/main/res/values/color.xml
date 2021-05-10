@@ -121,7 +121,7 @@
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
-    <color name="color_list_divider_dark">#484951</color>
+    <color name="color_list_divider_dark">#464646</color>
     <color name="color_list_divider_tran_dark">#99ebedf0</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
@@ -185,5 +185,10 @@
     <color name="color_88">#888888</color>
     <color name="color_40">#404040</color>
     <color name="color_36">#363636</color>
+    <color name="color_aa">#AAAAAA</color>
+    <color name="color_9b">#9b9b9b</color>
+    <color name="color_9900">#99000000</color>
+    <color name="color_bb">#bbbbbb</color>
+    <color name="color_ca">#cacaca</color>
 
 </resources>

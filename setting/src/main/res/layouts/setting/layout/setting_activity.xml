@@ -40,7 +40,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_safe_center"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -75,7 +75,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/settings_language"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -132,7 +132,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_mine_theme_switch"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
 
@@ -180,7 +180,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_mine_tab_layout"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
 
@@ -230,7 +230,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/settings_clear_cache"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
 
@@ -264,7 +264,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/web_app_auto_rotate"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -273,7 +273,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:layout_width="match_parent"
@@ -297,7 +299,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/native_page_auto_rotate"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -306,7 +308,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:layout_width="match_parent"
@@ -331,7 +335,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/voice_word_setting"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -340,7 +344,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:layout_width="match_parent"
@@ -364,7 +370,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/notification_switch"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -373,7 +379,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:layout_width="match_parent"
@@ -399,7 +407,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="自启动选项"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -408,7 +416,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:layout_width="match_parent"
@@ -434,7 +444,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_join_experience_plan"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -443,7 +453,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     android:id="@+id/v_experience_upgrade"

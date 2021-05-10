@@ -83,7 +83,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
                         android:text="@string/setting_net_check_net_url"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <TextView
@@ -156,7 +156,7 @@
                         android:layout_marginTop="20dp"
                         android:maxHeight="60dp"
                         android:text="@string/setting_net_check_net_request_result"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <TextView
@@ -230,7 +230,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
                         android:text="@string/setting_net_check_net_state"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <TextView
@@ -304,7 +304,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="20dp"
                         android:text="@string/setting_net_diagnosis_dns_link_title"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17dp"></TextView>
 
                     <RelativeLayout

@@ -8,9 +8,9 @@
     app:bl_arrowDirection="top"
     app:bl_arrowHeight="10dp"
     app:bl_arrowWidth="14dp"
-    app:bl_bubbleColor="?attr/text_ll_color_nor"
+    app:bl_bubbleColor="?attr/color_bg_40_ff"
     app:bl_cornersRadius="6dp"
-    app:bl_strokeColor="#bbbbbb"
+    app:bl_strokeColor="?attr/color_bg_46_bb"
     app:bl_strokeWidth="1px">
 
     <LinearLayout
@@ -126,7 +126,7 @@
                 android:layout_weight="1"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/schedule_event_chat_ic" />
+                android:src="?attr/schedule_event_chat_ic" />
 
             <ImageView
                 android:id="@+id/iv_share"
@@ -135,7 +135,7 @@
                 android:layout_weight="1"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/schedule_event_share_ic" />
+                android:src="?attr/schedule_event_share_ic" />
 
             <ImageView
                 android:id="@+id/iv_delete"
@@ -144,7 +144,7 @@
                 android:layout_weight="1"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/schedule_event_delete_ic" />
+                android:src="?attr/schedule_event_delete_ic" />
         </LinearLayout>
 
     </LinearLayout>

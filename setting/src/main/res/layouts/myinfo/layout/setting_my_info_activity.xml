@@ -67,7 +67,7 @@
                 android:gravity="center_horizontal"
                 android:paddingBottom="18dp"
                 android:text="@string/not_set"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp" />
 
             <RelativeLayout
@@ -84,7 +84,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_user_worker_num"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -122,7 +122,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/user_telephone"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -160,7 +160,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_phone_num"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -198,7 +198,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_user_company_info"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -236,7 +236,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/user_depart_info_text"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -274,7 +274,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/mail"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView

@@ -413,6 +413,7 @@ public class AudioRecordButton extends Button {
             mCurrentState = state;
             switch (mCurrentState) {
                 case STATE_NORMAL:
+
                     setBackgroundResource(R.drawable.bg_record_btn_normal);
                     setText(R.string.hold_to_talk);
                     break;

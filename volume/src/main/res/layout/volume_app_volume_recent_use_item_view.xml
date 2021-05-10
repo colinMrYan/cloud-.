@@ -30,7 +30,7 @@
             android:layout_toRightOf="@id/volume_img"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="17sp" />
 
         <TextView

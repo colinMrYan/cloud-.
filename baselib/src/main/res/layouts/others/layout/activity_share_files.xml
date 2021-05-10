@@ -83,7 +83,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="10dp"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -110,7 +110,7 @@
                 android:maxLines="3"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp" />
 
             <TextView
@@ -177,7 +177,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:text="@string/share_to_chat"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="17sp" />
 
         <ImageView
@@ -221,7 +221,7 @@
             android:layout_toRightOf="@id/img_volume_share_icon"
             android:paddingLeft="12dp"
             android:text="@string/share_upload_volume"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="17sp" />
 
         <ImageView

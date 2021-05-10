@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/knowledge_img"
         android:padding="15dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="@dimen/content_title_textsize" />
 </RelativeLayout>

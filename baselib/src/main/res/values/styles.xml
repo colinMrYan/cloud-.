@@ -81,6 +81,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
@@ -90,7 +91,18 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
+        <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
+        <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
 
+        <item name="color_bg_40_ff">@color/button_color_nor</item>
+        <item name="color_stroke_46_ca">@color/color_ca</item>
+        <item name="color_bg_46_bb">@color/color_bb</item>
+        <item name="color_stroke_46_dd">@color/color_list_divider</item>
+        <item name="color_stroke_46_9b">@color/color_9b</item>
+        <item name="color_stroke_40_ee">@color/button_color_sel</item>
+        <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
@@ -160,6 +172,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
@@ -169,7 +182,18 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
+        <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
+        <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
 
+        <item name="color_bg_40_ff">@color/button_color_nor</item>
+        <item name="color_stroke_46_ca">@color/color_ca</item>
+        <item name="color_bg_46_bb">@color/color_bb</item>
+        <item name="color_stroke_46_dd">@color/color_list_divider</item>
+        <item name="color_stroke_46_9b">@color/color_9b</item>
+        <item name="color_stroke_40_ee">@color/button_color_sel</item>
+        <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
@@ -236,6 +260,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
@@ -244,7 +269,18 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
+        <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
+        <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
 
+        <item name="color_bg_40_ff">@color/button_color_nor</item>
+        <item name="color_stroke_46_ca">@color/color_ca</item>
+        <item name="color_bg_46_bb">@color/color_bb</item>
+        <item name="color_stroke_46_dd">@color/color_list_divider</item>
+        <item name="color_stroke_46_9b">@color/color_9b</item>
+        <item name="color_stroke_40_ee">@color/button_color_sel</item>
+        <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
@@ -321,7 +357,19 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
         <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>
+        <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic_dark</item>
+        <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic_dark</item>
+        <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic_dark</item>
 
+        <item name="color_bg_40_ff">@color/color_40</item>
+        <item name="color_stroke_46_ca">@color/color_list_divider_dark</item>
+        <item name="color_bg_46_bb">@color/color_list_divider_dark</item>
+        <item name="color_stroke_46_dd">@color/color_list_divider_dark</item>
+        <item name="color_divider_1c_dd">@color/color_bg_common_dark</item>
+        <item name="color_stroke_46_9b">@color/color_list_divider_dark</item>
+        <item name="color_stroke_40_ee">@color/color_40</item>
+        <item name="color_stroke_46_aa">@color/color_list_divider_dark</item>
+        <item name="color_stroke_46_00">@color/color_list_divider_dark</item>
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
@@ -337,7 +385,7 @@
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_dark</item>
         <item name="ic_add">@drawable/ic_add_dark</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
-        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_black</item>
         <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
         <item name="ic_header_option">@drawable/ic_header_option_blue</item>
         <item name="status_bar_dark_font">false</item>
@@ -350,11 +398,11 @@
         </item>
         <item name="mine_my_info_card_name_color">@color/white</item>
         <item name="mine_my_info_card_enterprise_color">@color/white</item>
-        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_black</item>
         <item name="mine_my_info_menu_tint_color">@color/white</item>
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
-        <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
-        <item name="schedule_tab_text_color_select">@color/white</item>
+        <item name="schedule_tab_text_color_normal">@color/color_text_common_88</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_e1</item>
     </style>
 
 

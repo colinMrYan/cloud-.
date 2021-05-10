@@ -37,7 +37,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="27dp"
                 android:paddingRight="30dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="26sp" />
 
             <LinearLayout
@@ -68,7 +68,7 @@
                         android:paddingRight="13dp"
                         android:paddingBottom="17dp"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textColorHint="@color/color_text_tip"
                         android:textSize="15sp"
                         android:theme="@style/MyEditText" />
@@ -96,7 +96,7 @@
                         android:paddingTop="17dp"
                         android:paddingBottom="17dp"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textColorHint="@color/color_text_tip"
                         android:textSize="15sp"
                         android:theme="@style/MyEditText" />

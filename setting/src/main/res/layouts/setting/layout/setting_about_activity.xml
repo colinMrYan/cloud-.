@@ -62,7 +62,7 @@
                     android:id="@+id/tv_app_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -88,7 +88,7 @@
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
                         android:text="@string/setting_about_welcome_text"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -122,7 +122,7 @@
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
                         android:text="@string/setting_about_protocol_text"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -155,7 +155,7 @@
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
                         android:text="@string/setting_about_privacy_text"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -188,7 +188,7 @@
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
                         android:text="@string/setting_check_update_text"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -222,7 +222,7 @@
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
                         android:text="@string/setting_invite_friends_text"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <ImageView

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -11,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -117,9 +117,9 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     @BindView(R2.id.rl_calendar_type)
     RelativeLayout calendarTypeLayout;
     @BindView(R2.id.switch_all_day)
-    Switch allDaySwitch;
+    SwitchCompat allDaySwitch;
     @BindView(R2.id.switch_sync_calendar)
-    Switch syncCalendarSwitch;
+    SwitchCompat syncCalendarSwitch;
     @BindView(R2.id.tv_event_type)
     TextView eventTypeText;
     @BindView(R2.id.et_meeting_position)

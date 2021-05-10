@@ -3,7 +3,7 @@
     android:shape="rectangle">
     <stroke
         android:width="0.5px"
-        android:color="#cacaca" />
+        android:color="?attr/color_stroke_46_ca" />
 
     <!-- 填充的颜色 -->
     <solid android:color="?attr/text_ll_color_nor" />

@@ -10,7 +10,7 @@
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="4.5dp"
     app:bl_cornersRadius="8dp"
-    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeColor="?attr/color_stroke_46_aa"
     app:bl_strokeWidth="0.5px">
 
     <RelativeLayout
@@ -24,7 +24,7 @@
             android:layout_marginBottom="5dp"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textIsSelectable="false"
             android:textSize="15sp" />
 
@@ -35,7 +35,7 @@
             android:layout_below="@id/tv_name_tips"
             android:lineSpacingMultiplier="1.2"
             android:minWidth="40dp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textIsSelectable="false"
             android:textSize="15sp" />
 

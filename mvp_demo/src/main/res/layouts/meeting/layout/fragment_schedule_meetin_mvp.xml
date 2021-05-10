@@ -44,7 +44,7 @@
             android:paddingRight="6dp"
             android:paddingTop="6dp"
             android:singleLine="true"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="13sp">
 
             <requestFocus />

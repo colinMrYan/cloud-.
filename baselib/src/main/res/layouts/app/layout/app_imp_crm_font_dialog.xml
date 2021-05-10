@@ -42,7 +42,7 @@
                 android:onClick="onClick"
                 android:text="@string/help"
                 android:textAllCaps="false"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize"
                 android:visibility="visible" />
         </LinearLayout>
@@ -96,7 +96,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:text="@string/news_font_middle"
                 android:textAllCaps="false"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -109,7 +109,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:text="@string/news_font_big_text"
                 android:textAllCaps="false"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -122,7 +122,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:text="@string/news_font_biggest_text"
                 android:textAllCaps="false"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize" />
 
 

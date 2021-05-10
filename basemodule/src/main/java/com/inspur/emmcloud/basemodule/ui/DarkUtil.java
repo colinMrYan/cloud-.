@@ -66,4 +66,15 @@ public class DarkUtil {
         return Color.parseColor(currentThemeNo != THEME_DARK ? "#f6f6f6" : "#1c1c1e");
     }
 
+    /**
+     * 兜底
+     * 暗黑模式适配E1E1E1,其他模式为333333
+     *
+     * @return 文字容器二级背景颜色
+     */
+    public static int getTextE1TO33() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#333333" : "#E1E1E1");
+    }
+
 }

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.schedule.R;
 import com.inspur.emmcloud.schedule.api.ScheduleEventListener;
@@ -356,6 +357,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             eventSubtitleEvent.setVisibility(GONE);
         }
         eventLayout.addView(eventView, eventLayoutParams);
+
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -504,8 +506,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             public void onDismiss() {
                 eventImg.setImageResource(event.getEventIconResId(false));
                 view.setBackground(drawableNormal);
-                eventTitleText.setTextColor(ResourceUtils.getResValueOfAttr(getContext(), com.inspur.baselib.R.attr.text_color));
-                eventSubtitleText.setTextColor(ResourceUtils.getResValueOfAttr(getContext(), com.inspur.baselib.R.attr.text_color));
+                eventTitleText.setTextColor(DarkUtil.getTextE1TO33());
+                eventSubtitleText.setTextColor(DarkUtil.getTextE1TO33());
             }
         });
         int mDeviceHeight = ResolutionUtils.getHeight(getContext());

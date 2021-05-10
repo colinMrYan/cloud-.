@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="8dp"
                             android:layout_toLeftOf="@id/rl_flag"
-                            android:textColor="?attr/text_color"
+                            android:textColor="?attr/text_color_e1"
                             android:textSize="17sp" />
                     </RelativeLayout>
 
@@ -383,7 +383,7 @@
                         android:layout_below="@id/iv_reply"
                         android:layout_centerHorizontal="true"
                         android:text="回复"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -409,7 +409,7 @@
                         android:layout_below="@id/iv_reply_all"
                         android:layout_marginBottom="4dp"
                         android:text="回复全部"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="12sp" />
                 </RelativeLayout>
 
@@ -433,7 +433,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/iv_forward"
                         android:text="转发"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>

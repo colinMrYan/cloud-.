@@ -102,7 +102,7 @@
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
                     android:maxLines="5"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:padding="7.5dp"
                     android:textSize="16sp" />
 
@@ -120,7 +120,7 @@
                     android:stateListAnimator="@null"
                     android:text="@string/hold_to_talk"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_text_tip"
+                    android:textColor="?attr/conversation_name_color"
                     android:textSize="16sp"
                     android:visibility="gone" />
             </RelativeLayout>

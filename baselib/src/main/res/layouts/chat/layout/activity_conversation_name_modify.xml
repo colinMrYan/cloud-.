@@ -78,7 +78,7 @@
             android:paddingRight="15dp"
             android:paddingBottom="10dp"
             android:singleLine="true"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/content_title_textsize" />
     </RelativeLayout>
 

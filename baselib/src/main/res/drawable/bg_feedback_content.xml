@@ -9,5 +9,5 @@
     <corners android:radius="8dp" />
     <stroke
         android:width="0.5dp"
-        android:color="#dddddd" />
+        android:color="?attr/color_stroke_46_dd" />
 </shape>

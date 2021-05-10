@@ -38,7 +38,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/rl_header"
-        android:background="?attr/color_list_divider" />
+        android:background="?attr/color_divider_1c_dd" />
 
     <RelativeLayout
         android:id="@+id/search_layout"
@@ -95,7 +95,7 @@
                 android:hint="@string/application_search"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_normal_textsize">
 
                 <requestFocus />
@@ -108,7 +108,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5px"
         android:layout_below="@id/search_layout"
-        android:background="?attr/color_list_divider" />
+        android:background="?attr/color_divider_1c_dd" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -41,7 +41,7 @@
                 android:layout_gravity="left"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold" />
 
@@ -56,21 +56,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="6dp"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="@dimen/content_small_textsize" />
 
                 <TextView
                     android:id="@+id/file_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/text_color" />
+                    android:textColor="?attr/text_color_e1" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

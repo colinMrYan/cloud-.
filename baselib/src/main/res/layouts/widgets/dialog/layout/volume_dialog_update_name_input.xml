@@ -13,7 +13,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="17sp" />
 
     <EditText
@@ -32,7 +32,7 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:textColorHint="@color/color_text_common_level_two"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="16sp" />
 
     <View

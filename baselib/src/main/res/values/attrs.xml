@@ -73,6 +73,19 @@
     <attr name="dialog_common_bg_36" format="reference" />
     <attr name="contact_struct_icon" format="reference" />
     <attr name="contact_group_icon" format="reference" />
+    <attr name="color_stroke_46_aa" format="reference" />
+    <attr name="color_stroke_46_9b" format="reference" />
+    <attr name="color_stroke_40_ee" format="reference" />
+    <attr name="color_stroke_46_00" format="reference" />
+    <attr name="color_stroke_46_dd" format="reference" />
+    <attr name="text_color_e1_66" format="reference" />
+    <attr name="color_divider_1c_dd" format="reference" />
+    <attr name="schedule_event_share_ic" format="reference" />
+    <attr name="schedule_event_chat_ic" format="reference" />
+    <attr name="schedule_event_delete_ic" format="reference" />
+    <attr name="color_bg_40_ff" format="reference" />
+    <attr name="color_bg_46_bb" format="reference" />
+    <attr name="color_stroke_46_ca" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/home_common_bg"
@@ -67,10 +68,10 @@
                 android:background="?attr/text_ll_color_nor"
                 android:gravity="top"
                 android:hint="@string/schedule_meeting_add_content_hint"
-                android:paddingBottom="15dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:paddingTop="15dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="15dp"
                 android:textColor="?attr/text_color_e1"
                 android:textColorHint="@color/color_text_common_level_two"
                 android:textSize="15sp" />
@@ -113,9 +114,9 @@
                         android:layout_toRightOf="@id/tv_meeting_position_title"
                         android:background="@null"
                         android:hint="@string/schedule_add_position"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:singleLine="true"
                         android:textColor="?attr/text_color_e1"
                         android:textColorHint="@color/color_text_common_level_two"
@@ -133,24 +134,24 @@
                             android:layout_height="match_parent"
                             android:layout_centerVertical="true"
                             android:onClick="onClick"
-                            android:paddingBottom="12dp"
                             android:paddingLeft="25dp"
-                            android:paddingRight="12dp"
                             android:paddingTop="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingBottom="12dp"
                             android:src="@drawable/ic_arrow_right" />
 
                         <ImageView
                             android:id="@+id/iv_meeting_position_del"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
                             android:onClick="onClick"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="25dp"
-                            android:paddingRight="11dp"
                             android:paddingTop="11dp"
+                            android:paddingRight="11dp"
+                            android:paddingBottom="11dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/app_edittext_clear" />
                     </RelativeLayout>
@@ -177,21 +178,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/all_day"
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_all_day"
                     android:layout_width="wrap_content"
                     android:layout_height="51dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"></Switch>
+                    android:layout_centerVertical="true"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
             </RelativeLayout>
 
             <View
@@ -238,7 +241,7 @@
                         android:id="@+id/tv_start_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17sp" />
                 </LinearLayout>
 
@@ -279,7 +282,7 @@
                         android:id="@+id/tv_end_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="17sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -312,11 +315,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/schedule_meeting_add_attendee_title"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="15sp" />
 
                     <LinearLayout
@@ -360,11 +363,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="11dp"
+                            android:paddingBottom="11dp"
                             android:text="@string/schedule_meeting_add_record_holder_title"
-                            android:textColor="?attr/text_color"
+                            android:textColor="?attr/text_color_e1"
                             android:textSize="15sp" />
 
                         <LinearLayout
@@ -402,11 +405,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingBottom="11dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="11dp"
+                            android:paddingBottom="11dp"
                             android:text="@string/schedule_meeting_add_conference_title"
-                            android:textColor="?attr/text_color"
+                            android:textColor="?attr/text_color_e1"
                             android:textSize="15sp" />
 
                         <LinearLayout
@@ -442,11 +445,11 @@
                     android:id="@+id/tv_notes_tips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_meeting_add_note"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="15sp" />
 
                 <EditText
@@ -456,10 +459,10 @@
                     android:layout_below="@id/tv_notes_tips"
                     android:background="@null"
                     android:minHeight="41dp"
-                    android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:textColor="?attr/text_color"
+                    android:paddingBottom="10dp"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="15sp" />
             </RelativeLayout>
 
@@ -484,20 +487,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_meeting_add_alert_time"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:textColor="@color/color_text_common_level_two"
                     android:textSize="15sp" />
 
@@ -530,14 +533,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/schedule_account_type"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <TextView
@@ -546,8 +549,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="33dp"
-                        android:paddingBottom="11dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="日程"
                         android:textColor="@color/color_text_common_level_two"
                         android:textSize="15sp" />
@@ -586,25 +589,27 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:paddingBottom="11dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/schedule_sync_sys_calendar"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
 
-                    <Switch
+                    <android.support.v7.widget.SwitchCompat
                         android:id="@+id/switch_sync_calendar"
                         android:layout_width="wrap_content"
                         android:layout_height="51dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
-                        android:checked="false" />
+                        android:checked="false"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/selector_switch_track" />
 
 
                 </RelativeLayout>
@@ -614,8 +619,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_marginBottom="51dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginBottom="51dp"
                 android:background="?attr/color_list_divider" />
 
         </LinearLayout>

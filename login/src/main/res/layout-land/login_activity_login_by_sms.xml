@@ -34,7 +34,7 @@
                 android:paddingLeft="27dp"
                 android:paddingRight="30dp"
                 android:text="@string/login_captchas_login"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="26sp" />
 
             <LinearLayout
@@ -66,7 +66,7 @@
                         android:paddingRight="12dp"
                         android:paddingBottom="17dp"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textColorHint="@color/color_text_tip"
                         android:textSize="15sp"
                         android:theme="@style/MyEditText" />
@@ -89,7 +89,7 @@
                         android:paddingRight="120dp"
                         android:paddingBottom="17dp"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textColorHint="@color/color_text_tip"
                         android:textSize="15sp"
                         android:theme="@style/MyEditText" />

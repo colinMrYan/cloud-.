@@ -9,8 +9,7 @@
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        >
+        android:layout_height="44dp">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -85,7 +84,7 @@
                             android:layout_marginRight="20dp"
                             android:elevation="10dp"
                             android:gravity="center"
-                            android:textColor="?attr/text_color"
+                            android:textColor="?attr/text_color_e1"
                             android:textSize="17sp" />
 
                         <LinearLayout
@@ -182,7 +181,7 @@
                         android:id="@+id/tv_member"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <TextView
@@ -235,7 +234,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/channel_group_name"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <TextView
@@ -284,7 +283,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -318,7 +317,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/channel_set_top"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.SwitchCompat
@@ -327,7 +326,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp" />
+                        android:layout_marginRight="10dp"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/selector_switch_track" />
                 </RelativeLayout>
 
                 <View style="@style/divide_style" />
@@ -345,7 +346,7 @@
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/message_without_interruption"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.SwitchCompat
@@ -354,7 +355,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp" />
+                        android:layout_marginRight="10dp"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/selector_switch_track" />
                 </RelativeLayout>
             </LinearLayout>
 

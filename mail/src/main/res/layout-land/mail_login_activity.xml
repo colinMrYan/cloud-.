@@ -54,7 +54,7 @@
                     android:inputType="textEmailAddress"
                     android:paddingRight="12dp"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textColorHint="@color/color_text_tip"
                     android:textSize="16sp"
                     android:theme="@style/MyEditText" />
@@ -80,7 +80,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textColorHint="@color/color_text_tip"
                     android:textSize="16sp"
                     android:theme="@style/MyEditText" />

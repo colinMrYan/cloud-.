@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
                 android:paddingTop="8dp"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -68,7 +68,7 @@
                         android:layout_toRightOf="@id/iv_point"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
                 </RelativeLayout>
             </RelativeLayout>

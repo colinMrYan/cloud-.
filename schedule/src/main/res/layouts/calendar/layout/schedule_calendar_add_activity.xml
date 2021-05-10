@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_bg_common"
@@ -56,10 +57,10 @@
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:onClick="onClick"
-            android:paddingBottom="17dp"
             android:paddingLeft="13dp"
-            android:paddingRight="16dp"
             android:paddingTop="17dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="17dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
@@ -75,15 +76,15 @@
             android:id="@+id/et_input_title"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="?attr/text_ll_color_nor"
             android:gravity="top|left"
             android:hint="@string/schedule_calendar_input_content_hint"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingTop="14dp"
+            android:paddingRight="16dp"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -100,21 +101,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:paddingBottom="11dp"
             android:paddingTop="11dp"
+            android:paddingBottom="11dp"
             android:text="@string/all_day"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_all_day"
             android:layout_width="wrap_content"
             android:layout_height="51dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"></Switch>
+            android:layout_centerVertical="true"
+            app:thumbTint="@color/white"
+            app:track="@drawable/selector_switch_track" />
     </RelativeLayout>
 
     <View
@@ -143,8 +146,8 @@
             android:id="@+id/ll_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignRight="@id/v_center"
+            android:layout_alignParentLeft="true"
             android:onClick="onClick"
             android:paddingLeft="16dp"
             android:paddingTop="14dp">
@@ -174,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_start_date"
                 android:text="08:00"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="17sp" />
         </RelativeLayout>
 
@@ -230,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_end_date"
                     android:text="20:00"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16dp" />
             </RelativeLayout>
         </RelativeLayout>
@@ -244,17 +247,17 @@
         android:layout_marginTop="10dp"
         android:background="@color/cardview_light_background"
         android:onClick="onClick"
-        android:paddingBottom="11dp"
         android:paddingLeft="14dp"
+        android:paddingTop="11dp"
         android:paddingRight="15dp"
-        android:paddingTop="11dp">
+        android:paddingBottom="11dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/schedule_calendar"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
         <RelativeLayout
@@ -262,8 +265,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/iv_calendar_enter"
             android:layout_toStartOf="@+id/iv_calendar_enter"
+            android:layout_toLeftOf="@+id/iv_calendar_enter"
             android:visibility="gone">
 
             <ImageView
@@ -319,10 +322,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/schedule_event_alert"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
         <ImageView
@@ -343,9 +346,9 @@
             android:layout_toLeftOf="@id/iv_alert_time_arrow"
             android:layout_toRightOf="@id/tv_alert_title"
             android:gravity="right"
-            android:paddingBottom="10dp"
-            android:paddingRight="1dp"
             android:paddingTop="8dp"
+            android:paddingRight="1dp"
+            android:paddingBottom="10dp"
             android:text="@string/schedule_calendar_no_alert"
             android:textColor="@color/color_text_common_level_two"
             android:textSize="16sp" />
@@ -376,10 +379,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/repeat"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/content_title_textsize" />
 
         <ImageView
@@ -400,11 +403,11 @@
             android:layout_toLeftOf="@id/iv_repeat_arrow"
             android:layout_toRightOf="@id/tv_repeat_title"
             android:gravity="right"
-            android:paddingBottom="10dp"
-            android:paddingRight="8dp"
             android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="10dp"
             android:text="@string/never"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/content_title_textsize" />
     </RelativeLayout>
 

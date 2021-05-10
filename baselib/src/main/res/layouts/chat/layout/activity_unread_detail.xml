@@ -25,7 +25,7 @@
         app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/color_text_link"
         app:tabTextAppearance="@style/XYLinkTabLayoutTextStyle"
-        app:tabTextColor="?attr/text_color" >
+        app:tabTextColor="?attr/text_color_e1" >
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"

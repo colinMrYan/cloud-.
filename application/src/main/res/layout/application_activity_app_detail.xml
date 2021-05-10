@@ -58,7 +58,7 @@
                         android:layout_marginBottom="5dp"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textColor="?attr/text_color"
+                        android:textColor="?attr/text_color_e1"
                         android:textSize="@dimen/content_normal_textsize" />
 
                     <TextView
@@ -175,7 +175,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/function_intr"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView

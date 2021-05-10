@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:text="安装指南"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="14sp" />
 
                 <TextView
@@ -112,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已安装证书"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -245,7 +246,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加密发送邮件的内容和附件"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat
@@ -255,7 +256,9 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="@color/color_text_tip"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                app:thumbTint="@color/white"
+                                app:track="@drawable/selector_switch_track" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -277,7 +280,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="12dp"
                                 android:text="加签发送邮件的内容和附件"
-                                android:textColor="?attr/text_color"
+                                android:textColor="?attr/text_color_e1"
                                 android:textSize="14sp" />
 
                             <android.support.v7.widget.SwitchCompat
@@ -287,7 +290,9 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="@color/color_text_tip"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                app:thumbTint="@color/white"
+                                app:track="@drawable/selector_switch_track" />
                         </RelativeLayout>
 
                     </LinearLayout>

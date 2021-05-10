@@ -38,7 +38,7 @@
             android:layout_toRightOf="@id/v_unread"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="15sp" />
 
         <RelativeLayout
@@ -84,7 +84,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:gravity="right"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="13sp" />
 
         <TextView

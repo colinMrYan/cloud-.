@@ -25,6 +25,6 @@
         android:maxLines="2"
         android:paddingTop="5dp"
         android:text="@string/work"
-        android:textColor="?attr/text_color"
+        android:textColor="?attr/text_color_e1"
         android:textSize="14sp" />
 </RelativeLayout>

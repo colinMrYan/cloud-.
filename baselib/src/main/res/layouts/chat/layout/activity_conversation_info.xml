@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/content_bg"
@@ -125,7 +126,7 @@
                     android:paddingBottom="11dp"
                     android:singleLine="true"
                     android:text="@string/channel_group_name"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -175,7 +176,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/channel_group_qrcode"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -210,7 +211,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/channel_group_image"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -244,7 +245,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/channel_group_file"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -278,7 +279,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -314,7 +315,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/chat_group_message_search"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -349,7 +350,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/channel_set_sticky"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -360,7 +361,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_arrow_right" />
+                    android:src="@drawable/ic_arrow_right"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     style="@style/divide_style"
@@ -383,7 +386,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/message_without_interruption"
-                    android:textColor="?attr/text_color"
+                    android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -394,7 +397,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_arrow_right" />
+                    android:src="@drawable/ic_arrow_right"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
                 <View
                     style="@style/divide_style"

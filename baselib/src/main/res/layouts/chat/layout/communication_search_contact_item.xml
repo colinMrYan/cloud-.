@@ -25,7 +25,7 @@
             android:paddingRight="10dp"
             android:singleLine="true"
             android:text="测试名称"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16sp" />
 
         <TextView

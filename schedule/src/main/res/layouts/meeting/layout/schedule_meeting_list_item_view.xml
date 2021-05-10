@@ -28,7 +28,7 @@
             android:layout_toLeftOf="@id/iv_icon"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/tv_display_name"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="15sp" />
     </RelativeLayout>
 

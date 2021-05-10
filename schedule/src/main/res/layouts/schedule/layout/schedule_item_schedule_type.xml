@@ -16,7 +16,7 @@
             android:layout_marginLeft="16dp"
             android:paddingBottom="11dp"
             android:paddingTop="11dp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/text_color_e1"
             android:textSize="@dimen/header_function_textsize" />
 
         <ImageView
