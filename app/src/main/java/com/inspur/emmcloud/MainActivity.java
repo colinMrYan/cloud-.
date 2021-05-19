@@ -377,7 +377,6 @@ public class MainActivity extends BaseActivity implements IMainActivity {
 
     @Override
     public void onAgreedProtocol() {
-        MyApplication.getInstance().init();
     }
 
     @Override

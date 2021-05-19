@@ -47,6 +47,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PROTOCOL_DLG_AGREED;
+
 /**
  * Application class
  */
@@ -83,6 +85,9 @@ public abstract class BaseApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initWithoutUserInfo();
+        if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
+            init();
+        }
     }
 
     private void initWithoutUserInfo(){
