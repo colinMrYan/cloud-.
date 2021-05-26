@@ -2,6 +2,7 @@ package com.inspur.emmcloud.web.webview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -13,7 +14,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -173,26 +176,42 @@ public class ImpWebChromeClient extends WebChromeClient {
      */
     public boolean onJsAlert(WebView view, String url, String message,
                              final JsResult result) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(
-                view.getContext(), AlertDialog.THEME_HOLO_LIGHT);
-
-        builder.setTitle(Res.getStringID("msg_title")).setMessage(message);
-
-        builder.setPositiveButton(Res.getStringID("file_ok"),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-
-                });
-        // 禁止取消按钮
-        builder.setCancelable(false);
-        AlertDialog dialog = builder.create();
-        if (context != null) {
-            dialog.show();
+        // 防止activity已经finish，导致dialog代码崩溃
+        boolean destroyed;
+        if (context instanceof Activity) {
+            Activity activity = (Activity) this.context;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                destroyed = activity.isDestroyed();
+            } else {
+                destroyed = activity.isFinishing();
+            }
+        } else {
+            destroyed = true;
         }
+        if (!destroyed) {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(
+                    this.context, AlertDialog.THEME_HOLO_LIGHT);
+
+            builder.setTitle(Res.getStringID("msg_title")).setMessage(message);
+
+            builder.setPositiveButton(Res.getStringID("file_ok"),
+                    new OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            result.confirm();
+                        }
+
+                    });
+            // 禁止取消按钮
+            builder.setCancelable(false);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            result.confirm();
+        }
+
         return true;
     }
 

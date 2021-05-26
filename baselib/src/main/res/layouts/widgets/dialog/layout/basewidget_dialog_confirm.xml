@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="?attr/text_ll_color_nor">
+    android:background="?attr/dialog_common_bg_40">
 
     <TextView
         android:id="@+id/tv_tip_content"
@@ -14,7 +14,7 @@
         android:gravity="left"
         android:paddingLeft="20dp"
         android:paddingTop="20dp"
-        android:textColor="?attr/text_color_e1"
+        android:textColor="?attr/text_color"
         android:textSize="16sp" />
 
     <CheckBox
@@ -29,7 +29,7 @@
         android:scaleX="0.85"
         android:scaleY="0.85"
         android:text="@string/battery_tip_ishide"
-        android:textColor="?attr/text_color_e1"
+        android:textColor="?attr/text_color"
         android:textSize="18sp" />
 
     <RelativeLayout
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
-            android:background="?attr/text_ll_color_nor"
+            android:background="?attr/dialog_common_bg_40"
             android:paddingLeft="10dp"
             android:text="@string/battery_tip_toset"
             android:textColor="@color/color_text_link"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_toLeftOf="@id/tv_toset"
-            android:background="?attr/text_ll_color_nor"
+            android:background="?attr/dialog_common_bg_40"
             android:paddingLeft="30dp"
             android:paddingRight="20dp"
             android:text="@string/battery_tip_cancel"

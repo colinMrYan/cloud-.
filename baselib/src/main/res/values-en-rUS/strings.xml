@@ -365,6 +365,7 @@
     <string name="chat_emotion_total_tip">All Stickers</string>
     <string name="chat_filemanager_native">Native Files</string>
     <string name="chat_filemanager_volume">Cloud Drive</string>
+    <string name="we_chat_file_manager">WeChat</string>
     <string name="chat_file_transfer">File transfer</string>
     <string name="chat_file_transfer_content">Transfer texts,images,audio between your device and PC</string>
     <!--语音通话提示-->

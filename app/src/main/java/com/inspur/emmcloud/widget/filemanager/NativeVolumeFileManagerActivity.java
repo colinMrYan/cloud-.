@@ -26,6 +26,7 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
 
     NativeFileManagerFragment nativeFileManagerFragment;
     VolumeFileManagerFragment volumeFileManagerFragment;
+    WeChatFileManagerFragment weChatFileManagerFragment;
     FileFragmentPagerAdapter fileFragmentPagerAdapter;
     TabLayout fileTablayout;
     TextView okTextView;
@@ -45,6 +46,7 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
         finishButton = findViewById(R.id.ibt_back);
         nativeFileManagerFragment = new NativeFileManagerFragment();
         volumeFileManagerFragment = new VolumeFileManagerFragment();
+        weChatFileManagerFragment = new WeChatFileManagerFragment();
         initView();
     }
 
@@ -52,9 +54,11 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(nativeFileManagerFragment);
         fragmentList.add(volumeFileManagerFragment);
+        fragmentList.add(weChatFileManagerFragment);
         fileFragmentPagerAdapter = new FileFragmentPagerAdapter(this.getSupportFragmentManager(), fragmentList);
         fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.internal_shared_storage)), true);
         fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.chat_filemanager_volume)), false);
+        fileTablayout.addTab(fileTablayout.newTab().setText(getString(R.string.we_chat_file_manager)), false);
         fileTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -112,6 +116,9 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
                 break;
             case 1:
                 volumeFileManagerFragment.onBackPress();
+                break;
+            case 2:
+                weChatFileManagerFragment.onBackPress();
                 break;
         }
     }

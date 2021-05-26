@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
 import java.util.ArrayList;
@@ -123,7 +124,8 @@ public class DropPopMenu {
         mListView = new ListView(mContext);
         mListView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
                 , LinearLayout.LayoutParams.WRAP_CONTENT));
-        mListView.setDivider(new ColorDrawable(Color.parseColor("#e3e3e3")));
+        int currentThemeNo = PreferencesUtils.getInt(mContext, "app_theme_num_v1", 0);
+        mListView.setDivider(new ColorDrawable(Color.parseColor(currentThemeNo != 3 ? "#e3e3e3" : "#464646")));
         mListView.setDividerHeight(1);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

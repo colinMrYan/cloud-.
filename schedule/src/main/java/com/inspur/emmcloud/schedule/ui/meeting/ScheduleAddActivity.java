@@ -130,7 +130,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     ImageView meetingPositionDelImageView;
 
 
-
     private LoadingDialog loadingDlg;
     private ScheduleAPIService apiService;
     private Calendar startTimeCalendar; // 开始时间
@@ -171,9 +170,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
                     meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     location = new Location();
-                    location.setId(meetingRoom.getId());
-                    location.setBuilding(meetingRoom.getBuilding().getName());
-                    location.setDisplayName(meetingRoom.getName());
+                    if (meetingRoom != null) {
+                        location.setId(meetingRoom.getId());
+                        location.setBuilding(meetingRoom.getBuilding().getName());
+                        location.setDisplayName(meetingRoom.getName());
+                    }
                     schedule.setScheduleCalendar(AccountType.APP_MEETING.toString());
                     schedule.setLocation(JSONUtils.toJSONString(location));
                 } else {
@@ -225,7 +226,6 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), schedule.getAllDay()));
         }
     }
-
 
 
     @Override
@@ -513,7 +513,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
     }
 
     /**
-     * 设置提醒*/
+     * 设置提醒
+     */
     private void setReminder() {
         Intent intent = new Intent(this, ScheduleAlertTimeActivity.class);
         int advanceTimeSpan = -1;
@@ -527,9 +528,10 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 
 
     /**
-     * 选择参会人*/
+     * 选择参会人
+     */
     private void selectContact(int requestCode) {
-        if(!AppTabUtils.hasContactPermission(this)){
+        if (!AppTabUtils.hasContactPermission(this)) {
             return;
         }
         String title = "";
@@ -642,9 +644,11 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                     setMeetingTime();
                     positionEditText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
-                    location.setId(meetingRoom.getId());
-                    location.setBuilding(meetingRoom.getBuilding().getName());
-                    location.setDisplayName(meetingRoom.getName());
+                    if (meetingRoom != null) {
+                        location.setId(meetingRoom.getId());
+                        location.setBuilding(meetingRoom.getBuilding().getName());
+                        location.setDisplayName(meetingRoom.getName());
+                    }
                     modifyLocationUI();
                     break;
                 case REQUEST_SET_REMIND_EVENT:
@@ -664,7 +668,8 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
 
 
     /**
-     *添加邮箱到联络人*/
+     * 添加邮箱到联络人
+     */
     List<SearchModel> getSearchModelListHaveEmail(List<SearchModel> searchModelList) {
         List<SearchModel> searchModelList1 = new ArrayList<>();
         for (int i = 0; i < searchModelList.size(); i++) {
@@ -878,7 +883,7 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
             if (syncCalendarSwitch.isChecked()) {
                 try {
                     JSONObject jsonObject = SysCalendarAndCloudPlusScheduleSyncUtils.saveCloudSchedule(ScheduleAddActivity.this,
-                        schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
+                            schedule.getTitle(), schedule.getNote(), schedule.getStartTime()
                             , schedule.getEndTime(), schedule.getId(), schedule.getAllDay(), schedule.getRemindEventObj().getAdvanceTimeSpan() / 60);
                     CalendarIdAndCloudScheduleIdCacheUtils.saveCalendarIdAndCloudIdBean(
                             ScheduleAddActivity.this, new CalendarIdAndCloudIdBean(jsonObject.

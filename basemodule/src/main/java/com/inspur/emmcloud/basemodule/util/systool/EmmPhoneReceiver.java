@@ -18,10 +18,16 @@ import com.inspur.emmcloud.componentservice.communication.CommunicationService;
  * Date: 2019/11/29
  */
 public class EmmPhoneReceiver extends BroadcastReceiver {
+
+    private EmmPhoneStateLinstener emmPhoneStateLinstener;
+
     //微信7.0.9语音通话中，有系统电话拨入，当系统电话接听时，挂断微信语音通话
     //微信7.0.9语音通话中，给别人拨打系统电话，微信语音通话立即挂断
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (emmPhoneStateLinstener == null) {
+            emmPhoneStateLinstener = new EmmPhoneStateLinstener();
+        }
         //如果是去电
         if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             Router router = Router.getInstance();
@@ -40,7 +46,8 @@ public class EmmPhoneReceiver extends BroadcastReceiver {
             //第三步：通过extends PhoneStateListener来定制自己的规则。将其对象传递给第二步作为参数。
             //第四步：这一步很重要，那就是给应用添加权限。android.permission.READ_PHONE_STATE
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
-            telephonyManager.listen(new EmmPhoneStateLinstener(), PhoneStateListener.LISTEN_CALL_STATE);
+//            telephonyManager.listen(new EmmPhoneStateLinstener(), PhoneStateListener.LISTEN_CALL_STATE);
+            telephonyManager.listen(emmPhoneStateLinstener, PhoneStateListener.LISTEN_CALL_STATE);
         }
     }
 }

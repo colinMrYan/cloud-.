@@ -71,6 +71,7 @@
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
+        <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -81,6 +82,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="dialog_divider_e3_46">@color/color_e3</item>
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
@@ -162,6 +164,7 @@
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
+        <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -172,6 +175,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="dialog_divider_e3_46">@color/color_e3</item>
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
@@ -250,6 +254,7 @@
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
+        <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
@@ -260,6 +265,7 @@
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
         <item name="color_list_divider">@color/color_list_divider</item>
+        <item name="dialog_divider_e3_46">@color/color_e3</item>
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
@@ -338,6 +344,7 @@
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
         <item name="dialog_common_bg_36">@color/color_36</item>
+        <item name="dialog_common_bg_40">@color/color_40</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
@@ -348,6 +355,7 @@
         <item name="text_color_backup">@color/text_color_dark</item>
         <item name="bubble_bg_color">@color/bubble_bg_color_dark</item>
         <item name="color_list_divider">@color/color_list_divider_dark</item>
+        <item name="dialog_divider_e3_46">@color/color_list_divider_dark</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran_dark</item>
         <item name="selector_list">@drawable/selector_list_dark</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
@@ -641,7 +649,7 @@
 
     <style name="cus_dialog_style" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#36A5F6</item>
-        <item name="android:background">?attr/text_ll_color_nor</item>
+        <item name="android:background">?attr/dialog_common_bg_40</item>
         <item name="android:textSize">16dp</item>
         <item name="textColorAlertDialogListItem">?attr/text_color</item>
     </style>

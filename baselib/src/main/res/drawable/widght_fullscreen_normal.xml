@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="90"
-        android:endColor="?attr/text_ll_color_nor"
-        android:startColor="?attr/text_ll_color_nor" />
+        android:endColor="?attr/dialog_common_bg_40"
+        android:startColor="?attr/dialog_common_bg_40" />
     <!--
     <stroke
         android:dashGap="2dp"

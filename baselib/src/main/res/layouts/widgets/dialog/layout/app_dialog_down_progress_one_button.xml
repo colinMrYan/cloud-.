@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/text_ll_color_nor"
+        android:background="?attr/dialog_common_bg_40"
         android:elevation="5dp">
 
         <TextView
@@ -16,7 +16,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="@string/cloud_plus_update"
-            android:textColor="?attr/text_color_e1"
+            android:textColor="?attr/text_color"
             android:textSize="17sp" />
 
         <ProgressBar
@@ -46,7 +46,7 @@
             android:layout_alignLeft="@id/progress_bar_apk_download"
             android:layout_below="@id/progress_bar_apk_download"
             android:layout_marginTop="6dp"
-            android:textColor="?attr/text_color_e1"
+            android:textColor="?attr/text_color"
             android:textSize="13sp" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="@string/downloading_package"
-            android:textColor="?attr/text_color_e1"
+            android:textColor="?attr/text_color"
             android:textSize="15sp" />
 
         <TextView

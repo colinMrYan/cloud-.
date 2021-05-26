@@ -4,7 +4,7 @@
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="?attr/text_ll_color_nor"
+    android:background="?attr/dialog_common_bg_40"
     android:orientation="vertical">
 
 

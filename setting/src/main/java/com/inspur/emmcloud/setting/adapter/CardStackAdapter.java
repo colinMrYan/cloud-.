@@ -112,10 +112,10 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
             companyNameText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!StringUtils.isBlank(cardPackageBean.getBarcodeUrl())){
+                    if (!StringUtils.isBlank(cardPackageBean.getBarcodeUrl())) {
                         BottomDialog.ActionListSheetBuilder builder = new BottomDialog.ActionListSheetBuilder(context);
                         final BottomDialog bottomDialog = builder.build();
-                        ((TextView)bottomDialog.findViewById(R.id.tv_company_name)).setText(cardPackageBean.getCompany());
+                        ((TextView) bottomDialog.findViewById(R.id.tv_company_name)).setText(cardPackageBean.getCompany());
                         bottomDialog.findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -155,9 +155,9 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
                                         .open();
                             }
                         });
-                        ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(),cardPackageBean.getBarcodeUrl());
+                        ImageDisplayUtils.getInstance().displayImage(builder.getQrCodeImage(), cardPackageBean.getBarcodeUrl());
                         bottomDialog.show();
-                    }else{
+                    } else {
                         ToastUtils.show(context.getString(R.string.card_package_no_qrcode));
                     }
                 }
@@ -170,8 +170,6 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         }
 
     }
-
-
 
 
     private static class CustomShareListener implements UMShareListener {

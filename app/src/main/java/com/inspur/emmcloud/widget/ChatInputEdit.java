@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.widget;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -119,7 +120,11 @@ public class ChatInputEdit extends EditText {
             int lastCursorPosion = getSelectionStart();
             //拿到粘贴板的文本，setSpan的时候第二个参数last+文本的长度
             ClipboardManager clip = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            String copyText = clip.getPrimaryClip().getItemAt(0).getText().toString();
+            ClipData primaryClip = clip.getPrimaryClip();
+            String copyText = "";
+            if (primaryClip != null) {
+                copyText = primaryClip.getItemAt(0).getText().toString();
+            }
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getText());
             spannableStringBuilder.insert(lastCursorPosion, copyText);
             Spannable span = EmotionUtil.getInstance(mContext).getSmiledText(spannableStringBuilder, getTextSize());

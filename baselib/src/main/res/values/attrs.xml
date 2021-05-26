@@ -14,6 +14,7 @@
     <attr name="color_list_divider_tran" format="reference|color" />
     <attr name="drawable_list_divider" format="reference" />
     <attr name="home_common_bg" format="reference|color" />
+    <attr name="dialog_divider_e3_46" format="reference|color" />
 
     <attr name="header_text_blue_white_color" format="reference|color" />
     <attr name="footer_bg_color" format="reference|color" />
@@ -86,6 +87,7 @@
     <attr name="color_bg_40_ff" format="reference" />
     <attr name="color_bg_46_bb" format="reference" />
     <attr name="color_stroke_46_ca" format="reference" />
+    <attr name="dialog_common_bg_40" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

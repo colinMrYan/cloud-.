@@ -696,7 +696,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     public void handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
-        if (mCamera == null && jCameraView.isHasCameraCropView()) {
+        if (mCamera == null || jCameraView.isHasCameraCropView()) {
             return;
         }
         final Camera.Parameters params = mCamera.getParameters();

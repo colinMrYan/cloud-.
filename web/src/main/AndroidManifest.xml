@@ -38,6 +38,7 @@
 
         <activity
             android:name=".plugin.filetransfer.filemanager.FileManagerActivity"
+            android:screenOrientation="portrait"
             android:resizeableActivity="true" />
         <activity
             android:name=".plugin.barcode.ScanResultActivity"

@@ -83,6 +83,7 @@
                     android:layout_marginTop="10dp"
                     android:textColorHint="@color/color_text_tip"
                     app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
+                    app:passwordToggleTint="?attr/text_color_e1"
                     app:passwordToggleEnabled="true">
 
                     <EditText

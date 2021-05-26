@@ -374,6 +374,7 @@
     <string name="chat_emotion_total_tip">所有表情</string>
     <string name="chat_filemanager_native">本地文件</string>
     <string name="chat_filemanager_volume">企业云盘</string>
+    <string name="we_chat_file_manager">微信</string>
     <string name="chat_file_transfer">文件传输助手</string>
     <string name="chat_file_transfer_content">登录云+桌面版，向文件传输助手发消息，可以在手机与电脑间传输文字、图片、音频等文件。</string>
     <string name="chat_search_related_messages">%1$s的记录</string>
