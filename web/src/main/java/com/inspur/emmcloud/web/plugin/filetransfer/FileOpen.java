@@ -353,54 +353,21 @@ public class FileOpen {
     }
 
     private static String getText(String path) {
-        // TODO Auto-generated method stub
         File file = new File(path);
         BufferedReader reader;
         String text = "";
         try {
-            // FileReader f_reader = new FileReader(file);
-            // BufferedReader reader = new BufferedReader(f_reader);
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream in = new BufferedInputStream(fis);
-            in.mark(4);
-            byte[] first3bytes = new byte[3];
-            in.read(first3bytes);// 找到文档的前三个字节并自动判断文档类型。
-            in.reset();
-            if (first3bytes[0] == (byte) 0xEF && first3bytes[1] == (byte) 0xBB
-                    && first3bytes[2] == (byte) 0xBF) {// utf-8
-
-                reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
-
-            } else if (first3bytes[0] == (byte) 0xFF
-                    && first3bytes[1] == (byte) 0xFE) {
-
-                reader = new BufferedReader(
-                        new InputStreamReader(in, "unicode"));
-            } else if (first3bytes[0] == (byte) 0xFE
-                    && first3bytes[1] == (byte) 0xFF) {
-
-                reader = new BufferedReader(new InputStreamReader(in,
-                        "utf-16be"));
-            } else if (first3bytes[0] == (byte) 0xFF
-                    && first3bytes[1] == (byte) 0xFF) {
-
-                reader = new BufferedReader(new InputStreamReader(in,
-                        "utf-16le"));
-            } else {
-
-                reader = new BufferedReader(new InputStreamReader(in, "GBK"));
-            }
+            reader = new BufferedReader(new InputStreamReader(in, EncodingDetect.getCharset(file)));
             String str = reader.readLine();
-
             while (str != null) {
                 text = text + str + "\n";
                 str = reader.readLine();
 
             }
             reader.close();
-
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -413,7 +380,7 @@ public class FileOpen {
      */
     public void showOpenDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(context, PreferencesUtils.getInt(context,
-                        "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
+                "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
                 .setMessage(Res.getStringID("file_download_success"))
                 .setTitle(Res.getStringID("tips"))
                 .setCancelable(false)
