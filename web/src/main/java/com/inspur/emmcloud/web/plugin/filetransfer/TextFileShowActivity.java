@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.web.ui.ImpBaseActivity;
 
@@ -20,6 +21,7 @@ public class TextFileShowActivity extends ImpBaseActivity {
         Intent intent = getIntent();
         String content = intent.getExtras().getString("text");
         TextView contentText = (TextView) findViewById(Res.getWidgetID("tv_content"));
+        contentText.setTextColor(DarkUtil.getTextColor());
         contentText.setText(content);
     }
 
