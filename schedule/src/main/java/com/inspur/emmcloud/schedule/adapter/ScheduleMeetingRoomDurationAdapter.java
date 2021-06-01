@@ -77,7 +77,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
             meetingAddLayout.setVisibility(View.VISIBLE);
             flagView.setBackgroundColor(Color.parseColor("#36A5F6"));
         } else {
-            timeText.setTextColor(ResourceUtils.getResValueOfAttr(context, com.inspur.baselib.R.attr.text_color));
+//            timeText.setTextColor(ResourceUtils.getResValueOfAttr(context, com.inspur.baselib.R.attr.text_color));
             meetingContentLayout.setVisibility(View.VISIBLE);
             meetingAddLayout.setVisibility(View.GONE);
             ContactService contactService = Router.getInstance().getService(ContactService.class);
