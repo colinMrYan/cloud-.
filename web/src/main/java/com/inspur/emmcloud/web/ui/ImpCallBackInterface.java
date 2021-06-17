@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabMenu;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
+import com.inspur.emmcloud.web.plugin.window.OnTitleBackKeyDownListener;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ public interface ImpCallBackInterface {
     void onSetOptionMenu(List<MainTabMenu> optionMenuList);
 
     void setOnKeyDownListener(OnKeyDownListener onKeyDownListener);
+
+    void setOnTitleBackKeyDownListener(OnTitleBackKeyDownListener onTitleBackKeyDownListener);
 
     boolean isWebFromIndex();
 

@@ -67,6 +67,7 @@ import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
 import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
+import com.inspur.emmcloud.web.plugin.window.OnTitleBackKeyDownListener;
 import com.inspur.emmcloud.web.webview.ImpWebView;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -137,6 +138,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
     private OnKeyDownListener onKeyDownListener;
+    private OnTitleBackKeyDownListener onTitleBackKeyDownListener;
     private boolean isStaticWebTitle = false;
     //错误url和错误信息
     private String errorUrl = "";
@@ -470,6 +472,11 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
             @Override
             public void setOnKeyDownListener(OnKeyDownListener onKeyDownListener) {
                 ImpFragment.this.onKeyDownListener = onKeyDownListener;
+            }
+
+            @Override
+            public void setOnTitleBackKeyDownListener(OnTitleBackKeyDownListener onTitleBackKeyDownListener) {
+                ImpFragment.this.onTitleBackKeyDownListener = onTitleBackKeyDownListener;
             }
 
             @Override
@@ -891,11 +898,15 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
             showChangeFontSizeDialog();
 
         } else if (i == R.id.ibt_back) {
-            if (webView.canGoBack()) {
-                webView.goBack();// 返回上一页面
-                setGoBackTitle();
+            if (ImpFragment.this.onTitleBackKeyDownListener != null) {
+                ImpFragment.this.onTitleBackKeyDownListener.onTitleBackKeyDown();
             } else {
-                finishActivity();
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回上一页面
+                    setGoBackTitle();
+                } else {
+                    finishActivity();
+                }
             }
 
         } else if (i == R.id.imp_close_btn) {

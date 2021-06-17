@@ -163,9 +163,11 @@ public class FileTransferService extends ImpPlugin {
                         fileDownloadDlg.dismiss();
                     }
                     if (needOpenFile) {
-                        if (getActivity() != null) {
-                            new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
-                        }
+                        new FileOpen(getActivity(), reallyPath, fileType).openFile();
+                        // 不再显示下载完成提示框。与IOS端保持一致
+//                        if (getActivity() != null) {
+//                            new FileOpen(getActivity(), reallyPath, fileType).showOpenDialog();
+//                        }
                     }
                     fileInfo = (String) msg.obj;
                     getActivity().runOnUiThread(new Runnable() {

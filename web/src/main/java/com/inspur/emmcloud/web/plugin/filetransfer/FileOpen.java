@@ -410,7 +410,7 @@ public class FileOpen {
         alertDialog.show();
     }
 
-    private void openFile() {
+    public void openFile() {
         // TODO Auto-generated method stub
         File file = new File(path);
         if (StringUtils.isBlank(mimeType)) {
