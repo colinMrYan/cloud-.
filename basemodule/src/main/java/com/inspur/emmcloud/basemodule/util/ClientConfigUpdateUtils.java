@@ -111,6 +111,8 @@ public class ClientConfigUpdateUtils extends BaseModuleAPIInterfaceInstance {
         PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MAINTAB.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_NAVI_TAB.getValue(), "");
     }
 
     public void clearDbDataConfigWithMyApp() {
