@@ -938,6 +938,7 @@ public class MyAppFragment extends BaseFragment {
                                 intent.setClass(getActivity(), AppGroupActivity.class);
                                 intent.putExtra("categoryName", app.getAppName());
                                 intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
+                                intent.putExtra("appStoreBadgeMap", (Serializable) appStoreBadgeMap);
                                 startActivity(intent);
                             } else {
                                 if (getIsCommonlyUseGroupInList(listPosition)) {

@@ -13,11 +13,20 @@ import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
+import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -30,13 +39,26 @@ public class AppGroupActivity extends BaseActivity {
     RecyclerView appGroupRecyclerView;
     TextView textView;
     private List<App> appList = new ArrayList<>();
+    private Map<String, Integer> mAppStoreBadgeMap = new HashMap<>();
+    private AppGroupAdapter mAppGroupAdapter;
 
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
         appList.addAll((List<App>) getIntent().getSerializableExtra("appGroupList"));
+        mAppStoreBadgeMap = (Map<String, Integer>)getIntent().getSerializableExtra("appStoreBadgeMap");
         initViews();
+        EventBus.getDefault().register(this);
+    }
+
+
+    //接收从AppBadgeUtils里发回的角标数字
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
+        BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
+        mAppStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
+        mAppGroupAdapter.updateBadgeNum(mAppStoreBadgeMap);
     }
 
     @Override
@@ -53,9 +75,9 @@ public class AppGroupActivity extends BaseActivity {
         appGroupRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(BaseApplication.getInstance(), 11)));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.getInstance(), 4);
         appGroupRecyclerView.setLayoutManager(gridLayoutManager);
-        AppGroupAdapter appGroupAdapter = new AppGroupAdapter(this, appList);
-        appGroupRecyclerView.setAdapter(appGroupAdapter);
-        appGroupAdapter.setGroupListener(new GroupAppListClickListener() {
+        mAppGroupAdapter = new AppGroupAdapter(this, appList, mAppStoreBadgeMap);
+        appGroupRecyclerView.setAdapter(mAppGroupAdapter);
+        mAppGroupAdapter.setGroupListener(new GroupAppListClickListener() {
             @Override
             public void onGroupAppClick(App app) {
                 ApplicationUriUtils.openApp(AppGroupActivity.this, app, "application");

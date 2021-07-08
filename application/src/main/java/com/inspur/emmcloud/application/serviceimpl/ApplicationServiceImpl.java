@@ -85,12 +85,22 @@ public class ApplicationServiceImpl implements ApplicationService {
         for (AppGroupBean appGroupBean : appGroupBeanList) {
             List<App> appList = appGroupBean.getAppItemList();
             for (App app : appList) {
-                Integer num = appBadgeMapSum.get(app.getAppID());
-                if (num != null) {
-                    appStoreBadgeNum = appStoreBadgeNum + num;
-                    appBadgeMapSum.remove(app.getAppID());
+                List<App> subAppList = app.getSubAppList();
+                if (subAppList == null || subAppList.isEmpty()) {
+                    Integer num = appBadgeMapSum.get(app.getAppID());
+                    if (num != null) {
+                        appStoreBadgeNum = appStoreBadgeNum + num;
+                        appBadgeMapSum.remove(app.getAppID());
+                    }
+                } else {
+                    for (App subApp : subAppList) {
+                        Integer num = appBadgeMapSum.get(subApp.getAppID());
+                        if (num != null) {
+                            appStoreBadgeNum = appStoreBadgeNum + num;
+                            appBadgeMapSum.remove(subApp.getAppID());
+                        }
+                    }
                 }
-
             }
         }
         return appStoreBadgeNum;
@@ -136,7 +146,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void getWebAppRealUrl(Activity activity,OnGetWebAppRealUrlListener listener, String url) {
+    public void getWebAppRealUrl(Activity activity, OnGetWebAppRealUrlListener listener, String url) {
         new WebAppUtils(activity, listener).getWebAppRealUrl(url);
     }
 
@@ -149,8 +159,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
     }
-
-
 
 
     class WebService extends ApplicationApiInterfaceImpl {

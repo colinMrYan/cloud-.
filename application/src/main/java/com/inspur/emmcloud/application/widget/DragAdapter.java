@@ -136,19 +136,41 @@ public class DragAdapter extends BaseAdapter {
      * 处理未处理消息个数的显示
      *
      * @param app
-     * @param unhandledBadges
+     * @param unhandledBadges∞
      */
     private void setUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
-        Integer appBadgeNum = appStoreBadgeMap.get(app.getAppID());
-        if (appBadgeNum != null && appBadgeNum > 0) {
-            unhandledBadges.setVisibility(View.VISIBLE);
-            GradientDrawable gradientDrawable = new GradientDrawableBuilder()
-                    .setCornerRadius(DensityUtil.dip2px(context, 40))
-                    .setBackgroundColor(0xFFF74C31)
-                    .setStrokeColor(0xFFF74C31).build();
-            unhandledBadges.setBackground(gradientDrawable);
-            unhandledBadges.setText(appBadgeNum > 99 ? "99+" : (appBadgeNum + ""));
+        List<App> subAppList = app.getSubAppList();
+        if (subAppList == null || subAppList.isEmpty()) {
+            Integer appBadgeNum = appStoreBadgeMap.get(app.getAppID());
+            if (appBadgeNum != null && appBadgeNum > 0) {
+                applyAppNum(appBadgeNum, unhandledBadges);
+            } else {
+                unhandledBadges.setVisibility(View.GONE);
+            }
+        } else {
+            int allBadgeNum = 0;
+            for (App subApp : subAppList) {
+                Integer subAppBadgeNum = appStoreBadgeMap.get(subApp.getAppID());
+                if (subAppBadgeNum != null && subAppBadgeNum > 0) {
+                    allBadgeNum += subAppBadgeNum;
+                }
+            }
+            if (allBadgeNum > 0) {
+                applyAppNum(allBadgeNum, unhandledBadges);
+            } else {
+                unhandledBadges.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private void applyAppNum(int num, TextView unhandledBadges) {
+        unhandledBadges.setVisibility(View.VISIBLE);
+        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                .setCornerRadius(DensityUtil.dip2px(context, 40))
+                .setBackgroundColor(0xFFF74C31)
+                .setStrokeColor(0xFFF74C31).build();
+        unhandledBadges.setBackground(gradientDrawable);
+        unhandledBadges.setText(num > 99 ? "99+" : (num + ""));
     }
 
     /**
