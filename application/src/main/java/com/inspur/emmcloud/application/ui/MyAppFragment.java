@@ -980,7 +980,8 @@ public class MyAppFragment extends BaseFragment {
                             new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
-                            MyAppCacheUtils.deleteAppInCache(getActivity(), app);
+                            //常用应用删除时，不会删除具体类别的应用
+//                            MyAppCacheUtils.deleteAppInCache(getActivity(), app);
 //                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
                         }
                     });
