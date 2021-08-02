@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
@@ -224,10 +225,12 @@ public class ImageGridActivity extends ImageBaseActivity implements
             OkText.setText(getString(R.string.select_complete,
                     imagePicker.getSelectImageCount(),
                     imagePicker.getSelectLimit()));
+            OkText.setTextColor(Color.parseColor("#3A90FF"));
             OkText.setEnabled(true);
         } else {
             OkText.setText(getString(R.string.send));
             OkText.setEnabled(false);
+            OkText.setTextColor(Color.parseColor("#636363"));
         }
 
         if (imagePicker.getSelectImageCount() == 1 && imagePicker.isMultiMode()) {
