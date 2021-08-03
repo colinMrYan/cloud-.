@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat.mvp.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,11 +25,13 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
     Context context;
     List<String> uidList;
     boolean isOwner = false;
+    String mOwnerUid;
 
-    public ConversationMembersHeadAdapter(Context context, boolean isOwner, List<String> uidList) {
+    public ConversationMembersHeadAdapter(Context context, boolean isOwner, List<String> uidList, String ownerUid) {
         this.isOwner = isOwner;
         this.context = context;
         this.uidList = uidList;
+        mOwnerUid = ownerUid;
     }
 
     public void setUIUidList(List<String> uiIidList) {
@@ -58,6 +61,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
             view = View.inflate(context, R.layout.chat_group_info_member_head_item, null);
             holder.headImage = view.findViewById(R.id.iv_chat_members_head);
             holder.nameTv = view.findViewById(R.id.tv_chat_members_name);
+            holder.ownerTagImage = view.findViewById(R.id.iv_chat_members_owner);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -65,20 +69,21 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         String uid;
         String userName;
         String userPhotoUrl;
-        if (uidList.get(i).equals("deleteUser")) {
+        uid = uidList.get(i);
+        if (uid.equals("deleteUser")) {
             userPhotoUrl = "drawable://" + R.drawable.ic_delete_channel_member;
             userName = "";
-        } else if (uidList.get(i).equals("addUser")) {
+        } else if (uid.equals("addUser")) {
             userPhotoUrl = "drawable://" + R.drawable.ic_add_channel_member;
             userName = "";
-        } else if (uidList.get(i).equals("fileTransfer")) {
+        } else if (uid.equals("fileTransfer")) {
             userPhotoUrl = "drawable://" + R.drawable.ic_file_transfer;
             userName = context.getString(R.string.chat_file_transfer);
         } else {
-            uid = uidList.get(i);
             userName = ContactUserCacheUtils.getUserName(uid);
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
         }
+        holder.ownerTagImage.setVisibility(TextUtils.equals(uid, mOwnerUid) ? View.VISIBLE : View.GONE);
         holder.nameTv.setText(userName);
         ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
         return view;
@@ -90,6 +95,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         private ImageView headImage;
         private TextView nameTv;
         private View itemView;
+        private View ownerTagImage;
     }
 
 }

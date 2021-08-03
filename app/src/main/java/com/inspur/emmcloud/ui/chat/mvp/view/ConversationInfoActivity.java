@@ -146,7 +146,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
             muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
         }
-        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList);
+        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList, uiConversation.getOwner());
         Configuration configuration = getResources().getConfiguration();
         // 适配横屏头像显示
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -238,6 +238,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             case R.id.rl_more_members:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
+                bundle.putString(MembersActivity.CHAT_OWNER_UID, uiConversation.getOwner());
                 bundle.putStringArrayList("uidList", uiConversation.getMemberList());
                 IntentUtils.startActivity(this,
                         MembersActivity.class, bundle);

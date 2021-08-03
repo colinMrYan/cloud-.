@@ -63,6 +63,7 @@ import butterknife.ButterKnife;
 @Route(path = Constant.AROUTER_CLASS_COMMUNICATION_MEMBER)
 public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final String MEMBER_PAGE_STATE = "member_page_state";
+    public static final String CHAT_OWNER_UID = "chat_owner_uid";
     public static final int SELECT_STATE = 1;//选择人员
     public static final int MENTIONS_STATE = 2;//@人员选择
     public static final int CHECK_STATE = 3;//查看人员
@@ -101,6 +102,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private List<PersonDto> selectedUserList = new ArrayList<>();//选中的群成员list  ///
     private List<PersonDto> allReadySelectPersonDtoList = new ArrayList<>();
     private int state = -1;
+    private String mChatOwner;
 
     @Override
     public void onCreate() {
@@ -117,6 +119,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     private void initViews() {
         state = getIntent().getIntExtra(MEMBER_PAGE_STATE, -1);
+        mChatOwner = getIntent().getStringExtra(CHAT_OWNER_UID);
         if (state == MENTIONS_STATE) {  ///////////////////////////
             lettersSideBar.setVisibility(View.GONE);
             moreSelectText.setVisibility(View.VISIBLE);
@@ -215,10 +218,10 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 //        lettersSideBar.setIndexArray(letterIndexList);
         if (state == SELECT_STATE) {
             channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
-                    personDtoList, allReadySelectPersonDtoList);
+                    personDtoList, allReadySelectPersonDtoList, mChatOwner);
         } else {
             channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
-                    personDtoList);
+                    personDtoList, mChatOwner);
         }
         lettersSideBar.invalidate();
         allMemberListView.setAdapter(channelMemberListAdapter);

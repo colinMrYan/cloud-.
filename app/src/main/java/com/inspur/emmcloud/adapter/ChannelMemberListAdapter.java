@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +33,20 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
     private List<PersonDto> personDtoList;
     private List<PersonDto> lastSelectUserList = new ArrayList<>();//上次选中的群成员list
     private List<PersonDto> selectedUserList = new ArrayList<>();//选中的群成员list
+    private String mChatOwner;
 
-    public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList) {
+    public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList, String chatOwner) {
         this.mActivity = mActivity;
         this.personDtoList = sortDataList;
+        mChatOwner = chatOwner;
     }
 
-    public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList, List<PersonDto> lastSelectUserList) {
+    public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList, List<PersonDto> lastSelectUserList, String chatOwner) {
         this.mActivity = mActivity;
         this.personDtoList = sortDataList;
         this.selectedUserList = lastSelectUserList;
         this.lastSelectUserList = lastSelectUserList;
+        mChatOwner = chatOwner;
     }
 
     /**
@@ -92,6 +96,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             holder.sideBarLetterTv = (TextView) convertView.findViewById(R.id.tv_member_slidebar);
 //            holder.line = convertView.findViewById(R.id.v_line);
             holder.selectedImg = (ImageView) convertView.findViewById(R.id.img_member_selected);
+            holder.ownerImg = (ImageView) convertView.findViewById(R.id.chat_member_list_owner);
             holder.contentRl = (RelativeLayout) convertView.findViewById(R.id.rl_content);
             convertView.setTag(holder);
         } else {
@@ -112,6 +117,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 //                holder.line.setVisibility(View.GONE);
             }
             holder.userNameTv.setText(dto.getName());
+            holder.ownerImg.setVisibility(TextUtils.equals(dto.getUid(), mChatOwner) ? View.VISIBLE : View.GONE);
             setUserDesc(dto, holder.userDescTv);
             String photoUrl;
             holder.userHeadImg.setTag("");
@@ -185,6 +191,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
         //        View line;
         ImageView selectedImg;
         RelativeLayout contentRl;
+        ImageView ownerImg;
     }
 
 }

@@ -42,12 +42,22 @@
 
             <TextView
                 android:id="@+id/tv_user_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/chat_member_list_owner"
+                android:layout_width="30dp"
+                android:layout_height="16dp"
+                android:src="@drawable/icon_chat_owner"
+                android:layout_toRightOf="@id/tv_user_name"
+                android:visibility="gone"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="6dp"/>
 
             <TextView
                 android:id="@+id/tv_user_desc"
