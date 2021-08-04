@@ -83,7 +83,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
             userName = ContactUserCacheUtils.getUserName(uid);
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
         }
-        holder.ownerTagImage.setVisibility(TextUtils.equals(uid, mOwnerUid) ? View.VISIBLE : View.GONE);
+        holder.ownerTagImage.setVisibility(TextUtils.equals(uid, mOwnerUid) && getCount() > 2 ? View.VISIBLE : View.GONE);
         holder.nameTv.setText(userName);
         ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
         return view;
