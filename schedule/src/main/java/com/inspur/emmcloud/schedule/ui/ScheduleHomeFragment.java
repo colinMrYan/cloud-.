@@ -135,7 +135,8 @@ public class ScheduleHomeFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_EWS_401:
                 if (errorLayout.getVisibility() != View.VISIBLE) {
                     errorLayout.setVisibility(View.VISIBLE);
-                    errorInfoText.setText(getString(R.string.schedule_exchange_login_fail));
+                    String accountStr = (eventMessage.getMessageObj() instanceof String) ? eventMessage.getMessageObj().toString() : "";
+                    errorInfoText.setText(getString(R.string.schedule_exchange_login_fail, accountStr));
                 }
                 break;
             case Constant.EVENTBUS_TAG_SCHEDULE_HIDE_EXCHANGE_ACCOUNT_ERROR:
