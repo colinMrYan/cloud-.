@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ListViewUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -43,7 +42,6 @@ import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -74,7 +72,6 @@ import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.reactnativenavigation.params.Orientation;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,7 +92,6 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 
 /**
  * Created by yufuchang on 2018/6/7.
@@ -105,6 +101,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_MULTI_SELECT = "isMulti_select";
     public static final String EXTRA_TYPE = "select_content";
+    public static final String EXTRA_CREATE_NEW_GROUP = "create_new_group";// 创建群聊
+    // 从单聊详情页点击+号创建群聊
+    public static final String EXTRA_CREATE_NEW_GROUP_FROM_DIRECT = "create_new_group_from_direct";
+    public static final String EXTRA_CREATE_NEW_GROUP_UID_DIRECT = "create_new_group_uid_direct";
     public static final String EXTRA_CONTAIN_ME = "isContainMe";
     public static final String EXTRA_HAS_SELECT = "hasSearchResult";
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
@@ -205,6 +205,10 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private String sureDialogMessage;
     private View view;
     private ScrollView searchOuterScroller;
+    private boolean isCreateGroup = false;// 来自创建群聊
+    private boolean isCreateGroupFromDirect = false;// 来自单聊详情页，创建群聊
+    private String fromDirectUid;// 单聊时对方的uid
+    private JSONObject searchResultObj;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -332,6 +336,9 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             searchContent = SEARCH_NOTHIING;
         } else {
             Intent intent = getActivity().getIntent();
+            isCreateGroup = intent.getExtras().getBoolean(EXTRA_CREATE_NEW_GROUP);
+            isCreateGroupFromDirect = intent.getExtras().getBoolean(EXTRA_CREATE_NEW_GROUP_FROM_DIRECT);
+            fromDirectUid = intent.getExtras().getString(EXTRA_CREATE_NEW_GROUP_UID_DIRECT);
             if (intent.hasExtra(EXTRA_LIMIT)) {
                 selectLimit = intent.getIntExtra(EXTRA_LIMIT, 5000);
             }
@@ -899,7 +906,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         InputMethodUtils.hide(getActivity());
         JSONArray peopleArray = new JSONArray();
         JSONArray channelGroupArray = new JSONArray();
-        JSONObject searchResultObj = new JSONObject();
+        searchResultObj = new JSONObject();
         //将选中的组织转化成组织下的所有人员
         convertContactOrg2ContactUser();
         for (int i = 0; i < selectMemList.size(); i++) {
@@ -940,13 +947,94 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             String searchResult = searchResultObj.toString();
             showConfirmDialog(searchResult, selectMemList.get(0), selectMemList.get(0).getType().equals(SearchModel.TYPE_GROUP));
         } else {
-            String searchResult = searchResultObj.toString();
-            Intent intent = new Intent();
-            intent.putExtra("searchResult", searchResult);
-            intent.putExtra("selectMemList", (Serializable) selectMemList);
-            getActivity().setResult(RESULT_OK, intent);
-            getActivity().finish();
+            // 新建群组
+            if (isCreateGroup) {
+                // 创建群组时，群聊的人员列表（包括用户本人）
+                checkIsExistGroupChat();
+            } else if (isCreateGroupFromDirect) {
+                // 从单聊聊天详情页新建群组
+                checkIsExistGroupChat();
+            } else {
+                setResultAndFinish();
+            }
         }
+    }
+
+    /**
+     * 创建群聊时检验是否已存在相同群成员群组
+     */
+    private void checkIsExistGroupChat() {
+        List<String> createGroupMemberList = new ArrayList<>();
+        for (int j = 0; j < selectMemList.size(); j++) {
+            createGroupMemberList.add(selectMemList.get(j).getId());
+        }
+        createGroupMemberList.add(MyApplication.getInstance().getUid());
+        if (isCreateGroupFromDirect) {
+            createGroupMemberList.add(fromDirectUid);
+        }
+        if (selectMemList != null && selectMemList.size() > 0) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                List<ChannelGroup> allChannelGroupList = ChannelGroupCacheUtils.getAllChannelGroupList(MyApplication.getInstance());
+                for (int i = 0; i < allChannelGroupList.size(); i++) {
+                    ChannelGroup channelGroup = allChannelGroupList.get(i);
+                    ArrayList<String> memberList = channelGroup.getMemberList();
+                    // 存在选了一个人，且之前存在两个人的群组，满足了下面条件
+                    if (memberList == null || memberList.size() == 2 || memberList.size() != createGroupMemberList.size()) {
+                        continue;
+                    }
+                    if (memberList.containsAll(createGroupMemberList)) {
+                        // 群聊重复
+                        showAddGroupWarningDlg();
+                        return;
+                    }
+                }
+            } else {
+                List<Conversation> conversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+                for (Conversation conversation : conversationList) {
+                    ArrayList<String> uidList = conversation.getMemberList();
+                    if (uidList == null || uidList.size() == 2 || uidList.size() != createGroupMemberList.size()) {
+                        continue;
+                    }
+                    if (uidList.containsAll(createGroupMemberList)) {
+                        // 群聊重复
+                        showAddGroupWarningDlg();
+                        return;
+                    }
+                }
+            }
+        }
+        setResultAndFinish();
+    }
+
+    // 已存在相同成员的群组时，提示用户
+    private void showAddGroupWarningDlg() {
+        new CustomDialog.MessageDialogBuilder(getActivity())
+                .setMessage(getString(R.string.add_same_group_warning_text))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        getActivity().finish();
+                    }
+                })
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        setResultAndFinish();
+                    }
+                })
+                .show();
+    }
+
+    // 设置setResult结果并返回
+    private void setResultAndFinish() {
+        String searchResult = searchResultObj.toString();
+        Intent intent = new Intent();
+        intent.putExtra("searchResult", searchResult);
+        intent.putExtra("selectMemList", (Serializable) selectMemList);
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
     }
 
     private void convertContactOrg2ContactUser() {
@@ -1427,6 +1515,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 break;
             case R.id.ok_text:
                 InputMethodUtils.hide(getActivity());
+
                 returnSearchResultData();
                 break;
             case R.id.struct_layout:

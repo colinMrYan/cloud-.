@@ -453,6 +453,7 @@ public class CommunicationFragment extends BaseFragment {
                             Intent contactIntent = new Intent();
                             contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                             contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                            contactIntent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP, true);
                             contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
                                     getActivity().getString(R.string.message_create_group));
                             contactIntent.setClass(getActivity(), ContactSearchActivity.class);

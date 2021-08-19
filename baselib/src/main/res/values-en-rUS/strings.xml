@@ -319,6 +319,7 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
+    <string name="add_same_group_warning_text">The same person group already exists. Continue to create group?</string>
     <string name="chat_stick_on_top">Sticky on Top</string>
     <string name="chat_remove">Hide</string>
     <string name="chat_remove_from_top">Remove from Top</string>

@@ -72,6 +72,7 @@ import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
@@ -415,6 +416,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                             Intent intent = new Intent();
                             intent.putExtra("select_content", 2);
                             intent.putExtra("isMulti_select", true);
+                            intent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP, true);
                             intent.putExtra("title",
                                     getActivity().getString(R.string.creat_group));
                             intent.setClass(getActivity(), ContactSearchActivity.class);

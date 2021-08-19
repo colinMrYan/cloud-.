@@ -179,6 +179,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.add_group_member));
                     intent.setClass(getApplicationContext(),
                             ContactSearchActivity.class);
+                    // 单聊时点击+号为创建群聊，传入Uid
+                    if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
+                        intent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP_FROM_DIRECT, true);
+                        intent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP_UID_DIRECT, uiUidList.get(0));
+                    }
                     startActivityForResult(intent, QEQUEST_ADD_MEMBER);
                 } else {
                     String uid = uiUidList.get(i);
