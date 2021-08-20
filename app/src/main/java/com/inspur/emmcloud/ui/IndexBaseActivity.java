@@ -735,7 +735,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             isSystemChangeTag = false;
         }
 
-        if (!"native://communicate".equals(tabId)) {
+        if (!"native://communicate".equals(v.getTag())) {
+            clickCount = 0;
             return super.onTouchEvent(event);
         }
 
