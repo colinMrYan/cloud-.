@@ -25,11 +25,21 @@ public class MainTabProperty {
     private List<MainTabMenu> mainTabMenuList = new ArrayList<>();
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private boolean isHasExtendList = true;
+    private String barTintColorString;
+    private String title;
+    private String titleColorString;
+    private String titleImageString;
+    private int titleBarHeight = -1;
 
     public MainTabProperty(String response) {
         canContact = JSONUtils.getBoolean(response, "canOpenContact", true);
         canCreate = JSONUtils.getBoolean(response, "canCreateChannel", true);
         isHaveNavbar = JSONUtils.getBoolean(response, "isHaveNavbar", false);
+        barTintColorString = JSONUtils.getString(response, "barTintColorString", null);
+        title = JSONUtils.getString(response, "title", null);
+        titleColorString = JSONUtils.getString(response, "titleColorString", null);
+        titleImageString = JSONUtils.getString(response, "titleImageString", null);
+        titleBarHeight = JSONUtils.getInt(response, "titleBarHeight", -1);
         JSONArray jsonArray = JSONUtils.getJSONArray(response, "menus", new JSONArray());
         for (int i = 0; i < (jsonArray.length() > 2 ? 2 : jsonArray.length()); i++) {
             mainTabMenuList.add(new MainTabMenu(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
@@ -73,6 +83,26 @@ public class MainTabProperty {
 
     public void setHaveNavbar(boolean haveNavbar) {
         isHaveNavbar = haveNavbar;
+    }
+
+    public String getBarTintColorString(){
+        return barTintColorString;
+    }
+
+    public String getBarTitle(){
+        return title;
+    }
+
+    public String getTitleColor(){
+        return titleColorString;
+    }
+
+    public String getTitleImage(){
+        return titleImageString;
+    }
+
+    public int getTitleBarHeight(){
+        return titleBarHeight;
     }
 
     public List<MainTabMenu> getMainTabMenuList() {

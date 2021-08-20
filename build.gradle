@@ -2,7 +2,7 @@
 //apply from: "conf.gradle"
 buildscript {
     ext.versions = [
-            'minSdk'        : 16,
+            'minSdk'        : 19,
             'targetSdk'     : 27,
             'compileSdk'    : 28,
             'supportLibrary': '28.0.0',

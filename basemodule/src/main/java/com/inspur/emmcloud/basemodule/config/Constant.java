@@ -226,6 +226,11 @@ public class Constant {
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
     public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
+    public static final String WEB_FRAGMENT_BAR_TINT_COLOR = "bar_tint_color";
+    public static final String WEB_FRAGMENT_TITLE = "title";
+    public static final String WEB_FRAGMENT_TITLE_COLOR = "title_color";
+    public static final String WEB_FRAGMENT_TITLE_IMAGE = "title_image";
+    public static final String WEB_FRAGMENT_TITLE_BAR_HEIGHT = "title_bar_height";
     public static final String Web_STATIC_TITLE = "web_from_index";
 
     public static final String INSPUR_HOST_URL = ".inspur.com";

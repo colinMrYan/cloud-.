@@ -3,12 +3,14 @@ package com.inspur.emmcloud.web.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +37,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.core.LogisticsCenter;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
@@ -161,11 +164,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.web_fragment_imp, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViews();
-        if (headerLayout.getVisibility() == View.VISIBLE) {
-            setFragmentStatusBarCommon();
-        } else {
-            setFragmentStatusBarWhite();
-        }
+        dealStatusBar();
         //String version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
         // if (!version.equals(getArguments().getString(Constant.WEB_FRAGMENT_VERSION, ""))) {
         //    initFragmentViews();
@@ -177,11 +176,20 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            if (headerLayout.getVisibility() == View.VISIBLE) {
-                setFragmentStatusBarCommon();
+            dealStatusBar();
+        }
+    }
+
+    private void dealStatusBar() {
+        if (headerLayout.getVisibility() == View.VISIBLE) {
+            if (getArguments() != null && !TextUtils.isEmpty(getArguments().getString(Constant.WEB_FRAGMENT_BAR_TINT_COLOR))) {
+                boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(getActivity(), com.inspur.emmcloud.basemodule.R.attr.status_bar_dark_font);
+                ImmersionBar.with(getActivity()).statusBarColor(getArguments().getString(Constant.WEB_FRAGMENT_BAR_TINT_COLOR)).statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(com.inspur.emmcloud.basemodule.R.color.white).navigationBarDarkIcon(true, 1.0f).init();
             } else {
-                setFragmentStatusBarWhite();
+                setFragmentStatusBarCommon();
             }
+        } else {
+            setFragmentStatusBarWhite();
         }
     }
 
@@ -325,12 +333,37 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
      */
     private void initWebViewHeaderLayout() {
         impCallBackInterface = getImpCallBackInterface();
-        if (getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true)) {
-            String title = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
+        if (getArguments() != null && getArguments().getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true)) {
             webView.setProperty(headerText, frameLayout, impCallBackInterface);
             initWebViewGoBackOrClose();
             headerLayout.setVisibility(View.VISIBLE);
-            headerText.setText(title);
+            String image = getArguments().getString(Constant.WEB_FRAGMENT_TITLE_IMAGE);
+            if (TextUtils.isEmpty(image)) {
+                headerText.setVisibility(View.VISIBLE);
+                headerImage.setVisibility(View.GONE);
+                String title = getArguments().getString(Constant.WEB_FRAGMENT_TITLE);
+                title = TextUtils.isEmpty(title) ? getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME) : title;
+                headerText.setText(title);
+                String textColor = getArguments().getString(Constant.WEB_FRAGMENT_TITLE_COLOR);
+                if (!TextUtils.isEmpty(textColor)) {
+                    headerText.setTextColor(Color.parseColor(textColor));
+                }
+            } else {
+                headerText.setVisibility(View.GONE);
+                headerImage.setVisibility(View.VISIBLE);
+                ImageDisplayUtils.getInstance().displayImage(headerImage, image + "@2x.png");
+            }
+            String barTintColorString = getArguments().getString(Constant.WEB_FRAGMENT_BAR_TINT_COLOR);
+            if (!TextUtils.isEmpty(barTintColorString)) {
+                headerLayout.setBackgroundColor(Color.parseColor(barTintColorString));
+            }
+            int titleBarHeight = getArguments().getInt(Constant.WEB_FRAGMENT_TITLE_BAR_HEIGHT, -1);
+            if (titleBarHeight >= 0){
+                RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) headerLayout.getLayoutParams();
+                params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+                params.height = DensityUtil.dip2px(titleBarHeight);
+                headerLayout.setLayoutParams(params);
+            }
         } else {
             webView.setProperty(null, frameLayout, impCallBackInterface);
         }

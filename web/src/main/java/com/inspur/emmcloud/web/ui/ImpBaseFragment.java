@@ -44,6 +44,8 @@ public class ImpBaseFragment extends BaseFragment {
     LinearLayout webFunctionLayout;
     @BindView(R2.id.header_text)
     TextView headerText;
+    @BindView(R2.id.header_image)
+    ImageView headerImage;
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
 

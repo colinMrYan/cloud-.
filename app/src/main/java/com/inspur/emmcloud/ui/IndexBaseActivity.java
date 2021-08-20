@@ -394,6 +394,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             if (tabBean.getMainTabResult().getType().equals(Constant.APP_TAB_TYPE_WEB)) {
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
                     bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                    bundle.putString(Constant.WEB_FRAGMENT_BAR_TINT_COLOR, tabBean.getMainTabResult().getMainTabProperty().getBarTintColorString());
+                    bundle.putString(Constant.WEB_FRAGMENT_TITLE, tabBean.getMainTabResult().getMainTabProperty().getBarTitle());
+                    bundle.putString(Constant.WEB_FRAGMENT_TITLE_COLOR, tabBean.getMainTabResult().getMainTabProperty().getTitleColor());
+                    bundle.putString(Constant.WEB_FRAGMENT_TITLE_IMAGE, tabBean.getMainTabResult().getMainTabProperty().getTitleImage());
+                    bundle.putInt(Constant.WEB_FRAGMENT_TITLE_BAR_HEIGHT, tabBean.getMainTabResult().getMainTabProperty().getTitleBarHeight());
                     bundle.putString(Constant.WEB_FRAGMENT_VERSION, PreferencesByUserAndTanentUtils
                             .getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
                     bundle.putSerializable(Constant.WEB_FRAGMENT_MENU,
