@@ -51,6 +51,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="behind"
             android:theme="@style/AppTheme_Transparent" />
+        <activity
+            android:name=".ui.WebFileDownloadActivity"
+            android:screenOrientation="behind"
+            android:resizeableActivity="true" />
 
         <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService"></service>

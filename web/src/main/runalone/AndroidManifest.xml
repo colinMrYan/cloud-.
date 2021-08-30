@@ -64,8 +64,8 @@
 
         <activity
             android:name=".plugin.filetransfer.filemanager.FileManagerActivity"
-            android:screenOrientation="portrait"
-            android:resizeableActivity="true" />
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".plugin.barcode.ScanResultActivity"
             android:launchMode="singleTask"
@@ -77,5 +77,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="behind"
             android:theme="@style/AppTheme_Transparent" />
+
+        <activity
+            android:name=".ui.WebFileDownloadActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
     </application>
 </manifest>

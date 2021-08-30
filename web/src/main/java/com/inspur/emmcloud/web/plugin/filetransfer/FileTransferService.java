@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,9 +26,11 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.UrlParseUtils;
+import com.inspur.emmcloud.web.bean.WebFileDownloadBean;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
+import com.inspur.emmcloud.web.ui.WebFileDownloadActivity;
 import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
@@ -207,6 +210,9 @@ public class FileTransferService extends ImpPlugin {
 
     };
     private String successCb, failCb;
+    private long fileSize;
+    private String fileId; // 文件ID
+    private String createTime; // 文件创建时间
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -260,7 +266,10 @@ public class FileTransferService extends ImpPlugin {
         JSONObject jsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         downloadUrl = JSONUtils.getString(jsonObject, "url", "");
         fileName = JSONUtils.getString(jsonObject, "saveName", "");
-        needOpenFile = JSONUtils.getBoolean(jsonObject,"autoOpen",true);
+        needOpenFile = JSONUtils.getBoolean(jsonObject, "autoOpen", true);
+        fileSize = JSONUtils.getLong(jsonObject, "fileSize", 0);
+        createTime = JSONUtils.getString(jsonObject, "createTime", "");
+        fileId = JSONUtils.getString(jsonObject, "fileId", "");
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
@@ -390,7 +399,7 @@ public class FileTransferService extends ImpPlugin {
         if ("download".equals(action)) {
             download(paramsObject);
         } else if ("downloadFile".equals(action)) { // 为了兼容自定义的imp插件
-            if (!paramsObject.isNull("key")){
+            if (!paramsObject.isNull("key")) {
                 try {
                     String key = paramsObject.getString("key");
                     //key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
@@ -461,7 +470,15 @@ public class FileTransferService extends ImpPlugin {
 
         downloadUrl = downloadUrl.trim();
         downloadUrl = StrUtil.changeUrl(downloadUrl);
-        showDownloadStatus();
+        // 返回ID的应用则跳转到本地下载页面，否则执行原有逻辑
+        if (TextUtils.isEmpty(fileId)) {
+            showDownloadStatus();
+        } else {
+            Intent intent = new Intent(getFragmentContext(), WebFileDownloadActivity.class);
+            WebFileDownloadBean webFileDownloadBean = new WebFileDownloadBean(fileId, fileSize, createTime, downloadUrl, fileName);
+            intent.putExtra("webFileDownload", webFileDownloadBean);
+            getFragmentContext().startActivity(intent);
+        }
     }
 
     // 下载
@@ -667,7 +684,7 @@ public class FileTransferService extends ImpPlugin {
             long length = urlConnection.getContentLength();
             totalSize = length;
             if (urlConnection.getResponseCode() >= 400) {
-                LogUtils.YfcDebug("异常："+urlConnection.getResponseCode()+"---"+urlConnection.getResponseMessage());
+                LogUtils.YfcDebug("异常：" + urlConnection.getResponseCode() + "---" + urlConnection.getResponseMessage());
                 handler.sendEmptyMessage(1);
                 return;
             } else {
@@ -890,7 +907,7 @@ public class FileTransferService extends ImpPlugin {
             }
         });
         fileUploadDlg = new AlertDialog.Builder(getActivity(), PreferencesUtils.getInt(getFragmentContext(),
-                        "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
+                "app_theme_num_v1", 0) != 3 ? android.R.style.Theme_Holo_Light_Dialog : AlertDialog.THEME_HOLO_DARK)
                 .setTitle(Res.getStringID("file_uploading"))
                 .setView(view)
                 .setCancelable(false)
@@ -934,7 +951,6 @@ public class FileTransferService extends ImpPlugin {
     }
 
 
-
     /**
      * 格式化数据
      **/
@@ -966,7 +982,7 @@ public class FileTransferService extends ImpPlugin {
             try {
                 downLoadFile(downloadUrl);
             } catch (Exception e) {
-                LogUtils.YfcDebug("下载异常："+e.getMessage());
+                LogUtils.YfcDebug("下载异常：" + e.getMessage());
                 e.printStackTrace();
                 handler.sendEmptyMessage(1);
             }
