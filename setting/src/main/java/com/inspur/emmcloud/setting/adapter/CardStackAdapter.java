@@ -108,7 +108,7 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
         public void onBind(final CardPackageBean cardPackageBean, int position) {
             companyNameText.setText(cardPackageBean.getCompany());
-            companyNameText.setBackgroundResource(R.drawable.icon_card_package_head_bg);
+            companyNameText.setBackgroundResource(getBackGroundImg(position));
             companyNameText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

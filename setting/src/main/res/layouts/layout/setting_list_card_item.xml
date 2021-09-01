@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linear_list_card_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="10dp"
     app:stackHeaderHeight="185dp">
 
     <RelativeLayout
@@ -36,29 +37,34 @@
         android:orientation="vertical"
         android:paddingBottom="17dp"
         android:paddingTop="10dp"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <LinearLayout
             android:id="@+id/tax_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/company_tax_view"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
+                android:layout_height="22dp"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:text="@string/setting_card_package_taxpayer"
                 android:textColor="@color/color_text_help"
-                android:layout_marginRight="22dp"
+                android:layout_marginRight="24dp"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/company_tax_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
@@ -66,20 +72,23 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:background="?attr/color_divider_1c_dd" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/company_address_view"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:layout_marginRight="22dp"
+                android:layout_height="22dp"
+                android:gravity="top"
+                android:layout_gravity="top"
+                android:layout_marginRight="24dp"
                 android:text="@string/setting_card_package_address"
                 android:textColor="@color/color_text_help"
                 android:textSize="16sp" />
@@ -88,7 +97,8 @@
                 android:id="@+id/company_address_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
@@ -96,19 +106,22 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:background="?attr/color_divider_1c_dd" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp">
 
             <TextView
                 android:id="@+id/link_phone_view"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:layout_marginRight="22dp"
+                android:layout_height="22dp"
+                android:gravity="top"
+                android:layout_gravity="top"
+                android:layout_marginRight="24dp"
                 android:text="@string/setting_card_package_phone_number"
                 android:textColor="@color/color_text_help"
                 android:textSize="16sp" />
@@ -117,7 +130,8 @@
                 android:id="@+id/link_phone_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="@color/color_text_link"
                 android:textSize="16sp" />
 
@@ -125,19 +139,23 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:background="?attr/color_divider_1c_dd" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/bank_view"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginRight="22dp"
-                android:gravity="center_vertical"
+                android:layout_height="22dp"
+                android:layout_marginRight="24dp"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:text="@string/setting_card_package_bank"
                 android:textColor="@color/color_text_help"
                 android:textSize="16sp" />
@@ -146,7 +164,8 @@
                 android:id="@+id/bank_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
 
@@ -155,19 +174,22 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:background="?attr/color_divider_1c_dd" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp">
 
             <TextView
                 android:id="@+id/bank_account_view"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginRight="22dp"
-                android:gravity="center_vertical"
+                android:layout_height="22dp"
+                android:layout_marginRight="24dp"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:text="@string/setting_card_package_bank_account"
                 android:textColor="@color/color_text_help"
                 android:textSize="16sp" />
@@ -176,15 +198,21 @@
                 android:id="@+id/bank_account_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="top"
+                android:layout_gravity="top"
                 android:textColor="?attr/text_color"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:background="?attr/color_divider_1c_dd" />
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/shape_bottom_rectangle_with_radius"/>-->
     </LinearLayout>
 
 </LinearLayout>
