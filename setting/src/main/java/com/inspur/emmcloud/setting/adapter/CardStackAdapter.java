@@ -86,20 +86,20 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
     class ColorItemViewHolder extends RxCardStackView.ViewHolder {
 
         private TextView companyNameText;
-        private TextView taxpayerText;
-        private TextView bankText;
-        private TextView bankNumText;
-        private TextView addressText;
-        private TextView phoneText;
+        private TextView companyTaxText;
+        private TextView companyAdressText;
+        private TextView phoneNumText;
+        private TextView bankNameText;
+        private TextView bankAccountText;
 
         public ColorItemViewHolder(View view) {
             super(view);
             companyNameText = (TextView) view.findViewById(R.id.tv_company_name);
-            taxpayerText = (TextView) view.findViewById(R.id.tv_taxpayer);
-            bankText = (TextView) view.findViewById(R.id.txt_bank);
-            bankNumText = (TextView) view.findViewById(R.id.tv_bank_code);
-            addressText = (TextView) view.findViewById(R.id.tv_address);
-            phoneText = (TextView) view.findViewById(R.id.tv_phone);
+            companyTaxText = (TextView) view.findViewById(R.id.company_tax_name);
+            companyAdressText = (TextView) view.findViewById(R.id.company_address_name);
+            phoneNumText = (TextView) view.findViewById(R.id.link_phone_name);
+            bankNameText = (TextView) view.findViewById(R.id.bank_name);
+            bankAccountText = (TextView) view.findViewById(R.id.bank_account_name);
         }
 
         @Override
@@ -108,7 +108,7 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
 
         public void onBind(final CardPackageBean cardPackageBean, int position) {
             companyNameText.setText(cardPackageBean.getCompany());
-            companyNameText.setBackgroundResource(getBackGroundImg(position));
+            companyNameText.setBackgroundResource(R.drawable.icon_card_package_head_bg);
             companyNameText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -162,11 +162,11 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
                     }
                 }
             });
-            taxpayerText.setText(cardPackageBean.getTaxpayer());
-            bankText.setText(cardPackageBean.getBank());
-            bankNumText.setText(cardPackageBean.getBankAccount());
-            addressText.setText(cardPackageBean.getAddress());
-            phoneText.setText(cardPackageBean.getPhone());
+            companyTaxText.setText(cardPackageBean.getTaxpayer());
+            bankNameText.setText(cardPackageBean.getBank());
+            bankAccountText.setText(cardPackageBean.getBankAccount());
+            companyAdressText.setText(cardPackageBean.getAddress());
+            phoneNumText.setText(cardPackageBean.getPhone());
         }
 
     }

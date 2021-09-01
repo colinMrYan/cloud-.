@@ -7,9 +7,11 @@
 
     <string name="setting_card_package_welcome">欢迎使用卡包</string>
     <string name="setting_card_package_collect">将您常用信息卡片归集一处</string>
-    <string name="setting_card_package_taxpayer">纳税人识别号</string>
-    <string name="setting_card_package_address">地址</string>
-    <string name="setting_card_package_phone_number">电话</string>
+    <string name="setting_card_package_taxpayer">公司税号</string>
+    <string name="setting_card_package_address">公司地址</string>
+    <string name="setting_card_package_phone_number">联系电话</string>
+    <string name="setting_card_package_bank">开户银行</string>
+    <string name="setting_card_package_bank_account">银行账号</string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->

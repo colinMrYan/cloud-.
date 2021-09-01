@@ -8,9 +8,11 @@
 
     <string name="setting_card_package_welcome">Welcome to use the package</string>
     <string name="setting_card_package_collect">Put your usual information cards in one place</string>
-    <string name="setting_card_package_taxpayer">Taxpayer identification number</string>
-    <string name="setting_card_package_address">Address</string>
+    <string name="setting_card_package_taxpayer">Company tax number</string>
+    <string name="setting_card_package_address">Company address</string>
     <string name="setting_card_package_phone_number">Telephone</string>
+    <string name="setting_card_package_bank">Open bank</string>
+    <string name="setting_card_package_bank_account">Account</string>
 
     <!--九宫格-->
     <!-- Gesture login activity -->

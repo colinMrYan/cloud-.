@@ -31,69 +31,160 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/shape_bottom_rectangle_with_radius"
         android:orientation="vertical"
         android:paddingBottom="17dp"
-        android:paddingLeft="22dp">
+        android:paddingTop="10dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/tax_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="17dp"
-            android:text="@string/setting_card_package_taxpayer"
-            android:textColor="@color/color_text_help"
-            android:textSize="12sp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/company_tax_view"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/setting_card_package_taxpayer"
+                android:textColor="@color/color_text_help"
+                android:layout_marginRight="22dp"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_taxpayer"
+            <TextView
+                android:id="@+id/company_tax_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="?attr/text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/color_divider_1c_dd" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_text_tip"
-            android:textSize="20sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txt_bank"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_text_help"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/company_address_view"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="22dp"
+                android:text="@string/setting_card_package_address"
+                android:textColor="@color/color_text_help"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_bank_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_text_tip"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/company_address_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="?attr/text_color"
+                android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_card_package_address"
-            android:textColor="@color/color_text_help"
-            android:textSize="12sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_address"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_text_tip"
-            android:textSize="20sp" />
+            android:layout_height="0.5dp"
+            android:background="?attr/color_divider_1c_dd" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_card_package_phone_number"
-            android:textColor="@color/color_text_help"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_phone"
+            <TextView
+                android:id="@+id/link_phone_view"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="22dp"
+                android:text="@string/setting_card_package_phone_number"
+                android:textColor="@color/color_text_help"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/link_phone_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/color_text_link"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/color_text_tip"
-            android:textSize="20sp" />
+            android:layout_height="0.5dp"
+            android:background="?attr/color_divider_1c_dd" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bank_view"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="22dp"
+                android:gravity="center_vertical"
+                android:text="@string/setting_card_package_bank"
+                android:textColor="@color/color_text_help"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/bank_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="?attr/text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/color_divider_1c_dd" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bank_account_view"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="22dp"
+                android:gravity="center_vertical"
+                android:text="@string/setting_card_package_bank_account"
+                android:textColor="@color/color_text_help"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/bank_account_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="?attr/text_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/color_divider_1c_dd" />
     </LinearLayout>
-
 
 </LinearLayout>
