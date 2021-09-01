@@ -62,7 +62,7 @@ public class WebFileDownloadActivity extends BaseActivity {
         webFileDownloadBean = (WebFileDownloadBean) getIntent().getSerializableExtra("webFileDownload");
         fileNameText.setText(webFileDownloadBean.getFileName());
         fileTypeImg.setImageResource(FileUtils.getFileIconResIdByFileName(webFileDownloadBean.getFileName()));
-        fileSizeText.setText(webFileDownloadBean.getCreateTime());
+        fileSizeText.setText(FileUtils.formatFileSize(webFileDownloadBean.getFileSize()));
         fileSavePath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_WEB, webFileDownloadBean.getFileId(), webFileDownloadBean.getFileName());
         if (!StringUtils.isBlank(fileSavePath)) {
             setDownloadingStatus(true);
