@@ -88,6 +88,7 @@
     <attr name="color_bg_46_bb" format="reference" />
     <attr name="color_stroke_46_ca" format="reference" />
     <attr name="dialog_common_bg_40" format="reference" />
+    <attr name="wallet_bottom_rectangle_with_shade" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
