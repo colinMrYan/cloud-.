@@ -76,6 +76,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
     private void openUrl(JSONObject paramsObject) {
         String url = JSONUtils.getString(paramsObject, "url", "");
         String title = JSONUtils.getString(paramsObject, "title", "");
+        String description = JSONUtils.getString(paramsObject, "description", "");
         boolean isHaveNavBar = JSONUtils.getBoolean(paramsObject, "isHaveNavbar", true);
         boolean isShare = JSONUtils.getBoolean(paramsObject, "isShare", false);
 
@@ -85,6 +86,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
         if (isShare) {
             bundle.putBoolean("isShare", true);
+            bundle.putString("description", description);
             if (getImpCallBackInterface() != null) {
                 getImpCallBackInterface().onStartActivityForResult(Constant.AROUTER_CLASS_CONVERSATION_SEARCH, bundle, ImpFragment.SHARE_WEB_URL_REQUEST);
             }

@@ -52,6 +52,7 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
     private String uri;
     private Bundle extras;
     private String title;
+    private String description; // web应用内分享内容简述
     private boolean isWebShare;
     private boolean isShowHeader = true; // 默认为true
     private Conversation conversation;
@@ -80,6 +81,7 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
         if (extras != null) {
             uri = extras.getString("uri");
             title = extras.getString("appName");
+            description = extras.getString("description");
             isWebShare = extras.getBoolean("isShare", false);
             isShowHeader = extras.getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
         }
@@ -120,6 +122,9 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
                 break;
             case R.id.tv_search_contact:
                 Intent intent = new Intent(this, SearchActivity.class);
+                if (isWebShare) {
+                    shareContent = getString(R.string.baselib_share_link) + title;
+                }
                 intent.putExtra(Constant.SHARE_CONTENT, shareContent);
                 startActivityForResult(intent, REQUEST_CODE_SHARE);
                 break;
@@ -130,8 +135,13 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SHARE && resultCode == RESULT_OK) {
-            setResult(RESULT_OK, data);
-            finish();
+            if (isWebShare) {
+                searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                handleShareResult();
+            } else {
+                setResult(RESULT_OK, data);
+                finish();
+            }
         }
     }
 
@@ -221,7 +231,7 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
         try {
             jsonObject.put("url", uri);
             jsonObject.put("poster", "");
-            jsonObject.put("digest", "");
+            jsonObject.put("digest", description);
             jsonObject.put("title", title);
             jsonObject.put(Constant.WEB_FRAGMENT_SHOW_HEADER, isShowHeader);
         } catch (Exception e) {
