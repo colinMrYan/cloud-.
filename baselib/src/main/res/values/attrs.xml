@@ -89,6 +89,8 @@
     <attr name="color_stroke_46_ca" format="reference" />
     <attr name="dialog_common_bg_40" format="reference" />
     <attr name="wallet_bottom_rectangle_with_shade" format="reference" />
+    <attr name="ic_wallet_back_btn" format="reference" />
+    <attr name="ic_wallet_setting" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

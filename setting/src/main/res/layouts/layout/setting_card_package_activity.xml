@@ -20,7 +20,7 @@
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_card_back_btn" />
+            android:src="?attr/ic_wallet_back_btn" />
 
         <ImageView
             android:id="@+id/tv_set"
@@ -32,7 +32,7 @@
             android:onClick="onClick"
             android:padding="17dp"
             android:scaleType="fitXY"
-            android:src="@drawable/setting_icon_card_package_set" />
+            android:src="?attr/ic_wallet_setting" />
     </RelativeLayout>
 
     <RelativeLayout
