@@ -165,7 +165,11 @@ public class DbCacheUtils {
                         }
                     }
                 });
-        db = x.getDb(daoConfig);
+        try {
+            db = x.getDb(daoConfig);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

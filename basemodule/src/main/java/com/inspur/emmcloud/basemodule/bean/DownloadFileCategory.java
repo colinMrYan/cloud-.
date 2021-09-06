@@ -5,7 +5,7 @@ package com.inspur.emmcloud.basemodule.bean;
  */
 
 public enum DownloadFileCategory {
-    CATEGORY_MESSAGE("message"), CATEGORY_VOLUME_FILE("volumeFile"), CATEGORY_TASK("task");
+    CATEGORY_MESSAGE("message"), CATEGORY_VOLUME_FILE("volumeFile"), CATEGORY_TASK("task"), CATEGORY_WEB("webFile");
     private String value;
 
     private DownloadFileCategory(String value) {
