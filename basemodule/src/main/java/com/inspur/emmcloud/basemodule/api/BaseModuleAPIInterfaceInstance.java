@@ -7,6 +7,7 @@ import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
@@ -107,6 +108,16 @@ public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
 
     @Override
     public void returnBadgeCountFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnBadgeCountFromBadgeServerSuccess(AppBadgeModel badgeBodyModel) {
+
+    }
+
+    @Override
+    public void returnBadgeCountFromBadgeServerFail(String error, int errorCode) {
 
     }
 

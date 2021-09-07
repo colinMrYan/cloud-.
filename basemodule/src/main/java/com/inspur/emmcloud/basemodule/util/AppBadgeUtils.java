@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,6 +26,7 @@ public class AppBadgeUtils {
     public void getAppBadgeCountFromServer() {
         if (NetUtils.isNetworkConnected(context, false)) {
             appAPIService.getBadgeCount();
+            appAPIService.getBadgeCountFromBadgeServer();
         }
     }
 
@@ -36,6 +38,15 @@ public class AppBadgeUtils {
 
         @Override
         public void returnBadgeCountFail(String error, int errorCode) {
+        }
+
+        @Override
+        public void returnBadgeCountFromBadgeServerSuccess(AppBadgeModel appBadgeModel) {
+            EventBus.getDefault().post(appBadgeModel);
+        }
+
+        @Override
+        public void returnBadgeCountFromBadgeServerFail(String error, int errorCode) {
         }
     }
 }

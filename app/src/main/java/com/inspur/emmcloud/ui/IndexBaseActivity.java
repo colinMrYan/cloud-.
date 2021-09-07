@@ -33,6 +33,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ConfirmDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
@@ -239,7 +240,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
-                                    if(AppRoleUtils.isShowContact()){
+                                    if (AppRoleUtils.isShowContact()) {
                                         tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
                                                 mainTabResult);
                                     }
@@ -442,18 +443,35 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             // 如果没有动态的key就把动态清0
             setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME, 0);
         }
-        if (badgeBodyModel.isAppStoreExist()) {
-            int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
-            if (appStoreTabBarBadgeNum > 0) {
-                Map<String, Integer> appStoreBadgeMap =
-                        badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
-                appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+        if (badgeBodyModel.isFromWebSocket()) {
+            if (badgeBodyModel.isAppStoreExist()) {
+                int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+                if (appStoreTabBarBadgeNum > 0) {
+                    Map<String, Integer> appStoreBadgeMap =
+                            badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                    appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
+                }
+                setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appStoreTabBarBadgeNum);
+            } else {
+                // 如果没有应用的key就把应用清0
+                setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
             }
-            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appStoreTabBarBadgeNum);
-        } else {
-            // 如果没有应用的key就把应用清0
-            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
         }
+    }
+
+
+    /**
+     * app未读数目变化
+     *
+     * @param appBadgeModel 角标服务的app model
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
+        int appBadgeCount = appBadgeModel.getAppBadgeCount();
+        //1.修改各app角标
+        appBadgeCount = getFilterAppStoreBadgeNum(appBadgeModel.getAppBadgeMap());
+        //2.修改应用tab角标
+        setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appBadgeCount);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

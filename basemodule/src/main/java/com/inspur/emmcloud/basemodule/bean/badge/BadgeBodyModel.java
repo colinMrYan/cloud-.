@@ -16,6 +16,8 @@ public class BadgeBodyModel {
     private BadgeBodyModuleModel snsBadgeBodyModuleModel;
     private String body = "";
 
+    private boolean isFromWebSocket;
+
     public BadgeBodyModel(String body) {
         this.body = body;
         snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body, COM_INSPUR_ECM_SNS, ""));
@@ -57,5 +59,13 @@ public class BadgeBodyModel {
 
     public boolean isSNSExist() {
         return JSONUtils.getJSONObject(body).has(COM_INSPUR_ECM_SNS);
+    }
+
+    public boolean isFromWebSocket() {
+        return isFromWebSocket;
+    }
+
+    public void setFromWebSocket(boolean fromWebSocket) {
+        isFromWebSocket = fromWebSocket;
     }
 }

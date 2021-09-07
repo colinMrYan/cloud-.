@@ -466,6 +466,7 @@ public class WebSocketPush {
                                 if (wsPushContent.getMethod().equals("put")) {
                                     GetWebSocketBadgeResult getWebSocketBadgeResult = new GetWebSocketBadgeResult(wsPushContent.getBody());
                                     BadgeBodyModel badgeBodyModel = getWebSocketBadgeResult.getBadgeBodyModel();
+                                    badgeBodyModel.setFromWebSocket(true);
                                     EventBus.getDefault().post(badgeBodyModel);
                                 }
                                 break;

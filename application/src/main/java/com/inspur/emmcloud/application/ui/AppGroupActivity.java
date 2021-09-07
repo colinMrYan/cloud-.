@@ -13,6 +13,7 @@ import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -47,18 +48,27 @@ public class AppGroupActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         appList.addAll((List<App>) getIntent().getSerializableExtra("appGroupList"));
-        mAppStoreBadgeMap = (Map<String, Integer>)getIntent().getSerializableExtra("appStoreBadgeMap");
+        mAppStoreBadgeMap = (Map<String, Integer>) getIntent().getSerializableExtra("appStoreBadgeMap");
         initViews();
         EventBus.getDefault().register(this);
     }
 
 
-    //接收从AppBadgeUtils里发回的角标数字
+    //接收从AppBadgeUtils里发回的聊天服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
+        if (!badgeBodyModel.isFromWebSocket()) {
+            return;
+        }
         BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
         mAppStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
         mAppGroupAdapter.updateBadgeNum(mAppStoreBadgeMap);
+    }
+
+    //接收从AppBadgeUtils里发回的角标服务角标数字
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
+        mAppGroupAdapter.updateBadgeNum(appBadgeModel.getAppBadgeMap());
     }
 
     @Override
