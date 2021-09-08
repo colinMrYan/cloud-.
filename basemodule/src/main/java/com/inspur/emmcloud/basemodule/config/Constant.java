@@ -13,6 +13,7 @@ public class Constant {
     public static final String CONCIG_SHOW_FEEDBACK = "IsShowFeedback";
     public static final String CONCIG_SHOW_CUSTOMER_SERVICE = "IsShowCustomerService";
     public static final String CONCIG_FORCE_PULL_MESSAGE = "force_pull_message";
+    public static final String CONCIG_FORCE_PULL_BADGE = "force_pull_badge";
     public static final String CONCIG_UPDATE_2_NEWVERSION = "forceUpdate20";//更新到云+2.0  即 云+协同应用
     public static final String CONCIG_CLOUD_PLUS_UUID_FILE = Environment.getExternalStorageDirectory() + "/gsp.uuid";
 

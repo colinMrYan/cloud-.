@@ -2,6 +2,7 @@ package com.inspur.emmcloud.application.ui;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.inspur.emmcloud.application.bean.App;
 import com.inspur.emmcloud.application.util.ApplicationUriUtils;
 import com.inspur.emmcloud.application.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
@@ -57,9 +59,10 @@ public class AppGroupActivity extends BaseActivity {
     //接收从AppBadgeUtils里发回的聊天服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        if (!badgeBodyModel.isFromWebSocket()) {
+        if (BaseApplication.getInstance().getBadgeFromBadgeServer() && !badgeBodyModel.isFromWebSocket()) {
             return;
         }
+        LogUtils.debug("TilllLog", "AppGroup 从聊天服务应用");
         BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
         mAppStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
         mAppGroupAdapter.updateBadgeNum(mAppStoreBadgeMap);
@@ -68,6 +71,7 @@ public class AppGroupActivity extends BaseActivity {
     //接收从AppBadgeUtils里发回的角标服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
+        LogUtils.debug("TilllLog", "AppGroup 从角标服务应用");
         mAppGroupAdapter.updateBadgeNum(appBadgeModel.getAppBadgeMap());
     }
 

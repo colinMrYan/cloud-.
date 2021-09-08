@@ -415,28 +415,28 @@ public class BaseModuleApiService {
      * @param mContext
      */
     public void uploadException(final Context mContext, JSONObject jsonObject, ExceptionUploadInterface exceptionInterface) {
-            final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
-            RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
-            params.setAsJsonContent(true);
-            params.setBodyContent(jsonObject.toString());
-            //Android3.0之后已经不能在主线程发起网络请求，会造成ANR，但此处情况特殊，需临时关闭StrictMode
-            StrictMode.ThreadPolicy oldThreadPolicy = StrictMode.getThreadPolicy();
-            StrictMode.VmPolicy oldVmPolicy = StrictMode.getVmPolicy();
-            if (Build.VERSION.SDK_INT >= 11) {
-                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
-                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+        final String completeUrl = BaseModuleApiUri.getUploadExceptionUrl();
+        RequestParams params = ((BaseApplication) mContext.getApplicationContext()).getHttpRequestParams(completeUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonObject.toString());
+        //Android3.0之后已经不能在主线程发起网络请求，会造成ANR，但此处情况特殊，需临时关闭StrictMode
+        StrictMode.ThreadPolicy oldThreadPolicy = StrictMode.getThreadPolicy();
+        StrictMode.VmPolicy oldVmPolicy = StrictMode.getVmPolicy();
+        if (Build.VERSION.SDK_INT >= 11) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+        }
+        try {
+            JSONObject jsonObjectResult = x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
+            if (exceptionInterface != null) {
+                exceptionInterface.uploadExceptionFinish(jsonObjectResult);
             }
-            try {
-                JSONObject jsonObjectResult = x.http().requestSync(HttpMethod.POST, params, JSONObject.class);
-                if (exceptionInterface != null) {
-                    exceptionInterface.uploadExceptionFinish(jsonObjectResult);
-                }
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
-            //时候后改回StrictMode
-            StrictMode.setThreadPolicy(oldThreadPolicy);
-            StrictMode.setVmPolicy(oldVmPolicy);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        //时候后改回StrictMode
+        StrictMode.setThreadPolicy(oldThreadPolicy);
+        StrictMode.setVmPolicy(oldVmPolicy);
     }
 
 
@@ -557,6 +557,9 @@ public class BaseModuleApiService {
      * 从角标服务获取app badge数量
      */
     public void getBadgeCountFromBadgeServer() {
+        if (!BaseApplication.getInstance().getBadgeFromBadgeServer()) {
+            return;
+        }
         final String url = WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/badge";
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {

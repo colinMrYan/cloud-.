@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,6 +27,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
@@ -443,19 +445,21 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             // 如果没有动态的key就把动态清0
             setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME, 0);
         }
-        if (badgeBodyModel.isFromWebSocket()) {
-            if (badgeBodyModel.isAppStoreExist()) {
-                int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
-                if (appStoreTabBarBadgeNum > 0) {
-                    Map<String, Integer> appStoreBadgeMap =
-                            badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
-                    appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
-                }
-                setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appStoreTabBarBadgeNum);
-            } else {
-                // 如果没有应用的key就把应用清0
-                setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
+        if (BaseApplication.getInstance().getBadgeFromBadgeServer() && !badgeBodyModel.isFromWebSocket()) {
+            return;
+        }
+        LogUtils.debug("TilllLog",  "IndexActivity 从聊天服务应用");
+        if (badgeBodyModel.isAppStoreExist()) {
+            int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
+            if (appStoreTabBarBadgeNum > 0) {
+                Map<String, Integer> appStoreBadgeMap =
+                        badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
             }
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appStoreTabBarBadgeNum);
+        } else {
+            // 如果没有应用的key就把应用清0
+            setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
         }
     }
 
@@ -467,9 +471,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
-        int appBadgeCount = appBadgeModel.getAppBadgeCount();
+        LogUtils.debug("TilllLog",  "IndexActivity 从角标服务应用");
+
         //1.修改各app角标
-        appBadgeCount = getFilterAppStoreBadgeNum(appBadgeModel.getAppBadgeMap());
+        int appBadgeCount = getFilterAppStoreBadgeNum(appBadgeModel.getAppBadgeMap());
         //2.修改应用tab角标
         setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appBadgeCount);
     }

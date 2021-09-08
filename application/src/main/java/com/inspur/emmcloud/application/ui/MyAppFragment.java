@@ -53,6 +53,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -635,9 +636,10 @@ public class MyAppFragment extends BaseFragment {
     //接收从AppBadgeUtils里发回的聊天服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
-        if (!badgeBodyModel.isFromWebSocket()) {
+        if (BaseApplication.getInstance().getBadgeFromBadgeServer() && !badgeBodyModel.isFromWebSocket()) {
             return;
         }
+        LogUtils.debug("TilllLog",  "MyApp 从聊天服务应用");
         BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
         appStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
         appListAdapter.notifyDataSetChanged();
@@ -646,6 +648,7 @@ public class MyAppFragment extends BaseFragment {
     //接收从AppBadgeUtils里发回的角标服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
+        LogUtils.debug("TilllLog", "MyApp 从角标服务应用");
         appStoreBadgeMap = appBadgeModel.getAppBadgeMap();
         appListAdapter.notifyDataSetChanged();    }
 
