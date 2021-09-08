@@ -23,10 +23,12 @@ public class AppBadgeUtils {
         appAPIService.setAPIInterface(new WebService());
     }
 
-    public void getAppBadgeCountFromServer() {
+    public void getAppBadgeCountFromServer(boolean isPush) {
         if (NetUtils.isNetworkConnected(context, false)) {
-            appAPIService.getBadgeCount();
-            appAPIService.getBadgeCountFromBadgeServer();
+            appAPIService.getBadgeCount(isPush);
+            if (isPush) {
+                appAPIService.getBadgeCountFromBadgeServer();
+            }
         }
     }
 

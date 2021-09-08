@@ -73,7 +73,7 @@ public class NetWorkStateChangeUtils {
      */
     private void getBadgeFromServer(Context context) {
         if (MyApplication.getInstance().isHaveLogin()) {
-            new AppBadgeUtils(context).getAppBadgeCountFromServer();
+            new AppBadgeUtils(context).getAppBadgeCountFromServer(false);
         }
     }
 }

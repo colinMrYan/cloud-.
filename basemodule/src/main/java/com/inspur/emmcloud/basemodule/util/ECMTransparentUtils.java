@@ -39,7 +39,7 @@ public class ECMTransparentUtils {
             if (BaseApplication.getInstance().getIsActive() && !(isSocketConnect && WebServiceRouterManager.getInstance().isV1xVersionChat())) {
                 if (router.getService(AppService.class) != null) {
                     AppService service = router.getService(AppService.class);
-                    service.getAppBadgeCountFromServer();
+                    service.getAppBadgeCountFromServer(true);
                 }
             } else {
                 int badgeNumber = JSONUtils.getInt(transparent, "badge", 0);

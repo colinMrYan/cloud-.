@@ -45,7 +45,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 Router router = Router.getInstance();
                 if (router.getService(AppService.class) != null) {
                     AppService service = router.getService(AppService.class);
-                    service.getAppBadgeCountFromServer();
+                    service.getAppBadgeCountFromServer(false);
                 }
             }
         }

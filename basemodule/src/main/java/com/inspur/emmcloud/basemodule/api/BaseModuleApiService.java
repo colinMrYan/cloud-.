@@ -520,13 +520,15 @@ public class BaseModuleApiService {
     /**
      * 获取app badge数量
      */
-    public void getBadgeCount() {
+    public void getBadgeCount(final boolean isPush) {
         final String url = BaseModuleApiUri.getBadgeCountUrl();
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnBadgeCountSuccess(new BadgeBodyModel(new String(arg0)));
+                BadgeBodyModel badgeBodyModel = new BadgeBodyModel(new String(arg0));
+                badgeBodyModel.setFromWebSocket(isPush);
+                apiInterface.returnBadgeCountSuccess(badgeBodyModel);
             }
 
             @Override
@@ -539,7 +541,7 @@ public class BaseModuleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getBadgeCount();
+                        getBadgeCount(isPush);
                     }
 
                     @Override

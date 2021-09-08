@@ -183,7 +183,7 @@ public class MyAppFragment extends BaseFragment {
             getMyApp();
         }
         if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
-            new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+            new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer(false);
         }
         refreshRecommendAppWidgetView();
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
@@ -348,7 +348,7 @@ public class MyAppFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 getMyApp();
-                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer(false);
             }
         });
     }
@@ -990,7 +990,7 @@ public class MyAppFragment extends BaseFragment {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             deleteCommonlyUseApp(appAdapterList, app);
-                            new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+                            new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer(false);
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
                             //常用应用删除时，不会删除具体类别的应用
@@ -1119,7 +1119,7 @@ public class MyAppFragment extends BaseFragment {
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
             if (MyAppCacheUtils.getMyAppListFromNet(BaseApplication.getInstance()).size() > 0) {
-                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer(false);
             }
             appListAdapter.setAppAdapterList(appGroupList);
             if (swipeRefreshLayout != null) {

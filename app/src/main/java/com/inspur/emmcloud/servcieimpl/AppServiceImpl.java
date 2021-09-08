@@ -22,8 +22,8 @@ import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 public class AppServiceImpl implements AppService {
     @Override
-    public void getAppBadgeCountFromServer() {
-        new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+    public void getAppBadgeCountFromServer(boolean isPush) {
+        new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer(isPush);
     }
 
     @Override
