@@ -24,6 +24,7 @@ import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.CrashHandler;
@@ -90,7 +91,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         }
     }
 
-    private void initWithoutUserInfo(){
+    private void initWithoutUserInfo() {
         Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
         Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
         Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
@@ -370,6 +371,7 @@ public abstract class BaseApplication extends MultiDexApplication {
 
         }
     }
+
     public String getTanent() {
         return tanent;
     }
@@ -513,6 +515,14 @@ public abstract class BaseApplication extends MultiDexApplication {
      */
     public void setOpenNotification(boolean isOpenNotification) {
         this.isOpenNotification = isOpenNotification;
+    }
+
+    /**
+     * 是否从角标服务拉取角标数量
+     */
+    public boolean getBadgeFromBadgeServer() {
+        String fromBadgeServerConfig = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), Constant.CONCIG_FORCE_PULL_BADGE, "914683;912536;915614;913530;");
+        return fromBadgeServerConfig.contains(getCurrentEnterprise().getId());
     }
 
     /**

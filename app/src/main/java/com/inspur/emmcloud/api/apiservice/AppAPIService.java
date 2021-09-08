@@ -7,6 +7,7 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
@@ -211,7 +212,6 @@ public class AppAPIService {
     }
 
 
-
     /**
      * 获取显示tab页的接口
      */
@@ -396,6 +396,7 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.debug("TilllLog",  "getAppConfig callbackSuccess:" + new String(arg0));
                 apiInterface.returnAppConfigSuccess(new GetAppConfigResult(new String(arg0)));
             }
 
@@ -421,7 +422,6 @@ public class AppAPIService {
             }
         });
     }
-
 
 
     /**
@@ -466,12 +466,12 @@ public class AppAPIService {
     /**
      * 获取app权限
      * {
-     *     "enable_contacts": 0,//是否显示通讯录
-     *     "enable_file_send": 0,//是否能发送文件
-     *     "enable_image_send": 0//是否能发送图片
+     * "enable_contacts": 0,//是否显示通讯录
+     * "enable_file_send": 0,//是否能发送文件
+     * "enable_image_send": 0//是否能发送图片
      * }
      */
-    public void getAppRole(){
+    public void getAppRole() {
 //        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
         final String url = APIUri.getAppRoleUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
@@ -483,7 +483,7 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAppRoleFail(error,responseCode);
+                apiInterface.returnAppRoleFail(error, responseCode);
             }
 
             @Override
@@ -507,19 +507,19 @@ public class AppAPIService {
     /**
      * 获取微信参数
      */
-    public void getWxParams(){
+    public void getWxParams() {
 //        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
         final String url = APIUri.getWxParams();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("返回参数："+new String(arg0));
+                LogUtils.YfcDebug("返回参数：" + new String(arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("返回失败："+error+"-----"+responseCode);
+                LogUtils.YfcDebug("返回失败：" + error + "-----" + responseCode);
             }
 
             @Override
@@ -543,7 +543,7 @@ public class AppAPIService {
     /**
      * 获取是否已经隐私政策和服务协议
      */
-    public void getIsAgreeAgreement(){
+    public void getIsAgreeAgreement() {
 //        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
         final String url = APIUri.getIsAgreed();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
@@ -555,7 +555,7 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnIsAgreedFail(error,responseCode);
+                apiInterface.returnIsAgreedFail(error, responseCode);
             }
 
             @Override
@@ -579,11 +579,11 @@ public class AppAPIService {
     /**
      * 保存是否同意的状态
      */
-    public void saveAgreeState(final String isAgree){
+    public void saveAgreeState(final String isAgree) {
 //        final String url = "https://emm.inspur.com/api/sys/v3.0/config/clientConfig";
         final String url = APIUri.saveAgreeState();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("isAgreed",isAgree);
+        params.addParameter("isAgreed", isAgree);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -592,7 +592,7 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnSaveAgreedFail(error,responseCode);
+                apiInterface.returnSaveAgreedFail(error, responseCode);
             }
 
             @Override

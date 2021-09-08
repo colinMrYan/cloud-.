@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,6 +53,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -62,6 +64,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.bean.badge.AppBadgeModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -630,14 +633,24 @@ public class MyAppFragment extends BaseFragment {
         appGroupItemList.set(to, temp);
     }
 
-    //接收从AppBadgeUtils里发回的角标数字
+    //接收从AppBadgeUtils里发回的聊天服务角标数字
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNum(BadgeBodyModel badgeBodyModel) {
+        if (BaseApplication.getInstance().getBadgeFromBadgeServer() && !badgeBodyModel.isFromWebSocket()) {
+            return;
+        }
+        LogUtils.debug("TilllLog",  "MyApp 从聊天服务应用");
         BadgeBodyModuleModel badgeBodyModuleModel = badgeBodyModel.getAppStoreBadgeBodyModuleModel();
         appStoreBadgeMap = badgeBodyModuleModel.getDetailBodyMap();
         appListAdapter.notifyDataSetChanged();
     }
 
+    //接收从AppBadgeUtils里发回的角标服务角标数字
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
+        LogUtils.debug("TilllLog", "MyApp 从角标服务应用");
+        appStoreBadgeMap = appBadgeModel.getAppBadgeMap();
+        appListAdapter.notifyDataSetChanged();    }
 
     @Override
     public void onDestroy() {
