@@ -26,7 +26,7 @@ public class AppBadgeUtils {
     public void getAppBadgeCountFromServer(boolean isPush) {
         if (NetUtils.isNetworkConnected(context, false)) {
             appAPIService.getBadgeCount(isPush);
-            if (isPush) {
+            if (!isPush) {
                 appAPIService.getBadgeCountFromBadgeServer();
             }
         }
