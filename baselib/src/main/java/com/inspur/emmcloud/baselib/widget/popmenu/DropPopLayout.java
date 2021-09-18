@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 
 import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 
 /**
@@ -48,7 +49,8 @@ public class DropPopLayout extends LinearLayout {
 
         mTriangleDownIndicatorView = new TriangleIndicatorView(getContext());
         mTriangleDownIndicatorView.setOrientation(false);
-        setTriangleIndicatorViewColor(Color.WHITE);
+        int currentThemeNo = PreferencesUtils.getInt(getContext(), "app_theme_num_v1", 0);
+        setTriangleIndicatorViewColor(currentThemeNo == 3 ? Color.parseColor("#404040") : Color.WHITE);
         mTriangleUpIndicatorView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT
                 , LayoutParams.WRAP_CONTENT));
         addView(mTriangleDownIndicatorView);

@@ -23,13 +23,17 @@ import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
 import com.inspur.emmcloud.login.util.OauthUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.http.app.RequestTracker;
+import org.xutils.http.body.RequestBody;
 import org.xutils.http.request.UriRequest;
 
 import java.net.SocketTimeoutException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
 
@@ -293,8 +297,17 @@ public class LoginAPIService {
         RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("old", oldpsd);
         params.addQueryStringParameter("new", newpsd);
-        params.setAsJsonContent(true);
-        params.addHeader("Content-Type", "application/json");
+        // xUtils 3.9.0设置ContentType逻辑与3.5.0不同，put时也必须设置ContentType，post暂未发现问题
+        JSONObject paramObj = new JSONObject();
+        try {
+            paramObj.put("old", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        params.setBodyContent(paramObj.toString());
+        params.setBodyContentType("application/json");
+//        params.setRequestBody();
+//        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
@@ -340,8 +353,17 @@ public class LoginAPIService {
         RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("passcode", smsCode);
         params.addQueryStringParameter("new", newPwd);
-        params.setAsJsonContent(true);
-        params.addHeader("Content-Type", "application/json");
+        // xUtils 3.9.0设置ContentType逻辑与3.5.0不同，put时也必须设置ContentType，post暂未发现问题
+        JSONObject paramObj = new JSONObject();
+        try {
+            paramObj.put("new", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        params.setBodyContent(paramObj.toString());
+        params.setBodyContentType("application/json");
+//        params.setAsJsonContent(true);
+//        params.addHeader("Content-Type", "application/json");
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override

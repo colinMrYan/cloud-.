@@ -13,6 +13,8 @@ import com.inspur.emmcloud.news.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.news.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.news.bean.GetNewsTitleResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
 public class NewsApiService {
@@ -137,6 +139,15 @@ public class NewsApiService {
                 .getHttpRequestParams(completeUrl);
         params.setHeader("Content-Type", "url-encoded-form");
         params.addQueryStringParameter("comment", instruction);
+        // 3.9.0xUtils 默认设置content-type有问题，暂时传StringBody类型
+        JSONObject paramObj = new JSONObject();
+        try {
+            paramObj.put("new", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        params.setBodyContent(paramObj.toString());
+        params.setBodyContentType("url-encoded-form");
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {

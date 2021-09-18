@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_meeting_search"
-        android:background="?attr/color_bg_common">
+        android:background="?attr/color_bg_common_00">
 
         <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

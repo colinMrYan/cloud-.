@@ -78,7 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_search_contact"
-        android:background="?attr/color_bg_common">
+        android:background="?attr/color_bg_common_00">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rcv_conversation"

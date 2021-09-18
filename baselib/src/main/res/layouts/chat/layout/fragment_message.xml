@@ -92,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="?attr/color_bg_common">
+        android:background="?attr/color_bg_common_00">
 
         <ListView
             android:id="@+id/msg_list"
