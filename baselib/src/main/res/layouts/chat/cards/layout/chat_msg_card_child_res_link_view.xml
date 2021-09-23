@@ -52,5 +52,28 @@
                 android:textColor="@color/color_text_common_level_two"
                 android:textSize="15sp" />
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_extend_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_text"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_extend_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_extend_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/color_text_common_level_one"
+                android:textSize="17sp" />
+        </LinearLayout>
     </RelativeLayout>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>
