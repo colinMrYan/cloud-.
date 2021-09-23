@@ -6,7 +6,9 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ApiRequestRecord;
 import com.inspur.emmcloud.basemodule.bean.AppException;
@@ -534,6 +536,9 @@ public class BaseModuleApiService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnBadgeCountFail(error, responseCode);
+                if (!BaseApplication.getInstance().getBadgeFromBadgeServer()) {
+                    ToastUtils.show(R.string.pull_badge_fail);
+                }
             }
 
             @Override
@@ -573,6 +578,7 @@ public class BaseModuleApiService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnBadgeCountFromBadgeServerFail(error, responseCode);
+                ToastUtils.show(R.string.pull_badge_fail);
             }
 
             @Override

@@ -1131,6 +1131,8 @@
     <string name="left_unread">人未读</string>
     <string name="unread_detail_title">消息接收人列表</string>
 
+    <string name="pull_badge_fail">网络连接失败或请求超时，请稍后下拉刷新……</string>
+
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

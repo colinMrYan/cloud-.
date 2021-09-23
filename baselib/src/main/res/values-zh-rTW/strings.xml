@@ -1067,7 +1067,9 @@
     <string name="unread">未讀</string>
     <string name="left_unread">人未讀</string>
     <string name="all_read">全部已讀</string>
-    <string name="unread_detail_title">消息接收人列表</string>
+    <string name="unread_detail_title">消息接收人清單</string>
+    <string name="pull_badge_fail">網絡連接失敗或請求超時，請稍後下拉重繪……</string>
+
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
