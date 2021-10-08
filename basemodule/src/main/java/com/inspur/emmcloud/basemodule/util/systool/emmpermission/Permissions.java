@@ -125,7 +125,9 @@ public final class Permissions {
                 case CALL_PHONE:
                 case READ_CALL_LOG:
                 case WRITE_CALL_LOG:
-                case USE_SIP:
+                case USE_SIP:{
+                    break;
+                }
 //                case PROCESS_OUTGOING_CALLS: {
 //                    String message = context.getString(R.string.permission_name_phone);
 //                    if (!textList.contains(message)) {

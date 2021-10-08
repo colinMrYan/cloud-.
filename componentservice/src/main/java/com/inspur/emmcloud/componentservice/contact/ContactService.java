@@ -19,4 +19,8 @@ public interface ContactService extends CoreService {
 
     void saveContactUser(ContactUser contactUser);
     String getUserName(String uid);
+
+    String getOrganizeName(String userId);
+
+    ContactUser getContactUserByPhoneNumber(String mobile);
 }

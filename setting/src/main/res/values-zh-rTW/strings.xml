@@ -96,6 +96,7 @@
     <string name="setting_mine_theme_grey">優雅灰</string>
     <string name="setting_mine_theme_blue">商務藍</string>
     <string name="setting_mine_theme_dark">暗夜黑</string>
+    <string name="setting_phone_recognize">來電身份識別</string>
 
     <string name="setting_mine_tab_layout">佈局切換</string>
     <string name="setting_mine_tab_layout_switch">是否切換為：%1$s</string>

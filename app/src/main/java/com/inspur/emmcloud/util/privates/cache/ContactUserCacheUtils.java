@@ -351,6 +351,24 @@ public class ContactUserCacheUtils {
         return contactUser;
     }
 
+    /**
+     * 根据手机号查询联系人的接口
+     *
+     * @param mobile
+     * @return
+     */
+    public static ContactUser getContactUserByMobile(String mobile) {
+        ContactUser contactUser = null;
+        try {
+            contactUser = DbCacheUtils.getDb().selector(ContactUser.class).where("mobile",
+                    "=", mobile).findFirst();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return contactUser;
+    }
+
 
     /**
      * 通过手机号搜索通讯录

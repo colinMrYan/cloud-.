@@ -98,6 +98,7 @@
     <string name="setting_mine_theme_blue">Blue</string>
     <string name="setting_mine_theme_dark">Dark</string>
 
+    <string name="setting_phone_recognize">Caller identification</string>
 
     <string name="setting_mine_tab_layout">Layout Switching</string>
     <string name="setting_mine_tab_layout_switch">Switch to：%1$s</string>
