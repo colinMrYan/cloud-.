@@ -394,6 +394,8 @@ public class SettingActivity extends BaseActivity {
         } else if (i == R.id.rl_setting_switch_tablayout) {
             IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
 
+        } else if(i == R.id.phone_recognize_layout){
+            IntentUtils.startActivity(SettingActivity.this, PhoneRecognizeActivity.class);
         } else {
         }
     }

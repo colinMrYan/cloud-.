@@ -1001,6 +1001,8 @@
     <string name="permission_grant_window_fail">You have forbidden granting %1$s suspension window permission</string>
     <string name="permission_grant_background_start">Please grant %1$s background pop-up permission</string>
     <string name="permission_grant_background_start_fail">You have disabled granting %1$s background pop-up permission</string>
+    <string name="permission_grant_window_alert_lockscreen_display">Please grant %1$s lock screen display and background pop-up interface permissions</string>
+    <string name="permission_grant_lockscreen_display">Please grant %1$s lock screen display permission</string>
 
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
@@ -1019,6 +1021,11 @@
     <string name="permission_name_sensors">Body Sensors</string>
     <string name="permission_name_sms">SMS</string>
     <string name="permission_name_storage">Storage</string>
+    <string name="permission_setting_phone_recognize">This feature requires requesting permission to open the suspension window and call log from your phone</string>
+    <string name="permission_setting_open_phone_overlay">Turn on the suspension window permission</string>
+    <string name="permission_setting_open_phone_read">Turn on read call history permissions</string>
+    <string name="permission_setting_close_phone_overlay">Turn off the suspension window permission</string>
+    <string name="permission_setting_close_phone_read">Turn off read call history permissions</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>

@@ -1074,6 +1074,30 @@ public class AppUtils {
     }
 
     /**
+     * 小米后台锁屏显示检测方法
+     * @param context
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public static boolean canShowLockView(Context context) {
+        if (getIsXiaoMi()){
+            AppOpsManager ops = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);;
+            try {
+                int op = 10020; // >= 23
+                Method method = ops.getClass().getMethod("checkOpNoThrow", new Class[]
+                        {int.class, int.class, String.class}
+                );
+                Integer result = (Integer) method.invoke(ops, op, android.os.Process.myUid(), context.getPackageName());
+                return result == AppOpsManager.MODE_ALLOWED;
+            } catch (Exception e) {
+                LogUtils.YfcDebug("异常：" + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    /**
      * 判断耳机
      *
      * @return
