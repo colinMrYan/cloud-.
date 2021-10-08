@@ -58,6 +58,11 @@ public class PhoneRecognizeActivity extends BaseActivity {
                 checkReadPhonePermission();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         refreshView();
     }
 
