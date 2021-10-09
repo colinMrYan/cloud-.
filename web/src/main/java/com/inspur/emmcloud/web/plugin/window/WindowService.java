@@ -30,7 +30,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
     public void execute(String action, JSONObject paramsObject) {
         switch (action) {
             case "open":
-                openUrl(paramsObject);
+                open(paramsObject);
                 break;
             case "setTitles":
                 showDropTitle(paramsObject);
@@ -47,6 +47,25 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             default:
                 showCallIMPMethodErrorDlg();
                 break;
+        }
+    }
+
+    private void open(JSONObject paramsObject) {
+        String uri = JSONUtils.getString(paramsObject, "uri", "");
+        if (!TextUtils.isEmpty(uri)) {
+            openUri(uri);
+        } else {
+            openUrl(paramsObject);
+        }
+    }
+
+    private void openUri(String uri) {
+        try {
+            Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
+            intent.setComponent(null);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
