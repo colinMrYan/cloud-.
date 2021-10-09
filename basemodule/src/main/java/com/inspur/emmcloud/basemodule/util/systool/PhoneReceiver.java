@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
@@ -56,6 +57,8 @@ public class PhoneReceiver extends BroadcastReceiver {
     }
 
     private void showUserInfoWindow(String incomingNumber) {
+        //有通讯录权限才能监听来电显示身份识别信息
+        if (!AppTabUtils.hasContactPermission(BaseApplication.getInstance())) return;
         if (TextUtils.isEmpty(incomingNumber)) return;
         ContactUser contactUser = getInComingUserInfoByPhoneNum(incomingNumber);
         if (contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber)) return;

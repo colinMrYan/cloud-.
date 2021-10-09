@@ -43,6 +43,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -99,6 +100,8 @@ public class SettingActivity extends BaseActivity {
     SwitchCompat notificationSwitch;
     @BindView(R2.id.switch_view_setting_native_rotate)
     SwitchCompat nativeRotateSwitch;
+    @BindView(R2.id.phone_recognize_layout)
+    RelativeLayout phoneRecognize;
     int REQUEST_CODE_CAMERA = 10002;
     Uri fileUri = null;
     private Handler handler;
@@ -194,6 +197,7 @@ public class SettingActivity extends BaseActivity {
 
     private void initView() {
         setTitleText(R.string.settings);
+        phoneRecognize.setVisibility(AppTabUtils.hasContactPermission(BaseApplication.getInstance()) ? View.VISIBLE : View.GONE);
         loadingDlg = new LoadingDialog(this);
         apiService = new SettingAPIService(this);
         apiService.setAPIInterface(new WebService());
