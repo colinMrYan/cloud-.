@@ -2,7 +2,9 @@ package com.inspur.emmcloud.setting.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.BottomDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.setting.R;
@@ -167,8 +170,34 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
             bankAccountText.setText(cardPackageBean.getBankAccount());
             companyAdressText.setText(cardPackageBean.getAddress());
             phoneNumText.setText(cardPackageBean.getPhone());
+            phoneNumText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(cardPackageBean.getPhone()))
+                    showCallUserDialog(cardPackageBean.getPhone());
+                }
+            });
         }
 
+    }
+
+    private void showCallUserDialog(final String mobile) {
+        new CustomDialog.MessageDialogBuilder(getContext())
+                .setMessage(mobile)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.user_call, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        AppUtils.call(context, mobile, 1);
+                    }
+                })
+                .show();
     }
 
 

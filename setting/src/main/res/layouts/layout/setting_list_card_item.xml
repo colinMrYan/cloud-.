@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:layout_gravity="top"
-                android:textColor="?attr/text_color_e1"
+                android:textColor="@color/color_text_link"
                 android:textSize="16sp" />
 
         </LinearLayout>
