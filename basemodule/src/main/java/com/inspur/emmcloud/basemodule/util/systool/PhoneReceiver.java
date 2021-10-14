@@ -47,10 +47,9 @@ public class PhoneReceiver extends BroadcastReceiver {
             contactUser = service.getContactUserByPhoneNumber(phoneNumber);
         }
         if (contactUser != null && !TextUtils.isEmpty(contactUser.getId())){
-            String[] organizeNames = service.getOrganizeName(contactUser.getId()).split("-");
-            int length = organizeNames.length;
-            //组织信息：最后一级（部门信息）+人名
-            contactUser.setOffice(organizeNames[length - 1] + "-" + contactUser.getName());
+            String organizeNames = service.getOrganizeName(contactUser.getId());
+            //组织信息-姓名
+            contactUser.setOffice(organizeNames + "-" + contactUser.getName());
         }
         return contactUser;
     }

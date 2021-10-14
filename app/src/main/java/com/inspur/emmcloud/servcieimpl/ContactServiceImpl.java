@@ -48,30 +48,25 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public String getOrganizeName(String userId) {
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(userId);
-        if (contactUser != null) {
-            String parentId = contactUser.getParentId();
-            List<ContactOrg> contactOrgList = new ArrayList<>();
-            while (true) {
-                ContactOrg parentOrg = ContactOrgCacheUtils.getContactOrg(parentId);
-                if (parentOrg == null) {
-                    break;
-                }
-                contactOrgList.add(parentOrg);
-                parentId = parentOrg.getParentId();
-                if (StringUtils.isBlank(parentId)) {
-                    break;
-                }
+        if (contactUser == null) return null;
+        String orgNameOrID = contactUser.getParentId();
+        if (StringUtils.isBlank(orgNameOrID)) return null;
+        String root = "root";
+        List<String> orgNameList = new ArrayList<>();
+        while (!root.equals(orgNameOrID)) {
+            ContactOrg contactOrgTest = ContactOrgCacheUtils.getContactOrg(orgNameOrID);
+            if (contactOrgTest == null) return null;
+            orgNameOrID = contactOrgTest.getName();
+            orgNameList.add(orgNameOrID);
+            orgNameOrID = contactOrgTest.getParentId();
+        }
+        Collections.reverse(orgNameList);
+        if (orgNameList.size() > 1) {
+            if (orgNameList.size() == 2) {
+                return orgNameList.get(1);
+            } else {
+                return orgNameList.get(1) + "-" + orgNameList.get(2);
             }
-            Collections.reverse(contactOrgList);
-            StringBuilder orgNameBuilder = new StringBuilder();
-            for (int i = 0; i < contactOrgList.size(); i++) {
-                ContactOrg contactOrg = contactOrgList.get(i);
-                orgNameBuilder.append(contactOrg.getName());
-                if (i != contactOrgList.size() - 1) {
-                    orgNameBuilder.append("-");
-                }
-            }
-            return orgNameBuilder.toString();
         }
         return null;
     }
