@@ -3,6 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?attr/home_common_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -39,7 +40,7 @@
         android:layout_below="@id/rl_header"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:background="@color/content_bg">
+        android:background="?attr/home_common_bg">
 
         <ImageView
             android:id="@+id/phone_display"
@@ -50,13 +51,14 @@
 
         <TextView
             android:id="@+id/introduction_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:singleLine="false"
+            android:textColor="?attr/text_color_e1"
             android:textSize="16dp"
             android:text="****"/>
 
@@ -67,7 +69,7 @@
             android:text="****"
             android:textSize="18dp"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="?attr/text_color_e1"
             android:background="@drawable/setting_permission_selector_state"
             android:layout_marginTop="40dp"/>
 
@@ -77,7 +79,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:textSize="18dp"
-            android:textColor="@color/white"
+            android:textColor="?attr/text_color_e1"
             android:text="****"
             android:background="@drawable/setting_permission_selector_state"
             android:layout_marginTop="30dp"/>
