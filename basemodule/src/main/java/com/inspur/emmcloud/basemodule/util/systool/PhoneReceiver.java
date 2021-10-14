@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.telephony.PhoneStateListener;
@@ -15,13 +16,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.amazonaws.mobile.auth.core.signin.ui.DisplayUtils;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -51,7 +50,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             String[] organizeNames = service.getOrganizeName(contactUser.getId()).split("-");
             int length = organizeNames.length;
             //组织信息：最后一级（部门信息）+人名
-            contactUser.setOffice(AppUtils.getAppName(BaseApplication.getInstance()) + " : " + organizeNames[length - 1] + "-" + contactUser.getName());
+            contactUser.setOffice(organizeNames[length - 1] + "-" + contactUser.getName());
         }
         return contactUser;
     }
@@ -70,8 +69,8 @@ public class PhoneReceiver extends BroadcastReceiver {
         }
         if (windowManager != null && phoneView != null) {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.width = DisplayUtils.dp(380);
-            layoutParams.height = DisplayUtils.dp(160);
+            layoutParams.width = (int)dp2px(310);
+            layoutParams.height = (int)dp2px(160);;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else {
@@ -80,12 +79,6 @@ public class PhoneReceiver extends BroadcastReceiver {
             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
             layoutParams.gravity = Gravity.CENTER;
             layoutParams.format = PixelFormat.TRANSPARENT;
-            phoneView.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    windowManager.removeView(phoneView);
-                }
-            });
             ((TextView) phoneView.findViewById(R.id.user_name)).setText(contactUser.getOffice());
             ((TextView) phoneView.findViewById(R.id.user_mobile)).setText(incomingNumber);
             String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), contactUser.getId());
@@ -111,4 +104,9 @@ public class PhoneReceiver extends BroadcastReceiver {
             }
         }
     };
+
+    private float dp2px(int dp){
+        float scale = Resources.getSystem().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
+    }
 }

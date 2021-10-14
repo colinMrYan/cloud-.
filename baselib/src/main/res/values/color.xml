@@ -86,6 +86,7 @@
     <color name="yellow_light">#ffefa717</color>
     <color name="comment_file_color">#0f7bca</color>
     <color name="transparent">#00000000</color>
+    <color name="transparent_30">#B2000000</color>
     <!--
      <color name="black">#ff000000</color>
      <color name="white">#ffffffff</color>
@@ -179,6 +180,7 @@
     <color name="button_color_sel_dark">#323232</color>
     <color name="text_color">#333333</color>
     <color name="text_color_dark">#FFFFFF</color>
+    <color name="text_color_dark_66">#66FFFFFF</color>
     <color name="bubble_bg_color">#ECEEF2</color>
     <color name="bubble_bg_color_dark">#303030</color>
     <color name="color_3a">#3a3a3a</color>
