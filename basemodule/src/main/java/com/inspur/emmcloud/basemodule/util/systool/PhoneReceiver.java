@@ -46,10 +46,16 @@ public class PhoneReceiver extends BroadcastReceiver {
         if (service != null) {
             contactUser = service.getContactUserByPhoneNumber(phoneNumber);
         }
-        if (contactUser != null && !TextUtils.isEmpty(contactUser.getId())){
-            String organizeNames = service.getOrganizeName(contactUser.getId());
-            //组织信息-姓名
-            contactUser.setOffice(organizeNames + "-" + contactUser.getName());
+        if (contactUser != null && !TextUtils.isEmpty(contactUser.getId())) {
+            String organizeNameStr = service.getOrganizeName(contactUser.getId());
+            if (TextUtils.isEmpty(organizeNameStr)) {
+                contactUser.setOffice(contactUser.getName());
+            } else {
+                String[] organizeNames = organizeNameStr.split("-");
+                int length = organizeNames.length;
+                //组织信息：最后一级（部门信息）+人名
+                contactUser.setOffice(organizeNames[length - 1] + "-" + contactUser.getName());
+            }
         }
         return contactUser;
     }
@@ -63,13 +69,13 @@ public class PhoneReceiver extends BroadcastReceiver {
         if (windowManager == null) {
             windowManager = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         }
-        if (phoneView == null){
+        if (phoneView == null) {
             phoneView = LayoutInflater.from(BaseApplication.getInstance()).inflate(com.inspur.emmcloud.basemodule.R.layout.phone_alert, null);
         }
         if (windowManager != null && phoneView != null) {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.width = (int)dp2px(310);
-            layoutParams.height = (int)dp2px(160);;
+            layoutParams.width = (int) dp2px(310);
+            layoutParams.height = (int) dp2px(160);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else {
@@ -81,7 +87,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             ((TextView) phoneView.findViewById(R.id.user_name)).setText(contactUser.getOffice());
             ((TextView) phoneView.findViewById(R.id.user_mobile)).setText(incomingNumber);
             String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), contactUser.getId());
-            ImageDisplayUtils.getInstance().displayImage(((ImageView) phoneView.findViewById(R.id.user_header)),photoUri,R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(((ImageView) phoneView.findViewById(R.id.user_header)), photoUri, R.drawable.icon_person_default);
             windowManager.addView(phoneView, layoutParams);
         }
     }
@@ -93,7 +99,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    if (windowManager != null && phoneView != null){
+                    if (windowManager != null && phoneView != null) {
                         windowManager.removeView(phoneView);
                     }
                     break;
@@ -104,7 +110,7 @@ public class PhoneReceiver extends BroadcastReceiver {
         }
     };
 
-    private float dp2px(int dp){
+    private float dp2px(int dp) {
         float scale = Resources.getSystem().getDisplayMetrics().density;
         return dp * scale + 0.5f;
     }
