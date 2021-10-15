@@ -214,6 +214,7 @@ public class WSAPIService {
             bodyObj.put("poster", msgContentExtendedLinks.getPoster());
             bodyObj.put("title", msgContentExtendedLinks.getTitle());
             bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
+            bodyObj.put(Constant.WEB_FRAGMENT_SHOW_HEADER, msgContentExtendedLinks.isShowHeader());
             bodyObj.put("url", msgContentExtendedLinks.getUrl());
             bodyObj.put("tmpId", message.getId());
             JSONArray array = new JSONArray();
