@@ -71,6 +71,7 @@ import com.inspur.emmcloud.web.plugin.video.VideoService;
 import com.inspur.emmcloud.web.plugin.window.DropItemTitle;
 import com.inspur.emmcloud.web.plugin.window.OnKeyDownListener;
 import com.inspur.emmcloud.web.plugin.window.OnTitleBackKeyDownListener;
+import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.webview.ImpWebView;
 import com.itheima.roundedimageview.RoundedImageView;
 
@@ -105,6 +106,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public static final int REQUEST_CODE_RECORD_VIDEO = 10;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final int REQUEST_EDIT_SCREENSHOT_IMG = 11;
+    public static final int SHARE_WEB_URL_REQUEST = 12;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
@@ -893,6 +895,9 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                         break;
                     case REQUEST_EDIT_SCREENSHOT_IMG:
                         serviceName = ScreenshotService.class.getCanonicalName();
+                        break;
+                    case SHARE_WEB_URL_REQUEST:
+                        serviceName = WindowService.class.getCanonicalName();
                     default:
                         break;
                 }

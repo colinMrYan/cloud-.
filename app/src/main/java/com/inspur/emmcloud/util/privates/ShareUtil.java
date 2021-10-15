@@ -12,12 +12,17 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.ShareFilesActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class ShareUtil {
     public static void share(Context context, final SearchModel searchModel, String shareContent) {
+        share(context, searchModel, shareContent, false);
+    }
+
+    public static void share(Context context, final SearchModel searchModel, String shareContent, final boolean isWebShare) {
         final BaseActivity activity = (BaseActivity) context;
         int defaultIcon = CommunicationUtils.getDefaultHeadUrl(searchModel);
         String headUrl = CommunicationUtils.getHeadUrl(searchModel);
@@ -34,11 +39,15 @@ public class ShareUtil {
                 if (searchModel.getType().equals(SearchModel.TYPE_USER) && searchModel.getId().equals(BaseApplication.getInstance().getUid())) {
                     ToastUtils.show(R.string.do_not_select_yourself);
                 } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("searchModel", searchModel);
-                    activity.setResult(activity.RESULT_OK, intent);
-                    dialog.dismiss();
-                    activity.finish();
+                    if (isWebShare) {
+                        ((ConversationSearchActivity) activity).handleShareResult();
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra("searchModel", searchModel);
+                        activity.setResult(activity.RESULT_OK, intent);
+                        dialog.dismiss();
+                        activity.finish();
+                    }
                 }
             }
 

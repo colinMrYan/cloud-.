@@ -292,6 +292,10 @@ public class CommunicationUtils {
 
 
     public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
+        return combinLocalExtendedLinksMessage(cid, poster, title, subTitle, url, false);
+    }
+
+    public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url, boolean isShowHeader) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -303,6 +307,7 @@ public class CommunicationUtils {
         msgContentExtendedLinks.setTitle(title);
         msgContentExtendedLinks.setSubtitle(subTitle);
         msgContentExtendedLinks.setUrl(url);
+        msgContentExtendedLinks.setShowHeader(isShowHeader);
         message.setContent(msgContentExtendedLinks.toString());
         return message;
     }
