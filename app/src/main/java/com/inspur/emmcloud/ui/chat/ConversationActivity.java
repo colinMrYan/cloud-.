@@ -861,7 +861,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
                         Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
-                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""), JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true));
+                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""), JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true)
+                                , JSONUtils.getString(content, "app_name", ""), JSONUtils.getString(content, "ico", ""), JSONUtils.getString(content, "app_url", ""),
+                                JSONUtils.getBoolean(content, "isHaveAPPNavbar", true));
                         addLocalMessage(message, 0);
                         MessageSendManager.getInstance().sendMessage(message);
                     }

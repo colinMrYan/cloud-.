@@ -19,7 +19,11 @@ public class MsgContentExtendedLinks {
     private String subtitle;
     private String url;
     private String tmpId;
+    private String appName;
+    private String ico;
+    private String appUrl;
     private boolean isShowHeader = true;
+    private boolean isHaveAPPNavBar = false;
     private List<RelatedLink> relatedLinkList = new ArrayList<>();
 
     public MsgContentExtendedLinks(String content) {
@@ -28,7 +32,11 @@ public class MsgContentExtendedLinks {
         subtitle = JSONUtils.getString(content, "subtitle", "");
         url = JSONUtils.getString(content, "url", "");
         tmpId = JSONUtils.getString(content, "tmpId", "");
+        appName = JSONUtils.getString(content, "app_name", "");
+        ico = JSONUtils.getString(content, "ico", "");
+        appUrl = JSONUtils.getString(content, "app_url", "");
         isShowHeader = JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+        isHaveAPPNavBar = JSONUtils.getBoolean(content, "isHaveAPPNavbar", false);
         JSONArray array = JSONUtils.getJSONArray(content, "relatedLinks", new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             RelatedLink relatedLink = new RelatedLink(JSONUtils.getJSONObject(array, i, new JSONObject()));
@@ -95,6 +103,38 @@ public class MsgContentExtendedLinks {
         this.tmpId = tmpId;
     }
 
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getIco() {
+        return ico;
+    }
+
+    public void setIco(String ico) {
+        this.ico = ico;
+    }
+
+    public String getAppUrl() {
+        return appUrl;
+    }
+
+    public void setAppUrl(String appUrl) {
+        this.appUrl = appUrl;
+    }
+
+    public boolean isHaveAPPNavBar() {
+        return isHaveAPPNavBar;
+    }
+
+    public void setHaveAPPNavBar(boolean haveAPPNavBar) {
+        isHaveAPPNavBar = haveAPPNavBar;
+    }
+
     public String toString() {
         JSONObject obj = new JSONObject();
         try {
@@ -102,7 +142,11 @@ public class MsgContentExtendedLinks {
             obj.put("title", title);
             obj.put("subtitle", subtitle);
             obj.put("url", url);
+            obj.put("app_name", appName);
+            obj.put("ico", ico);
+            obj.put("app_url", appUrl);
             obj.put(Constant.WEB_FRAGMENT_SHOW_HEADER, isShowHeader);
+            obj.put("isHaveAPPNavbar", isHaveAPPNavBar);
             JSONArray array = new JSONArray();
             for (RelatedLink relatedLink : relatedLinkList) {
                 array.put(relatedLink.toJSonObject());

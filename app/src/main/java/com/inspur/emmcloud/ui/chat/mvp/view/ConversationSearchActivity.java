@@ -52,7 +52,11 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
     private String uri;
     private Bundle extras;
     private String title;
+    private String appName;
+    private String ico;
+    private String appUrl;
     private String description; // web应用内分享内容简述
+    private boolean isHaveAPPNavBar;
     private boolean isWebShare;
     private boolean isShowHeader = true; // 默认为true
     private Conversation conversation;
@@ -84,6 +88,10 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
             description = extras.getString("description");
             isWebShare = extras.getBoolean("isShare", false);
             isShowHeader = extras.getBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+            isHaveAPPNavBar = extras.getBoolean("isHaveAPPNavbar", true);
+            appName = extras.getString("app_name");// 应用名
+            appUrl = extras.getString("app_url");
+            ico = extras.getString("ico");
         }
         mPresenter = new ConversationSearchPresenter();
         mPresenter.attachView(this);
@@ -233,6 +241,10 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
             jsonObject.put("poster", "");
             jsonObject.put("digest", description);
             jsonObject.put("title", title);
+            jsonObject.put("app_name", appName);
+            jsonObject.put("ico", ico);
+            jsonObject.put("app_url", appUrl);
+            jsonObject.put("isHaveAPPNavbar", isHaveAPPNavBar);
             jsonObject.put(Constant.WEB_FRAGMENT_SHOW_HEADER, isShowHeader);
         } catch (Exception e) {
             e.printStackTrace();
