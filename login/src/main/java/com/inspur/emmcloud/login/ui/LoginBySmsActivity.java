@@ -224,7 +224,7 @@ public class LoginBySmsActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(this)) {
             LoginUtils loginUtils = new LoginUtils(
                     LoginBySmsActivity.this, handler);
-            loginUtils.login(phone, captcha, true);
+            loginUtils.login(phone, captcha, true, mode);
         }
 
     }
