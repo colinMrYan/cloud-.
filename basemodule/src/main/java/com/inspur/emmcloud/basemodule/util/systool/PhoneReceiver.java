@@ -27,13 +27,11 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 public class PhoneReceiver extends BroadcastReceiver {
 
-    private Context mContext;
     private WindowManager windowManager;
     private View phoneView;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mContext = context;
         if (intent.getAction() != null && intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
             telephonyManager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -60,32 +58,40 @@ public class PhoneReceiver extends BroadcastReceiver {
         return contactUser;
     }
 
-    private void showUserInfoWindow(String incomingNumber) {
+    public void showUserInfoWindow(String incomingNumber) {
         //有通讯录权限才能监听来电显示身份识别信息
+        hideWindow();
         if (!AppTabUtils.hasContactPermission(BaseApplication.getInstance())) return;
         if (TextUtils.isEmpty(incomingNumber)) return;
         ContactUser contactUser = getInComingUserInfoByPhoneNum(incomingNumber);
         if (contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber)) return;
         if (windowManager == null) {
-            windowManager = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            windowManager = (WindowManager) BaseApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
         }
         if (phoneView == null) {
             phoneView = LayoutInflater.from(BaseApplication.getInstance()).inflate(com.inspur.emmcloud.basemodule.R.layout.phone_alert, null);
         }
         if (windowManager != null && phoneView != null) {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.width = (int) dp2px(310);
-            layoutParams.height = (int) dp2px(160);
+            layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
             }
+            layoutParams.y = (int)dp2px(150);
             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
-            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.gravity = Gravity.TOP;
             layoutParams.format = PixelFormat.TRANSPARENT;
             ((TextView) phoneView.findViewById(R.id.user_name)).setText(contactUser.getOffice());
             ((TextView) phoneView.findViewById(R.id.user_mobile)).setText(incomingNumber);
+            ((ImageView) phoneView.findViewById(R.id.close_icon)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideWindow();
+                }
+            });
             String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), contactUser.getId());
             ImageDisplayUtils.getInstance().displayImage(((ImageView) phoneView.findViewById(R.id.user_header)), photoUri, R.drawable.icon_person_default);
             windowManager.addView(phoneView, layoutParams);
@@ -99,9 +105,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    if (windowManager != null && phoneView != null) {
-                        windowManager.removeView(phoneView);
-                    }
+                    hideWindow();
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
                     showUserInfoWindow(incomingNumber);
@@ -109,6 +113,20 @@ public class PhoneReceiver extends BroadcastReceiver {
             }
         }
     };
+
+    public void hideWindow(){
+        if (windowManager != null && phoneView != null) {
+            try {
+                windowManager.removeView(phoneView);
+            }catch (Exception e){
+                e.printStackTrace();
+            } finally {
+                windowManager = null;
+                phoneView = null;
+            }
+        }
+    }
+
 
     private float dp2px(int dp) {
         float scale = Resources.getSystem().getDisplayMetrics().density;
