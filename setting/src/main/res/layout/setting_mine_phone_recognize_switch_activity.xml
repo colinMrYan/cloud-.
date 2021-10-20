@@ -64,22 +64,22 @@
 
         <TextView
             android:id="@+id/open_overlay_window"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="320dp"
+            android:layout_height="40dp"
             android:text="****"
             android:textSize="18dp"
             android:gravity="center"
-            android:textColor="?attr/text_color_e1"
+            android:textColor="@color/white"
             android:background="@drawable/setting_permission_selector_state"
             android:layout_marginTop="40dp"/>
 
         <TextView
             android:id="@+id/open_phone_read"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="320dp"
+            android:layout_height="40dp"
             android:gravity="center"
             android:textSize="18dp"
-            android:textColor="?attr/text_color_e1"
+            android:textColor="@color/white"
             android:text="****"
             android:background="@drawable/setting_permission_selector_state"
             android:layout_marginTop="30dp"/>
