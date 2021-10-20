@@ -64,7 +64,7 @@ public class PhoneReceiver extends BroadcastReceiver {
         if (!AppTabUtils.hasContactPermission(BaseApplication.getInstance())) return;
         if (TextUtils.isEmpty(incomingNumber)) return;
         ContactUser contactUser = getInComingUserInfoByPhoneNum(incomingNumber);
-        if (contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber)) return;
+        if (contactUser == null || contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber)) return;
         if (windowManager == null) {
             windowManager = (WindowManager) BaseApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
         }
