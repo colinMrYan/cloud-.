@@ -24,6 +24,14 @@ public class UriUtils {
     /**
      * 打开url
      *
+     */
+    public static void openUrl(Activity context, String uri, boolean isShowHeader) {
+        openUrl(context, uri, "  ", isShowHeader);
+    }
+
+    /**
+     * 打开url
+     *
      * @param context
      * @param uri
      */

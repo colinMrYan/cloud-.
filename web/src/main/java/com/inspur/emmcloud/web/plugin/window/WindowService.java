@@ -7,15 +7,19 @@ import android.text.TextUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabMenu;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpActivity;
+import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by yufuchang on 2018/7/20.
@@ -72,15 +76,34 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
     private void openUrl(JSONObject paramsObject) {
         String url = JSONUtils.getString(paramsObject, "url", "");
         String title = JSONUtils.getString(paramsObject, "title", "");
+        String description = JSONUtils.getString(paramsObject, "description", "");
         boolean isHaveNavBar = JSONUtils.getBoolean(paramsObject, "isHaveNavbar", true);
+        boolean isShare = JSONUtils.getBoolean(paramsObject, "isShare", false);
+        boolean isHaveAPPNavBar = JSONUtils.getBoolean(paramsObject, "isHaveAPPNavbar", true);
+        String appName = JSONUtils.getString(paramsObject, "app_name", "");
+        String ico = JSONUtils.getString(paramsObject, "ico", "");
+        String appUrl = JSONUtils.getString(paramsObject, "app_url", "");
 
         Bundle bundle = new Bundle();
         bundle.putString("uri", url);
         bundle.putString("appName", title);
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
-        Intent intent = new Intent(getActivity(), ImpActivity.class);
-        intent.putExtras(bundle);
-        getActivity().startActivity(intent);
+        if (isShare) {
+            bundle.putBoolean("isShare", true);
+            bundle.putBoolean("isHaveAPPNavbar", isHaveAPPNavBar);
+            bundle.putString("description", description);
+            bundle.putString("app_name", appName);
+            bundle.putString("app_url", appUrl);
+            bundle.putString("ico", ico);
+            if (getImpCallBackInterface() != null) {
+                getImpCallBackInterface().onStartActivityForResult(Constant.AROUTER_CLASS_CONVERSATION_SEARCH, bundle, ImpFragment.SHARE_WEB_URL_REQUEST);
+            }
+        } else {
+
+            Intent intent = new Intent(getActivity(), ImpActivity.class);
+            intent.putExtras(bundle);
+            getActivity().startActivity(intent);
+        }
     }
 
     private void onBackKeyDown(JSONObject paramsObject) {
@@ -153,4 +176,11 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ImpFragment.SHARE_WEB_URL_REQUEST && resultCode == RESULT_OK
+                && NetUtils.isNetworkConnected(getFragmentContext())) {
+        }
+    }
 }

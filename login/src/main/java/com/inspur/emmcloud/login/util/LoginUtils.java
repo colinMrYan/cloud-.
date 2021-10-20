@@ -30,6 +30,7 @@ import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
+import com.inspur.emmcloud.login.ui.LoginBySmsActivity;
 import com.inspur.emmcloud.login.ui.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.emmcloud.login.util.MDM.MDMListener;
@@ -49,6 +50,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     private Activity activity;
     private Handler handler;
     private boolean isSMSLogin = false;
+    private int mode = LoginBySmsActivity.MODE_LOGIN; // 默认登录模式
     private Handler loginUtilsHandler;
     private GetLoginResult getLoginResult;
     private LoadingDialog loadingDlg;
@@ -171,9 +173,22 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
 
     }
 
-    // 登录
+    // 登录 存在bug，无法区分短信登录还是找回密码
     public void login(String userName, String password, boolean isSMSLogin) {
         this.isSMSLogin = isSMSLogin;
+        login(userName, password);
+    }
+
+    /**
+     *
+     * @param userName 用户名/手机号
+     * @param password 密码/验证码
+     * @param isSMSLogin 是否短信登录
+     * @param mode 登录/找回密码 修复之前bug. mode = MODE_LOGIN登录 mode = MODE_FORGET_PASSWORD忘记密码
+     */
+    public void login(String userName, String password, boolean isSMSLogin,int mode) {
+        this.isSMSLogin = isSMSLogin;
+        this.mode = mode;
         login(userName, password);
     }
 
@@ -293,7 +308,11 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         String refreshToken = getLoginResult.getRefreshToken();
         BaseApplication.getInstance().setAccessToken(accessToken);
         BaseApplication.getInstance().setRefreshToken(refreshToken);
-        getMyInfo();
+        if (mode == LoginBySmsActivity.MODE_FORGET_PASSWORD) {
+            handler.sendEmptyMessage(LOGIN_SUCCESS);
+        } else {
+            getMyInfo();
+        }
     }
 
     @Override

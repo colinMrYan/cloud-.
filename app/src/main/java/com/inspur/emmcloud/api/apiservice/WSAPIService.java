@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.api.apiservice;
 
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
@@ -215,6 +217,14 @@ public class WSAPIService {
             bodyObj.put("title", msgContentExtendedLinks.getTitle());
             bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
             bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            String appName = msgContentExtendedLinks.getAppName();
+            if (!TextUtils.isEmpty(appName)) {
+                bodyObj.put("app_name", appName);
+                bodyObj.put("ico", msgContentExtendedLinks.getIco());
+                bodyObj.put("app_url", msgContentExtendedLinks.getAppUrl());
+                bodyObj.put("isHaveAPPNavbar", msgContentExtendedLinks.isHaveAPPNavBar());
+            }
+            bodyObj.put(Constant.WEB_FRAGMENT_SHOW_HEADER, msgContentExtendedLinks.isShowHeader());
             bodyObj.put("tmpId", message.getId());
             JSONArray array = new JSONArray();
             for (RelatedLink relatedLink : msgContentExtendedLinks.getRelatedLinkList()) {

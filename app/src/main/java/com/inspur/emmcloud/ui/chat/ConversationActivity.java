@@ -71,6 +71,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -129,6 +130,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+
+import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
 
 @Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
@@ -683,7 +686,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     Message message = uiMessage.getMessage();
                     switch (message.getType()) {
-                        case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        case MESSAGE_TYPE_FILE_REGULAR_FILE:
                         case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                             Bundle bundle = new Bundle();
                             bundle.putString("mid", message.getId());
@@ -720,7 +723,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         // TODO Auto-generated method stub
 //        Message message = uiMessage.getMessage();
         String messageType = uiMessage.getMessage().getType();
-        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && (messageType.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && (messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
                 || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))) {
             ToastUtils.show(ConversationActivity.this, getString(R.string.resend_file_failed));
             return;
@@ -849,7 +852,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         for (String url : pathList) {
                             String urlLowerCase = url.toLowerCase();
                             boolean isImage = urlLowerCase.endsWith("png") || urlLowerCase.endsWith("jpg") || urlLowerCase.endsWith("jpeg") || urlLowerCase.endsWith("dng");
-                            combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                            combinAndSendMessageWithFile(isImage ? getCompressorUrl(url) : url, isImage ? Message.MESSAGE_TYPE_MEDIA_IMAGE : MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                         }
                     }
                     break;
@@ -858,7 +861,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
                         Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
-                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""));
+                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""), JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true)
+                                , JSONUtils.getString(content, "app_name", ""), JSONUtils.getString(content, "ico", ""), JSONUtils.getString(content, "app_url", ""),
+                                JSONUtils.getBoolean(content, "isHaveAPPNavbar", true));
                         addLocalMessage(message, 0);
                         MessageSendManager.getInstance().sendMessage(message);
                     }
@@ -899,7 +904,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (data.getBooleanExtra("isNativeFile", false)) {
                             List<String> filePathList = data.getStringArrayListExtra("pathList");
                             for (String filepath : filePathList) {
-                                combinAndSendMessageWithFile(filepath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
+                                combinAndSendMessageWithFile(filepath, MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                             }
                         } else {
                             List<VolumeFile> volumeFileList = (List<VolumeFile>) data.getSerializableExtra("volumeFileList");
@@ -1105,7 +1110,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         Message fakeMessage = null;
         switch (messageType) {
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+            case MESSAGE_TYPE_FILE_REGULAR_FILE:
                 fakeMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
@@ -1677,7 +1682,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 transmitImgMsg(cid, uiMessage.getMessage());
                 break;
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+            case MESSAGE_TYPE_FILE_REGULAR_FILE:
                 transmitFileMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -1796,8 +1801,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         operationIdList.add(R.string.chat_long_click_schedule);
                     }
                     break;
-                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-
+                case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
@@ -1847,7 +1851,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;
-            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+            case MESSAGE_TYPE_FILE_REGULAR_FILE:
                 if (uiMessage.getSendStatus() != 1) {
                     return;
                 }
@@ -1903,9 +1907,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 //当消息处于发送中状态时无法点击
+
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
-                    String url = message.getMsgContentExtendedLinks().getUrl();
-                    UriUtils.openUrl(ConversationActivity.this, url);
+                    MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
+                    String url = msgContentExtendedLinks.getUrl();
+                    boolean showHeader = msgContentExtendedLinks.isShowHeader();
+                    UriUtils.openUrl(ConversationActivity.this, url, showHeader);
                 }
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
@@ -2154,7 +2161,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     result = getString(R.string.baselib_share_image) + " " + jsonObject.getString("name");
                     break;
-                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");
                     break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -2254,7 +2261,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     fakeMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
                     break;
-                case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, path, message.getMsgContentAttachmentFile());
                     break;
             }
@@ -2270,7 +2277,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
             MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
             String[] allPath = newPath.split("/");
-            msgContentRegularFile.setCategory(Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+            msgContentRegularFile.setCategory(MESSAGE_TYPE_FILE_REGULAR_FILE);
             msgContentRegularFile.setName(allPath[allPath.length - 1]);
             msgContentRegularFile.setSize(volumeFile.getSize());
             msgContentRegularFile.setMedia(newPath);
