@@ -1140,6 +1140,8 @@
 
     <string name="pull_badge_fail">网络连接失败或请求超时，请稍后下拉刷新……</string>
 
+    <string name="root_toast">云+提醒您，当前手机已root，请注意保护你的账号安全</string>
+
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

@@ -34,8 +34,8 @@ public class EncryptUtils {
      * @throws Exception
      */
     public static String encode(String stringToEncode) throws Exception {
-        String defaltKeyString = "inspurIMPCloud968842022285d325h9";
-        return encode(stringToEncode, defaltKeyString, null, Base64.DEFAULT);
+//        String defaltKeyString = "inspurIMPCloud968842022285d325h9";
+        return encode(stringToEncode, Base64Utils.getFromBase64("aW5zcHVySU1QQ2xvdWQ5Njg4NDIwMjIyODVkMzI1aDk="), null, Base64.DEFAULT);
     }
 
 
@@ -149,8 +149,8 @@ public class EncryptUtils {
 
 
     public static String decode(String text) throws NullPointerException {
-        String defaltKeyString = "inspurIMPCloud968842022285d325h9";
-        return decode(text, defaltKeyString, null, Base64.DEFAULT);
+//        String defaltKeyString = "inspurIMPCloud968842022285d325h9";
+        return decode(text, Base64Utils.getFromBase64("aW5zcHVySU1QQ2xvdWQ5Njg4NDIwMjIyODVkMzI1aDk="), null, Base64.DEFAULT);
     }
 
 
