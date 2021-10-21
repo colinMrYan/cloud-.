@@ -1,10 +1,12 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -37,6 +39,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
+import com.inspur.emmcloud.basemodule.util.systool.PhoneReceiver;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -108,6 +111,7 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
+        registerPhoneReceiver();
         //目前隐私协议改为本地判断
 //        getIsAgreed();
     }
@@ -550,6 +554,12 @@ public class IndexActivity extends IndexBaseActivity {
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
         }
+    }
+
+    private void registerPhoneReceiver(){
+        IntentFilter intentFilterPhone = new IntentFilter();
+        intentFilterPhone.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
     }
 
     class CacheContactUserThread extends Thread {

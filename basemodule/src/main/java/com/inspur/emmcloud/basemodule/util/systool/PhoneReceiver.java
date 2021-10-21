@@ -29,6 +29,21 @@ public class PhoneReceiver extends BroadcastReceiver {
 
     private WindowManager windowManager;
     private View phoneView;
+    private final PhoneStateListener listener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, final String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+            switch (state) {
+                case TelephonyManager.CALL_STATE_IDLE:
+                case TelephonyManager.CALL_STATE_OFFHOOK:
+                    hideWindow();
+                    break;
+                case TelephonyManager.CALL_STATE_RINGING:
+                    showUserInfoWindow(incomingNumber);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,13 +73,14 @@ public class PhoneReceiver extends BroadcastReceiver {
         return contactUser;
     }
 
-    public void showUserInfoWindow(String incomingNumber) {
+    private void showUserInfoWindow(String incomingNumber) {
         //有通讯录权限才能监听来电显示身份识别信息
         hideWindow();
         if (!AppTabUtils.hasContactPermission(BaseApplication.getInstance())) return;
         if (TextUtils.isEmpty(incomingNumber)) return;
         ContactUser contactUser = getInComingUserInfoByPhoneNum(incomingNumber);
-        if (contactUser == null || contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber)) return;
+        if (contactUser == null || contactUser.getId() == null || !contactUser.getMobile().equals(incomingNumber))
+            return;
         if (windowManager == null) {
             windowManager = (WindowManager) BaseApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
         }
@@ -80,7 +96,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             } else {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
             }
-            layoutParams.y = (int)dp2px(150);
+            layoutParams.y = (int) dp2px(150);
             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
             layoutParams.gravity = Gravity.TOP;
             layoutParams.format = PixelFormat.TRANSPARENT;
@@ -97,22 +113,6 @@ public class PhoneReceiver extends BroadcastReceiver {
             windowManager.addView(phoneView, layoutParams);
         }
     }
-
-    private PhoneStateListener listener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, final String incomingNumber) {
-            super.onCallStateChanged(state, incomingNumber);
-            switch (state) {
-                case TelephonyManager.CALL_STATE_IDLE:
-                case TelephonyManager.CALL_STATE_OFFHOOK:
-                    hideWindow();
-                    break;
-                case TelephonyManager.CALL_STATE_RINGING:
-                    showUserInfoWindow(incomingNumber);
-                    break;
-            }
-        }
-    };
 
     public void hideWindow() {
         try {
