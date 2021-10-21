@@ -1,5 +1,7 @@
 package com.inspur.emmcloud;
 
+import android.content.IntentFilter;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.beefe.picker.PickerViewPackage;
@@ -13,6 +15,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.systool.PhoneReceiver;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -70,6 +73,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
         }
         SoLoader.init(this, false);//ReactNative相关初始化
         initHotfix();
+        registerPhoneRecognizeReceiver();
     }
 
     /**
@@ -98,6 +102,13 @@ public class MyApplication extends BaseApplication implements ReactApplication {
             // 不同的是，会通过handler的方式去轮询
             TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
         }
+    }
+
+
+    private void registerPhoneRecognizeReceiver() {
+        IntentFilter intentFilterPhone = new IntentFilter();
+        intentFilterPhone.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
     }
 
     /**

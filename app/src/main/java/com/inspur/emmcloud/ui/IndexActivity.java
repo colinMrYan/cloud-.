@@ -111,7 +111,6 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         uploadApiRequestRecord();
-        registerPhoneReceiver();
         //目前隐私协议改为本地判断
 //        getIsAgreed();
     }
@@ -554,12 +553,6 @@ public class IndexActivity extends IndexBaseActivity {
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
         }
-    }
-
-    private void registerPhoneReceiver(){
-        IntentFilter intentFilterPhone = new IntentFilter();
-        intentFilterPhone.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
     }
 
     class CacheContactUserThread extends Thread {
