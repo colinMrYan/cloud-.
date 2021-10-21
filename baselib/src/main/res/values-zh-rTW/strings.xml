@@ -1031,10 +1031,10 @@
     <string name="permission_name_sensors">身體感測器</string>
     <string name="permission_name_sms">簡訊</string>
     <string name="permission_name_storage">存儲空間</string>
-    <string name="permission_setting_phone_recognize">該功能需要向手機申請開啟懸浮窗和通話記錄許可權</string>
-    <string name="permission_setting_open_phone_overlay">開啟懸浮窗許可權</string>
+    <string name="permission_setting_phone_recognize">該功能需要向手機申請開啟彈窗和通話記錄許可權</string>
+    <string name="permission_setting_open_phone_overlay">開啟彈窗相關許可權</string>
     <string name="permission_setting_open_phone_read">開啟讀取通話記錄許可權</string>
-    <string name="permission_setting_close_phone_overlay">已授權懸浮窗</string>
+    <string name="permission_setting_close_phone_overlay">已授權彈窗</string>
     <string name="permission_setting_close_phone_read">已授權讀取通話記錄</string>
     <string name="voice_communication_dialog">撥號中...</string>
 

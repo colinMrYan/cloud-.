@@ -114,19 +114,18 @@ public class PhoneReceiver extends BroadcastReceiver {
         }
     };
 
-    public void hideWindow(){
-        if (windowManager != null && phoneView != null) {
-            try {
+    public void hideWindow() {
+        try {
+            if (windowManager != null && phoneView != null) {
                 windowManager.removeView(phoneView);
-            }catch (Exception e){
-                e.printStackTrace();
-            } finally {
-                windowManager = null;
-                phoneView = null;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            windowManager = null;
+            phoneView = null;
         }
     }
-
 
     private float dp2px(int dp) {
         float scale = Resources.getSystem().getDisplayMetrics().density;
