@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
+import com.inspur.emmcloud.util.privates.RootCheckUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -127,6 +129,9 @@ public class MainActivity extends BaseActivity implements IMainActivity {
             splashLogoImg.setImageResource(R.drawable.ic_splash_logo);
         } else {
             ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
+        }
+        if (RootCheckUtils.isRooted()) {
+            ToastUtils.show(R.string.root_toast);
         }
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
