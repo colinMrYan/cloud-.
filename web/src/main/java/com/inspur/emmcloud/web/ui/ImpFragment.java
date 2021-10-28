@@ -145,6 +145,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     private OnKeyDownListener onKeyDownListener;
     private OnTitleBackKeyDownListener onTitleBackKeyDownListener;
     private boolean isStaticWebTitle = false;
+    private boolean isTitlePriorityFirst = false; // 打开WebView传参title字段优先级，true表示title一直作为标题
     //错误url和错误信息
     private String errorUrl = "";
     private String errorDescription = "";
@@ -228,6 +229,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
         }
         appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
         isStaticWebTitle = getArguments().getBoolean(Constant.Web_STATIC_TITLE, false);
+        isTitlePriorityFirst = getArguments().getBoolean(Constant.WEB_FRAGMENT_TITLE_PRIORITY_FIRST, false);
         if (isStaticWebTitle) {
             backImgBtn.setVisibility(View.GONE);
             closeBtn.setVisibility(View.GONE);
@@ -455,7 +457,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
 
             @Override
             public void onSetTitle(String title) {
-                if (!isStaticWebTitle) {
+                if (!isStaticWebTitle && !isTitlePriorityFirst) {
                     setTitle(title);
                 }
             }

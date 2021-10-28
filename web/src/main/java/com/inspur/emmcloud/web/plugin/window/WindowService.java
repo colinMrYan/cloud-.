@@ -76,6 +76,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
     private void openUrl(JSONObject paramsObject) {
         String url = JSONUtils.getString(paramsObject, "url", "");
         String title = JSONUtils.getString(paramsObject, "title", "");
+        boolean isTitlePriorityFirst = JSONUtils.getBoolean(paramsObject, "isTitlePriorityFirst", false);
         String description = JSONUtils.getString(paramsObject, "description", "");
         boolean isHaveNavBar = JSONUtils.getBoolean(paramsObject, "isHaveNavbar", true);
         boolean isShare = JSONUtils.getBoolean(paramsObject, "isShare", false);
@@ -88,6 +89,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
         bundle.putString("uri", url);
         bundle.putString("appName", title);
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isHaveNavBar);
+        bundle.putBoolean(Constant.WEB_FRAGMENT_TITLE_PRIORITY_FIRST, isTitlePriorityFirst);
         if (isShare) {
             bundle.putBoolean("isShare", true);
             bundle.putBoolean("isHaveAPPNavbar", isHaveAPPNavBar);
