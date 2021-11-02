@@ -227,6 +227,7 @@ public class Constant {
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
     public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
+    public static final String WEB_FRAGMENT_TITLE_PRIORITY_FIRST = "title_priority_first";
     public static final String WEB_FRAGMENT_BAR_TINT_COLOR = "bar_tint_color";
     public static final String WEB_FRAGMENT_TITLE = "title";
     public static final String WEB_FRAGMENT_TITLE_COLOR = "title_color";

@@ -1139,17 +1139,17 @@ public class AppUtils {
     public static boolean needAuthorizationToken(String url) {
         //检查每一个路由是否，三方应用不传云+token。先判断是否为空字符串，再判断是否是三方url
         WebServiceRouterManager manager = WebServiceRouterManager.getInstance();
-        if ((!TextUtils.isEmpty(manager.getClusterEcm()) && url.contains(manager.getClusterEcm())) ||
-                (!TextUtils.isEmpty(manager.getClusterChat()) && url.contains(manager.getClusterChat())) ||
-                (!TextUtils.isEmpty(manager.getClusterSchedule()) && url.startsWith(manager.getClusterSchedule())) ||
-                (!TextUtils.isEmpty(manager.getClusterDistribution()) && url.startsWith(manager.getClusterDistribution())) ||
-                (!TextUtils.isEmpty(manager.getClusterNews()) && url.startsWith(manager.getClusterNews())) ||
-                (!TextUtils.isEmpty(manager.getClusterCloudDrive()) && url.startsWith(manager.getClusterCloudDrive())) ||
-                (!TextUtils.isEmpty(manager.getClusterStorageLegacy()) && url.startsWith(manager.getClusterStorageLegacy())) ||
-                (!TextUtils.isEmpty(manager.getClusterChatSocket()) && url.startsWith(manager.getClusterChatSocket())) ||
-                (!TextUtils.isEmpty(manager.getClusterEmm()) && url.startsWith(manager.getClusterEmm())) ||
-                (!TextUtils.isEmpty(manager.getClusterClientRegistry()) && url.startsWith(manager.getClusterClientRegistry())) ||
-                (!TextUtils.isEmpty(manager.getClusterBot()) && url.startsWith(manager.getClusterBot()))) {
+        if (url.startsWith(manager.getClusterEcm()) ||
+                url.startsWith(manager.getClusterChat()) ||
+                url.startsWith(manager.getClusterSchedule()) ||
+                url.startsWith(manager.getClusterDistribution()) ||
+                url.startsWith(manager.getClusterNews()) ||
+                url.startsWith(manager.getClusterCloudDrive()) ||
+                url.startsWith(manager.getClusterStorageLegacy()) ||
+                url.startsWith(manager.getClusterChatSocket()) ||
+                url.startsWith(manager.getClusterEmm()) ||
+                url.startsWith(manager.getClusterClientRegistry()) ||
+                url.startsWith(manager.getClusterBot())) {
             return true;
         }
         URL urlHost = null;
