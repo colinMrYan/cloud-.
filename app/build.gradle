@@ -55,10 +55,10 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
 //        versionCode 128
-        versionCode 138
+        versionCode 140
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
 //        versionName "4.8.19"
-        versionName "4.8.23-beta.4"
+        versionName "4.8.25"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
