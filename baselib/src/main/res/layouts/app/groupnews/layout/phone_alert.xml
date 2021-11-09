@@ -13,13 +13,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp">
 
-        <com.inspur.emmcloud.baselib.widget.ImageViewRound
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/user_header"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/default_image" />
 
-        <com.inspur.emmcloud.baselib.widget.ImageViewRound
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/app_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
