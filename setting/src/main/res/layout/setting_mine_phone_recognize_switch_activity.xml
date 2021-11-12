@@ -50,18 +50,6 @@
             android:layout_height="300dp"/>
 
         <TextView
-            android:id="@+id/introduction_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="-20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="?attr/text_color_e1"
-            android:textSize="16dp"
-            android:text="****"/>
-
-        <TextView
             android:id="@+id/open_overlay_window"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
@@ -74,8 +62,7 @@
             android:textSize="18dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:background="@drawable/setting_permission_selector_state"
-            android:layout_marginTop="40dp"/>
+            android:background="@drawable/setting_permission_selector_state" />
 
         <TextView
             android:id="@+id/open_phone_read"
@@ -92,6 +79,18 @@
             android:text="****"
             android:background="@drawable/setting_permission_selector_state"
             android:layout_marginTop="30dp"/>
+
+        <TextView
+            android:id="@+id/introduction_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="?attr/text_color_e1"
+            android:textSize="16dp"
+            android:text="****"/>
 
     </LinearLayout>
 

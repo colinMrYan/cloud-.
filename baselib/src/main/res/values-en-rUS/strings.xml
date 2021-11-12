@@ -1021,11 +1021,11 @@
     <string name="permission_name_sensors">Body Sensors</string>
     <string name="permission_name_sms">SMS</string>
     <string name="permission_name_storage">Storage</string>
-    <string name="permission_setting_phone_recognize">This feature requires requesting open pop-up window and call log permission from your phone</string>
-    <string name="permission_setting_open_phone_overlay">Open the pop-up window-related permissions</string>
-    <string name="permission_setting_open_phone_read">Turn on read call history permissions</string>
-    <string name="permission_setting_close_phone_overlay">The window has been authorized</string>
-    <string name="permission_setting_close_phone_read">The call history is authorized to be read</string>
+    <string name="permission_setting_phone_recognize">Open call notification permission only when receiving call notification to obtain the incoming call number query the network contacts user information within the cloud, open the pop-up permission allows the cloud to display the organizational contacts user information on the phone screen</string>
+    <string name="permission_setting_open_phone_overlay">Turn on the suspension window permission</string>
+    <string name="permission_setting_open_phone_read">Turn on call notification permissions</string>
+    <string name="permission_setting_close_phone_overlay">Turn off the suspension window permission</string>
+    <string name="permission_setting_close_phone_read">Call notification permissions have been granted</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>

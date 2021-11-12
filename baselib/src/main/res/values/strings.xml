@@ -1075,11 +1075,12 @@
     <string name="permission_grant_background_start_fail">您已禁止授予%1$s 后台弹出界面权限</string>
     <string name="permission_grant_window_alert_lockscreen_display">请您授予%1$s 锁屏显示和后台弹出界面权限</string>
     <string name="permission_grant_lockscreen_display">请您授予%1$s 锁屏显示权限</string>
-    <string name="permission_setting_phone_recognize">该功能需要向手机申请开启弹窗和通话记录权限</string>
-    <string name="permission_setting_open_phone_overlay">开启弹窗相关权限</string>
-    <string name="permission_setting_open_phone_read">开启获取通话记录权限</string>
-    <string name="permission_setting_close_phone_overlay">已授权弹窗</string>
-    <string name="permission_setting_close_phone_read">已授权读取通话记录</string>
+    <string name="permission_grant_lockscreen_display_fail">您已禁止授予%1$s 锁屏显示权限</string>
+    <string name="permission_setting_phone_recognize">开启来电通知权限仅在收到来电通知时获取来电号码查询云+内组织通讯录用户信息，开启弹窗权限允许云+将组织通讯录用户信息显示在手机屏幕上</string>
+    <string name="permission_setting_open_phone_overlay">开启悬浮窗权限</string>
+    <string name="permission_setting_open_phone_read">开启来电通知权限</string>
+    <string name="permission_setting_close_phone_overlay">已授权悬浮窗</string>
+    <string name="permission_setting_close_phone_read">已授权来电通知权限</string>
 
     <string name="permission_name_calendar">日历</string>
     <string name="permission_name_camera">相机</string>

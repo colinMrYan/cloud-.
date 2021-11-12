@@ -55,22 +55,9 @@
                 android:src="@drawable/setting_phone_recognize" />
 
             <TextView
-                android:id="@+id/introduction_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-20dp"
-                android:gravity="center_horizontal"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="****"
-                android:textColor="?attr/text_color_e1"
-                android:textSize="16dp" />
-
-            <TextView
                 android:id="@+id/open_overlay_window"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
                 android:background="@drawable/setting_permission_selector_state"
                 android:gravity="center"
                 android:minHeight="40dp"
@@ -97,6 +84,18 @@
                 android:text="****"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/introduction_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="****"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16dp" />
 
         </LinearLayout>
     </ScrollView>
