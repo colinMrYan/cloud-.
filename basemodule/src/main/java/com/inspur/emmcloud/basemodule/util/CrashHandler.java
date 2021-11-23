@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -56,26 +57,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable throwable) {
         // 把错误的堆栈信息 获取出来
         String errorInfo = getErrorInfo(throwable);
+        if (thread != Looper.getMainLooper().getThread()) {
+            ImageDisplayUtils.getInstance().clearAllCache();
+        }
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
-        if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
-            final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
-            AppExceptionCacheUtils.saveAppException(mContext, appException);
-            new BaseModuleApiService(mContext).uploadException(mContext, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
-                @Override
-                public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
-                    //只处理成功，其他发生任何情况都等进入后台时统一上传
-                    try {
-                        if (uploadResultJSONObject.getString("status").equals("success")) {
-                            AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext,
-                                    appException.getHappenTime(), appException.getErrorInfo());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
+        uploadError(errorInfo);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         //这里如果系统处理，可能只崩溃一个页面，如果都交给自己处理，则发生异常必定整个退出
         if (mDefaultHandler != null) {
@@ -98,8 +85,32 @@ public class CrashHandler implements UncaughtExceptionHandler {
         PrintWriter pw = new PrintWriter(writer);
         arg1.printStackTrace(pw);
         pw.close();
-        String error = writer.toString();
-        return error;
+        return writer.toString();
+    }
+
+    public void uploadError(Throwable throwable) {
+        uploadError(getErrorInfo(throwable));
+    }
+
+    public void uploadError(String errorInfo) {
+        if (NetUtils.isNetworkConnected(mContext, false) && !AppUtils.isApkDebugable(mContext)) {
+            final AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(mContext), 1, "", errorInfo, 0);
+            AppExceptionCacheUtils.saveAppException(mContext, appException);
+            new BaseModuleApiService(mContext).uploadException(mContext, getUploadContentJSONObj(appException), new ExceptionUploadInterface() {
+                @Override
+                public void uploadExceptionFinish(JSONObject uploadResultJSONObject) {
+                    //只处理成功，其他发生任何情况都等进入后台时统一上传
+                    try {
+                        if (uploadResultJSONObject.getString("status").equals("success")) {
+                            AppExceptionCacheUtils.deleteAppExceptionByContentAndHappenTime(mContext,
+                                    appException.getHappenTime(), appException.getErrorInfo());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     public void init(Context context) {

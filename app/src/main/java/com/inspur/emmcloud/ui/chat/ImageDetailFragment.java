@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.CrashHandler;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
@@ -262,7 +264,17 @@ public class ImageDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        showImageResouce();
+        try {
+            showImageResouce();
+        } catch (Exception e) {
+            ToastUtils.show("该图片已损坏，正在帮您修复，请再次点击查看。");
+            CrashHandler.getInstance().uploadError(e);
+            ImageDisplayUtils.getInstance().clearAllCache();
+            Activity activity = getActivity();
+            if (activity != null) {
+                getActivity().finish();
+            }
+        }
 
     }
 
