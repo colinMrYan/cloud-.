@@ -8,6 +8,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppException;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.interf.ExceptionUploadInterface;
 
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.text.SimpleDateFormat;
 
 /**
  * 程序异常处理类
@@ -63,6 +65,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Log.d("jason", "errorInfo=" + errorInfo);
         Log.e("AndroidRuntime", errorInfo);
         uploadError(errorInfo);
+        if (AppUtils.isApkDebugable(mContext)) {
+            saveCrashInfoFile(throwable);
+        }
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         //这里如果系统处理，可能只崩溃一个页面，如果都交给自己处理，则发生异常必定整个退出
         if (mDefaultHandler != null) {
@@ -78,6 +83,38 @@ public class CrashHandler implements UncaughtExceptionHandler {
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
         }
+    }
+
+
+    /**
+     * 保存错误信息到文件中
+     *
+     * @param ex 异常信息
+     * @return 返回文件名称, 便于将文件传送到服务器
+     */
+    private boolean saveCrashInfoFile(Throwable ex) {
+        StringBuffer sb = new StringBuffer();
+        try {
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = sDateFormat.format(new java.util.Date());
+            sb.append("\r\n").append(date).append("\n");
+            Writer writer = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(writer);
+            ex.printStackTrace(printWriter);
+            Throwable cause = ex.getCause();
+            while (cause != null) {
+                cause.printStackTrace(printWriter);
+                cause = cause.getCause();
+            }
+            printWriter.flush();
+            printWriter.close();
+            String result = writer.toString();
+            sb.append(result);
+            return FileUtils.writeFile(MyAppConfig.LOCAL_IMP_CRASH, sb.toString());
+        } catch (Exception e) {
+            Log.e(TAG, "an error occured while writing file...", e);
+        }
+        return true;
     }
 
     private String getErrorInfo(Throwable arg1) {

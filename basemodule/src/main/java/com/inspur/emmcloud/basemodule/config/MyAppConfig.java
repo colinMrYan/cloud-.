@@ -49,6 +49,11 @@ public class MyAppConfig {
      */
     public static final String LOCAL_IMP_USER_OPERATE_DIC = Environment
             .getExternalStorageDirectory() + "/IMP-Cloud/imp/user_space/";
+    /**
+     * 用户崩溃日志路径
+     */
+    public static final String LOCAL_IMP_CRASH = Environment
+            .getExternalStorageDirectory() + "/IMP-Cloud/crash/imp_cloud_crash.txt";
     public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 2600;
     public static final int UPLOAD_ORIGIN_IMG_DEFAULT_SIZE = 1280;
     public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
