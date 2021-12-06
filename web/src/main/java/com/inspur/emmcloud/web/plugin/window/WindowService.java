@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -48,10 +50,18 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             case "onTitleBackKeyDown":
                 onTitleBackKeyDown(paramsObject);
                 break;
+            case "openSetting":
+                openSettingActivity(paramsObject);
+                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
         }
+    }
+
+    // 打开原生设置页面，用于设置网页支持横竖屏
+    private void openSettingActivity(JSONObject paramsObject) {
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_HOME).navigation();
     }
 
     private void open(JSONObject paramsObject) {

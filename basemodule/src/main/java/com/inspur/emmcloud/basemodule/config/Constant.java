@@ -328,6 +328,7 @@ public class Constant {
     public static final String AROUTER_CLASS_SETTING_CREATE_GESTURE = "/setting/CreateGestureActivity";
     public static final String AROUTER_CLASS_SETTING_TEST = "/setting/test";
     public static final String AROUTER_CLASS_SETTING_GUIDE = "/setting/guide";
+    public static final String AROUTER_CLASS_SETTING_SETTING = "/setting/setting";
     public static final String AROUTER_CLASS_SETTING_FACEVERIFY = "/setting/FaceVerify";
     public static final String AROUTER_CLASS_SETTING_SERVICE_TERM = "/setting/serviceTerm";
 

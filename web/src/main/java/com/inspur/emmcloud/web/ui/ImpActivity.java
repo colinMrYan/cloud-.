@@ -8,20 +8,21 @@ import android.view.WindowManager;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
-public class ImpActivity extends ImpFragmentBaseActivity {
+public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
 
     public static final int DO_NOTHING_RESULTCODE = 5;
     private ImpFragment fragment;
+    boolean isWebAutoRotate = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        boolean isWebAutoRotate = false;
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);
@@ -50,5 +51,17 @@ public class ImpActivity extends ImpFragmentBaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         fragment.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onRestart() {
+        Router router = Router.getInstance();
+        if (router.getService(AppService.class) != null) {
+            AppService service = router.getService(AppService.class);
+            isWebAutoRotate = Boolean.parseBoolean(service.getAppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+        }
+        setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.onRestart();
     }
 }
