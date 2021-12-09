@@ -68,6 +68,8 @@ public class AppAPIService {
         String clientVersion = AppUtils.getVersion(context);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addParameter("clientVersion", clientVersion);
+        params.setConnectTimeout(3000);
+        params.setReadTimeout(3000);
         if (AppUtils.isAppVersionStandard()) {
             params.addParameter("clientType", "android");
         } else {
@@ -396,7 +398,7 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.debug("TilllLog",  "getAppConfig callbackSuccess:" + new String(arg0));
+                LogUtils.debug("TilllLog", "getAppConfig callbackSuccess:" + new String(arg0));
                 apiInterface.returnAppConfigSuccess(new GetAppConfigResult(new String(arg0)));
             }
 
