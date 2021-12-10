@@ -317,7 +317,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void setWebAutoRotateState() {
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "true"));
         webRotateSwitch.setChecked(isWebAutoRotate);
     }
 

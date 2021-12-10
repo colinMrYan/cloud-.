@@ -50,7 +50,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             case "onTitleBackKeyDown":
                 onTitleBackKeyDown(paramsObject);
                 break;
-            case "openSetting":
+            case "openSettings":
                 openSettingActivity(paramsObject);
                 break;
             default:
@@ -61,7 +61,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
 
     // 打开原生设置页面，用于设置网页支持横竖屏
     private void openSettingActivity(JSONObject paramsObject) {
-        ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_HOME).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_SETTING).navigation();
     }
 
     private void open(JSONObject paramsObject) {

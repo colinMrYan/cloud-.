@@ -26,7 +26,7 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);
-            isWebAutoRotate = Boolean.parseBoolean(service.getAppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+            isWebAutoRotate = Boolean.parseBoolean(service.getAppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true"));
         }
         // 设置是否开启webview自动旋转
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -58,7 +58,7 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);
-            isWebAutoRotate = Boolean.parseBoolean(service.getAppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+            isWebAutoRotate = Boolean.parseBoolean(service.getAppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true"));
         }
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
