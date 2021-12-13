@@ -1,5 +1,9 @@
 package com.inspur.emmcloud.web.plugin.share;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -15,6 +19,8 @@ import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
+
+import okio.ByteString;
 
 public class ShareSocialService extends ImpPlugin {
     public String successCb, failCb;
@@ -93,13 +99,28 @@ public class ShareSocialService extends ImpPlugin {
         final String title = JSONUtils.getString(optionsObj, "title", "");
         final String descr = JSONUtils.getString(optionsObj, "descr", "  ");
         final String thumImage = JSONUtils.getString(optionsObj, "thumImage", "");
+        final String base64ShareImage = JSONUtils.getString(optionsObj, "base64ShareImage", "");
+        final String base64ThumbImage = JSONUtils.getString(optionsObj, "base64ThumbImage", "");
+        final Bitmap decodeShareImage = decodeBase64ToBitmap(base64ShareImage);
+        final Bitmap decodeThumbImage = decodeBase64ToBitmap(base64ThumbImage);
+        if (TextUtils.isEmpty(shareImage) && decodeShareImage == null) return;
         ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                UMImage image = new UMImage(getActivity(), shareImage);
+                UMImage image,thumbImage;
+                if (!TextUtils.isEmpty(shareImage)) {
+                    image = new UMImage(getActivity(), shareImage);
+                } else {
+                    image = new UMImage(getActivity(), decodeShareImage);
+                }
+                if (decodeThumbImage != null) {
+                    thumbImage = new UMImage(getActivity(), decodeThumbImage);
+                } else {
+                    thumbImage = new UMImage(getActivity(), thumImage);
+                }
                 image.setTitle(title);
                 image.setDescription(descr);
-                image.setThumb(new UMImage(getActivity(), thumImage));
+                image.setThumb(thumbImage);
                 new ShareAction(getActivity()).withMedia(image)
                         .setPlatform(share_media)
                         .setCallback(new CustomShareListener())
@@ -139,6 +160,16 @@ public class ShareSocialService extends ImpPlugin {
 
             this.jsCallback(failCb, object);
         }
+    }
+
+    private Bitmap decodeBase64ToBitmap(String base64Str) {
+        try {
+            byte[] input = ByteString.decodeBase64(base64Str).toByteArray();
+            return BitmapFactory.decodeByteArray(input, 0, input.length);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
