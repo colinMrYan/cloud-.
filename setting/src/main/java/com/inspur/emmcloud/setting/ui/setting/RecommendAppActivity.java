@@ -87,7 +87,7 @@ public class RecommendAppActivity extends BaseActivity {
                                     .setCallback(mShareListener)
                                     .share();
                         } else {
-                            UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
+                            UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher);
                             UMWeb web = new UMWeb("https://www.inspuronline.com/yjapp/");
                             web.setThumb(thumb);
                             web.setDescription(getResources().getString(R.string.app_name) + " -智能化的企业协同平台");

@@ -167,7 +167,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
                             shareGroupToFriends();
                         } else {
                             String tip = getString(R.string.chat_group_welcome_join_group);
-                            UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher_share);
+                            UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher);
                             UMWeb web = new UMWeb(shareUrl);
                             web.setThumb(thumb);
                             web.setDescription(getString(R.string.chat_group_welcome_join_group_detail, groupName));
@@ -182,14 +182,14 @@ public class ConversationQrCodeActivity extends BaseActivity {
                 });
 
         shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
-        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
-            shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
-            shareAction.addButton(PlatformName.WEIXIN_CIRCLE, "wxcircle", "umeng_socialize_wxcircle", "umeng_socialize_wxcircle");
-        }
-        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
-            shareAction.addButton(PlatformName.QQ, "qq", "umeng_socialize_qq", "umeng_socialize_qq");
-            shareAction.addButton(PlatformName.QZONE, "qzone", "umeng_socialize_qzone", "umeng_socialize_qzone");
-        }
+//        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {
+//            shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
+//            shareAction.addButton(PlatformName.WEIXIN_CIRCLE, "wxcircle", "umeng_socialize_wxcircle", "umeng_socialize_wxcircle");
+//        }
+//        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_MOBILE_QQ)) {
+//            shareAction.addButton(PlatformName.QQ, "qq", "umeng_socialize_qq", "umeng_socialize_qq");
+//            shareAction.addButton(PlatformName.QZONE, "qzone", "umeng_socialize_qzone", "umeng_socialize_qzone");
+//        }
         shareAction.open();
 
     }
