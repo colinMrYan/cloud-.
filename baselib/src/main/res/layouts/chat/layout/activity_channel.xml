@@ -79,8 +79,8 @@
                 android:layout_width="104dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="14dp"
                 android:elevation="1dp"
                 android:gravity="center"
                 android:paddingLeft="8dp"
@@ -92,25 +92,39 @@
                 app:cus_borderWidth="0dp"
                 app:cus_isRadiusAdjustBounds="true" />
 
-            <com.inspur.emmcloud.widget.RecycleViewForSizeChange
-                android:id="@+id/msg_list"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:descendantFocusability="beforeDescendants"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:listSelector="@android:color/transparent"
-                android:scrollbarStyle="insideInset"
-                android:scrollbars="none" />
+                android:layout_height="match_parent">
+
+                <com.inspur.emmcloud.baselib.widget.ConversationWatermarkView
+                    android:id="@+id/conversation_watermark"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+                <com.inspur.emmcloud.widget.RecycleViewForSizeChange
+                    android:id="@+id/msg_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:descendantFocusability="beforeDescendants"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@android:color/transparent"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="none" />
+
+
+            </FrameLayout>
 
         </RelativeLayout>
+
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"
-        android:background="?attr/text_ll_color_nor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="?attr/text_ll_color_nor" />
 
 </LinearLayout>

@@ -9,9 +9,12 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ConversationWatermarkView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -43,6 +46,9 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     @BindView(R.id.iv_config)
     View configView;
 
+    @BindView(R.id.conversation_watermark)
+    ConversationWatermarkView watermarkView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +64,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         recordUserClickChannel();
         setConversationUnHide();
         configView.setVisibility(View.VISIBLE);
+        showWaterMark();
     }
 
     @Override
@@ -82,6 +89,17 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
 
     protected void initChannelMessage() {
 
+    }
+
+    private void showWaterMark() {
+        //TODO:服务下发控制
+        if(true){
+            return;
+        }
+        watermarkView.setVisibility(View.VISIBLE);
+        String myInfo = PreferencesUtils.getString(this, "myInfo");
+        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        watermarkView.setText(getMyInfoResult.getName());
     }
 
     /**
