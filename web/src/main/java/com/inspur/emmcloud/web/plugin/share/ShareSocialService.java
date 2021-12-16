@@ -138,7 +138,7 @@ public class ShareSocialService extends ImpPlugin {
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         ShareAction shareAction = new ShareAction(getActivity())
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                        SHARE_MEDIA.QQ, SHARE_MEDIA.SMS)
+                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS)
                 .setShareboardclickCallback(shareBoardlistener);
         shareAction.open();
     }
