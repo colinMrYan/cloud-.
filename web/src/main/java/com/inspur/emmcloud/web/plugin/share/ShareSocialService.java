@@ -2,11 +2,15 @@ package com.inspur.emmcloud.web.plugin.share;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -19,6 +23,11 @@ import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import okio.ByteString;
 
@@ -107,6 +116,10 @@ public class ShareSocialService extends ImpPlugin {
         ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                if (snsPlatform.mKeyword.equals("SAVE")) {
+                    saveBitmapFile(decodeShareImage,"share.jpg");
+                    return;
+                }
                 UMImage image,thumbImage;
                 if (!TextUtils.isEmpty(shareImage)) {
                     image = new UMImage(getActivity(), shareImage);
@@ -138,9 +151,33 @@ public class ShareSocialService extends ImpPlugin {
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         ShareAction shareAction = new ShareAction(getActivity())
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS)
+                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE)
                 .setShareboardclickCallback(shareBoardlistener);
+        shareAction.addButton("保存到本地", "SAVE", "ic_launcher", "ic_launcher");
         shareAction.open();
+    }
+
+    public String saveBitmapFile(Bitmap bitmap, String saveImageName) {
+        String saveImageFolder = "IMP-Cloud/cache/share/";
+        File temp = new File(Environment.getExternalStorageDirectory() + "/" + saveImageFolder);// 要保存文件先创建文件夹
+        if (!temp.exists()) {
+            temp.mkdir();
+        }
+        String savedImagePath = MyAppConfig.LOCAL_CACHE_PATH + "share/" + saveImageName;
+
+        File file = new File(savedImagePath);
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.communication_save_image_success, saveImageFolder));
+        } catch (IOException e) {
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
+            e.printStackTrace();
+        }
+        return savedImagePath;
     }
 
     private void callbackSuccess() {
