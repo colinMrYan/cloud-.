@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -12,6 +13,10 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -119,17 +124,23 @@ public class ShareSocialService extends ImpPlugin {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                 if (snsPlatform.mKeyword.equals("SAVE")) {
-                    saveBitmapFile(decodeShareImage,"share.jpg");
-                    return;
+                    if (decodeShareImage != null){
+                        saveBitmapFile(decodeShareImage,"share.jpg");
+                        return;
+                    }
+                    if (!TextUtils.isEmpty(shareImage)){
+                        saveImageFromUrl(shareImage);
+                        return;
+                    }
                 }
                 UMImage image,thumbImage;
                 if (!TextUtils.isEmpty(shareImage)) {
                     image = new UMImage(getActivity(), shareImage);
                 } else {
-                    image = new UMImage(getActivity(), compressBitmap(decodeShareImage, 500));
+                    image = new UMImage(getActivity(), decodeShareImage);
                 }
                 if (decodeThumbImage != null) {
-                    thumbImage = new UMImage(getActivity(), compressBitmap(decodeThumbImage,50));
+                    thumbImage = new UMImage(getActivity(), decodeThumbImage);
                 } else {
                     thumbImage = new UMImage(getActivity(), thumImage);
                 }
@@ -156,7 +167,7 @@ public class ShareSocialService extends ImpPlugin {
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
                         SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE)
                 .setShareboardclickCallback(shareBoardlistener);
-        shareAction.addButton(getActivity().getString(com.inspur.baselib.R.string.agora_app_id), "SAVE", "ic_file_download", "ic_file_download");
+        shareAction.addButton(getActivity().getString(com.inspur.baselib.R.string.save_to_storage), "SAVE", "ic_file_download", "ic_file_download");
         shareAction.open();
     }
 
@@ -227,6 +238,37 @@ public class ShareSocialService extends ImpPlugin {
         }
         Bitmap newBitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(baos.toByteArray()), null, null);
         return newBitmap;
+    }
+
+    private void saveImageFromUrl(String mImageUrl) {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoader.getInstance().loadImage(mImageUrl, options,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view,
+                                                FailReason failReason) {
+                        if (getActivity() != null) {
+                            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
+                        }
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view,
+                                                  Bitmap loadedImage) {
+                        if (getActivity() != null) {
+                            saveBitmapFile(loadedImage,"share.jpg");
+                        }
+                    }
+                });
     }
 
     @Override
