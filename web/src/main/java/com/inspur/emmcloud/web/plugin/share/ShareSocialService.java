@@ -126,6 +126,7 @@ public class ShareSocialService extends ImpPlugin {
                 } else {
                     image = new UMImage(getActivity(), decodeShareImage);
                 }
+                image.compressStyle =UMImage.CompressStyle.SCALE;
                 if (decodeThumbImage != null) {
                     thumbImage = new UMImage(getActivity(), decodeThumbImage);
                 } else {
@@ -202,7 +203,11 @@ public class ShareSocialService extends ImpPlugin {
     private Bitmap decodeBase64ToBitmap(String base64Str) {
         try {
             byte[] input = ByteString.decodeBase64(base64Str).toByteArray();
-            return BitmapFactory.decodeByteArray(input, 0, input.length);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig= Bitmap.Config.RGB_565;
+            options.inSampleSize=2;
+            options.inJustDecodeBounds =false;
+            return BitmapFactory.decodeByteArray(input, 0, input.length, options);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
