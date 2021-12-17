@@ -342,7 +342,12 @@ public class Constant {
     public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
+    //TODO:更新除微信外appid
+    public static final String UMENT_APPKEY = "5c6cf18ff1f55645e900092a";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
+    public static final String WECHAT_APP_SECRET = "b0f39cb7f260634d5b0b4a3fe0399f8a";
+    public static final String QQ_APPID = "101983127";
+    public static final String QQ_APP_SECRET = "d6c027d90ae69817b9a03a16bef8e7f8";
 
     public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
     public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";

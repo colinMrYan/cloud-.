@@ -1082,6 +1082,9 @@
     <string name="privacy_reject_dialog_title">Whether to confirm disagree and exit?</string>
     <string name="privacy_reject_dialog_quit">Quit</string>
     <string name="privacy_reject_dialog_cancel">Cancel</string>
+    <string name="pass_login_confirm">Pass confirmation login</string>
+    <string name="confirm_login_by_self">In order to ensure the security of the account, please ensure that it is operated by yourself</string>
+    <string name="save_to_storage">Save to local</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

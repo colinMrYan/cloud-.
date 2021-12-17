@@ -25,6 +25,8 @@ import com.umeng.socialize.utils.ShareBoardlistener;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -124,14 +126,14 @@ public class ShareSocialService extends ImpPlugin {
                 if (!TextUtils.isEmpty(shareImage)) {
                     image = new UMImage(getActivity(), shareImage);
                 } else {
-                    image = new UMImage(getActivity(), decodeShareImage);
+                    image = new UMImage(getActivity(), compressBitmap(decodeShareImage, 500));
                 }
-                image.compressStyle =UMImage.CompressStyle.SCALE;
                 if (decodeThumbImage != null) {
-                    thumbImage = new UMImage(getActivity(), decodeThumbImage);
+                    thumbImage = new UMImage(getActivity(), compressBitmap(decodeThumbImage,50));
                 } else {
                     thumbImage = new UMImage(getActivity(), thumImage);
                 }
+                image.compressStyle =UMImage.CompressStyle.SCALE;
                 image.setTitle(title);
                 image.setDescription(descr);
                 image.setThumb(thumbImage);
@@ -154,7 +156,7 @@ public class ShareSocialService extends ImpPlugin {
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
                         SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE)
                 .setShareboardclickCallback(shareBoardlistener);
-        shareAction.addButton("保存到本地", "SAVE", "ic_file_download", "ic_file_download");
+        shareAction.addButton(getActivity().getString(com.inspur.baselib.R.string.agora_app_id), "SAVE", "ic_file_download", "ic_file_download");
         shareAction.open();
     }
 
@@ -206,12 +208,25 @@ public class ShareSocialService extends ImpPlugin {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig= Bitmap.Config.RGB_565;
             options.inSampleSize=2;
-            options.inJustDecodeBounds =false;
             return BitmapFactory.decodeByteArray(input, 0, input.length, options);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // 友盟：用户设置的图片大小最好不要超过250k，缩略图不要超过18k
+    private Bitmap compressBitmap(Bitmap bitmap, long sizeLimit) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int quality = 100;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        while (baos.toByteArray().length / 1024 > sizeLimit) {
+            baos.reset();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            quality -= 10;
+        }
+        Bitmap newBitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(baos.toByteArray()), null, null);
+        return newBitmap;
     }
 
     @Override
