@@ -153,7 +153,7 @@ public class ShareSocialService extends ImpPlugin {
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
                         SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE)
                 .setShareboardclickCallback(shareBoardlistener);
-        shareAction.addButton("保存到本地", "SAVE", "ic_launcher", "ic_launcher");
+        shareAction.addButton("保存到本地", "SAVE", "ic_file_download", "ic_file_download");
         shareAction.open();
     }
 
