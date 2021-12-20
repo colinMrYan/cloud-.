@@ -1149,7 +1149,7 @@
     <string name="unread_detail_title">消息接收人列表</string>
 
     <string name="pull_badge_fail">网络连接失败或请求超时，请稍后下拉刷新……</string>
-    <string name="save_to_storage">保存到本地</string>
+    <string name="save_to_storage">保存至相册</string>
 
     <string name="root_toast">&appname;提醒您，当前手机已root，请注意保护你的账号安全</string>
     <string name="network_change_tip">网络环境发生变化，当前为</string>

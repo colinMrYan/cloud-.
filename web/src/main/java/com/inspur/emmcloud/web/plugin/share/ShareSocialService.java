@@ -12,6 +12,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -186,6 +187,7 @@ public class ShareSocialService extends ImpPlugin {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
+            AppUtils.refreshMedia(getActivity(), savedImagePath);
             ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.communication_save_image_success, saveImageFolder));
         } catch (IOException e) {
             ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
