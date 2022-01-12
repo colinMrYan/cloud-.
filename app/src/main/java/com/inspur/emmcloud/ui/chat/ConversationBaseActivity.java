@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -92,8 +93,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     }
 
     private void showWaterMark() {
-        //TODO:服务下发控制
-        if(true){
+        boolean showWaterMark = AppConfigCacheUtils.getAppConfigValue(this, "EnableChatWatermark", "false").equals("true");
+        if(!showWaterMark){
             return;
         }
         watermarkView.setVisibility(View.VISIBLE);

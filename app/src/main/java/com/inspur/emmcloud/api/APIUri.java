@@ -123,7 +123,7 @@ public class APIUri {
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWebAutoRotate) {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval"
                 + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "")
-                + "&key=force_pull_message" + "&key=force_pull_badge" + "&key=EnableCommonFunction"+"&key=forceUpdate20" ;
+                + "&key=force_pull_message" + "&key=force_pull_badge" + "&key=EnableCommonFunction"+"&key=forceUpdate20" +"&key=EnableChatWatermark" ;
     }
 
     /**
