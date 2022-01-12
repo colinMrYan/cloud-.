@@ -37,6 +37,9 @@ import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
 import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PROTOCOL_DLG_AGREED;
 
 public abstract class BaseFragmentActivity extends FragmentActivity {
+
+    private static boolean checkedNecessaryPermission;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 设置是否开启原生页面自动旋转
@@ -49,6 +52,10 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         }
         setTheme();
         super.onCreate(savedInstanceState);
+        if(checkedNecessaryPermission){
+            onCreate();
+            return;
+        }
         if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             checkNecessaryPermission();
         } else {
@@ -58,6 +65,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     }
 
     private void checkNecessaryPermission() {
+        checkedNecessaryPermission = true;
         final String[] necessaryPermissionArray =
                 StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {

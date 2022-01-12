@@ -26,7 +26,6 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -42,6 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_NO_SET = 5;
     public static final int THEME_DARK = 3;
     private int statusType;
+
+    private static boolean checkedNecessaryPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             setContentView(layoutResId);
         }
         setStatus();
+        if(checkedNecessaryPermission){
+            onCreate();
+            return;
+        }
         //首页先同意隐私协议再检查权限
         if (this instanceof IMainActivity) {
             ProtocolUtil.showProtocolDialog(this, new ProtocolUtil.ProtocolDialogCallback() {
@@ -86,6 +91,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     private void checkNecessaryPermission() {
+        checkedNecessaryPermission = true;
+
         final String[] necessaryPermissionArray =
                 StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
@@ -129,7 +136,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     ToastUtils.show(BaseApplication.getInstance(),
                                             PermissionRequestManagerUtils.getInstance()
                                                     .getPermissionToast(BaseApplication.getInstance(), permissions));
-                                    BaseApplication.getInstance().exit();
+                                    onCreate();
+//                                    BaseApplication.getInstance().exit();
                                 }
                             });
                 }
