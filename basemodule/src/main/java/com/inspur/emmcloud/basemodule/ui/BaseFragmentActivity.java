@@ -52,16 +52,13 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         }
         setTheme();
         super.onCreate(savedInstanceState);
-        if(checkedNecessaryPermission){
-            onCreate();
-            return;
-        }
-        if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
-            checkNecessaryPermission();
-        } else {
-            //目前仅有可能时隐私H5页
-            onCreate();
-        }
+        onCreate();
+//        if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
+//            checkNecessaryPermission();
+//        } else {
+//            //目前仅有可能时隐私H5页
+//            onCreate();
+//        }
     }
 
     private void checkNecessaryPermission() {

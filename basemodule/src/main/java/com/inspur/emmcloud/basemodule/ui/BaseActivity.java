@@ -84,9 +84,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                     checkNecessaryPermission();
                 }
             });
-        } else {
-            checkNecessaryPermission();
         }
+
+//        else {
+//            checkNecessaryPermission();
+//        }
     }
 
 
