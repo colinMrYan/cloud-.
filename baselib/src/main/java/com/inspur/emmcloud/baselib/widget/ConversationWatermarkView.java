@@ -10,15 +10,17 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+
 public class ConversationWatermarkView extends View {
 
     private TextPaint mTextPaint = new TextPaint();
     private String[] mText;
-    private int mDegrees = 35;
-    private int mTextColor = Color.parseColor("#66666666");
-    private int mTextSize = 70;
-    private int mDx = 100;
-    private int mDy = 130;
+    private int mDegrees = -30;
+    private int mTextColor = Color.parseColor("#191F345E");
+    private int mTextSize = DensityUtil.dip2px(22);
+    private int mDx = DensityUtil.dip2px(50);
+    private int mDy = DensityUtil.dip2px(70);
     private int textWidth, textHeight;
 
     public ConversationWatermarkView(Context context) {
@@ -29,6 +31,7 @@ public class ConversationWatermarkView extends View {
         super(context, attrs);
         mTextPaint.setTextSize(mTextSize);
         mTextPaint.setColor(mTextColor);
+        mTextPaint.setFakeBoldText(true);
     }
 
 
