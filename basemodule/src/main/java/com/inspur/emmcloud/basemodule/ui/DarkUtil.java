@@ -26,11 +26,12 @@ public class DarkUtil {
     /**
      * 兜底
      * 暗黑模式适配获取文字主色
+     *
      * @return 文字主色
      */
-    public static int getSendButtonColor(){
+    public static int getSendButtonColor() {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != THEME_DARK ? "#000000":"#FFFFFF");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#000000" : "#FFFFFF");
     }
 
     /**
@@ -76,5 +77,18 @@ public class DarkUtil {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         return Color.parseColor(currentThemeNo != THEME_DARK ? "#333333" : "#E1E1E1");
     }
+
+
+    /**
+     * 兜底
+     * 暗黑模式适配E1E1E1,其他模式为333333
+     *
+     * @return 文字容器二级背景颜色
+     */
+    public static boolean isDarkTheme() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        return currentThemeNo == THEME_DARK;
+    }
+
 
 }
