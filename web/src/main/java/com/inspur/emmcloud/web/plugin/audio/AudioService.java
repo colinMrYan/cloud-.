@@ -1,23 +1,23 @@
 package com.inspur.emmcloud.web.plugin.audio;
 
-import android.content.Intent;
+import android.util.Log;
 
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.componentservice.volume.VolumeFile;
+import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
 import com.inspur.emmcloud.componentservice.web.WebMediaService;
+import com.inspur.emmcloud.componentservice.web.WebMediaCallback;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
-import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
-import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AudioService extends ImpPlugin {
-
+    WebMediaService service = null;
     private String successCb, failCb;
-    private String recordAudioFilePath;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -25,17 +25,54 @@ public class AudioService extends ImpPlugin {
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         Router router = Router.getInstance();
         if (router.getService(WebMediaService.class) == null) return;
-        WebMediaService service = router.getService(WebMediaService.class);
+        if (service == null) {
+            service = router.getService(WebMediaService.class);
+        }
+        Log.e("printf", "service.id : " + service.getClass());
         switch (action) {
             case "recordAudio":
                 JSONObject optionObj = paramsObject.optJSONObject("options");
                 String recordAction = optionObj.optString("value");
+                //上传接口
                 switch (recordAction) {
                     case "start":
                         service.startAudioRecord();
                         break;
                     case "stop":
-                        recordAudioFilePath = service.stopAudioRecord();
+                        //录制完成后进行上传
+                        String uploadPath = optionObj.optString("path");
+                        service.stopAudioRecord(new WebMediaCallbackImpl() {
+                            @Override
+                            public void onRecordEnd(String resourceLocalPath) {
+                                if (resourceLocalPath != null) {
+                                    service.uploadAudioFile("", resourceLocalPath, new WebMediaCallbackImpl() {
+                                                @Override
+                                                public void onSuccess(VolumeFile volumeFile) {
+                                                    try {
+                                                        JSONObject json = new JSONObject();
+                                                        json.put("path", JSONUtils.getString(volumeFile.getResource(), "url", ""));
+                                                        Log.e("printf","uploadPath : " + JSONUtils.getString(volumeFile.getResource(), "url", ""));
+                                                        jsCallback(successCb, json);
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFail() {
+                                                    try {
+                                                        JSONObject json = new JSONObject();
+                                                        json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                                                        jsCallback(failCb, json);
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                    );
+                                }
+                            }
+                        });
                         break;
                 }
                 break;
@@ -58,15 +95,6 @@ public class AudioService extends ImpPlugin {
                         break;
                 }
                 break;
-            case "upload":
-                try {
-                    final JSONObject optionsObj = paramsObject.getJSONObject("options");
-                    String fileName = optionsObj.optString("id");
-                    service.uploadAudioFile();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
@@ -83,30 +111,5 @@ public class AudioService extends ImpPlugin {
     @Override
     public void onDestroy() {
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
-            if (data != null && data.getData() != null) {
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put("path", recordAudioFilePath);
-                    jsCallback(successCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                    jsCallback(failCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

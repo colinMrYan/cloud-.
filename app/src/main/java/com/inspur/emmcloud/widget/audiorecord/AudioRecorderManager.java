@@ -172,8 +172,10 @@ public class AudioRecorderManager {
         bufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
         // 创建AudioRecord对象
-        audioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE,
-                AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSizeInBytes);
+        if (audioRecord == null){
+            audioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE,
+                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSizeInBytes);
+        }
     }
 
     /**
