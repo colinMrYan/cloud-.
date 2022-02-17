@@ -29,7 +29,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_toLeftOf="@id/iv_search"
             android:layout_toRightOf="@id/ibt_back"
             android:ellipsize="end"
             android:gravity="center"
@@ -42,10 +41,9 @@
             android:id="@+id/iv_search"
             android:layout_width="43dp"
             android:layout_height="match_parent"
-            android:clickable="true"
             android:onClick="onClick"
+            android:layout_toRightOf="@+id/header_text"
             android:layout_toLeftOf="@+id/header_service_state"
-            android:scaleType="centerInside"
             android:src="?attr/ic_config"
             android:tint="?attr/header_text_color_e1" />
 
