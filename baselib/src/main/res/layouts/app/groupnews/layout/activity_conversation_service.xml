@@ -39,8 +39,9 @@
 
         <ImageView
             android:id="@+id/iv_search"
-            android:layout_width="43dp"
-            android:layout_height="match_parent"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:onClick="onClick"
             android:layout_toRightOf="@+id/header_text"
             android:layout_toLeftOf="@+id/header_service_state"

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,18 +34,12 @@ public class ConversationServiceActivity extends BaseActivity {
     private boolean apiRequesting = false;
     private PageState state = PageState.FOCUS;
     private GroupTitleAdapter adapter;
-    private List<Conversation> conversationServiceList;
+    private List<Conversation> conversationServiceList = new ArrayList<>();
+    private TextView searchStateView;
 
     public enum PageState {
         ALL, FOCUS
     }
-
-    @BindView(R.id.header_text)
-    TextView title;
-    @BindView(R.id.header_service_state)
-    TextView searchStateView;
-    @BindView(R.id.rv_service_list)
-    RecyclerView recyclerView;
 
     @Override
     public void onCreate() {
@@ -55,7 +50,7 @@ public class ConversationServiceActivity extends BaseActivity {
             return;
         }
         initView();
-        getConversationServiceList();
+//        getConversationServiceList();
     }
 
     @Override
@@ -77,10 +72,12 @@ public class ConversationServiceActivity extends BaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(ConversationServiceActivity.this);
-        title.setText(conversation.getName());
+        ((TextView) findViewById(R.id.header_text)).setText(conversation.getName());
+        searchStateView = findViewById(R.id.header_service_state);
         searchStateView.setText(getString(R.string.all));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.rv_service_list));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new GroupTitleAdapter();
         recyclerView.setAdapter(adapter);
@@ -114,7 +111,8 @@ public class ConversationServiceActivity extends BaseActivity {
 
     private void updatePageByInterface(boolean getDateSuccess, GetConversationListResult result) {
         if (getDateSuccess) {
-            conversationServiceList = result.getConversationList();
+            conversationServiceList.clear();
+            conversationServiceList.addAll(result.getConversationList());
             adapter.notifyDataSetChanged();
         } else {
             changePageState();
@@ -135,114 +133,114 @@ public class ConversationServiceActivity extends BaseActivity {
         }
     }
 
-private class WebService extends APIInterfaceInstance {
-    @Override
-    public void returnGetConversationServiceListSuccess(GetConversationListResult result) {
-        updatePageByInterface(true, result);
-    }
-
-    @Override
-    public void returnGetConversationServiceListFail(String error, int errorCode) {
-        updatePageByInterface(false, null);
-    }
-
-    @Override
-    public void returnGetConversationServiceListAllSuccess(GetConversationListResult result) {
-        updatePageByInterface(true, result);
-    }
-
-    @Override
-    public void returnGetConversationServiceListAllFail(String error, int errorCode) {
-        updatePageByInterface(false, null);
-    }
-
-    @Override
-    public void returnFollowConversationServiceSuccess(Conversation changedConversations) {
-        for (Conversation conversation : conversationServiceList) {
-            if (conversation.getId().equals(changedConversations.getId())) {
-                conversation.setFocus(changedConversations.getFocus());
-                break;
-            }
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnGetConversationServiceListSuccess(GetConversationListResult result) {
+            updatePageByInterface(true, result);
         }
-        adapter.notifyDataSetChanged();
-        apiRequesting = false;
-    }
 
-    @Override
-    public void returnFollowConversationServiceFail(String error, int errorCode) {
-        apiRequesting = false;
-    }
-}
-
-public class GroupTitleAdapter extends RecyclerView.Adapter<ServiceItemViewHolder> {
-
-    @Override
-    public int getItemCount() {
-        return conversationServiceList.size();
-    }
-
-    @Override
-    public void onBindViewHolder(ServiceItemViewHolder holder, int arg1) {
-        final Conversation conversation = conversationServiceList.get(arg1);
-        if (conversation == null) return;
-        holder.titleText.setText(conversation.getName());
-        holder.titleDesc.setText(conversation.getAction());
-        switch (state) {
-            case ALL:
-                holder.itemFocusImg.setVisibility(View.VISIBLE);
-                // todo 关注icon
-                if (conversation.getFocus() == 1) {
-                    holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_photo_default));
-                } else {
-                    holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_chat_owner));
-                }
-                break;
-            case FOCUS:
-                holder.itemFocusImg.setVisibility(View.INVISIBLE);
-                break;
+        @Override
+        public void returnGetConversationServiceListFail(String error, int errorCode) {
+            updatePageByInterface(false, null);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cid = conversation.getId();
-                if (TextUtils.isEmpty(cid)) return;
-                switch (state) {
-                    case ALL:
-                        requestFollowService(cid);
-                        break;
-                    case FOCUS:
-                    default:
-                        Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), cid);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                        IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
-                        break;
+
+        @Override
+        public void returnGetConversationServiceListAllSuccess(GetConversationListResult result) {
+            updatePageByInterface(true, result);
+        }
+
+        @Override
+        public void returnGetConversationServiceListAllFail(String error, int errorCode) {
+            updatePageByInterface(false, null);
+        }
+
+        @Override
+        public void returnFollowConversationServiceSuccess(Conversation changedConversations) {
+            for (Conversation conversation : conversationServiceList) {
+                if (conversation.getId().equals(changedConversations.getId())) {
+                    conversation.setFocus(changedConversations.getFocus());
+                    break;
                 }
             }
-        });
+            adapter.notifyDataSetChanged();
+            apiRequesting = false;
+        }
+
+        @Override
+        public void returnFollowConversationServiceFail(String error, int errorCode) {
+            apiRequesting = false;
+        }
     }
 
-    @Override
-    public ServiceItemViewHolder onCreateViewHolder(ViewGroup arg0, int arg1) {
-        LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.conversation_service_item_view, arg0, false);
-        return new ServiceItemViewHolder(view);
+    public class GroupTitleAdapter extends RecyclerView.Adapter<ServiceItemViewHolder> {
+
+        @Override
+        public int getItemCount() {
+            return conversationServiceList.size();
+        }
+
+        @Override
+        public void onBindViewHolder(ServiceItemViewHolder holder, int arg1) {
+            final Conversation conversation = conversationServiceList.get(arg1);
+            if (conversation == null) return;
+            holder.titleText.setText(conversation.getName());
+            holder.titleDesc.setText(conversation.getAction());
+            switch (state) {
+                case ALL:
+                    holder.itemFocusImg.setVisibility(View.VISIBLE);
+                    // todo 关注icon
+                    if (conversation.getFocus() == 1) {
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_photo_default));
+                    } else {
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_chat_owner));
+                    }
+                    break;
+                case FOCUS:
+                    holder.itemFocusImg.setVisibility(View.INVISIBLE);
+                    break;
+            }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String cid = conversation.getId();
+                    if (TextUtils.isEmpty(cid)) return;
+                    switch (state) {
+                        case ALL:
+                            requestFollowService(cid);
+                            break;
+                        case FOCUS:
+                        default:
+                            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), cid);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
+                            break;
+                    }
+                }
+            });
+        }
+
+        @Override
+        public ServiceItemViewHolder onCreateViewHolder(ViewGroup arg0, int arg1) {
+            LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            View view = mInflater.inflate(R.layout.conversation_service_item_view, arg0, false);
+            return new ServiceItemViewHolder(view);
+        }
     }
-}
 
-public static class ServiceItemViewHolder extends RecyclerView.ViewHolder {
-    TextView titleText;
-    TextView titleDesc;
-    ImageView itemImg;
-    ImageView itemFocusImg;
+    public static class ServiceItemViewHolder extends RecyclerView.ViewHolder {
+        TextView titleText;
+        TextView titleDesc;
+        ImageView itemImg;
+        ImageView itemFocusImg;
 
-    public ServiceItemViewHolder(View view) {
-        super(view);
-        titleText = (TextView) view.findViewById(R.id.tv_name);
-        titleDesc = (TextView) view.findViewById(R.id.tv_desc);
-        itemImg = (ImageView) view.findViewById(R.id.item_icon);
-        itemFocusImg = (ImageView) view.findViewById(R.id.item_focus);
+        public ServiceItemViewHolder(View view) {
+            super(view);
+            titleText = (TextView) view.findViewById(R.id.tv_name);
+            titleDesc = (TextView) view.findViewById(R.id.tv_desc);
+            itemImg = (ImageView) view.findViewById(R.id.item_icon);
+            itemFocusImg = (ImageView) view.findViewById(R.id.item_focus);
+        }
+
     }
-
-}
 }
