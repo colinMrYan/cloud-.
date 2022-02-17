@@ -24,6 +24,7 @@ public class Conversation implements Serializable {
     public static final String TYPE_CAST = "CAST";
     public static final String TYPE_LINK = "LINK";
     public static final String TYPE_TRANSFER = "FILE_TRANSFER";
+    public static final String TYPE_SERVICE = "SERVICE";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "enterprise")
@@ -59,6 +60,8 @@ public class Conversation implements Serializable {
     @Column(name = "showName")
     private String showName = "";
     private String draft = "";
+    // 服务号关注
+    private int focus = 0;
 
     public Conversation() {
 
@@ -254,6 +257,15 @@ public class Conversation implements Serializable {
     public void setShowName(String showName) {
         this.showName = showName;
     }
+
+    public int getFocus() {
+        return focus;
+    }
+
+    public void setFocus(int focus) {
+        this.focus = focus;
+    }
+
 
     public SearchModel conversation2SearchModel() {
         SearchModel searchModel = new SearchModel();

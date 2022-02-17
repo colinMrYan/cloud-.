@@ -797,4 +797,43 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
+    @Override
+    public void returnGetConversationServiceListSuccess(GetConversationListResult getConversationListResult) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListAllSuccess(GetConversationListResult getConversationListResult) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListAllFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnSearchConversationServiceSuccess(Conversation conversations) {
+
+    }
+
+    @Override
+    public void returnSearchConversationServiceFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnFollowConversationServiceSuccess(Conversation conversations) {
+
+    }
+
+    @Override
+    public void returnFollowConversationServiceFail(String error, int errorCode) {
+
+    }
 }

@@ -341,4 +341,16 @@ public interface APIInterface {
 
     void returnSaveAgreedSuccess(String isSaveSuccess);
     void returnSaveAgreedFail(String error,int errorCode);
+
+    void returnGetConversationServiceListSuccess(GetConversationListResult result);
+    void returnGetConversationServiceListFail(String error, int errorCode);
+
+    void returnGetConversationServiceListAllSuccess(GetConversationListResult result);
+    void returnGetConversationServiceListAllFail(String error, int errorCode);
+
+    void returnSearchConversationServiceSuccess(Conversation conversations);
+    void returnSearchConversationServiceFail(String error, int errorCode);
+
+    void returnFollowConversationServiceSuccess(Conversation conversations);
+    void returnFollowConversationServiceFail(String error, int errorCode);
 }

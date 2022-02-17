@@ -290,7 +290,11 @@ public class CommunicationFragment extends BaseFragment {
                                 IntentUtils.startActivity(getActivity(), emmAction.getUrl());
                             }
                         }
-                    } else {
+                    } else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConversationServiceActivity.EXTRA_CONVERSATION_ID, conversation.getId());
+                        IntentUtils.startActivity(getActivity(), ConversationServiceActivity.class, bundle);
+                    }  else {
                         ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                     }
                     setConversationRead(uiConversation);

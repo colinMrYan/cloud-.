@@ -1867,4 +1867,155 @@ public class ChatAPIService {
             }
         });
     }
+
+    /**
+     * 服务号首页服务号列表
+     *
+     * @param cid
+     */
+    public void getConversationServiceList(final String cid) {
+        String url = APIUri.getConversationServiceListUrl(cid);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetConversationServiceListSuccess(new GetConversationListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGetConversationServiceListFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationServiceList(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 服务号首页所有服务号列表
+     *
+     * @param cid
+     */
+    public void getConversationServiceAllList(final String cid) {
+        String url = APIUri.getConversationServiceListAllUrl(cid);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnGetConversationServiceListAllSuccess(new GetConversationListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGetConversationServiceListAllFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getConversationServiceAllList(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 请求关注服务号
+     *
+     * @param cid
+     */
+    public void requestFollowConversationService(final String cid) {
+        String url = APIUri.getFollowConversationServiceUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnFollowConversationServiceSuccess(new Conversation(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnFollowConversationServiceFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        requestFollowConversationService(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 请求搜索服务号
+     *
+     */
+    public void requestSearchConversationService(final String serviceName) {
+        String url = APIUri.getSearchConversationServiceUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnSearchConversationServiceSuccess(new Conversation(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSearchConversationServiceFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        requestSearchConversationService(serviceName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
 }
