@@ -818,7 +818,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSearchConversationServiceSuccess(Conversation conversations) {
+    public void returnSearchConversationServiceSuccess(GetConversationListResult getConversationListResult) {
 
     }
 

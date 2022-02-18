@@ -76,7 +76,7 @@ public class ConversationCacheUtils {
      * 更新ConversationList的某些字段
      *
      * @param context
-     * @param conversationList
+     * @param conversation
      * @param updateColumnNames
      */
     public static void updateConversation(final Context context, final Conversation conversation, String... updateColumnNames) {

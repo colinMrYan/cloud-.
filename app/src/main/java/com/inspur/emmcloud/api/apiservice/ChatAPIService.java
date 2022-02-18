@@ -1992,7 +1992,7 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnSearchConversationServiceSuccess(new Conversation(new String(arg0)));
+                apiInterface.returnSearchConversationServiceSuccess(new GetConversationListResult(new String(arg0)));
             }
 
             @Override

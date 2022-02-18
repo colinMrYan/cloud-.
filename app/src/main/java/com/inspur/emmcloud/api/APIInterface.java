@@ -348,7 +348,7 @@ public interface APIInterface {
     void returnGetConversationServiceListAllSuccess(GetConversationListResult result);
     void returnGetConversationServiceListAllFail(String error, int errorCode);
 
-    void returnSearchConversationServiceSuccess(Conversation conversations);
+    void returnSearchConversationServiceSuccess(GetConversationListResult getConversationListResult);
     void returnSearchConversationServiceFail(String error, int errorCode);
 
     void returnFollowConversationServiceSuccess(Conversation conversations);

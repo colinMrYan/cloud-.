@@ -553,9 +553,14 @@
         <activity
             android:name=".ui.chat.ConversationServiceActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="behind"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.chat.ConversationServiceSearchActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <!-- 云盘 -->
 
