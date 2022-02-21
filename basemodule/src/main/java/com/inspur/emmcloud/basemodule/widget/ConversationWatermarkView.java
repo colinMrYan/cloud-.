@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.baselib.widget;
+package com.inspur.emmcloud.basemodule.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,13 +11,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 
 public class ConversationWatermarkView extends View {
 
     private TextPaint mTextPaint = new TextPaint();
     private String[] mText;
     private int mDegrees = -30;
-    private int mTextColor = Color.parseColor("#191F345E");
+    private int mTextColor = DarkUtil.isDarkTheme() ? Color.parseColor("#19DFE5FF") : Color.parseColor("#191F345E");
     private int mTextSize = DensityUtil.dip2px(22);
     private int mDx = DensityUtil.dip2px(50);
     private int mDy = DensityUtil.dip2px(70);

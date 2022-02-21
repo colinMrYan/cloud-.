@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.inspur.emmcloud.baselib.widget.ConversationWatermarkView
+                <com.inspur.emmcloud.basemodule.widget.ConversationWatermarkView
                     android:id="@+id/conversation_watermark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
