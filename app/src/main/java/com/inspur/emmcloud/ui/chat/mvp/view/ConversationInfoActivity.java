@@ -91,6 +91,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
     RelativeLayout searchRecordMarginLayout;
+    @BindView(R.id.rl_conversation_report)
+    RelativeLayout conversationReportRl;
 
     private Conversation uiConversation;
     private ConversationMembersHeadAdapter channelMembersHeadAdapter;
@@ -247,6 +249,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 bundle.putStringArrayList("uidList", uiConversation.getMemberList());
                 IntentUtils.startActivity(this,
                         MembersActivity.class, bundle);
+                break;
+            case R.id.rl_conversation_report:
+                IntentUtils.startActivity(getActivity(), ConversationReportActivity.class);
                 break;
             default:
                 break;

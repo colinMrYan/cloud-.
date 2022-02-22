@@ -189,6 +189,12 @@
     <string name="channel_set_top"> 置顶</string>
     <string name="channel_set_sticky"> 置顶聊天</string>
     <string name="message_without_interruption">消息免打扰</string>
+    <string name="channel_report">投诉</string>
+    <string name="channel_report_hint">请输入投诉内容</string>
+    <string name="feed_back_without_name">匿名提交</string>
+    <string name="report_submit">提交投诉</string>
+    <string name="report_out_of_length">您输入的字数已经超过了限制</string>
+    <string name="report_no_empty">请输入投诉内容</string>
     <string name="channel_single_chat_images">聊天图片</string>
     <string name="channel_single_chat_files">文件</string>
     <string name="channel_search_more_group_members">查看全部群成员</string>

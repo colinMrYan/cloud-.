@@ -380,6 +380,11 @@
             android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".ui.chat.mvp.view.ConversationReportActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
             android:name=".ui.chat.ChannelMsgDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
