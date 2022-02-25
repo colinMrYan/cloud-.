@@ -51,7 +51,9 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
             ToastUtils.show(this, R.string.baselib_sd_not_exist);
             finish();
         }
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
+        String[] permissions = new String[]{Permissions.CAMERA, Permissions.READ_EXTERNAL_STORAGE,
+                Permissions.WRITE_EXTERNAL_STORAGE};
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, permissions, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 granted = true;

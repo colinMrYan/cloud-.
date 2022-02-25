@@ -47,7 +47,9 @@ public class WebServiceImpl implements WebService {
     public void openCamera(final Activity activity, final String picPath, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
+            String[] permissions = new String[]{Permissions.CAMERA, Permissions.READ_EXTERNAL_STORAGE,
+                    Permissions.WRITE_EXTERNAL_STORAGE};
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, permissions,
                     new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
