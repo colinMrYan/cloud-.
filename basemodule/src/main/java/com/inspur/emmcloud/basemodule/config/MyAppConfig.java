@@ -49,8 +49,7 @@ public class MyAppConfig {
     /**
      * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
      */
-    public static final String LOCAL_IMP_USER_OPERATE_DIC = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/imp/user_space/";
+    public static final String LOCAL_IMP_USER_OPERATE_DIC = BaseApplication.getInstance().getExternalCacheDir() + "/IMP-Cloud/imp/user_space/";
     /**
      * 用户崩溃日志路径
      */
@@ -62,8 +61,6 @@ public class MyAppConfig {
     public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
     public static final int WEBSOCKET_REQUEST_TIMEOUT_COMMON = 16;
     public static final int WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE = 600;
-    private static final String LOCAL_DOWNLOAD_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/download/";
     public static int NETWORK_MOBILE_MAX_SIZE_ALERT = 1024 * 1024 * 50;
     private static Map<String, String> apiRequestRecordMap = new HashMap<>();
 
@@ -78,7 +75,7 @@ public class MyAppConfig {
     }
 
     public static String getFileDownloadDirPath() {
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/download/";
+        return BaseApplication.getInstance().getExternalCacheDir() + "/IMP-Cloud/download/";
     }
 
     public static String getFileDownloadByUserAndTanentDirPath() {
@@ -111,7 +108,7 @@ public class MyAppConfig {
      */
     public static String getCacheVoiceFilePath(String cid, String messageId) {
         cid = cid.replaceAll(":", "_");
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/" + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".amr";
+        return BaseApplication.getInstance().getExternalCacheDir() + "/IMP-Cloud/" + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".amr";
     }
 
     /**
@@ -121,7 +118,7 @@ public class MyAppConfig {
      */
     public static String getCacheVoicePCMFilePath(String cid, String messageId) {
         cid = cid.replaceAll(":", "_");
-        return Environment.getExternalStorageDirectory() + "/IMP-Cloud/" + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".pcm";
+        return BaseApplication.getInstance().getExternalCacheDir() + "/IMP-Cloud/" + BaseApplication.getInstance().getUid() + "/" + BaseApplication.getInstance().getTanent() + "/voice/" + cid + "/" + messageId + ".pcm";
     }
 
     /**

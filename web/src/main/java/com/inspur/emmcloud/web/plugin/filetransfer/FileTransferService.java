@@ -82,8 +82,6 @@ public class FileTransferService extends ImpPlugin {
     private String uploadSucCB, uploadFailCB;
     // 提示不含有sd卡
     private AlertDialog msgDlg;
-    // 获取SDCard根目录
-    private String sdcard = Environment.getExternalStorageDirectory() + "/";
     // 下载的返回值
     private String result;
     // 判断是否是下载文件
