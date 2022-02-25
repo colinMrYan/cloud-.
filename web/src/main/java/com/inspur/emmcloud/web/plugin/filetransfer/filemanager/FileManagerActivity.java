@@ -10,8 +10,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.filetransfer.filemanager.adapter.WebFileFragmentPagerAdapter;
 import com.inspur.emmcloud.web.plugin.filetransfer.filemanager.bean.FileBean;
@@ -42,14 +47,26 @@ public class FileManagerActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        fileTabLayout = findViewById(R.id.tl_files_source);
-        fileViewPager = findViewById(R.id.viewpager_file_fragment);
-        okText = findViewById(R.id.tv_ok);
-        fileManagerFragment = new FileManagerFragment();
-        webWeChatFileManagerFragment = new WebWeChatFileManagerFragment();
-        okText = findViewById(R.id.tv_ok);
-        initView();
-        getIntentParam();
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.STORAGE,
+                new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+                        fileTabLayout = findViewById(R.id.tl_files_source);
+                        fileViewPager = findViewById(R.id.viewpager_file_fragment);
+                        okText = findViewById(R.id.tv_ok);
+                        fileManagerFragment = new FileManagerFragment();
+                        webWeChatFileManagerFragment = new WebWeChatFileManagerFragment();
+                        okText = findViewById(R.id.tv_ok);
+                        initView();
+                        getIntentParam();
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(FileManagerActivity.this, PermissionRequestManagerUtils.getInstance()
+                                .getPermissionToast(FileManagerActivity.this, permissions));
+                    }
+                });
     }
 
     private void initView() {

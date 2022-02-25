@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImageDataSource;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
@@ -25,6 +26,9 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageFolder;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.FolderPopUpWindow;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -60,39 +64,54 @@ public class ImageGridActivity extends ImageBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_grid);
-        ImmersionBar.with(this).statusBarColor(R.color.color_bg_common_dark).navigationBarColor(R.color.color_bg_common_dark).init();
-        // hideBars();
-        imagePicker = ImagePicker.getInstance();
-        imagePicker.clear();
-        imagePicker.addOnImageSelectedListener(this);
-        OkText = (TextView) findViewById(R.id.tv_ok);
-        mBtnDir = (Button) findViewById(R.id.btn_dir);
-        mBtnPre = (Button) findViewById(R.id.btn_preview);
-        mGridView = (GridView) findViewById(R.id.gridview);
-        orgPictureCheckBox = findViewById(R.id.cb_origin);
-        mFooterBar = findViewById(R.id.footer_bar);
-        OkText.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
-        mBtnPre.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
-        mImageGridAdapter = new ImageGridAdapter(this, null);
-        mImageFolderAdapter = new ImageFolderAdapter(this, null);
-        onImageSelected(0, null, false);
-        imageDataSource = new ImageDataSource(this, null, this);
-        encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
-        orgPictureCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.STORAGE, new PermissionRequestCallback() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                setContentView(R.layout.activity_image_grid);
+                ImmersionBar.with(ImageGridActivity.this).statusBarColor(R.color.color_bg_common_dark).navigationBarColor(R.color.color_bg_common_dark).init();
+                // hideBars();
+                imagePicker = ImagePicker.getInstance();
+                imagePicker.clear();
+                imagePicker.addOnImageSelectedListener(ImageGridActivity.this);
+                OkText = (TextView) findViewById(R.id.tv_ok);
+                mBtnDir = (Button) findViewById(R.id.btn_dir);
+                mBtnPre = (Button) findViewById(R.id.btn_preview);
+                mGridView = (GridView) findViewById(R.id.gridview);
+                orgPictureCheckBox = findViewById(R.id.cb_origin);
+                mFooterBar = findViewById(R.id.footer_bar);
+                OkText.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
+                mBtnPre.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
+                mImageGridAdapter = new ImageGridAdapter(ImageGridActivity.this, null);
+                mImageFolderAdapter = new ImageFolderAdapter(ImageGridActivity.this, null);
+                onImageSelected(0, null, false);
+                imageDataSource = new ImageDataSource(ImageGridActivity.this, null, ImageGridActivity.this);
+                encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+                orgPictureCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 //                mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
-                isOrigin = b;
+                        isOrigin = b;
+                    }
+                });
+                orgPictureCheckBox.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
             }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                finish();
+            }
+
         });
-        orgPictureCheckBox.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
     }
 
 
     @Override
     protected void onDestroy() {
-        imagePicker.removeOnImageSelectedListener(this);
+        if (imagePicker != null) {
+            imagePicker.removeOnImageSelectedListener(this);
+
+        }
         super.onDestroy();
     }
 
