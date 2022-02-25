@@ -15,6 +15,8 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 
+import org.jsoup.Connection;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,24 +28,24 @@ import static android.content.Context.MODE_PRIVATE;
  * @author Jason Chen; create at 2016年8月23日 上午10:00:28
  */
 public class MyAppConfig {
-    public static final String LOCAL_IMG_CREATE_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/img_create/";
-    public static final String LOCAL_CACHE_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/";
-    public static final String LOCAL_CACHE_VOICE_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/voice";
-    public static final String LOCAL_CACHE_PHOTO_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
-    public static final String LOCAL_OFFLINE_APP_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/offlineApp";
-    public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
-    public static final String LOCAL_CACHE_OSS_RECORD_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/oss/";
-    public static final String LOCAL_SHARE_FILE_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/share_file/";
-    public static final String LOCAL_CACHE_SCREENSHOTS_PATH = Environment
-            .getExternalStorageDirectory() + "/IMP-Cloud/cache/screenshots/";
+    public static final String LOCAL_IMG_CREATE_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/img_create/";
+    public static final String LOCAL_CACHE_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/";
+    public static final String LOCAL_CACHE_VOICE_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/voice";
+    public static final String LOCAL_CACHE_PHOTO_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/photo";
+    public static final String LOCAL_OFFLINE_APP_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/offlineApp";
+    public static final String LOCAL_CACHE_MARKDOWN_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/Markdown/";
+    public static final String LOCAL_CACHE_OSS_RECORD_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/oss/";
+    public static final String LOCAL_SHARE_FILE_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/share_file/";
+    public static final String LOCAL_CACHE_SCREENSHOTS_PATH = BaseApplication.getInstance()
+            .getExternalCacheDir() + "/IMP-Cloud/cache/screenshots/";
     /**
      * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
      */

@@ -84,6 +84,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     checkNecessaryPermission();
                 }
             });
+        } else {
+            //避免非主页调用不到onCreate
+            onCreate();
         }
 
 //        else {
