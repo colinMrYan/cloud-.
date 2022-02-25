@@ -1,29 +1,8 @@
 package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.util;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
-
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class FileUtil {
-    private static final String TAG = "CJT";
-    private static final File parentPath = Environment.getExternalStorageDirectory();
-    private static String storagePath = "";
-    private static String DST_FOLDER_NAME = "JCamera";
-
-    private static String initPath() {
-        if (storagePath.equals("")) {
-            storagePath = parentPath.getAbsolutePath() + File.separator + DST_FOLDER_NAME;
-            File f = new File(storagePath);
-            if (!f.exists()) {
-                f.mkdir();
-            }
-        }
-        return storagePath;
-    }
 
     public static boolean deleteFile(String url) {
         boolean result = false;
@@ -34,11 +13,4 @@ public class FileUtil {
         return result;
     }
 
-    public static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
 }
