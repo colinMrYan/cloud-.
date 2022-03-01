@@ -1018,6 +1018,15 @@ public class CommunicationFragment extends BaseFragment {
                 String cid = (String) eventMessage.getMessageObj();
                 notifyConversationMessageDataChanged(cid);
                 break;
+            case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED:
+                WebSocketPush.getInstance().startWebSocket();
+                WSCommand command = (WSCommand) eventMessage.getMessageObj();
+                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
+                    channelRefreshId = command.getChannel();
+                }
+                getConversationList();
+                getMessage();
+                break;
         }
     }
 
