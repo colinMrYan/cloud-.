@@ -179,6 +179,9 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mView.dismissLoading();
                 ArrayList<String> memberUidList = mConversation.getMemberList();
                 memberUidList.addAll(uidList);
+                if (needUpdateGroupName(mConversation.getMemberList())){
+                    updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)), null);
+                }
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
@@ -221,6 +224,9 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mView.dismissLoading();
                 ArrayList<String> memberUidList = mConversation.getMemberList();
                 memberUidList.removeAll(uidList);
+                if (needUpdateGroupName(mConversation.getMemberList())){
+                    updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)),null);
+                }
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
                 mView.updateUiConversation(mConversation);
@@ -343,42 +349,62 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
 
     @Override
     public void quitGroupChannel() {
-        final String conversationId = mConversation.getId();
-        String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
-        ApiServiceImpl.getInstance().quitGroupChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                mView.dismissLoading();
-                mView.quitGroupSuccess();
-            }
+        ArrayList<String> memberUidList = mConversation.getMemberList();
+        memberUidList.remove(BaseApplication.getInstance().getUid());
+        if (needUpdateGroupName(mConversation.getMemberList())){
+            String quitName = createChannelGroupName(createSequenceUserArray(memberUidList));
+            updateGroupName(quitName,new CallBack() {
+                @Override
+                public void success() {
+                    final String conversationId = mConversation.getId();
+                    String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
+                    ApiServiceImpl.getInstance().quitGroupChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+                        @Override
+                        public void callbackSuccess(byte[] arg0) {
+                            mView.dismissLoading();
+                            mView.quitGroupSuccess();
+                        }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                mView.dismissLoading();
-                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
-            }
+                        @Override
+                        public void callbackFail(String error, int responseCode) {
+                            mView.dismissLoading();
+                            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
+                        }
 
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        quitGroupChannel();
-                    }
+                        @Override
+                        public void callbackTokenExpire(long requestTime) {
+                            OauthCallBack oauthCallBack = new OauthCallBack() {
+                                @Override
+                                public void reExecute() {
+                                    quitGroupChannel();
+                                }
 
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                ApiServiceImpl.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-        }, conversationId);
+                                @Override
+                                public void executeFailCallback() {
+                                    callbackFail("", -1);
+                                }
+                            };
+                            ApiServiceImpl.getInstance().refreshToken(
+                                    oauthCallBack, requestTime);
+                        }
+                    }, conversationId);
+                }
+
+                @Override
+                public void fail() {
+
+                }
+            });
+        }
     }
 
     @Override
     public void delChannel() {
+        ArrayList<String> memberUidList = mConversation.getMemberList();
+        memberUidList.remove(BaseApplication.getInstance().getUid());
+        if (needUpdateGroupName(mConversation.getMemberList())){
+            updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)),null);
+        }
         final String conversationId = mConversation.getId();
         String completeUrl = ApiUrl.getDeleteChannelUrl(conversationId);
         ApiServiceImpl.getInstance().delChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
@@ -413,6 +439,60 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         }, conversationId);
 
     }
+
+    private void updateGroupName(final String newName,CallBack callBack) {
+        if (TextUtils.isEmpty(newName)) return;
+        final String completeUrl = APIUri.getUpdateConversationNameUrl(mConversation.getId());
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("name", newName);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateGroupName(newName, callBack);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                mView.dismissLoading();
+                Intent intent = new Intent("message_notify");
+                intent.putExtra("command", "refresh_session_list");
+                LocalBroadcastManager.getInstance(BaseApplication.getInstance()).sendBroadcast(intent);
+
+                Intent intentChannel = new Intent("update_channel_name");
+                intentChannel.putExtra("name", newName);
+                LocalBroadcastManager.getInstance(BaseApplication.getInstance()).sendBroadcast(intentChannel);
+                ConversationCacheUtils.updateConversationName(BaseApplication.getInstance(), mConversation.getId(), newName);
+                mConversation.setName(newName);
+                mView.updateUiConversation(mConversation);
+                mView.updateGroupNameSuccess();
+                if (callBack != null) {
+                    callBack.success();
+                }
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                mView.dismissLoading();
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
+                if (callBack != null) {
+                    callBack.fail();
+                }
+            }
+        });
+
+        }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -450,5 +530,54 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             }
         }
 
+    }
+
+    // 判断是否需要更新群聊名称
+    private boolean needUpdateGroupName(List<String> memberList) {
+        return mConversation.getName().equals(createChannelGroupName(createSequenceUserArray(memberList)));
+    }
+
+    // 群用户根据id排序
+    private JSONArray createSequenceUserArray(List<String> uidList) {
+        if (uidList.size() == 0) return null;
+        JSONArray idAndNameArray = new JSONArray();
+        List<ContactUser> contactUsers = ContactUserCacheUtils.getContactUserListById(uidList);
+        for (ContactUser contactUser : contactUsers) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("pid", contactUser.getId());
+                jsonObject.put("name", contactUser.getName());
+                idAndNameArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return ConversationCreateUtils.getLastSortedSearchMembers(idAndNameArray, false);
+    }
+
+
+    //创建群聊名称
+    private String createChannelGroupName(JSONArray peopleArray) {
+        if (peopleArray == null || peopleArray.length() == 0) return null;
+        List<String> uidList = new ArrayList<>();
+        JSONArray nameArray = new JSONArray();
+        for (int i = 0; i < peopleArray.length(); i++) {
+            try {
+                String targetUid = ConversationCreateUtils.getUidFromIdInfo(peopleArray.getJSONObject(i).getString("pid"));
+                if (!uidList.contains(targetUid)) {
+                    nameArray.put(i, peopleArray.getJSONObject(i).getString("name"));
+                    uidList.add(targetUid);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return ConversationCreateUtils.createChannelGroupName(nameArray);
+    }
+
+    private interface CallBack {
+        void success();
+
+        void fail();
     }
 }

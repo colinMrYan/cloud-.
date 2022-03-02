@@ -44,6 +44,11 @@ public class ConversationNameModifyActivity extends BaseActivity {
         ButterKnife.bind(this);
         String id = getIntent().getStringExtra("cid");
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), id);
+        if (conversation == null) {
+            ToastUtils.show(getApplicationContext(), getString(R.string.net_request_failed));
+            finish();
+            return;
+        }
         name = conversation.getName();
         EditTextUtils.setText(editText, name);
         loadingDlg = new LoadingDialog(ConversationNameModifyActivity.this);

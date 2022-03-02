@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -111,6 +113,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         loadingDialog = new LoadingDialog(this);
         mPresenter.getConversationInfo(cid);
         uiConversation = mPresenter.getConversation(cid);
+        if (uiConversation == null) {
+            ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+            finish();
+            return;
+        }
         init();
     }
 
@@ -162,6 +169,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                refreshMyConversation();
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 Intent intent = new Intent();
                 if (uiConversation.getType().equals(Conversation.TYPE_TRANSFER) && i == uiUidList.size() - 1) {
                     intent.putExtra(ConversationCastInfoActivity.EXTRA_CID, uiConversation.getId());
@@ -203,17 +215,26 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     public void onClick(View v) {
+        refreshMyConversation();
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
             case R.id.rl_conversation_name:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         ConversationNameModifyActivity.class, bundle);
                 break;
             case R.id.rl_conversation_qr:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString("cid", uiConversation.getId());
                 bundle.putString("groupName", uiConversation.getShowName());
                 bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
@@ -221,21 +242,37 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                         ConversationQrCodeActivity.class, bundle);
                 break;
             case R.id.rl_conversation_images:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupAlbumActivity.class, bundle);
                 break;
             case R.id.rl_conversation_files:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupFileActivity.class, bundle);
                 break;
             case R.id.rl_channel_search_record_have_margin:
             case R.id.rl_conversation_search_record:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
             case R.id.rl_conversation_quit:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 if (uiConversation.getOwner().equals(MyApplication.getInstance().getUid())) {
                     showDelGroupWarningDlg();
                 } else {
@@ -243,6 +280,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 }
                 break;
             case R.id.rl_more_members:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
                 bundle.putString(MembersActivity.CHAT_OWNER_UID, uiConversation.getOwner());
@@ -256,6 +297,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             default:
                 break;
         }
+    }
+
+    private void refreshMyConversation() {
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        mPresenter.getConversationInfo(cid);
+        uiConversation = mPresenter.getConversation(cid);
     }
 
     @Override
@@ -397,9 +444,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
-            String name = ((Conversation) eventMessage.getMessageObj()).getName();
-            conversationNameTextView.setText(name);
-            uiConversation.setName(name);
+            Conversation conversation = ((Conversation) eventMessage.getMessageObj());
+            if (uiConversation.getId().equals(conversation.getId())) {
+                uiConversation = mPresenter.getConversation(conversation.getId());
+                init();
+            }
         }
     }
 

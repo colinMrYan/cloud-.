@@ -69,6 +69,7 @@ public interface ConversationInfoContract {
 
         void delChannel();
 
+        void updateGroupName(String name);
 
     }
 }

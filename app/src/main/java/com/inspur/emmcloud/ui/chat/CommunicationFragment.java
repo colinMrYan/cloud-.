@@ -1021,6 +1021,7 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED:
                 WebSocketPush.getInstance().startWebSocket();
                 WSCommand command = (WSCommand) eventMessage.getMessageObj();
+                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
                 if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
                     channelRefreshId = command.getChannel();
                 }
@@ -1278,6 +1279,12 @@ public class CommunicationFragment extends BaseFragment {
                     public void accept(List<Conversation> conversationList) throws Exception {
                         sortConversationList();
                         createGroupIcon(conversationList);
+                        if (!TextUtils.isEmpty(channelRefreshId)) {
+                            Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelRefreshId);
+                            if (conversation != null) {
+                                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, conversation));
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
