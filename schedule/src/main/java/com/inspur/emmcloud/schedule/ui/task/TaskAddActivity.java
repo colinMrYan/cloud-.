@@ -40,6 +40,9 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -254,11 +257,11 @@ public class TaskAddActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = charSequence.toString();
-                if (str.length()>64){
-                    contentInputEdit.setText(str.substring(0,64)); //截取前x位
+                if (str.length() > 64) {
+                    contentInputEdit.setText(str.substring(0, 64)); //截取前x位
                     contentInputEdit.requestFocus();
                     contentInputEdit.setSelection(contentInputEdit.getText().length()); //光标移动到最后
-                    ToastUtils.show(getBaseContext(),R.string.schedule_task_title_is_length);
+                    ToastUtils.show(getBaseContext(), R.string.schedule_task_title_is_length);
                 }
             }
 
@@ -280,7 +283,7 @@ public class TaskAddActivity extends BaseActivity {
             setTaskColorTags();
             showManagerImage();
             setClickable(taskType);
-        }else{
+        } else {
             singleTagLayout.setVisibility(View.GONE);
         }
         attachmentOtherAdapter.notifyDataSetChanged();
@@ -338,14 +341,14 @@ public class TaskAddActivity extends BaseActivity {
             intent.putExtra(TaskTagsManageActivity.EXTRA_TAGS, (ArrayList<TaskColorTag>) taskColorTagList);
             startActivityForResult(intent, REQUEST_CLASS_TAG);
         } else if (i == R.id.rl_task_manager) {
-            if(AppTabUtils.hasContactPermission(this)){
+            if (AppTabUtils.hasContactPermission(this)) {
                 bundle1.putInt(EXTRA_TYPE, 2);
                 bundle1.putBoolean(EXTRA_MULTI_SELECT, false);
                 bundle1.putString(EXTRA_TITLE, getString(R.string.schedule_task_add_manager));
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle1).navigation(TaskAddActivity.this, REQUEST_MANGER);
             }
         } else if (i == R.id.rl_task_participant) {
-            if(AppTabUtils.hasContactPermission(this)){
+            if (AppTabUtils.hasContactPermission(this)) {
                 bundle1.putInt(EXTRA_TYPE, 2);
                 bundle1.putBoolean(EXTRA_MULTI_SELECT, true);
                 bundle1.putInt(EXTRA_LIMIT, 20);
@@ -383,9 +386,21 @@ public class TaskAddActivity extends BaseActivity {
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, REQUEST_ALBUM);
         } else if (i == R.id.rl_attachments_others) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("extra_maximum", 1);
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(TaskAddActivity.this, REQUEST_ATTACHMENT);
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.STORAGE,
+                    new PermissionRequestCallback() {
+                        @Override
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("extra_maximum", 1);
+                            ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(TaskAddActivity.this, REQUEST_ATTACHMENT);
+                        }
+
+                        @Override
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            ToastUtils.show(TaskAddActivity.this, PermissionRequestManagerUtils.getInstance()
+                                    .getPermissionToast(TaskAddActivity.this, permissions));
+                        }
+                    });
         }
     }
 
@@ -682,17 +697,18 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 添加附件到任务*/
-    private void addAttachmentsToTask(String taskId){
-        if(NetUtils.isNetworkConnected(this,false)){
+     * 添加附件到任务
+     */
+    private void addAttachmentsToTask(String taskId) {
+        if (NetUtils.isNetworkConnected(this, false)) {
             for (int i = 0; i < jsonAttachmentList.size(); i++) {
                 apiService.addAttachments(taskId, jsonAttachmentList.get(i).getJsonAttachment().toString());
             }
         }
     }
 
-    private void addParticipantsToTask(String taskId){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskParticipantList.size() > 0) {
+    private void addParticipantsToTask(String taskId) {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this, false) && taskParticipantList.size() > 0) {
             JSONArray addMembers = new JSONArray();
             for (int i = 0; i < taskParticipantList.size(); i++) {
                 addMembers.put(taskParticipantList.get(i).getId());
@@ -702,17 +718,19 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 更改任务 owner*/
-    private void changeOwnerToTask(){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskMangerList.size() > 0) {
+     * 更改任务 owner
+     */
+    private void changeOwnerToTask() {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this, false) && taskMangerList.size() > 0) {
             apiService.changeMessionOwner(taskResult.getId(), taskMangerList.get(0).getId(), taskMangerList.get(0).getName());
         }
     }
 
     /**
-     * 更新任务名称等属性*/
-    private void upDateTask(){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
+     * 更新任务名称等属性
+     */
+    private void upDateTask() {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this, false)) {
             String taskData = uploadTaskData();
             apiService.updateTask(taskData, -1);
         }
@@ -721,8 +739,8 @@ public class TaskAddActivity extends BaseActivity {
     /***
      * 添加Tags
      */
-    private void addTaskTags(){
-        if(NetUtils.isNetworkConnected(TaskAddActivity.this,false)){
+    private void addTaskTags() {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this, false)) {
             List<String> tagsIdList = new ArrayList<>();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 tagsIdList.add(taskColorTagList.get(i).getId());
@@ -732,8 +750,9 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 删除Tags*/
-    private void deleteTaskTags(){
+     * 删除Tags
+     */
+    private void deleteTaskTags() {
         if (!isCreateTask) {
             List<String> tagsIdList = new ArrayList<>();
             for (int i = 0; i < orgTaskColorTagList.size(); i++) {
@@ -746,8 +765,8 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
-    private void addAttachmentsToTask(JSONObject jsonAttachment){
-        if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
+    private void addAttachmentsToTask(JSONObject jsonAttachment) {
+        if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this, false)) {
             apiService.addAttachments(taskResult.getId(), jsonAttachment.toString());
         }
     }
@@ -881,7 +900,7 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
-            if(NetUtils.isNetworkConnected(TaskAddActivity.this,true)){
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this, true)) {
                 addAttachmentsToTask(getTaskAddResult.getId());
                 addParticipantsToTask(getTaskAddResult.getId());
                 changeOwnerToTask();

@@ -21,7 +21,10 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import java.io.BufferedOutputStream;
@@ -144,6 +147,10 @@ public class FileUtils {
     public static boolean writeFile(String filePath, String content,
                                     boolean append) {
         if (StringUtils.isEmpty(content)) {
+            return false;
+        }
+
+        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(BaseApplication.getInstance(), Permissions.STORAGE)){
             return false;
         }
 

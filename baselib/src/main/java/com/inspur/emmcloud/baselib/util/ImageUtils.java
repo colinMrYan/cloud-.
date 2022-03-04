@@ -297,41 +297,6 @@ public class ImageUtils {
         return originBitmap;
     }
 
-
-    /**
-     * 获取照相机使用的目录
-     *
-     * @return
-     */
-    public static String getCamerPath() {
-        return Environment.getExternalStorageDirectory() + File.separator
-                + "FounderNews" + File.separator;
-    }
-
-    /**
-     * 判断当前Url是否标准的content://样式，如果不是，则返回绝对路径
-     * @param mUri
-     * @return
-     */
-    public static String getAbsolutePathFromNoStandardUri(Uri mUri) {
-        String filePath = null;
-
-        String mUriString = mUri.toString();
-        mUriString = Uri.decode(mUriString);
-
-        String pre1 = "file://" + SDCARD + File.separator;
-        String pre2 = "file://" + SDCARD_MNT + File.separator;
-
-        if (mUriString.startsWith(pre1)) {
-            filePath = Environment.getExternalStorageDirectory().getPath()
-                    + File.separator + mUriString.substring(pre1.length());
-        } else if (mUriString.startsWith(pre2)) {
-            filePath = Environment.getExternalStorageDirectory().getPath()
-                    + File.separator + mUriString.substring(pre2.length());
-        }
-        return filePath;
-    }
-
     /**
      * 通过uri获取文件的绝对路径
      *

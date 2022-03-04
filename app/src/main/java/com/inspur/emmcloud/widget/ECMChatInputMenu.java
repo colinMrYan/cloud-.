@@ -946,8 +946,18 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                            Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
-                            ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
+                            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.STORAGE, new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
+                                    ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
+                                }
+
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+                                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                }
+                            });
                             break;
                         case "mention":
                             openMentionPage(false);

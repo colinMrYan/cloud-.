@@ -179,6 +179,12 @@
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="channel_single_chat_images">Images</string>
+    <string name="channel_report">Report</string>
+    <string name="channel_report_hint">Please enter the report content</string>
+    <string name="feed_back_without_name">Anonymous submit</string>
+    <string name="report_submit">submit report</string>
+    <string name="report_out_of_length">The number of words you entered has exceeded the limit</string>
+    <string name="report_no_empty">Please enter the report content</string>
     <string name="channel_single_chat_files">Files</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>

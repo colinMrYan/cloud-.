@@ -92,7 +92,7 @@ public class PermissionRequestManagerUtils {
             if (callback != null) {
                 callback.onPermissionRequestFail(permissionList);
             }
-            BaseApplication.getInstance().exit();
+//            BaseApplication.getInstance().exit();
         } else {
             if (isHasPermission(context, stringList2StringArray(permissionList))) {
                 if (callback != null) {

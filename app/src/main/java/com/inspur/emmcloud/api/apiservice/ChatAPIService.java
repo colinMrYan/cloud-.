@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -1864,6 +1865,56 @@ public class ChatAPIService {
                 };
                 refreshToken(
                         oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 上传反馈和建议接口 聊天是投诉举报
+     *
+     * @param content
+     * @param contact
+     * @param userName
+     */
+    public void uploadFeedback(final String content, final String contact,
+                               final String userName) {
+        final String completeUrl = "http://u.inspur.com/analytics/RestFulServiceForIMP.ashx?resource=Feedback&method=AddECMFeedback";
+        RequestParams params = ((BaseApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        String AppBaseID = context.getPackageName();
+        String AppVersion = AppUtils.getVersion(context);
+        String Organization = PreferencesUtils
+                .getString(context, "orgName", "");
+        String UUID = AppUtils.getMyUUID(context);
+        params.addParameter("Content", content);
+        params.addParameter("AppBaseID", AppBaseID);
+        params.addParameter("AppVersion", AppVersion);
+        params.addParameter("System", "android");
+        params.addParameter("SystemVersion", android.os.Build.VERSION.RELEASE);
+        params.addParameter("UserName", userName);
+        params.addParameter("Organization", Organization);
+        params.addParameter("Contact", contact);
+        params.addParameter("Email", "");
+        params.addParameter("Telephone", "");
+        params.addParameter("UUID", UUID);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+
             }
         });
     }

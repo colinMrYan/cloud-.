@@ -21,9 +21,13 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 
 import org.xutils.common.Callback;
@@ -33,6 +37,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class UpgradeUtils extends APIInterfaceInstance {
 
@@ -210,8 +215,18 @@ public class UpgradeUtils extends APIInterfaceInstance {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-                showDownloadDialog();
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permissions.STORAGE, new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+                        dialog.dismiss();
+                        showDownloadDialog();
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                    }
+                });
             }
         });
         Button cancelBt = dialog.findViewById(R.id.cancel_btn);
@@ -250,8 +265,19 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-                showDownloadDialog();
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permissions.STORAGE, new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+                        dialog.dismiss();
+                        showDownloadDialog();
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                    }
+                });
+
             }
         });
         Button cancelBt = dialog.findViewById(R.id.cancel_btn);

@@ -201,8 +201,8 @@ public class DataCleanManager {
                 if (sdcardCacheFile.exists()) {
                     sdCardCacheFileSize = getFolderSize(sdcardCacheFile);
                 }
-                File downloadFile = new File(Environment
-                        .getExternalStorageDirectory() + "/IMP-Cloud/download/");
+                File downloadFile = new File(context.getExternalCacheDir()
+                         + "/IMP-Cloud/download/");
                 if (downloadFile.exists()) {
                     downloadFileSize = getFolderSize(downloadFile);
                 }

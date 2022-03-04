@@ -187,6 +187,12 @@
     <string name="channel_group_qrcode_valid">該二維碼7天內（%1$s之前）有效，重新進入將更新</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
+    <string name="channel_report">投訴</string>
+    <string name="channel_report_hint">請輸入投訴内容</string>
+    <string name="feed_back_without_name">匿名提交</string>
+    <string name="report_submit">提交投诉</string>
+    <string name="report_out_of_length">您輸入的字數已經超過了限制</string>
+    <string name="report_no_empty">請輸入投訴内容</string>
     <string name="channel_set_sticky">置頂聊天</string>
     <string name="modify_group_name">群名片</string>
     <string name="channel_single_chat_images">聊天圖片</string>
