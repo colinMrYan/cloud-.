@@ -7,6 +7,7 @@
 package com.inspur.emmcloud.login.api;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -28,14 +29,19 @@ import org.json.JSONObject;
 import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.http.app.RequestTracker;
-import org.xutils.http.body.RequestBody;
 import org.xutils.http.request.UriRequest;
 
 import java.net.SocketTimeoutException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.crypto.Cipher;
 
 /**
  * com.inspur.emmcloud.login.api.LoginAPIService create at 2016年11月8日
@@ -64,7 +70,7 @@ public class LoginAPIService {
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("grant_type", "password");
         params.addParameter("username", userName);
-        params.addParameter("password", password);
+        params.addParameter("password", encryptPassword(password));
         params.addParameter("client_id", "com.inspur.ecm.client.android");
         params.addParameter("client_secret",
                 "6b3c48dc-2e56-440c-84fb-f35be37480e8");
@@ -120,12 +126,12 @@ public class LoginAPIService {
                     error = "未知错误";
                 }
                 String headerLimitRemaining = "";
-                String headerRetryAfter= "";
-                if (uriRequest != null && uriRequest.getResponseHeaders() != null){
+                String headerRetryAfter = "";
+                if (uriRequest != null && uriRequest.getResponseHeaders() != null) {
                     headerLimitRemaining = uriRequest.getResponseHeader("X-Rate-Limit-Remaining");
                     headerRetryAfter = uriRequest.getResponseHeader("X-Rate-Limit-Retry-After-Seconds");
                 }
-                apiInterface.returnOauthSignInFail(error, responseCode,headerLimitRemaining,headerRetryAfter);
+                apiInterface.returnOauthSignInFail(error, responseCode, headerLimitRemaining, headerRetryAfter);
             }
 
             @Override
@@ -137,23 +143,52 @@ public class LoginAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnOauthSignInSuccess(new GetLoginResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
 //                apiInterface.returnOauthSignInFail(error, responseCode);
             }
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
 //                apiInterface.returnOauthSignInFail(new String(""), 500,-1,-1);
             }
 
         });
+    }
+
+    private String encryptPassword(String password) {
+        if (!needEncryptPassword()) {
+            return password;
+        }
+        String passwordTmp1 = password + ':' + System.currentTimeMillis();
+        String publicKeyStr = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKn5D+lBk/cGLCuznxSmouLgd//4nnid2cz7EwsSINHIFBaRnMxIlfxmjLm7fUKWqKsN9MpW3NaEGmfKJBB7yHMCAwEAAQ==";
+        String outPassword = password;
+        try {
+            // base64编码的公钥
+            byte[] publicKeyBytes = Base64.decode(publicKeyStr, Base64.DEFAULT);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            // RSA加密
+            Cipher encryptCipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+            encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            outPassword = "E0:" + Base64.encodeToString(encryptCipher.doFinal(passwordTmp1.getBytes("UTF-8")), Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return password;
+        }
+        Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+        // \n回车 \t 水平制表符 \s 空格 \r换行
+        Matcher m = p.matcher(outPassword);
+        outPassword = m.replaceAll("");
+        return outPassword;
+    }
+
+    private boolean needEncryptPassword() {
+        return LoginAPIUri.getOauthSigninUrl().startsWith("https://id-test.inspuronline.com");
     }
 
     /**
@@ -173,19 +208,16 @@ public class LoginAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnRefreshTokenSuccess(new GetLoginResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnRefreshTokenFail(error, responseCode);
             }
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
                 apiInterface.returnRefreshTokenFail("", -1);
             }
 
@@ -228,19 +260,16 @@ public class LoginAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
                 apiInterface.returnLoginSMSCaptchaFail("", 500);
             }
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnLoginSMSCaptchaSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnLoginSMSCaptchaFail(error, responseCode);
             }
         });
@@ -264,26 +293,22 @@ public class LoginAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
                 apiInterface.returnReisterSMSCheckFail("", -1);
             }
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnReisterSMSCheckSuccess(new GetRegisterCheckResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnReisterSMSCheckFail(error, responseCode);
             }
         });
 
     }
-
 
 
     /**
@@ -329,13 +354,11 @@ public class LoginAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnModifyPasswordSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnModifyPasswordFail(error, responseCode);
             }
         });
@@ -486,7 +509,6 @@ public class LoginAPIService {
      * @param userCode
      */
     public void deviceCheck(String tenantId, String userCode) {
-        // TODO Auto-generated method stub
         String completeUrl = LoginAPIUri.getDeviceCheckUrl();
         String uuid = AppUtils.getMyUUID(context);
         // RequestParams params = new RequestParams(completeUrl);
