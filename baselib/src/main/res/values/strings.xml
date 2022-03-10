@@ -801,7 +801,7 @@
     <!--网络链接及网络诊断-->
     <string name="net_connected_error">网络不给力，请检查网络设置</string>
     <string name="net_no_network_available">无网络</string>
-
+    <string name="mobile_network">移动网络</string>
 
     <string name="function_net_load_fail">网络加载失败</string>
     <string name="function_net_over_load">重新加载</string>

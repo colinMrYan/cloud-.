@@ -801,6 +801,7 @@
 
     <string name="setting_net_diagnosis_copy">點此複製該內容</string>
     <string name="net_no_network_available">無網絡</string>
+    <string name="mobile_network">移動網絡</string>>
 
     <string name="function_net_load_fail">網絡加載失敗</string>
     <string name="function_net_over_load">重新加載</string>

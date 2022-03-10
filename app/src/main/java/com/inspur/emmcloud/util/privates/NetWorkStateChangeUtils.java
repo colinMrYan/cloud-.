@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
@@ -22,7 +21,7 @@ public class NetWorkStateChangeUtils {
 
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
     private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
-    private static boolean isColdReboot = true;
+    public static boolean isFirstRegister = true;
 
     private NetWorkStateChangeUtils() {
 
@@ -63,10 +62,10 @@ public class NetWorkStateChangeUtils {
                 }
                 checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
                 checkingNetStateUtils.getNetStateResult(5);
-                if (!isColdReboot) {
-                    ToastUtils.show(Res.getString("network_change_tip") + checkingNetStateUtils.getNetworksType());
+                if (!isFirstRegister) {
+                    ToastUtils.show(Res.getString("network_change_tip") + checkingNetStateUtils.getSimpleNetworksType());
                 }
-                isColdReboot = false;
+                isFirstRegister = false;
             }
         } catch (Exception e) {
             e.printStackTrace();

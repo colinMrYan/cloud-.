@@ -65,6 +65,7 @@ import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
+import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.tinkerpatch.sdk.TinkerPatch;
 
@@ -146,6 +147,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         // if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
         networkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        NetWorkStateChangeUtils.isFirstRegister = true;
         // } else {
         // networkCallback = new NetworkCallbackImpl(this);
         // NetworkRequest.Builder builder = new NetworkRequest.Builder();
