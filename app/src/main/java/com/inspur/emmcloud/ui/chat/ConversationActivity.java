@@ -982,6 +982,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
+                case REQUEST_OPERATE_CHANNELGROUP:
+                    if (data == null || !data.hasExtra("operate")){
+                        break;
+                    }
+                    int dateExtra = data.getIntExtra("operate", -1);
+                    cid = conversation.getId();
+                    switch (dateExtra) {
+                        case 0:
+                            conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+                            if (conversation == null) {
+                                ToastUtils.show(this, getString(R.string.net_request_failed));
+                                return;
+                            }
+                            setChannelTitle();
+                            break;
+                        case 1:
+                            MyApplication.getInstance().setCurrentChannelCid("");
+                            finish();
+                        default:
+                            break;
+                    }
                 //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {

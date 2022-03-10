@@ -109,10 +109,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().register(this);
         mPresenter = new ConversationInfoPresenter();
         mPresenter.attachView(this);
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
         loadingDialog = new LoadingDialog(this);
-        mPresenter.getConversationInfo(cid);
-        uiConversation = mPresenter.getConversation(cid);
+        refreshMyConversation();
         if (uiConversation == null) {
             ToastUtils.show(getContext(), getString(R.string.net_request_failed));
             finish();
@@ -313,14 +311,25 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        refreshMyConversation();
         switch (compoundButton.getId()) {
             case R.id.switch_conversation_sticky:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    conversationStickySwitch.setChecked(!b);
+                    return;
+                }
                 if (!b == uiConversation.isStick()) {
                     loadingDialog.show();
                     mPresenter.setConversationStick(b, uiConversation.getId());
                 }
                 break;
             case R.id.switch_conversation_mute_notification:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    conversationMuteNotificationSwitch.setChecked(!b);
+                    return;
+                }
                 if (!b == uiConversation.isDnd()) {
                     loadingDialog.show();
                     mPresenter.setMuteNotification(b, uiConversation.getId());
