@@ -24,6 +24,9 @@ public class LoginAPIUri {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
     }
 
+    public static String getCancelEmmTokenUrl() {
+        return "https://emm.inspuronline.com/api/sys/v3.0/user/sign_out";
+    }
 
     /**
      * 请求短信验证码

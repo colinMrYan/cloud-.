@@ -16,12 +16,14 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
+import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.util.OauthUtils;
 
 import org.json.JSONException;
@@ -232,6 +234,30 @@ public class LoginAPIService {
         final String url = LoginAPIUri.getCancelTokenUrl() + "?destroy=ALL";
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                cancelEmmToken();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+            }
+        });
+    }
+
+
+    /**
+     * 退出登录时取消Emm保存的token
+     */
+    public void cancelEmmToken() {
+        if (!WebServiceRouterManager.getInstance().getClusterEmm().equals("https://emm.inspuronline.com/")) return;
+        final String url = LoginAPIUri.getCancelEmmTokenUrl();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
             }
