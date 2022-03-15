@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
@@ -190,7 +191,7 @@ public class LoginAPIService {
     }
 
     private boolean needEncryptPassword() {
-        return LoginAPIUri.getOauthSigninUrl().startsWith("https://id-test.inspuronline.com");
+        return LoginAPIUri.getOauthSigninUrl().startsWith(Constant.DEFAULT_CLUSTER_ID);
     }
 
     /**
