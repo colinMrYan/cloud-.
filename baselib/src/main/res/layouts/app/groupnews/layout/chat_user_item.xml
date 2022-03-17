@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="7dp"
+    android:paddingTop="10dp"
+    android:paddingRight="7dp">
+
+    <com.inspur.emmcloud.baselib.widget.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            android:id="@+id/iv_chat_members_head"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/iv_chat_members_selected"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/icon_chat_owner"
+            android:visibility="gone" />
+    </com.inspur.emmcloud.baselib.widget.SquareLayout>
+
+    <TextView
+        android:id="@+id/tv_chat_members_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:maxWidth="55dp"
+        android:paddingTop="10dp"
+        android:singleLine="true"
+        android:textColor="?attr/text_color_e1" />
+</LinearLayout>

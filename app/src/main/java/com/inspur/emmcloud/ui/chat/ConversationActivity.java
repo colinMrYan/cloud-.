@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -167,6 +168,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @BindView(R.id.robot_photo_img)
     ImageView robotPhotoImg;
+
     @BindView(R.id.btn_conversation_unread)
     CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
@@ -180,6 +182,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
+    private UserOrientedConversationHelper userOrientedConversationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +193,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
+        initOrientedHelper();
     }
 
     private void handleMessage() {
@@ -227,6 +231,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         };
+    }
+
+
+    private void initOrientedHelper() {
+        userOrientedConversationHelper = new UserOrientedConversationHelper((View)findViewById(R.id.main_layout), conversation.getType(), this);
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -612,7 +621,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 } else {
                     sendEmail(userList);
                 }
-
+                break;
+            case "read_disappear":
+            case "whisper":
+                if (userOrientedConversationHelper != null) userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
                 break;
         }
     }
@@ -1230,7 +1242,19 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 发送文本消息
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
-        Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+        Message localMessage;
+        switch (userOrientedConversationHelper.getConversationType()) {
+            case BURN:
+                localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid, mentionsMap);
+                break;
+            case WHISPER:
+                localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, mentionsMap);
+                break;
+            case STANDARD:
+            default:
+                localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                break;
+        }
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);

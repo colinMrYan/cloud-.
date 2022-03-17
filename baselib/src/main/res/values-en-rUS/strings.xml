@@ -957,6 +957,8 @@
     <string name="voice_communication_can_not_use_this_feature">Unable to uses this feature during call</string>
     <string name="voice_communication_calling">Calling</string>
     <string name="video_call">Video Call</string>
+    <string name="read_disappear">Burn after reading</string>
+    <string name="voice_whisper">whisper</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>
     <string name="video_communication_waiting_answer">Connection...</string>

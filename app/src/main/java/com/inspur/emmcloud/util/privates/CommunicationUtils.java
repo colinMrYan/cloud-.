@@ -126,6 +126,42 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combineLocalTextWhisperMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("text/whisper");
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
+    public static Message combineLocalTextBurnMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType("text/whisper");
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
 
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
         String tracer = getTracer();

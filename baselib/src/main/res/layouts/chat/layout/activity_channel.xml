@@ -116,10 +116,50 @@
 
             </FrameLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/members_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="13dp"
+                    android:overScrollMode="never"
+                    android:visibility="gone"
+                    android:scrollbars="none" />
+            </FrameLayout>
+
         </RelativeLayout>
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/mention_layout"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp"
+        android:layout_height="30dp"
+        android:background="@color/color_icon_sub_main"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/mention_info"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/close_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/ui_10_dip"
+            android:background="@drawable/ic_chat_img_display_close"/>
+
+    </RelativeLayout>
 
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"

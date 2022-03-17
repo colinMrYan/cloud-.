@@ -818,15 +818,17 @@ public class ECMChatInputMenu extends LinearLayout {
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
                     R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email,
-                    R.drawable.ic_chat_input_add_video};
+                    R.drawable.ic_chat_input_add_video, R.drawable.ic_chat_input_read_disppear, R.drawable.ic_chat_input_whisper};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file), getContext().getString(R.string.voice_input),
                     getContext().getString(R.string.mention),
                     getContext().getString(R.string.voice_call),
                     getContext().getString(R.string.send_email),
-                    getContext().getString(R.string.video_call)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL};
+                    getContext().getString(R.string.video_call),
+                    getContext().getString(R.string.read_disappear),
+                    getContext().getString(R.string.voice_whisper)};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL, "read_disappear", "whisper"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -912,6 +914,9 @@ public class ECMChatInputMenu extends LinearLayout {
             //如果是群组的话添加@功能
             if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
+            }else {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
             }
 
             if (isVoiceCallEnable) {
@@ -1013,6 +1018,12 @@ public class ECMChatInputMenu extends LinearLayout {
                             break;
                         case "send_email":
                             inputMenuClickCallback.onInputMenuClick("mail");
+                            break;
+                        case "read_disappear":
+                            inputMenuClickCallback.onInputMenuClick("read_disappear");
+                            break;
+                        case "whisper":
+                            inputMenuClickCallback.onInputMenuClick("whisper");
                             break;
                         default:
                             break;

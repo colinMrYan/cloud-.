@@ -21,6 +21,7 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_MEDIA_IMAGE = "media/image";
     public static final String MESSAGE_TYPE_MEDIA_VOICE = "media/voice";
     public static final String MESSAGE_TYPE_TEXT_PLAIN = "text/plain";
+    public static final String MESSAGE_TYPE_TEXT_WHISPER = "text/whisper";
     public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
     public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
