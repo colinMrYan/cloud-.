@@ -977,6 +977,9 @@ public class CommunicationFragment extends BaseFragment {
                     conversationAdapter.setData(displayUIConversationList);
                     conversationAdapter.notifyRealItemChanged(index);
                 }
+                ArrayList<Conversation> conversations = new ArrayList<>();
+                conversations.add(conversation);
+                ConversationGroupIconUtils.getInstance().create(conversations);
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND:
                 conversation = (Conversation) eventMessage.getMessageObj();

@@ -24,6 +24,7 @@ import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
@@ -475,7 +476,10 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "refresh_session_list");
                 LocalBroadcastManager.getInstance(BaseApplication.getInstance()).sendBroadcast(intent);
-
+                // 创建头像
+                ArrayList<Conversation> conversations = new ArrayList<>();
+                conversations.add(mConversation);
+                ConversationGroupIconUtils.getInstance().create(conversations);
                 Intent intentChannel = new Intent("update_channel_name");
                 intentChannel.putExtra("name", newName);
                 LocalBroadcastManager.getInstance(BaseApplication.getInstance()).sendBroadcast(intentChannel);
