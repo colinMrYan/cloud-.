@@ -491,6 +491,32 @@ public class WebSocketPush {
                                             SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand);
                                             EventBus.getDefault().post(eventMessage);
                                             break;
+                                        case "client.chat.friendship.terminate":
+                                            SimpleEventMessage removeMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_CONTACT_REMOVE_FRIEND_MESSAGE, wsCommand);
+                                            EventBus.getDefault().post(removeMessage);
+                                            break;
+//                                        case "client.chat.channel.group.member.add":
+                                        case "client.chat.channel.group.member.remove":
+                                        case "client.chat.channel.group.create":
+                                        case "client.chat.channel.group.dismiss":
+                                        case "client.chat.channel.group.name.update":
+//                                        case "client.chat.channel.group.member.quit":
+//                                        case "client.chat.channel.group.member.join":
+                                            SimpleEventMessage eventMessageGroupConversationChanged = new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand);
+                                            EventBus.getDefault().post(eventMessageGroupConversationChanged);
+                                            //接收到消息后告知服务端 此处复用了音视频通话的发送接口
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        case "client.chat.friendship.remove":
+                                        case "client.chat.friendship.join":
+                                        case "client.chat.friendship.agree":
+                                            //被删、被加好友后，收到通知，刷新好友信息
+                                            ContactFriendRepository.getInstance().getContactFriends(null, BaseApplication.getInstance());
+                                            break;
+                                        case "client.user.log.out":
+                                            triggerForceLogout(BaseApplication.getInstance());
+                                            WSAPIService.getInstance().sendReceiveUserLogout(wsPushContent.getTracer());
+                                            break;
                                     }
 
                                 }

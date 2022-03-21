@@ -1024,6 +1024,18 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED:
                 WebSocketPush.getInstance().startWebSocket();
                 WSCommand command = (WSCommand) eventMessage.getMessageObj();
+                //删除其它成员不发送信息，删除自己继续发送信息
+                if (command.getAction().equals("client.chat.channel.group.member.remove")) {
+                    String removeParams = command.getParams();
+                    String[] uids = JSONUtils.getStringArray(removeParams, "members", new String[100]);
+                    boolean forceRefresh = false;
+                    for (String uid : uids) {
+                        if (uid.equals(BaseApplication.getInstance().getUid())) {
+                            forceRefresh = true;
+                        }
+                    }
+                    if (!forceRefresh) break;
+                }
                 if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
                 if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
                     channelRefreshId = command.getChannel();
@@ -1286,6 +1298,7 @@ public class CommunicationFragment extends BaseFragment {
                             Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelRefreshId);
                             if (conversation != null) {
                                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, conversation));
+                                channelRefreshId = "";
                             }
                         }
                     }
