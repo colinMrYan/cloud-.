@@ -351,51 +351,57 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     public void quitGroupChannel() {
         ArrayList<String> memberUidList = mConversation.getMemberList();
         memberUidList.remove(BaseApplication.getInstance().getUid());
-        if (needUpdateGroupName(mConversation.getMemberList())){
+        if (needUpdateGroupName(mConversation.getMemberList())) {
             String quitName = createChannelGroupName(createSequenceUserArray(memberUidList));
-            updateGroupName(quitName,new CallBack() {
+            updateGroupName(quitName, new CallBack() {
                 @Override
                 public void success() {
-                    final String conversationId = mConversation.getId();
-                    String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
-                    ApiServiceImpl.getInstance().quitGroupChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
-                        @Override
-                        public void callbackSuccess(byte[] arg0) {
-                            mView.dismissLoading();
-                            mView.quitGroupSuccess();
-                        }
-
-                        @Override
-                        public void callbackFail(String error, int responseCode) {
-                            mView.dismissLoading();
-                            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
-                        }
-
-                        @Override
-                        public void callbackTokenExpire(long requestTime) {
-                            OauthCallBack oauthCallBack = new OauthCallBack() {
-                                @Override
-                                public void reExecute() {
-                                    quitGroupChannel();
-                                }
-
-                                @Override
-                                public void executeFailCallback() {
-                                    callbackFail("", -1);
-                                }
-                            };
-                            ApiServiceImpl.getInstance().refreshToken(
-                                    oauthCallBack, requestTime);
-                        }
-                    }, conversationId);
+                    quitGroup();
                 }
 
                 @Override
                 public void fail() {
-
+                    mView.dismissLoading();
                 }
             });
+        } else {
+            quitGroup();
         }
+    }
+
+    private void quitGroup() {
+        final String conversationId = mConversation.getId();
+        String completeUrl = ApiUrl.getQuitChannelGroupUrl(mConversation.getId());
+        ApiServiceImpl.getInstance().quitGroupChannel(new BaseModuleAPICallback(mView.getContext(), completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                mView.dismissLoading();
+                mView.quitGroupSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                mView.dismissLoading();
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        quitGroupChannel();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                ApiServiceImpl.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        }, conversationId);
     }
 
     @Override
