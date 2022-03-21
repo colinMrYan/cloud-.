@@ -485,8 +485,11 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 LocalBroadcastManager.getInstance(BaseApplication.getInstance()).sendBroadcast(intentChannel);
                 ConversationCacheUtils.updateConversationName(BaseApplication.getInstance(), mConversation.getId(), newName);
                 mConversation.setName(newName);
-                mView.updateUiConversation(mConversation);
-                mView.updateGroupNameSuccess();
+                mConversation.setShowName(newName);
+                ConversationCacheUtils.updateConversation(MyApplication.getInstance(), mConversation,"showName", "name");
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, mConversation));
+//                mView.updateUiConversation(mConversation);
+//                mView.updateGroupNameSuccess();
                 if (callBack != null) {
                     callBack.success();
                 }
