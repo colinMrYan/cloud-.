@@ -1,3 +1,6 @@
+<!DOCTYPE resources [
+<!ENTITY appname "云+">
+]>
 <resources>
     <!--任务（新）-->
     <string name="schedule_task_add">添加任务</string>
@@ -172,8 +175,8 @@
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密码已更改，请到日程设置中更新</string>
     <string name="schedule_account_type">日历</string>
-    <string name="schedule_cloud_calendar">云+日程</string>
-    <string name="schedule_cloud_meeting">云+会议</string>
+    <string name="schedule_cloud_calendar">&appname;日程</string>
+    <string name="schedule_cloud_meeting">&appname;会议</string>
     <string name="schedule_schedule_calendar_detail">日历详情</string>
     <string name="schedule_calendar_adjust">调整</string>
     <string name="schedule_calendar_please_input_title">请输入标题</string>

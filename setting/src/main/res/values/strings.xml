@@ -1,3 +1,6 @@
+<!DOCTYPE resources [
+<!ENTITY appname "云+">
+]>
 <resources>
     <string name="setting_more_feedback">意见反馈</string>
     <string name="setting_feed_back_content_hint">请输入建议和意见</string>
@@ -47,7 +50,7 @@
 
     <string name="setting_check_update_text">检查新版本</string>
 
-    <string name="setting_invite_friends_text">把云+推荐给朋友</string>
+    <string name="setting_invite_friends_text">把&appname;推荐给朋友</string>
 
     <string name="setting_join_experience_plan">加入升级体验计划</string>
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
@@ -62,7 +65,7 @@
     <string name="setting_create_gesture_confirm_correct">设置成功</string>
     <string name="setting_create_gesture_reset">重新设置</string>
     <string name="setting_create_gesture_code">创建手势密码</string>
-    <string name="setting_create_gesture_guid">您可以创建一个云+解锁图案，这样他人在借用您的手机时，将无法打开云+</string>
+    <string name="setting_create_gesture_guid">您可以创建一个&appname;解锁图案，这样他人在借用您的手机时，将无法打开&appname;</string>
 
     <!--安全中心-->
     <string name="setting_safe_gesture_face">指纹、手势密码</string>
@@ -123,7 +126,7 @@
     <string name="setting_net_ping_url_baidu">百度</string>
     <string name="setting_net_ping_url_inspur">浪潮</string>
     <string name="setting_net_ping_url_ali">阿里</string>
-    <string name="setting_net_ping_url_cloud">云＋</string>
+    <string name="setting_net_ping_url_cloud">&appname;</string>
     <string name="setting_net_check_error_detail_title">异常信息</string>
 
     <string name="settings_device_manager">设备查看与管理</string>
@@ -158,7 +161,7 @@
     <string name="setting_enter_app">进入应用</string>
     <string name="setting_log_off">用户注销</string>
     <string name="setting_log_offed">注销成功</string>
-    <string name="setting_log_off_dialog_info">账号注销后，您在云+的所有消息记录，账号信息等均会清除且无法恢复，请您谨慎操作。请确认是否继续注销账号？</string>
+    <string name="setting_log_off_dialog_info">账号注销后，您在&appname;的所有消息记录，账号信息等均会清除且无法恢复，请您谨慎操作。请确认是否继续注销账号？</string>
 
 
 </resources>

@@ -138,7 +138,7 @@ public class MoreFragment extends BaseFragment {
                             break;
                         case "my_customerService_function":
                             mineLayoutItem.setIco("personcenter_customerService");
-                            mineLayoutItem.setTitle(getString(R.string.app_customer));
+                            mineLayoutItem.setTitle(getString(R.string.app_name) + getString(R.string.app_customer));
                             break;
                         case "my_aboutUs_function":
                             mineLayoutItem.setIco("personcenter_aboutUs");
@@ -342,7 +342,7 @@ public class MoreFragment extends BaseFragment {
                 Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
                     enterpriseText.setOnClickListener(myClickListener);
-                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.mine_my_info_switch_enterprise);
+                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
                     drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), drawableId);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
@@ -377,7 +377,7 @@ public class MoreFragment extends BaseFragment {
                 menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
                 menuImgBtn.setLayoutParams(layoutParams);
                 menuImgBtn.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
-                int tintColor= ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
+                int tintColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
                 menuImgBtn.setColorFilter(getContext().getResources().getColor(tintColor));
                 menuImgBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -386,9 +386,9 @@ public class MoreFragment extends BaseFragment {
                     }
                 });
                 String iconUrl = getIconUrl(mineLayoutItem.getIco());
-                if (iconUrl.startsWith("drawable")){
-                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn,iconUrl);
-                }else {
+                if (iconUrl.startsWith("drawable")) {
+                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn, iconUrl);
+                } else {
                     ImageDisplayUtils.getInstance().displayImage(menuImgBtn, iconUrl);
                 }
                 userCardMenuLayout.addView(menuImgBtn);

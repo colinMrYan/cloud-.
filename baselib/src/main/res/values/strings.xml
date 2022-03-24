@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appname "云+">
+    <!ENTITY author "MrGreen">
+    ]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-
-    <string name="app_name">云+</string>
+    <string name="app_name">&appname;</string>
     <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="app_name_huaxiayinhang">华夏管理云</string>
     <string name="app_name_beiqi">云+</string>
@@ -11,7 +14,7 @@
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
-    <string name="send_to_app">发送到云+</string>
+    <string name="send_to_app">发送到&appname;</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
@@ -383,7 +386,7 @@
     <string name="chat_filemanager_volume">企业云盘</string>
     <string name="we_chat_file_manager">微信</string>
     <string name="chat_file_transfer">文件传输助手</string>
-    <string name="chat_file_transfer_content">登录云+桌面版，向文件传输助手发消息，可以在手机与电脑间传输文字、图片、音频等文件。</string>
+    <string name="chat_file_transfer_content">登录&appname;桌面版，向文件传输助手发消息，可以在手机与电脑间传输文字、图片、音频等文件。</string>
     <string name="chat_search_related_messages">%1$s的记录</string>
 
 
@@ -519,7 +522,6 @@
     <string name="settings">设置</string>
     <string name="settings_protect">已保护</string>
     <string name="settings_clear_cache">清除缓存</string>
-    <string name="settings_aboutIMP">关于 云+</string>
     <string name="settings_clean_imgae_attachment">清理图片及附件缓存</string>
     <string name="settings_clean_web">清理Web应用缓存</string>
     <string name="settings_clean_all">清理应用所有缓存数据</string>
@@ -536,7 +538,7 @@
     <string name="wallet">卡包</string>
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
-    <string name="app_customer">云+客服</string>
+    <string name="app_customer">客服</string>
 
 
     <string name="fail_to_switch_enterprise">企业切换失败！</string>
@@ -578,8 +580,7 @@
     <string name="modify_user_password">请确认密码不为空，且两次输入密码一致</string>
     <string name="modify_user_password_success">通行证密码修改成功，请使用新密码登录</string>
     <string name="modify_user_password_fail">设置密码失败，您是否继续设置</string>
-    <string name="modify_welcom_user_cloud">欢迎使用云+</string>
-    <string name="modify_first_use">这是您第一次使用云+，是否设置浪潮通行证密码，以方便下次登录</string>
+    <string name="modify_first_use">这是您第一次使用&appname;，是否设置浪潮通行证密码，以方便下次登录</string>
 
     <!-- 用户信息页面部分 -->
     <string name="user_info_text">个人信息</string>
@@ -1010,7 +1011,7 @@
     <string name="voice_communicaiton_watting_talking">通话中</string>
     <string name="voice_communication_voice_busy_tip">正在语音通话，请稍后再试</string>
     <string name="voice_communication_quality">当前通话质量不佳</string>
-    <string name="voice_communication_support_nine_members">目前云+最多支持9人同时通话</string>
+    <string name="voice_communication_support_nine_members">目前&appname;最多支持9人同时通话</string>
     <string name="communication_has_leave">已挂断</string>
     <string name="voice_communication_notification_group_title">语音通话</string>
     <string name="voice_communication_notification_group_content">点击恢复</string>
@@ -1059,7 +1060,7 @@
 
     <string name="notification_switch">新消息通知</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
-    <string name="notification_switch_open_setting">系统中的云+消息通知已关闭，前往打开？</string>
+    <string name="notification_switch_open_setting">系统中的&appname;消息通知已关闭，前往打开？</string>
 
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
@@ -1082,7 +1083,7 @@
     <string name="permission_grant_window_alert_lockscreen_display">请您授予%1$s 锁屏显示和后台弹出界面权限</string>
     <string name="permission_grant_lockscreen_display">请您授予%1$s 锁屏显示权限</string>
     <string name="permission_grant_lockscreen_display_fail">您已禁止授予%1$s 锁屏显示权限</string>
-    <string name="permission_setting_phone_recognize">开启来电通知权限仅在收到来电通知时获取来电号码查询云+内组织通讯录用户信息，开启弹窗权限允许云+将组织通讯录用户信息显示在手机屏幕上</string>
+    <string name="permission_setting_phone_recognize">开启来电通知权限仅在收到来电通知时获取来电号码查询&appname;内组织通讯录用户信息，开启弹窗权限允许云+将组织通讯录用户信息显示在手机屏幕上</string>
     <string name="permission_setting_open_phone_overlay">开启悬浮窗权限</string>
     <string name="permission_setting_open_phone_read">开启来电通知权限</string>
     <string name="permission_setting_close_phone_overlay">已授权悬浮窗</string>
@@ -1147,7 +1148,7 @@
 
     <string name="pull_badge_fail">网络连接失败或请求超时，请稍后下拉刷新……</string>
 
-    <string name="root_toast">云+提醒您，当前手机已root，请注意保护你的账号安全</string>
+    <string name="root_toast">&appname;提醒您，当前手机已root，请注意保护你的账号安全</string>
     <string name="network_change_tip">网络环境发生变化，当前为</string>
 
     <!--日历字符串资源开始-->

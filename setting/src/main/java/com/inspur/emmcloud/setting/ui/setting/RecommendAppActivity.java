@@ -82,7 +82,7 @@ public class RecommendAppActivity extends BaseActivity {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if (share_media == SHARE_MEDIA.SMS) {
-                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  " + "https://www.inspuronline.com/yjapp/")
+                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【" + getResources().getString(R.string.app_name) + "】  " + "https://www.inspuronline.com/yjapp/")
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
@@ -90,8 +90,8 @@ public class RecommendAppActivity extends BaseActivity {
                             UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
                             UMWeb web = new UMWeb("https://www.inspuronline.com/yjapp/");
                             web.setThumb(thumb);
-                            web.setDescription("云+ -智能化的企业协同平台");
-                            web.setTitle("欢迎使用【云+】");
+                            web.setDescription(getResources().getString(R.string.app_name) + " -智能化的企业协同平台");
+                            web.setTitle("欢迎使用【" + getResources().getString(R.string.app_name) + "】");
                             new ShareAction(RecommendAppActivity.this).withMedia(web)
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
