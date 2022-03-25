@@ -9,6 +9,7 @@ package com.inspur.emmcloud.login.api;
 import android.content.Context;
 import android.util.Base64;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
@@ -24,7 +25,6 @@ import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
-import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.util.OauthUtils;
 
 import org.json.JSONException;
@@ -51,6 +51,7 @@ import javax.crypto.Cipher;
  * 下午2:34:43
  */
 public class LoginAPIService {
+    private static final String TAG = "LoginAPIService";
     private Context context;
     private LoginAPIInterface apiInterface;
 
@@ -238,6 +239,7 @@ public class LoginAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 cancelEmmToken();
+                destroyEcmToken();
             }
 
             @Override
@@ -255,7 +257,8 @@ public class LoginAPIService {
      * 退出登录时取消Emm保存的token
      */
     public void cancelEmmToken() {
-        if (!WebServiceRouterManager.getInstance().getClusterEmm().equals("https://emm.inspuronline.com/")) return;
+        if (!WebServiceRouterManager.getInstance().getClusterEmm().equals("https://emm.inspuronline.com/"))
+            return;
         final String url = LoginAPIUri.getCancelEmmTokenUrl();
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
@@ -271,6 +274,27 @@ public class LoginAPIService {
             public void callbackTokenExpire(long requestTime) {
             }
         });
+    }
+
+    public void destroyEcmToken() {
+        final String url = LoginAPIUri.getDestroyEcmTokenUrl();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.debug(TAG, "destroyEcmToken callbackSuccess:" + new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.debug(TAG, "destroyEcmToken callbackFail: error" + error + ",responseCode:" + responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+            }
+        });
+
     }
 
 

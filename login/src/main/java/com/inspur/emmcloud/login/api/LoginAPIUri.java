@@ -25,7 +25,11 @@ public class LoginAPIUri {
     }
 
     public static String getCancelEmmTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v3.0/user/sign_out";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/user/sign_out";
+    }
+
+    public static String getDestroyEcmTokenUrl() {
+        return WebServiceRouterManager.getInstance().getClusterChatSocket() + "/chat/rest/v1/oauth";
     }
 
     /**
