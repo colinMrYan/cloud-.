@@ -21,7 +21,7 @@ public class DisplayTextWhisperMsg {
 
     public static View getView(final Context context, Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
-                R.layout.chat_msg_card_child_text_plain_view, null);
+                R.layout.chat_msg_card_child_text_whisper_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
