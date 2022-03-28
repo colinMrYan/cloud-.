@@ -28,7 +28,6 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private View mentionView;
     private ConversationType conversationType;
     private RecyclerView memberListView;
-    private GridLayoutManager manager;
     private RecyclerGridAdapter recyclerGridAdapter;
     private ArrayList<String> selectedUser;
 
@@ -81,7 +80,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
 
     private void closeUserOrientedLayout() {
         if (mentionView != null) mentionView.setVisibility(View.GONE);
-        if (memberListView != null) memberListView.setVisibility(View.VISIBLE);
+        if (memberListView != null) memberListView.setVisibility(View.GONE);
         setConversationType(ConversationType.STANDARD);
     }
 
@@ -168,7 +167,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     int selectedState = holder.selectImg.getVisibility();
-                    holder.selectImg.setVisibility(8 - selectedState);
+                    holder.selectImg.setVisibility(View.GONE - selectedState);
                     callback.itemSelected(uid);
                 }
             });

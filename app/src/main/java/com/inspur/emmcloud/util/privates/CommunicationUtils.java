@@ -150,7 +150,7 @@ public class CommunicationUtils {
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("text/whisper");
+        message.setType("text/burn");
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
         if (mentionsMap != null && mentionsMap.size() > 0) {

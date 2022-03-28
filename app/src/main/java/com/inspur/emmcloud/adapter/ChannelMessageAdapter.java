@@ -36,6 +36,8 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
+import com.inspur.emmcloud.ui.chat.DisplayTextBurnMsg;
+import com.inspur.emmcloud.ui.chat.DisplayTextWhisperMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
@@ -242,6 +244,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_BURN:
+                    cardContentView = DisplayTextBurnMsg.getView(context, message);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                    cardContentView = DisplayTextWhisperMsg.getView(context, message);
                     break;
                 default:
                     cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
