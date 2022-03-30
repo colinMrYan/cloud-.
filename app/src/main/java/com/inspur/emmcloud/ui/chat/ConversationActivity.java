@@ -624,7 +624,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case "read_disappear":
             case "whisper":
-                if (userOrientedConversationHelper != null) userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
+                if (userOrientedConversationHelper != null) {
+                    if (userOrientedConversationHelper.isDisplayingUI()) {
+                        userOrientedConversationHelper.closeUserOrientedLayout();
+                    } else {
+                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
+                    }
+                }
                 break;
         }
     }

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,9 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private ConversationType conversationType;
     private RecyclerView memberListView;
     private RecyclerGridAdapter recyclerGridAdapter;
-    private ArrayList<String> selectedUser;
+    private ArrayList<String> selectedUser = new ArrayList<>();
+    private String channelType = "";
+    private boolean displayingUI = false;
 
     public enum ConversationType {
         STANDARD, WHISPER, BURN
@@ -51,10 +54,49 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
                 if (!selectedUser.remove(uid)) {
                     selectedUser.add(uid);
                 }
+                ArrayList<String> copyUsers = new ArrayList<>(selectedUser);
+                String content = createAlertContentByUidList(copyUsers);
+                showMentionView(content);
             }
         });
         memberListView.setAdapter(recyclerGridAdapter);
-        switch (type) {
+        channelType = type;
+        initAndUpdateChannelType();
+    }
+
+    public ConversationType getConversationType() {
+        return conversationType;
+    }
+
+    public void showUserOrientedLayout(ArrayList<String> userIds) {
+        setDisplayingUI(true);
+        initAndUpdateChannelType();
+        setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
+        recyclerGridAdapter.setContactUserList(userIds);
+    }
+
+    public ArrayList<String> getSelectedUser() {
+        return selectedUser;
+    }
+
+    public boolean isDisplayingUI() {
+        return displayingUI;
+    }
+
+    public void closeUserOrientedLayout() {
+        setDisplayingUI(false);
+        selectedUser.clear();
+        if (mentionView != null) mentionView.setVisibility(View.GONE);
+        if (memberListView != null) memberListView.setVisibility(View.GONE);
+        setConversationType(ConversationType.STANDARD);
+    }
+
+    private void setDisplayingUI(boolean displayingUI) {
+        this.displayingUI = displayingUI;
+    }
+
+    private void initAndUpdateChannelType() {
+        switch (channelType) {
             case "GROUP":
                 setConversationType(ConversationType.WHISPER);
                 break;
@@ -64,32 +106,16 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         }
     }
 
-    public ConversationType getConversationType() {
-        return conversationType;
-    }
-
-    public void setConversationType(ConversationType conversationType) {
+    private void setConversationType(ConversationType conversationType) {
         this.conversationType = conversationType;
     }
 
-    public void showUserOrientedLayout(ArrayList<String> userIds) {
-        if (mentionView != null) mentionView.setVisibility(View.VISIBLE);
-        setViewInfo(createAlertContentByUidList(userIds));
-        recyclerGridAdapter.setContactUserList(userIds);
-    }
-
-    private void closeUserOrientedLayout() {
-        if (mentionView != null) mentionView.setVisibility(View.GONE);
-        if (memberListView != null) memberListView.setVisibility(View.GONE);
-        setConversationType(ConversationType.STANDARD);
-    }
-
     private void setViewInfo(String content) {
-        if (userInfoView != null)
-            userInfoView.setText(userInfoView.getContext().getString(R.string.voice_input_mention, content));
+        showMentionView(content);
         switch (conversationType) {
             case WHISPER:
-                if (memberListView != null) memberListView.setVisibility(View.VISIBLE);
+                if (memberListView != null && memberListView.getVisibility() == View.GONE)
+                    memberListView.setVisibility(View.VISIBLE);
                 break;
             default:
                 memberListView.setVisibility(View.GONE);
@@ -97,7 +123,20 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         }
     }
 
+    private void showMentionView(String content) {
+        if (userInfoView != null) {
+            if (!TextUtils.isEmpty(content)) {
+                if (mentionView != null) mentionView.setVisibility(View.VISIBLE);
+                userInfoView.setText(userInfoView.getContext().getString(R.string.voice_input_mention, content));
+            } else {
+                userInfoView.setText("");
+                mentionView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private String createAlertContentByUidList(ArrayList<String> uids) {
+        if (uids.isEmpty()) return "";
         StringBuilder nameBuilder = new StringBuilder();
         String firstUid = uids.get(0);
         ContactUser firstContactUser = ContactUserCacheUtils.getContactUserByUid(firstUid);
@@ -109,10 +148,6 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
             if (contactUser != null) nameBuilder.append("、").append(contactUser.getName());
         }
         return nameBuilder.toString();
-    }
-
-    public ArrayList<String> getSelectedUser() {
-        return selectedUser;
     }
 
     @Override
@@ -162,6 +197,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
             String userName = ContactUserCacheUtils.getUserName(uid);
             String userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
             holder.nameTv.setText(userName);
+            holder.selectImg.setVisibility(View.GONE);
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headerImg, userPhotoUrl, R.drawable.icon_person_default);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
