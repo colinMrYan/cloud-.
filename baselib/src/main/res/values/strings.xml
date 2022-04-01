@@ -830,7 +830,7 @@
     <string name="load_fail">加载失败</string>
     <string name="see_more">查看更多</string>
     <string name="pull_down_loading_history">下拉加载历史消息</string>
-    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“云+”软件产品（以下
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“&appname;”软件产品（以下
 
 简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
 
@@ -1083,7 +1083,7 @@
     <string name="permission_grant_window_alert_lockscreen_display">请您授予%1$s 锁屏显示和后台弹出界面权限</string>
     <string name="permission_grant_lockscreen_display">请您授予%1$s 锁屏显示权限</string>
     <string name="permission_grant_lockscreen_display_fail">您已禁止授予%1$s 锁屏显示权限</string>
-    <string name="permission_setting_phone_recognize">开启来电通知权限仅在收到来电通知时获取来电号码查询&appname;内组织通讯录用户信息，开启弹窗权限允许云+将组织通讯录用户信息显示在手机屏幕上</string>
+    <string name="permission_setting_phone_recognize">开启来电通知权限仅在收到来电通知时获取来电号码查询&appname;内组织通讯录用户信息，开启弹窗权限允许&appname;将组织通讯录用户信息显示在手机屏幕上</string>
     <string name="permission_setting_open_phone_overlay">开启悬浮窗权限</string>
     <string name="permission_setting_open_phone_read">开启来电通知权限</string>
     <string name="permission_setting_close_phone_overlay">已授权悬浮窗</string>
