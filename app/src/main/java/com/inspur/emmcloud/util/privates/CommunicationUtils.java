@@ -126,36 +126,31 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combineLocalTextWhisperMessage(String text, String cid, Map<String, String> mentionsMap) {
+    public static Message combineLocalTextWhisperMessage(String text, String cid, List<String> toUidList) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("text/whisper");
+        message.setType(Message.MESSAGE_TYPE_TEXT_WHISPER);
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
-        if (mentionsMap != null && mentionsMap.size() > 0) {
-            msgContentTextPlain.setMentionsMap(mentionsMap);
+        if (toUidList != null && toUidList.size() > 0) {
+            msgContentTextPlain.setWhisperUsers(toUidList);
         }
-        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
-        message.setShowContent(showContent);
         message.setContent(msgContentTextPlain.toString());
         return message;
     }
 
-    public static Message combineLocalTextBurnMessage(String text, String cid, Map<String, String> mentionsMap) {
+    public static Message combineLocalTextBurnMessage(String text, String cid) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(tracer);
         message.setTmpId(tracer);
-        message.setType("text/burn");
+        message.setType(Message.MESSAGE_TYPE_TEXT_BURN);
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
-        if (mentionsMap != null && mentionsMap.size() > 0) {
-            msgContentTextPlain.setMentionsMap(mentionsMap);
-        }
         String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
         message.setShowContent(showContent);
         message.setContent(msgContentTextPlain.toString());

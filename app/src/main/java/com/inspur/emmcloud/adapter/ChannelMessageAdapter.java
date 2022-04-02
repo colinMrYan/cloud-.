@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -245,12 +246,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
                     break;
-                case Message.MESSAGE_TYPE_TEXT_BURN:
-                    cardContentView = DisplayTextBurnMsg.getView(context, message);
-                    break;
-                case Message.MESSAGE_TYPE_TEXT_WHISPER:
-                    cardContentView = DisplayTextWhisperMsg.getView(context, message);
-                    break;
                 default:
                     cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                     break;
@@ -290,46 +285,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             });
         }
         holder.cardLayout.addView(cardContentView);
-
-        //处理已读未读
-        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) || !NetUtils.isNetworkConnected(context)) {
-            holder.unreadText.setVisibility(View.GONE);
-            return;
-        }
-        Map<String, Set<String>> statesMap = uiMessage.getStatesMap();
-        Set<String> readList = statesMap.get(ChannelMessageStates.READ);
-        Set<String> sentList = statesMap.get(ChannelMessageStates.SENT);
-        Set<String> deliveredList = statesMap.get(ChannelMessageStates.DELIVERED);
-        int readSize = readList == null ? 0 : readList.size();
-        int sentSize = sentList == null ? 0 : sentList.size();
-        int deliveredSize = deliveredList == null ? 0 : deliveredList.size();
-        int allSize = readSize + sentSize + deliveredSize;
-        if (allSize == 0 || !uiMessage.getMessage().getFromUser().equals(uid)) {
-            holder.unreadText.setVisibility(View.GONE);
-        } else if (allSize == 1) {
-            holder.unreadText.setVisibility(View.VISIBLE);
-            holder.unreadText.setText(context.getResources().getString(readSize == 1 ? R.string.read : R.string.unread));
-            holder.unreadText.setTextColor(Color.parseColor(readSize == 1 ? "#999999" : "#36A5F6"));
-            holder.unreadText.setOnClickListener(null);
-        } else if (allSize > 1) {
-            holder.unreadText.setVisibility(View.VISIBLE);
-            if (readSize >= allSize) {
-                holder.unreadText.setText(context.getResources().getString(R.string.all_read));
-                holder.unreadText.setTextColor(Color.parseColor("#999999"));
-                holder.unreadText.setOnClickListener(null);
-            } else {
-                holder.unreadText.setText((sentSize + deliveredSize) + context.getResources().getString(R.string.left_unread));
-                holder.unreadText.setTextColor(Color.parseColor("#36A5F6"));
-                holder.unreadText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, UnReadDetailActivity.class);
-                        intent.putExtra(UnReadDetailActivity.UI_MESSAGE, uiMessage);
-                        intent.putStringArrayListExtra(UnReadDetailActivity.CONVERSATION_ALL_MEMBER, mExceptSelfMemberList);
-                        context.startActivity(intent);
-                    }
-                });
-            }
+        //悄悄话标识
+        List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
+        if (!whispers.isEmpty()) {
+            holder.sendToText.setVisibility(View.VISIBLE);
+        } else {
+            holder.sendToText.setVisibility(View.GONE);
         }
 
     }
@@ -475,7 +436,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView sendFailImg;
         public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
-        public TextView unreadText;
+        public TextView sendToText;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
 
@@ -498,8 +459,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
-            unreadText = (TextView) view
-                    .findViewById(R.id.chat_msg_unread_text);
+            sendToText = (TextView) view
+                    .findViewById(R.id.chat_msg_bottom_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
             itemView.setOnClickListener(this);
 

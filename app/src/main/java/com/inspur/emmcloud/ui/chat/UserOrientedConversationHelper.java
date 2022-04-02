@@ -27,7 +27,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private TextView userInfoView;
     private ImageView closeBtn;
     private View mentionView;
-    private ConversationType conversationType;
+    private ConversationType conversationType = ConversationType.STANDARD;
     private RecyclerView memberListView;
     private RecyclerGridAdapter recyclerGridAdapter;
     private ArrayList<String> selectedUser = new ArrayList<>();
@@ -61,7 +61,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         });
         memberListView.setAdapter(recyclerGridAdapter);
         channelType = type;
-        initAndUpdateChannelType();
+        conversationType = ConversationType.STANDARD;
     }
 
     public ConversationType getConversationType() {

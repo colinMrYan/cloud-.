@@ -914,9 +914,9 @@ public class ECMChatInputMenu extends LinearLayout {
             //如果是群组的话添加@功能
             if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
-                inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
-            }else {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
+            }else {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
             }
 
             if (isVoiceCallEnable) {

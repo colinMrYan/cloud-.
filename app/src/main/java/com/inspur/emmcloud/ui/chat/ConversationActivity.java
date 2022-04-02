@@ -1249,17 +1249,23 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
         Message localMessage;
-        switch (userOrientedConversationHelper.getConversationType()) {
-            case BURN:
-                localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid, mentionsMap);
-                break;
-            case WHISPER:
-                localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, mentionsMap);
-                break;
-            case STANDARD:
-            default:
-                localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
-                break;
+        if (mentionsMap != null && mentionsMap.size() != 0) {
+            localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+        } else {
+            switch (userOrientedConversationHelper.getConversationType()) {
+                case BURN:
+                    localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid);
+                    userOrientedConversationHelper.closeUserOrientedLayout();
+                    break;
+                case WHISPER:
+                    localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser());
+                    userOrientedConversationHelper.closeUserOrientedLayout();
+                    break;
+                case STANDARD:
+                default:
+                    localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                    break;
+            }
         }
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {

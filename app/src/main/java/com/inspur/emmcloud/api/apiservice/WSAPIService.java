@@ -51,6 +51,12 @@ public class WSAPIService {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 sendChatTextPlainMsg(fakeMessage);
                 break;
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                sendChatTextWhisperMsg(fakeMessage);
+                break;
+            case Message.MESSAGE_TYPE_TEXT_BURN:
+                sendChatTextBurnMsg(fakeMessage);
+                break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 sendChatCommentTextPlainMsg(fakeMessage);
                 break;
@@ -91,6 +97,61 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId", fakeMessage.getId());
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendChatTextWhisperMsg(Message fakeMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            JSONObject whisperObj = new JSONObject();
+            whisperObj.put("to",JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
+            actionObj.put("query", whisperObj);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", fakeMessage.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+            bodyObj.put("text", msgContentTextPlain.getText());
+            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put("whispers", JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendChatTextBurnMsg(Message fakeMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", fakeMessage.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+            bodyObj.put("text", msgContentTextPlain.getText());
+            bodyObj.put("messageType", "burn");
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);

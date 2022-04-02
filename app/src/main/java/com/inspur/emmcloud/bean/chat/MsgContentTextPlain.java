@@ -2,9 +2,12 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,6 +18,7 @@ public class MsgContentTextPlain {
     private String text;
     private String tmpId;
     private Map<String, String> mentionsMap = new HashMap<>();
+    private List<String> whisperUsers = new ArrayList<>();
 
     public MsgContentTextPlain(String Json) {
         JSONObject object = JSONUtils.getJSONObject(Json);
@@ -24,6 +28,7 @@ public class MsgContentTextPlain {
         if (mentionObj != null) {
             mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);
         }
+        whisperUsers = JSONUtils.getStringList(object, "whispers", new ArrayList<String>());
     }
 
     public MsgContentTextPlain() {
@@ -54,6 +59,14 @@ public class MsgContentTextPlain {
         this.tmpId = tmpId;
     }
 
+    public List<String> getWhisperUsers() {
+        return whisperUsers;
+    }
+
+    public void setWhisperUsers(List<String> whisperUsers) {
+        this.whisperUsers = whisperUsers;
+    }
+
     public String toString() {
         JSONObject obj = new JSONObject();
         try {
@@ -61,6 +74,10 @@ public class MsgContentTextPlain {
             if (mentionsMap.size() > 0) {
                 JSONObject mentionObj = JSONUtils.map2Json(mentionsMap);
                 obj.put("mentions", mentionObj);
+            }
+            if (whisperUsers.size() > 0){
+                JSONArray whisperObj = JSONUtils.toJSONArray(whisperUsers);
+                obj.put("whispers", whisperObj);
             }
         } catch (Exception e) {
             e.printStackTrace();
