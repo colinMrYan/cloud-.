@@ -137,7 +137,7 @@
     <string name="cutdown_month">月</string>
     <string name="notice">通知</string>
     <string name="close">关闭</string>
-    <string name="commoly_use_app">常用</string>
+    <string name="commoly_use_app">常用应用</string>
     <string name="app_init">正在初始化</string>
     <string name="news_content_cant_empty">内容不能为空</string>
     <string name="help">帮助</string>
@@ -183,14 +183,14 @@
     <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
     <string name="channel_group_info">群详情</string>
     <string name="channel_group_name">群名称</string>
-    <string name="channel_group_image"> 群聊图片</string>
+    <string name="channel_group_image"> 群图片</string>
     <string name="channel_group_file"> 群文件</string>
     <string name="channel_group_members_name"> 群名称</string>
     <string name="channel_group_qrcode">群二维码</string>
     <string name="channel_group_qrcode_card">群二维码名片</string>
     <string name="channel_group_qrcode_valid">该二维码7天内(%1$s之前)有效，重新进入将更新</string>
     <string name="channel_set_top"> 置顶</string>
-    <string name="channel_set_sticky"> 置顶聊天</string>
+    <string name="channel_set_sticky"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
     <string name="channel_report">投诉</string>
     <string name="channel_report_hint">请输入投诉内容</string>

@@ -27,7 +27,7 @@
     <string name="nothing">Nothing </string>
     <string name="function_intr">Function Introduction </string>
     <string name="user_depart_info_text">Departmental Information</string>
-    <string name="sweep">Scan</string>
+    <string name="sweep">Scan QR</string>
     <string name="send">Send</string>
     <string name="picture">Picture</string>
     <string name="album">Album</string>
@@ -129,7 +129,7 @@
     <string name="cutdown_month">m</string>
     <string name="notice">Notice</string>
     <string name="close">Close</string>
-    <string name="commoly_use_app">Commonly</string>
+    <string name="commoly_use_app">Common</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
     <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
@@ -310,7 +310,7 @@
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
-    <string name="message_create_group">New Chat</string>
+    <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
     <string name="no_channel_file">No content</string>
