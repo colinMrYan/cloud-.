@@ -92,7 +92,7 @@
 
     <string name="setting_language_set_text">Language</string>
 
-    <string name="setting_mine_theme_switch">Theme</string>
+    <string name="setting_mine_theme_switch">Change Skin</string>
     <string name="setting_mine_theme_white">White</string>
     <string name="setting_mine_theme_grey">Grey</string>
     <string name="setting_mine_theme_blue">Blue</string>
