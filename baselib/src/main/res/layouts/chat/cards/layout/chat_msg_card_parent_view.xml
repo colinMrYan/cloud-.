@@ -99,17 +99,40 @@
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
-    <TextView android:id="@+id/chat_msg_bottom_text"
-        android:layout_below="@id/chat_msg_send_content"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="3dp"
-        android:textSize="11sp"
-        android:drawableLeft="@drawable/icon_chat_whisper"
-        android:text="@string/chat_whisper_static"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_base_blue"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="63dp" />
 
+    <RelativeLayout
+        android:id="@+id/bottom_type_info_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="63dp"
+        android:layout_marginRight="63dp"
+        android:layout_below="@id/chat_msg_send_content">
+
+        <TextView
+            android:id="@+id/chat_msg_bottom_text_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="3dp"
+            android:drawablePadding="2dp"
+            android:text="@string/chat_whisper_static"
+            android:textColor="@color/color_base_blue"
+            android:textSize="11sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/chat_msg_bottom_text_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:drawableLeft="@drawable/icon_chat_whisper"
+            android:drawablePadding="2dp"
+            android:text="@string/chat_whisper_static"
+            android:textColor="@color/color_base_blue"
+            android:textSize="11sp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

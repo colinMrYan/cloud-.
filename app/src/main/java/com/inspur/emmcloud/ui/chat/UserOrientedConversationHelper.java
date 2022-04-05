@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -69,10 +70,12 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void showUserOrientedLayout(ArrayList<String> userIds) {
+        ArrayList<String> targetUsers = userIds;
+        targetUsers.remove(BaseApplication.getInstance().getUid());
         setDisplayingUI(true);
         initAndUpdateChannelType();
         setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
-        recyclerGridAdapter.setContactUserList(userIds);
+        recyclerGridAdapter.setContactUserList(targetUsers);
     }
 
     public ArrayList<String> getSelectedUser() {

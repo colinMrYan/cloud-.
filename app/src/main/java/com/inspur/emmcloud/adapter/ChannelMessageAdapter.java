@@ -1,11 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +10,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amazonaws.mobile.auth.core.signin.ui.DisplayUtils;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -37,11 +33,8 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTextBurnMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTextWhisperMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
-import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -204,7 +197,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         } else {
             params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         }
-
         holder.cardParentLayout.setLayoutParams(params);
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
@@ -212,6 +204,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
             String type = message.getType();
             switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     cardContentView = DisplayTxtPlainMsg.getView(context,
                             message);
@@ -285,14 +279,21 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             });
         }
         holder.cardLayout.addView(cardContentView);
-        //悄悄话标识
+        //悄悄话、阅后即焚 标识
         List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
         if (!whispers.isEmpty()) {
-            holder.sendToText.setVisibility(View.VISIBLE);
+            if (isMyMsg) {
+                holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
+                holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+                holder.bottomInfoTypeRight.setText(context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+            } else {
+                holder.bottomInfoTypeRight.setVisibility(View.GONE);
+                holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
+            }
         } else {
-            holder.sendToText.setVisibility(View.GONE);
+            holder.bottomInfoTypeRight.setVisibility(View.GONE);
+            holder.bottomInfoTypeLeft.setVisibility(View.GONE);
         }
-
     }
 
     /**
@@ -315,6 +316,23 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         } else {
             holder.sendTimeText.setVisibility(View.GONE);
         }
+    }
+
+    private String createChannelGroupName(List<String> uidList) {
+        if (uidList.isEmpty()) return "";
+        List<ContactUser> contactUsers = ContactUserCacheUtils.getContactUserListById(uidList);
+        StringBuilder nameBuilder = new StringBuilder();
+        int length = Math.min(4, uidList.size());
+        nameBuilder.append(contactUsers.get(0).getName());
+        for (int i = 1; i < length; i++) {
+            String name = "";
+            name = contactUsers.get(i).getName();
+            nameBuilder.append("、").append(name);
+        }
+        if (uidList.size() > 4) {
+            nameBuilder.append("...");
+        }
+        return nameBuilder.toString();
     }
 
     /**
@@ -436,7 +454,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView sendFailImg;
         public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
-        public TextView sendToText;
+        public TextView bottomInfoTypeLeft;
+        public TextView bottomInfoTypeRight;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
 
@@ -459,8 +478,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
-            sendToText = (TextView) view
-                    .findViewById(R.id.chat_msg_bottom_text);
+            bottomInfoTypeLeft = (TextView) view
+                    .findViewById(R.id.chat_msg_bottom_text_left);
+            bottomInfoTypeRight = (TextView) view
+                    .findViewById(R.id.chat_msg_bottom_text_right);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
             itemView.setOnClickListener(this);
 
