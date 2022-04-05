@@ -193,5 +193,7 @@
     <color name="color_bb">#bbbbbb</color>
     <color name="color_ca">#cacaca</color>
     <color name="color_e3">#e3e3e3</color>
+    <color name="color_whisper_bg">#DFEEFF</color>
+    <color name="color_whisper_text">#89A5C9</color>
 
 </resources>

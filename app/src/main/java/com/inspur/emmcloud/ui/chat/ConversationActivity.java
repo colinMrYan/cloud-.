@@ -1407,6 +1407,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
                 conversation.setMembers(JSONUtils.toJSONString(memberList));
                 adapter.updateMemberList(memberList);
+                userOrientedConversationHelper.showUserOrientedLayout(memberList);
                 break;
             case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
                 Message message = (Message) simpleEventMessage.getMessageObj();
@@ -1824,7 +1825,12 @@ public class ConversationActivity extends ConversationBaseActivity {
             //operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                    break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    if (!uiMessage.getMessage().getMsgContentTextPlain().getWhisperUsers().isEmpty()){
+                        break;
+                    }
                     operationIdList.add(R.string.chat_long_click_copy);
                     operationIdList.add(R.string.chat_long_click_transmit);
                     if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {

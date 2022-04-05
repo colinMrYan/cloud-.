@@ -116,7 +116,7 @@
 
             </FrameLayout>
 
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -124,12 +124,11 @@
                     android:id="@+id/members_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="13dp"
                     android:overScrollMode="never"
                     android:background="@color/white"
                     android:visibility="gone"
                     android:scrollbars="none" />
-            </FrameLayout>
+            </RelativeLayout>
 
         </RelativeLayout>
 

@@ -262,9 +262,26 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
                 }
             });
+            //悄悄话、阅后即焚 标识
+            List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
+            if (!whispers.isEmpty()) {
+                if (isMyMsg) {
+                    holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
+                    holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+                    holder.bottomInfoTypeRight.setText(context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+                } else {
+                    holder.bottomInfoTypeRight.setVisibility(View.GONE);
+                    holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
+                }
+            } else {
+                holder.bottomInfoTypeRight.setVisibility(View.GONE);
+                holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+            }
         } else {
             cardContentView = DisplayRecallMsg.getView(context, uiMessage);
             //撤回5分钟以内的文本消息显示撤回选线IG
+            holder.bottomInfoTypeRight.setVisibility(View.GONE);
+            holder.bottomInfoTypeLeft.setVisibility(View.GONE);
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
                     &&(System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5* 60 *1000)
@@ -279,21 +296,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             });
         }
         holder.cardLayout.addView(cardContentView);
-        //悄悄话、阅后即焚 标识
-        List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
-        if (!whispers.isEmpty()) {
-            if (isMyMsg) {
-                holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
-                holder.bottomInfoTypeLeft.setVisibility(View.GONE);
-                holder.bottomInfoTypeRight.setText(context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
-            } else {
-                holder.bottomInfoTypeRight.setVisibility(View.GONE);
-                holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
-            }
-        } else {
-            holder.bottomInfoTypeRight.setVisibility(View.GONE);
-            holder.bottomInfoTypeLeft.setVisibility(View.GONE);
-        }
     }
 
     /**

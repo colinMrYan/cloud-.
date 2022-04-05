@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -20,6 +21,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.reactnativenavigation.layouts.Layout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,8 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     public void showUserOrientedLayout(ArrayList<String> userIds) {
         ArrayList<String> targetUsers = userIds;
         targetUsers.remove(BaseApplication.getInstance().getUid());
+        if (targetUsers.isEmpty()) return;
+        adjustViewHeight(targetUsers.size() > 5);
         setDisplayingUI(true);
         initAndUpdateChannelType();
         setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
@@ -96,6 +100,21 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
 
     private void setDisplayingUI(boolean displayingUI) {
         this.displayingUI = displayingUI;
+    }
+
+    private void adjustViewHeight(boolean heightForSure){
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) memberListView.getLayoutParams();
+        if (heightForSure){
+            layoutParams.height = (int)dp2px(210);
+        } else {
+            layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        }
+        memberListView.setLayoutParams(layoutParams);
+    }
+
+    private float dp2px(int dp) {
+        float scale = Resources.getSystem().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
     }
 
     private void initAndUpdateChannelType() {
