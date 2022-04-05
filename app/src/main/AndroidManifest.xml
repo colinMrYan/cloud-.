@@ -562,6 +562,12 @@
             android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 
+        <activity
+            android:name=".ui.chat.ConversationBurnContentActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+
         <!-- 云盘 -->
 
         <!-- service -->

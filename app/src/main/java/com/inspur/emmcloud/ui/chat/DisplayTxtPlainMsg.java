@@ -43,7 +43,11 @@ public class DisplayTxtPlainMsg {
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
+        String msgType = message.getMsgContentTextPlain().getMsgType();
         String text = message.getMsgContentTextPlain().getText();
+        if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
+            text = context.getString(R.string.click_to_burn);
+        }
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);

@@ -120,7 +120,7 @@
             android:textColor="@color/color_whisper_text"
             android:textSize="11sp"
             android:background="@drawable/bg_corner_whisper_r10"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/chat_msg_bottom_text_right"
@@ -135,7 +135,25 @@
             android:text="@string/chat_whisper_static"
             android:textColor="@color/color_whisper_text"
             android:textSize="11sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/chat_icon_bottom_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/icon_chat_burn"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/chat_icon_bottom_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/icon_chat_burn"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

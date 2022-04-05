@@ -1890,6 +1890,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                         UserInfoActivity.class, bundle);
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                boolean isMyMsg = MyApplication.getInstance().getUid().equals(uiMessage.getMessage().getFromUser());
+                String msgType = message.getMsgContentTextPlain().getMsgType();
+                if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
+                    recallSendingMessage(uiMessage);
+                    Intent intent = new Intent(context, ConversationBurnContentActivity.class);
+                    intent.putExtra("content", message.getMsgContentTextPlain().getText());
+                    startActivity(intent);
+                }
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;

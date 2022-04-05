@@ -39,6 +39,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.umeng.socialize.utils.UmengText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -88,7 +89,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
     }
 
-    public void updateMemberList(ArrayList<String> memberList){
+    public void updateMemberList(ArrayList<String> memberList) {
         if (memberList == null) {
             return;
         }
@@ -259,11 +260,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     if (mItemClickListener != null) {
                         mItemClickListener.onCardItemClick(view, uiMessage);
                     }
-
                 }
             });
             //悄悄话、阅后即焚 标识
             List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
+            String msgType = message.getMsgContentTextPlain().getMsgType();
             if (!whispers.isEmpty()) {
                 if (isMyMsg) {
                     holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
@@ -273,19 +274,31 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     holder.bottomInfoTypeRight.setVisibility(View.GONE);
                     holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
                 }
+            } else if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                if (isMyMsg) {
+                    holder.bottomIconTypeRight.setVisibility(View.VISIBLE);
+                    holder.bottomIconTypeLeft.setVisibility(View.GONE);
+                } else {
+                    holder.bottomIconTypeRight.setVisibility(View.GONE);
+                    holder.bottomIconTypeLeft.setVisibility(View.VISIBLE);
+                }
             } else {
                 holder.bottomInfoTypeRight.setVisibility(View.GONE);
                 holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+                holder.bottomIconTypeRight.setVisibility(View.GONE);
+                holder.bottomIconTypeLeft.setVisibility(View.GONE);
             }
         } else {
             cardContentView = DisplayRecallMsg.getView(context, uiMessage);
             //撤回5分钟以内的文本消息显示撤回选线IG
             holder.bottomInfoTypeRight.setVisibility(View.GONE);
             holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+            holder.bottomIconTypeRight.setVisibility(View.GONE);
+            holder.bottomIconTypeLeft.setVisibility(View.GONE);
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    &&(System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5* 60 *1000)
-                    && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()))?View.VISIBLE:View.GONE);
+                    && (System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5 * 60 * 1000)
+                    && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid())) ? View.VISIBLE : View.GONE);
             cardContentView.findViewById(R.id.tv_edit_again).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -458,6 +471,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public TextView sendTimeText;
         public TextView bottomInfoTypeLeft;
         public TextView bottomInfoTypeRight;
+        public ImageView bottomIconTypeLeft;
+        public ImageView bottomIconTypeRight;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
 
@@ -484,6 +499,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.chat_msg_bottom_text_left);
             bottomInfoTypeRight = (TextView) view
                     .findViewById(R.id.chat_msg_bottom_text_right);
+            bottomIconTypeLeft = (ImageView) view
+                    .findViewById(R.id.chat_icon_bottom_left);
+            bottomIconTypeRight = (ImageView) view
+                    .findViewById(R.id.chat_icon_bottom_right);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
             itemView.setOnClickListener(this);
 

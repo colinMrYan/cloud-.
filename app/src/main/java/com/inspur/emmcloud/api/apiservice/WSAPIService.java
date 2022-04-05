@@ -151,7 +151,7 @@ public class WSAPIService {
             MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
             bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
             bodyObj.put("text", msgContentTextPlain.getText());
-            bodyObj.put("messageType", "burn");
+            bodyObj.put("messageType", Message.MESSAGE_TYPE_TEXT_BURN);
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);

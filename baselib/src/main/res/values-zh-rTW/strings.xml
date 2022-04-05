@@ -377,6 +377,7 @@
     <string name="video_call">視頻通話</string>
     <string name="read_disappear">閱後即焚</string>
     <string name="voice_whisper">悄悄话</string>
+    <string name="click_to_burn">點擊查看</string>
     <string name="video_communication_turn_to_voice_call">切到語音通話</string>
     <string name="video_communication_switch_camera">切換監視器</string>
     <string name="video_communication_waiting_answer">連接中…</string>

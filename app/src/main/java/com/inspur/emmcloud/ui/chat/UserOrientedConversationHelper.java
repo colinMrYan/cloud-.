@@ -21,7 +21,6 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.reactnativenavigation.layouts.Layout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,11 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         adjustViewHeight(targetUsers.size() > 5);
         setDisplayingUI(true);
         initAndUpdateChannelType();
-        setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
+        if (conversationType.equals(ConversationType.BURN)) {
+            setViewInfo(createAlertContentByUidList(targetUsers));
+        } else {
+            setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
+        }
         recyclerGridAdapter.setContactUserList(targetUsers);
     }
 

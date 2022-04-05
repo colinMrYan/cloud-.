@@ -151,6 +151,7 @@ public class CommunicationUtils {
         message.setType(Message.MESSAGE_TYPE_TEXT_BURN);
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
+        msgContentTextPlain.setMsgType(Message.MESSAGE_TYPE_TEXT_BURN);
         String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
         message.setShowContent(showContent);
         message.setContent(msgContentTextPlain.toString());

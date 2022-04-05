@@ -959,6 +959,7 @@
     <string name="video_call">Video Call</string>
     <string name="read_disappear">Burn after reading</string>
     <string name="voice_whisper">whisper</string>
+    <string name="click_to_burn">Click to view</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>
     <string name="video_communication_waiting_answer">Connection...</string>
