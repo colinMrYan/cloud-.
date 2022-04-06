@@ -2,12 +2,17 @@ package com.inspur.emmcloud.ui.chat.mvp.presenter;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.alibaba.android.arouter.utils.TextUtils;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -30,7 +35,9 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -447,7 +454,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
 
     }
 
-    private void updateGroupName(final String newName,CallBack callBack) {
+    private void updateGroupName(final String newName, final CallBack callBack) {
         if (TextUtils.isEmpty(newName)) return;
         final String completeUrl = APIUri.getUpdateConversationNameUrl(mConversation.getId());
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);

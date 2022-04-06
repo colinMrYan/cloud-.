@@ -118,6 +118,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED = "tag_conversation_self_data_changed";
     //频道消息发生变化
     public static final String EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED = "tag_conversation_message_data_changed";
+    public static final String EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED = "tag_group_conversation_data_changed";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
     public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";

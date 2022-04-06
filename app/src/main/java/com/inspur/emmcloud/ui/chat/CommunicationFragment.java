@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +150,8 @@ public class CommunicationFragment extends BaseFragment {
     private boolean isFirstConnectWebsocket = true;//判断是否第一次连上websocket
     private LoadingDialog loadingDlg;
     private CheckingNetStateUtils checkingNetStateUtils;
+    private String channelRefreshId = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -971,15 +974,15 @@ public class CommunicationFragment extends BaseFragment {
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
+                ArrayList<Conversation> conversations = new ArrayList<>();
+                conversations.add(conversation);
+                ConversationGroupIconUtils.getInstance().create(conversations);
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
                 if (index != -1) {
                     displayUIConversationList.get(index).setTitle(conversation.getName());
                     conversationAdapter.setData(displayUIConversationList);
                     conversationAdapter.notifyRealItemChanged(index);
                 }
-                ArrayList<Conversation> conversations = new ArrayList<>();
-                conversations.add(conversation);
-                ConversationGroupIconUtils.getInstance().create(conversations);
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND:
                 conversation = (Conversation) eventMessage.getMessageObj();

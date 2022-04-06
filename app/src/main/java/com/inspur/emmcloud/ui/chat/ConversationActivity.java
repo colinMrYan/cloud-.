@@ -137,7 +137,7 @@ import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FI
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
-    private static final int REQUEST_QUIT_CHANNELGROUP = 1;
+    private static final int REQUEST_OPERATE_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
@@ -934,10 +934,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     break;
-                case REQUEST_QUIT_CHANNELGROUP:
-                    MyApplication.getInstance().setCurrentChannelCid("");
-                    finish();
-                    break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
                         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -1229,7 +1225,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1240,7 +1236,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             default:
                 break;

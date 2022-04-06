@@ -16,6 +16,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
@@ -24,6 +25,12 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * com.inspur.emmcloud.util.privates.ChatCreateUtils create at 2016年11月29日 下午7:44:41
@@ -65,12 +72,15 @@ public class ConversationCreateUtils {
         JSONArray uidArray = new JSONArray();
         JSONArray nameArray = new JSONArray();
         LogUtils.jasonDebug("peopleArray=" + peopleArray.length());
+        List<String> uidList = new ArrayList<>();
         for (int i = 0; i < peopleArray.length(); i++) {
             try {
-                uidArray.put(i, peopleArray.getJSONObject(i).getString("pid"));
-
-                nameArray
-                        .put(i, peopleArray.getJSONObject(i).getString("name"));
+                String targetUid = getUidFromIdInfo(peopleArray.getJSONObject(i).getString("pid"));
+                if (!uidList.contains(targetUid)) {
+                    uidArray.put(i, targetUid);
+                    nameArray.put(i, peopleArray.getJSONObject(i).getString("name"));
+                    uidList.add(targetUid);
+                }
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -84,7 +94,6 @@ public class ConversationCreateUtils {
         loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(context);
         apiService.setAPIInterface(new WebService());
-        uidArray.put(MyApplication.getInstance().getUid());
         apiService.createGroupConversation(groupName, uidArray);
     }
 
@@ -92,23 +101,23 @@ public class ConversationCreateUtils {
      * 获取群组名称
      *
      * @param nameArray
-     * @return//群组名称最多显示5人人名
+     * @return//群组名称最多显示4人人名
      */
-    private String createChannelGroupName(JSONArray nameArray) {
-        // TODO Auto-generated method stub
+    public static String createChannelGroupName(JSONArray nameArray) {
         StringBuilder nameBuilder = new StringBuilder();
-        String myName = PreferencesUtils.getString(context, "userRealName");
         int length = Math.min(4, nameArray.length());
-        nameBuilder.append(myName);
         for (int i = 0; i < length; i++) {
             String name = "";
             try {
                 name = nameArray.getString(i);
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            nameBuilder.append("、" + name);
+            if (i == length - 1){
+                nameBuilder.append(name);
+            } else {
+                nameBuilder.append(name + "、");
+            }
         }
         if (nameArray.length() > 4) {
             nameBuilder.append("...");

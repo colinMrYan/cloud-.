@@ -101,6 +101,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private List<String> uiUidList = new ArrayList<>();
     private boolean isOwner = false;
     private LoadingDialog loadingDialog;
+    private boolean conversationNameChanged = false;
 
     @Override
     public void onCreate() {
@@ -217,6 +218,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.ibt_back:
+                if (conversationNameChanged){
+                    Intent intent = new Intent();
+                    intent.putExtra("operate",0);
+                    setResult(RESULT_OK, intent);
+                }
                 finish();
                 break;
             case R.id.rl_conversation_name:
@@ -234,7 +240,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     return;
                 }
                 bundle.putString("cid", uiConversation.getId());
-                bundle.putString("groupName", uiConversation.getShowName());
+//                bundle.putString("groupName", uiConversation.getShowName());
+                bundle.putString("groupName", conversationNameTextView.getText().toString());
                 bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
                 IntentUtils.startActivity(this,
                         ConversationQrCodeActivity.class, bundle);
@@ -308,6 +315,19 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         uiConversation = conversation;
         init();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (conversationNameChanged) {
+            Intent intent = new Intent();
+            intent.putExtra("operate", 0);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        super.onBackPressed();
+    }
+
+
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -384,7 +404,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void quitGroupSuccess() {
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra("operate",1);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -392,7 +414,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void deleteGroupSuccess() {
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra("operate",1);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -484,6 +508,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void activityFinish() {
         finish();
+    }
+
+    @Override
+    public void updateGroupNameSuccess() {
+        conversationNameChanged = true;
+        conversationNameTextView.setText(uiConversation.getName());
     }
 
     @Override
