@@ -1826,11 +1826,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_WHISPER:
-                    break;
+                case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    if (!uiMessage.getMessage().getMsgContentTextPlain().getWhisperUsers().isEmpty()){
-                        break;
-                    }
                     operationIdList.add(R.string.chat_long_click_copy);
                     operationIdList.add(R.string.chat_long_click_transmit);
                     if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
