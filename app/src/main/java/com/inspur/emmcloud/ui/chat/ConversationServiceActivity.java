@@ -89,11 +89,11 @@ public class ConversationServiceActivity extends BaseActivity {
             apiService.setAPIInterface(new WebService());
             switch (state) {
                 case ALL:
-                    apiService.getConversationServiceAllList(conversation.getId());
+                    apiService.getConversationServiceAllList();
                     break;
                 case FOCUS:
                 default:
-                    apiService.getConversationServiceList(conversation.getId());
+                    apiService.getConversationServiceList();
                     break;
             }
         }
@@ -104,7 +104,7 @@ public class ConversationServiceActivity extends BaseActivity {
         apiRequesting = true;
         ChatAPIService apiService = new ChatAPIService(ConversationServiceActivity.this);
         apiService.setAPIInterface(new WebService());
-        apiService.requestFollowConversationService(cid);
+        apiService.requestFollowOrRemoveConversationService(cid, true);
     }
 
     private void updatePageByInterface(boolean getDateSuccess, GetConversationListResult result) {

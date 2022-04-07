@@ -95,7 +95,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
         apiRequesting = true;
         ChatAPIService apiService = new ChatAPIService(ConversationServiceSearchActivity.this);
         apiService.setAPIInterface(new WebService());
-        apiService.requestFollowConversationService(cid);
+        apiService.requestFollowOrRemoveConversationService(cid, true);
     }
 
     private void updatePageByInterface(boolean getDateSuccess, GetConversationListResult result) {

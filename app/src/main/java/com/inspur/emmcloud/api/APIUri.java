@@ -1152,40 +1152,36 @@ public class APIUri {
 
     /**
      * 获取服务号首页列表
-     *
-     * @param cid
      * @return
      */
-    public static String getConversationServiceListUrl(String cid) {
-        return getECMChatConversationBaseUrl() + "/service/" + cid + "/serviceNumberList";
+    public static String getConversationServiceListUrl() {
+        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/user";
     }
 
     /**
      * 获取服务号所有列表
-     *
-     * @param cid
      * @return
      */
-    public static String getConversationServiceListAllUrl(String cid) {
-        return getECMChatConversationBaseUrl() + "/service/" + cid + "/serviceNumberAllList";
+    public static String getConversationServiceListAllUrl() {
+        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service";
     }
 
     /**
-     * 关注服务号所有列表
+     * 关注服务号
      *
      * @return
      */
     public static String getFollowConversationServiceUrl() {
-        return getECMChatConversationBaseUrl() + "/service/attentionAdd";
+        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/subscription";
     }
 
     /**
-     * 获取服务号所有列表
+     * 搜索服务号
      *
      * @return
      */
-    public static String getSearchConversationServiceUrl() {
-        return getECMChatConversationBaseUrl() + "/service/searchService";
+    public static String getSearchConversationServiceUrl(String name) {
+        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/name/" + name;
     }
 
 }

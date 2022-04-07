@@ -1870,11 +1870,9 @@ public class ChatAPIService {
 
     /**
      * 服务号首页服务号列表
-     *
-     * @param cid
      */
-    public void getConversationServiceList(final String cid) {
-        String url = APIUri.getConversationServiceListUrl(cid);
+    public void getConversationServiceList() {
+        String url = APIUri.getConversationServiceListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
@@ -1892,7 +1890,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getConversationServiceList(cid);
+                        getConversationServiceList();
                     }
 
                     @Override
@@ -1907,12 +1905,11 @@ public class ChatAPIService {
     }
 
     /**
-     * 服务号首页所有服务号列表
+     * 全部服务号列表
      *
-     * @param cid
      */
-    public void getConversationServiceAllList(final String cid) {
-        String url = APIUri.getConversationServiceListAllUrl(cid);
+    public void getConversationServiceAllList() {
+        String url = APIUri.getConversationServiceListAllUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
@@ -1930,7 +1927,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getConversationServiceAllList(cid);
+                        getConversationServiceAllList();
                     }
 
                     @Override
@@ -1945,14 +1942,13 @@ public class ChatAPIService {
     }
 
     /**
-     * 请求关注服务号
-     *
-     * @param cid
+     * 请求关注、取消关注 服务号
+     * @param serviceId
      */
-    public void requestFollowConversationService(final String cid) {
+    public void requestFollowOrRemoveConversationService(final String serviceId,final boolean followService) {
         String url = APIUri.getFollowConversationServiceUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
+        HttpUtils.request(context, followService ? CloudHttpMethod.POST : CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnFollowConversationServiceSuccess(new Conversation(new String(arg0)));
@@ -1968,7 +1964,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        requestFollowConversationService(cid);
+                        requestFollowOrRemoveConversationService(serviceId, followService);
                     }
 
                     @Override
@@ -1987,7 +1983,7 @@ public class ChatAPIService {
      *
      */
     public void requestSearchConversationService(final String serviceName) {
-        String url = APIUri.getSearchConversationServiceUrl();
+        String url = APIUri.getSearchConversationServiceUrl(serviceName);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
