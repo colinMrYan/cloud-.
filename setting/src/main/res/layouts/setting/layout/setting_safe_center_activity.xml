@@ -182,7 +182,8 @@
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_setting_face_unlock"

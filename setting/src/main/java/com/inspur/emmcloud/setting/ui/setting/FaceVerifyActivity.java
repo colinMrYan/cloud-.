@@ -98,7 +98,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      * @return
      */
     public static boolean getFaceVerifyIsOpenByUser(Context context) {
-        return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+//        return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+        return false;
     }
 
     @Override
