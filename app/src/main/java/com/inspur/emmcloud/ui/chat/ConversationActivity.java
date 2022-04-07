@@ -1893,12 +1893,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                 boolean isMyMsg = MyApplication.getInstance().getUid().equals(uiMessage.getMessage().getFromUser());
                 String msgType = message.getMsgContentTextPlain().getMsgType();
                 if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
-                    recallSendingMessage(uiMessage);
+//                    recallSendingMessage(uiMessage);
+                    requestToRecallMessage(uiMessage.getMessage());
                     Intent intent = new Intent(context, ConversationBurnContentActivity.class);
                     intent.putExtra("content", message.getMsgContentTextPlain().getText());
                     startActivity(intent);
                 }
                 break;
+            case Message.MESSAGE_TYPE_TEXT_BURN:
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;
             case MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -1916,7 +1919,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
@@ -2245,7 +2247,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void requestToRecallMessage(Message message) {
-        if (System.currentTimeMillis() - message.getCreationDate() >= 120000) {
+        if ((System.currentTimeMillis() - message.getCreationDate() >= 120000) && !message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
             showInfoDlg(getString(R.string.recall_fail_for_timeout));
         } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();

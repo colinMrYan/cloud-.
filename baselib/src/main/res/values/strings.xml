@@ -279,6 +279,8 @@
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
     <string name="send_a_meeting_request">[会议审批]</string>
+    <string name="send_a_burn">[阅后即焚]</string>
+    <string name="send_a_whispers">[悄悄话]</string>
     <string name="send_a_message_of_unknown_type">[未知类型]</string>
     <string name="direct_no_message">暂无新消息</string>
     <string name="group_no_message">已经进入群组，打个招呼吧</string>

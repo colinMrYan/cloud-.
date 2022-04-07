@@ -101,6 +101,17 @@ public class UIConversation implements Serializable {
                 switch (messageType) {
                     case Message.MESSAGE_TYPE_TEXT_PLAIN:
                         content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                        if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                            content = MyApplication.getInstance().getString(R.string.send_a_burn);
+                        } else if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
+                            content = MyApplication.getInstance().getString(R.string.send_a_whispers);
+                        }
+                        break;
+                    case Message.MESSAGE_TYPE_TEXT_BURN:
+                        content = MyApplication.getInstance().getString(R.string.send_a_burn);
+                        break;
+                    case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                        content = MyApplication.getInstance().getString(R.string.send_a_whispers);
                         break;
                     case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
