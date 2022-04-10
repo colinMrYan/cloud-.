@@ -168,7 +168,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                refreshMyConversation();
+//                refreshMyConversation();
                 if (uiConversation == null) {
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
                     return;
@@ -214,7 +214,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     public void onClick(View v) {
-        refreshMyConversation();
+//        refreshMyConversation();
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.ibt_back:
@@ -331,7 +331,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        refreshMyConversation();
+//        refreshMyConversation();
         switch (compoundButton.getId()) {
             case R.id.switch_conversation_sticky:
                 if (uiConversation == null) {
@@ -475,7 +475,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
      * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
+    public void onReceiveConversationNameUpdate(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
             Conversation conversation = ((Conversation) eventMessage.getMessageObj());
             if (uiConversation.getId().equals(conversation.getId())) {
