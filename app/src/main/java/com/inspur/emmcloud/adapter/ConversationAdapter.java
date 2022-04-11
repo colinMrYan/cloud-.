@@ -26,7 +26,6 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -288,10 +287,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     }
 
-    private List<Message> unreadMessageNodeMeOrAll(UIConversation uiConversation){
+    private List<Message> unreadMessageNodeMeOrAll(UIConversation uiConversation) {
         List<Message> messageList = new ArrayList<>();
         int count = uiConversation.getMessageList().size();
-        List<Message> unReadMessageList = uiConversation.getMessageList().subList(count - (int) uiConversation.getUnReadCount(), count);
+        List<Message> unReadMessageList = new ArrayList<>();
+        if ((int) uiConversation.getUnReadCount() > count) {
+            unReadMessageList = uiConversation.getMessageList();
+        } else {
+            unReadMessageList = uiConversation.getMessageList().subList(count - (int) uiConversation.getUnReadCount(), count);
+        }
         for (Message message : unReadMessageList) {
             String content = message.getMsgContentTextPlain().getText();
             if (StringUtils.isBlank(content)) {
@@ -314,7 +318,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
-                    } else if (BaseApplication.getInstance().getUid().equals(uid)){
+                    } else if (BaseApplication.getInstance().getUid().equals(uid)) {
                         newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": @" + ContactUserCacheUtils.getUserName(uid) + " ";
                         int startPosition = contentStringBuilder.indexOf(patternString);
                         contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
