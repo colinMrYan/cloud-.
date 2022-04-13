@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.chinatower.wxapi;
+package com.inspur.emmcloud.wxapi;
 
 
 import android.content.Intent;

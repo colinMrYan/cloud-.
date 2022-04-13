@@ -616,7 +616,7 @@
             android:value="59aa1f8f76661373290010d3"></meta-data>
 
         <activity
-            android:name=".chinatower.wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:launchMode="singleTask"
@@ -632,7 +632,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent101983127" />
+                <data android:scheme="tencent1105561850" />
             </intent-filter>
         </activity>
         <activity
