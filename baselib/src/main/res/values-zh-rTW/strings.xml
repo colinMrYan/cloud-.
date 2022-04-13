@@ -56,6 +56,7 @@
     <string name="modify_success">修改成功</string>
     <string name="save_success">保存成功</string>
     <string name="save_fail">保存失敗</string>
+    <string name="save_format_fail">文字或者連結不能保存至本地</string>
     <string name="communication_save_image_success">圖片已保存至%1$s資料夾</string>
     <string name="picture_cannot_show">圖片無法顯示</string>
     <string name="cannot_download_for_network_exception">網路有問題，無法下載</string>

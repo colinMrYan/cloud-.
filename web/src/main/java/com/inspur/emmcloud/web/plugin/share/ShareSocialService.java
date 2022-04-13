@@ -74,6 +74,10 @@ public class ShareSocialService extends ImpPlugin {
         ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                if (snsPlatform.mKeyword.equals("SAVE")) {
+                    ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_format_fail));
+                    return;
+                }
                 new ShareAction(getActivity()).withText(text).setPlatform(share_media).setCallback(new CustomShareListener()).share();
             }
         };
@@ -92,6 +96,10 @@ public class ShareSocialService extends ImpPlugin {
         ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                if (snsPlatform.mKeyword.equals("SAVE")) {
+                    ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_format_fail));
+                    return;
+                }
                 UMWeb web = new UMWeb(webpageUrl);
                 if (!StringUtils.isBlank(thumImage)) {
                     UMImage thumb = new UMImage(getActivity(), thumImage);
@@ -178,8 +186,7 @@ public class ShareSocialService extends ImpPlugin {
         if (!temp.exists()) {
             temp.mkdir();
         }
-        String savedImagePath = MyAppConfig.LOCAL_CACHE_PATH + "share/" + saveImageName;
-
+        String savedImagePath = temp.getPath() +  System.currentTimeMillis() + saveImageName;
         File file = new File(savedImagePath);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(
@@ -188,7 +195,7 @@ public class ShareSocialService extends ImpPlugin {
             bos.flush();
             bos.close();
             AppUtils.refreshMedia(getActivity(), savedImagePath);
-            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.communication_save_image_success, saveImageFolder));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_success));
         } catch (IOException e) {
             ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
             e.printStackTrace();

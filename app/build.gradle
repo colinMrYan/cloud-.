@@ -51,7 +51,7 @@ android {
         apply from: 'tinkerpatch.gradle'
     }
     defaultConfig {
-        applicationId "com.inspur.emmcloud.tianjingang"
+        applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
 //        versionCode 128 升级更新以version为判断依据
