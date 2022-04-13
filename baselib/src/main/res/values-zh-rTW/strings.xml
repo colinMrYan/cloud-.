@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appnameTW "雲+">
+]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
 
-    <string name="app_name">雲+</string>
+    <string name="app_name">&appnameTW;</string>
     <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="app_name_huaxiayinhang">華夏管理雲</string>
     <string name="app_name_beiqi">雲+</string>
@@ -10,7 +13,7 @@
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
-    <string name="send_to_app">發送到雲+</string>
+    <string name="send_to_app">發送到&appnameTW;</string>
     <string name="ok">確定</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
@@ -133,7 +136,7 @@
     <string name="cutdown_month">月</string>
     <string name="notice">通知</string>
     <string name="close">關閉</string>
-    <string name="commoly_use_app">常用</string>
+    <string name="commoly_use_app">常用應用</string>
     <string name="app_init">正在初始化</string>
     <string name="news_content_cant_empty">內容不能為空</string>
     <string name="help">幫助</string>
@@ -187,6 +190,12 @@
     <string name="channel_group_qrcode_valid">該二維碼7天內（%1$s之前）有效，重新進入將更新</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
+    <string name="channel_report">投訴</string>
+    <string name="channel_report_hint">請輸入投訴内容</string>
+    <string name="feed_back_without_name">匿名提交</string>
+    <string name="report_submit">提交投诉</string>
+    <string name="report_out_of_length">您輸入的字數已經超過了限制</string>
+    <string name="report_no_empty">請輸入投訴内容</string>
     <string name="channel_set_sticky">置頂聊天</string>
     <string name="modify_group_name">群名片</string>
     <string name="channel_single_chat_images">聊天圖片</string>
@@ -320,6 +329,8 @@
     <string name="voice_call">語音通話</string>
     <string name="sure_to_resend_message">確認重新發送該消息?</string>
     <string name="message_type_drafts">[草稿]</string>
+    <string name="message_type_node_me">[有人@我]</string>
+    <string name="message_type_node_all">所有人</string>
     <string name="send_email">郵件</string>
     <string name="quit_group">退出群組</string>
     <string name="dismiss_group">解散群組</string>
@@ -371,7 +382,7 @@
     <string name="chat_filemanager_volume">企業雲盤</string>
     <string name="we_chat_file_manager">微信</string>
     <string name="chat_file_transfer">文件傳輸助手</string>
-    <string name="chat_file_transfer_content">登錄雲+桌面版，向文件傳輸助手發消息，可以在手機與電腦間傳輸文字、圖片、音頻等文件。</string>
+    <string name="chat_file_transfer_content">登錄&appnameTW;桌面版，向文件傳輸助手發消息，可以在手機與電腦間傳輸文字、圖片、音頻等文件。</string>
     <!--语音通话提示-->
     <string name="voice_communication_end">聊天已結束</string>
     <string name="video_call">視頻通話</string>
@@ -517,7 +528,6 @@
     <string name="settings">設置</string>
     <string name="settings_protect">已保護</string>
     <string name="settings_clear_cache">清除緩存</string>
-    <string name="settings_aboutIMP">關於 雲+</string>
     <string name="settings_clean_imgae_attachment">清理圖片及附件緩存</string>
     <string name="settings_clean_web">清理Web應用緩存</string>
     <string name="settings_clean_all">清理應用所有緩存資料</string>
@@ -534,7 +544,7 @@
     <string name="wallet">卡包</string>
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
-    <string name="app_customer">雲+客服</string>
+    <string name="app_customer">&appnameTW;客服</string>
 
 
     <string name="fail_to_switch_enterprise">企業切換失敗！</string>
@@ -574,8 +584,7 @@
     <string name="modify_user_password">請確認密碼不為空，且兩次輸入密碼一致</string>
     <string name="modify_user_password_success">通行證密碼修改成功，請使用新密碼登錄</string>
     <string name="modify_user_password_fail">設置密碼失敗，您是否繼續設置</string>
-    <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
-    <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
+    <string name="modify_first_use">這是您第一次使用&appnameTW;，是否設置通行證密碼，以方便下次登錄</string>
     <string name="setting_update_this_time_hint">本次更新</string>
     <string name="setting_update_wifi_download_package_hint">WiFi下已自動下載安裝包</string>
 
@@ -798,6 +807,7 @@
 
     <string name="setting_net_diagnosis_copy">點此複製該內容</string>
     <string name="net_no_network_available">無網絡</string>
+    <string name="mobile_network">移動網絡</string>>
 
     <string name="function_net_load_fail">網絡加載失敗</string>
     <string name="function_net_over_load">重新加載</string>
@@ -825,7 +835,7 @@
     <string name="load_fail">載入失敗</string>
     <string name="see_more">查看更多</string>
     <string name="pull_down_loading_history">下拉載入歷史消息</string>
-    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“雲+”軟體產品（以下
+    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“&appnameTW;”軟體產品（以下
 
 簡稱“本軟體產品”）的法律協定。一旦安裝、複製或以其他方式使用本軟體產品，即表示同意接受協議各項條件的約束。如果用戶
 
@@ -961,7 +971,7 @@
     <string name="voice_communicaiton_watting_talking">通話中</string>
     <string name="voice_communication_voice_busy_tip">正在語音通話，請稍後再試</string>
     <string name="voice_communication_quality">當前通話品質不佳</string>
-    <string name="voice_communication_support_nine_members">現時雲+最多支持9人同時通話</string>
+    <string name="voice_communication_support_nine_members">現時&appnameTW;最多支持9人同時通話</string>
     <string name="voice_communication_more_than_two">語音通話用戶數不能少於2個。</string>
     <string name="voice_communication_hung_up_direct">掛斷</string>
     <string name="voice_communication_answer_phone_direct">接聽</string>
@@ -1034,7 +1044,7 @@
     <string name="permission_name_sensors">身體感測器</string>
     <string name="permission_name_sms">簡訊</string>
     <string name="permission_name_storage">存儲空間</string>
-    <string name="permission_setting_phone_recognize">開啟來電通知許可權僅在收到來電通知時獲取來電號碼查詢雲+內的組織通訊錄使用者資訊，開啟彈窗許可權允許雲+將組織通訊錄使用者信息顯示在手機螢幕上</string>
+    <string name="permission_setting_phone_recognize">開啟來電通知許可權僅在收到來電通知時獲取來電號碼查詢&appnameTW;內的組織通訊錄使用者資訊，開啟彈窗許可權允許&appnameTW;將組織通訊錄使用者信息顯示在手機螢幕上</string>
     <string name="permission_setting_open_phone_overlay">開啟懸浮窗許可權</string>
     <string name="permission_setting_open_phone_read">開啟來電通知許可權</string>
     <string name="permission_setting_close_phone_overlay">已授權懸浮窗</string>
@@ -1080,7 +1090,9 @@
     <string name="unread_detail_title">消息接收人清單</string>
     <string name="pull_badge_fail">網絡連接失敗或請求超時，請稍後下拉重繪……</string>
 
-    <string name="root_toast">雲+提醒您，當前手機已root，請注意保護你的帳號安全</string>
+    <string name="root_toast">&appnameTW;提醒您，當前手機已root，請注意保護你的帳號安全</string>
+    <string name="network_change_tip">網路環境發生變化，當前為</string>
+
 
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">

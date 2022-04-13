@@ -280,6 +280,27 @@ public class CheckingNetStateUtils {
     }
 
     /**
+     * 获取网络wifi/移动网络/无网络
+     */
+    public String getSimpleNetworksType() {
+        String netWorkType = null;
+        Context context = BaseApplication.getInstance();
+        ConnectivityManager conMan = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                netWorkType = "WIFI";
+            } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                netWorkType = context.getString(R.string.mobile_network);
+            }
+        } else {
+            netWorkType = context.getString(R.string.net_no_network_available);
+        }
+        return netWorkType;
+    }
+
+    /**
      * Http 检测网路状态 回调
      */
     public class WebHttpService extends BaseModuleAPIInterfaceInstance {

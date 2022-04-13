@@ -13,6 +13,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
@@ -490,6 +491,18 @@ public class WebSocketPush {
                                         case "client.chat.message.recall":
                                             SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand);
                                             EventBus.getDefault().post(eventMessage);
+                                            break;
+//                                        case "client.chat.channel.group.member.add":
+                                        case "client.chat.channel.group.member.remove":
+                                        case "client.chat.channel.group.create":
+                                        case "client.chat.channel.group.dismiss":
+                                        case "client.chat.channel.group.name.update":
+//                                        case "client.chat.channel.group.member.quit":
+//                                        case "client.chat.channel.group.member.join":
+                                            SimpleEventMessage eventMessageGroupConversationChanged = new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand);
+                                            EventBus.getDefault().post(eventMessageGroupConversationChanged);
+                                            //接收到消息后告知服务端 此处复用了音视频通话的发送接口
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
                                             break;
                                     }
 

@@ -20,16 +20,21 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by chenmch on 2018/4/26.
@@ -246,7 +251,19 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.contentText.setText(Html.fromHtml(content));
             }
         } else {
-            holder.contentText.setText(uiConversation.getContent());
+            // 添加@用户/@所有人功能
+            List<Message> nodeUserMessageList = unreadMessageNodeMeOrAll(uiConversation);
+            String content = uiConversation.getContent();
+            if (nodeUserMessageList.size() != 0) {
+                content = "<font color='#FF0000'>" + context.getString(R.string.message_type_node_me) + "</font>" + nodeUserMessageList.get(nodeUserMessageList.size() - 1).getContent();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.contentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+                } else {
+                    holder.contentText.setText(Html.fromHtml(content));
+                }
+            } else {
+                holder.contentText.setText(content);
+            }
         }
         TransHtmlToTextUtils.stripUnderlines(holder.contentText, R.color.msg_content_color);
     }
@@ -268,6 +285,50 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void setAdapterListener(AdapterListener adapterListener) {
         this.adapterListener = adapterListener;
 
+    }
+
+    private List<Message> unreadMessageNodeMeOrAll(UIConversation uiConversation) {
+        List<Message> messageList = new ArrayList<>();
+        int count = uiConversation.getMessageList().size();
+        List<Message> unReadMessageList = new ArrayList<>();
+        if ((int) uiConversation.getUnReadCount() > count) {
+            unReadMessageList = uiConversation.getMessageList();
+        } else {
+            unReadMessageList = uiConversation.getMessageList().subList(count - (int) uiConversation.getUnReadCount(), count);
+        }
+        for (Message message : unReadMessageList) {
+            String content = message.getMsgContentTextPlain().getText();
+            if (StringUtils.isBlank(content)) {
+                return messageList;
+            }
+            Map<String, String> mentionsMap = message.getMsgContentTextPlain().getMentionsMap();
+            StringBuilder contentStringBuilder = new StringBuilder();
+            contentStringBuilder.append(content);
+            Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
+            Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
+            while (mentionMatcher.find()) {
+                String patternString = mentionMatcher.group();
+                String key = patternString.substring(1, patternString.length() - 1).trim();
+                if (mentionsMap.containsKey(key)) {
+                    String newString = "";
+                    String uid = mentionsMap.get(key);
+                    if (uid.equals("EVERYBODY")) {
+                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：@" + context.getString(R.string.message_type_node_all) + " ";
+                        int startPosition = contentStringBuilder.indexOf(patternString);
+                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        message.setContent(contentStringBuilder.toString());
+                        messageList.add(message);
+                    } else if (BaseApplication.getInstance().getUid().equals(uid)) {
+                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": @" + ContactUserCacheUtils.getUserName(uid) + " ";
+                        int startPosition = contentStringBuilder.indexOf(patternString);
+                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        message.setContent(contentStringBuilder.toString());
+                        messageList.add(message);
+                    }
+                }
+            }
+        }
+        return messageList;
     }
 
     @Override

@@ -138,7 +138,8 @@ public class MyAppCacheUtils {
             isCommonUseAppShowResult = AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
         } else {
             isCommonUseAppShowResult = PreferencesUtils.getBoolean(BaseApplication.getInstance(), BaseApplication.getInstance().getTanent()
-                    + userId + "needCommonlyUseApp", true);
+                    + userId + "needCommonlyUseApp", true)
+                    &&  AppConfigCacheUtils.getAppConfigValue(BaseApplication.getInstance(), "EnableCommonFunction", "true").equals("true");
         }
         return isCommonUseAppShowResult;
     }

@@ -5,9 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.push.WebSocketPush;
 
 /**
@@ -18,8 +20,8 @@ public class NetWorkStateChangeUtils {
 
 
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
-    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
-
+    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
+    public static boolean isFirstRegister = true;
 
     private NetWorkStateChangeUtils() {
 
@@ -39,32 +41,34 @@ public class NetWorkStateChangeUtils {
     public void netWorkStateChange() {
         try {
             boolean isAppOnForeground = MyApplication.getInstance().getIsActive();
-            if (isAppOnForeground){
+            if (isAppOnForeground) {
                 boolean isConnected = false;
                 ConnectivityManager connectivity = (ConnectivityManager) MyApplication.getInstance()
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
                 if (connectivity != null) {
                     NetworkInfo[] info = connectivity.getAllNetworkInfo();
                     if (info != null) {
-                        for (int i = 0; i < info.length; i++) {
-                            if (info[i].getState() == NetworkInfo.State.CONNECTED || info[i].getState() == NetworkInfo.State.CONNECTING) {
+                        for (NetworkInfo networkInfo : info) {
+                            if (networkInfo.getState() == NetworkInfo.State.CONNECTED || networkInfo.getState() == NetworkInfo.State.CONNECTING) {
                                 isConnected = true;
                                 break;
                             }
                         }
                     }
                 }
-
-                if (isConnected){
+                if (isConnected) {
                     getBadgeFromServer(MyApplication.getInstance());
                     WebSocketPush.getInstance().startWebSocket();
                 }
                 checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
                 checkingNetStateUtils.getNetStateResult(5);
+                if (!isFirstRegister) {
+                    ToastUtils.show(Res.getString("network_change_tip") + checkingNetStateUtils.getSimpleNetworksType());
+                }
+                isFirstRegister = false;
             }
-
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

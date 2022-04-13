@@ -138,7 +138,7 @@ import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FI
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
-    private static final int REQUEST_QUIT_CHANNELGROUP = 1;
+    private static final int REQUEST_OPERATE_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
@@ -952,10 +952,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     break;
-                case REQUEST_QUIT_CHANNELGROUP:
-                    MyApplication.getInstance().setCurrentChannelCid("");
-                    finish();
-                    break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
                         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -1000,6 +996,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
+                case REQUEST_OPERATE_CHANNELGROUP:
+                    if (data == null || !data.hasExtra("operate")){
+                        break;
+                    }
+                    int dateExtra = data.getIntExtra("operate", -1);
+                    cid = conversation.getId();
+                    switch (dateExtra) {
+                        case 0:
+                            conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+                            if (conversation == null) {
+                                ToastUtils.show(this, getString(R.string.net_request_failed));
+                                return;
+                            }
+                            setChannelTitle();
+                            break;
+                        case 1:
+                            MyApplication.getInstance().setCurrentChannelCid("");
+                            finish();
+                        default:
+                            break;
+                    }
                 //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {
@@ -1226,7 +1243,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1237,7 +1254,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             default:
                 break;

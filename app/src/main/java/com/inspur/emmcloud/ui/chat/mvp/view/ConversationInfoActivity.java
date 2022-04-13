@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -91,12 +93,15 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
     RelativeLayout searchRecordMarginLayout;
+    @BindView(R.id.rl_conversation_report)
+    RelativeLayout conversationReportRl;
 
     private Conversation uiConversation;
     private ConversationMembersHeadAdapter channelMembersHeadAdapter;
     private List<String> uiUidList = new ArrayList<>();
     private boolean isOwner = false;
     private LoadingDialog loadingDialog;
+    private boolean conversationNameChanged = false;
 
     @Override
     public void onCreate() {
@@ -105,10 +110,13 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().register(this);
         mPresenter = new ConversationInfoPresenter();
         mPresenter.attachView(this);
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
         loadingDialog = new LoadingDialog(this);
-        mPresenter.getConversationInfo(cid);
-        uiConversation = mPresenter.getConversation(cid);
+        refreshMyConversation();
+        if (uiConversation == null) {
+            ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+            finish();
+            return;
+        }
         init();
     }
 
@@ -160,6 +168,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationMembersHeadRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                refreshMyConversation();
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 Intent intent = new Intent();
                 if (uiConversation.getType().equals(Conversation.TYPE_TRANSFER) && i == uiUidList.size() - 1) {
                     intent.putExtra(ConversationCastInfoActivity.EXTRA_CID, uiConversation.getId());
@@ -201,39 +214,70 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     public void onClick(View v) {
+//        refreshMyConversation();
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.ibt_back:
+                if (conversationNameChanged){
+                    Intent intent = new Intent();
+                    intent.putExtra("operate",0);
+                    setResult(RESULT_OK, intent);
+                }
                 finish();
                 break;
             case R.id.rl_conversation_name:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         ConversationNameModifyActivity.class, bundle);
                 break;
             case R.id.rl_conversation_qr:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString("cid", uiConversation.getId());
-                bundle.putString("groupName", uiConversation.getShowName());
+//                bundle.putString("groupName", uiConversation.getShowName());
+                bundle.putString("groupName", conversationNameTextView.getText().toString());
                 bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
                 IntentUtils.startActivity(this,
                         ConversationQrCodeActivity.class, bundle);
                 break;
             case R.id.rl_conversation_images:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupAlbumActivity.class, bundle);
                 break;
             case R.id.rl_conversation_files:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         GroupFileActivity.class, bundle);
                 break;
             case R.id.rl_channel_search_record_have_margin:
             case R.id.rl_conversation_search_record:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
             case R.id.rl_conversation_quit:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 if (uiConversation.getOwner().equals(MyApplication.getInstance().getUid())) {
                     showDelGroupWarningDlg();
                 } else {
@@ -241,6 +285,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 }
                 break;
             case R.id.rl_more_members:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
                 bundle.putString(MembersActivity.CHAT_OWNER_UID, uiConversation.getOwner());
@@ -248,9 +296,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 IntentUtils.startActivity(this,
                         MembersActivity.class, bundle);
                 break;
+            case R.id.rl_conversation_report:
+                IntentUtils.startActivity(getActivity(), ConversationReportActivity.class);
+                break;
             default:
                 break;
         }
+    }
+
+    private void refreshMyConversation() {
+        String cid = getIntent().getExtras().getString(EXTRA_CID);
+        mPresenter.getConversationInfo(cid);
+        uiConversation = mPresenter.getConversation(cid);
     }
 
     @Override
@@ -260,15 +317,39 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     @Override
+    public void onBackPressed() {
+        if (conversationNameChanged) {
+            Intent intent = new Intent();
+            intent.putExtra("operate", 0);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        super.onBackPressed();
+    }
+
+
+
+    @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//        refreshMyConversation();
         switch (compoundButton.getId()) {
             case R.id.switch_conversation_sticky:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    conversationStickySwitch.setChecked(!b);
+                    return;
+                }
                 if (!b == uiConversation.isStick()) {
                     loadingDialog.show();
                     mPresenter.setConversationStick(b, uiConversation.getId());
                 }
                 break;
             case R.id.switch_conversation_mute_notification:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    conversationMuteNotificationSwitch.setChecked(!b);
+                    return;
+                }
                 if (!b == uiConversation.isDnd()) {
                     loadingDialog.show();
                     mPresenter.setMuteNotification(b, uiConversation.getId());
@@ -323,7 +404,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void quitGroupSuccess() {
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra("operate",1);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -331,7 +414,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void deleteGroupSuccess() {
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra("operate",1);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -390,11 +475,13 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
      * @param eventMessage
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReciverConversationNameUpdate(SimpleEventMessage eventMessage) {
+    public void onReceiveConversationNameUpdate(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
-            String name = ((Conversation) eventMessage.getMessageObj()).getName();
-            conversationNameTextView.setText(name);
-            uiConversation.setName(name);
+            Conversation conversation = ((Conversation) eventMessage.getMessageObj());
+            if (uiConversation.getId().equals(conversation.getId())) {
+                uiConversation = mPresenter.getConversation(conversation.getId());
+                init();
+            }
         }
     }
 
@@ -421,6 +508,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void activityFinish() {
         finish();
+    }
+
+    @Override
+    public void updateGroupNameSuccess() {
+        conversationNameChanged = true;
+        conversationNameTextView.setText(uiConversation.getName());
     }
 
     @Override

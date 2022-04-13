@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.widget.filemanager;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -9,9 +12,13 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.volume.Volume;
 import com.inspur.emmcloud.widget.filemanager.adapter.FileFragmentPagerAdapter;
 
@@ -38,16 +45,33 @@ public class NativeVolumeFileManagerActivity extends BaseFragmentActivity implem
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_native_volume_file_manager);
-        setStatus();
-        fileTablayout = findViewById(R.id.tl_files_source);
-        fileViewPager = findViewById(R.id.viewpager_file_fragment);
-        okTextView = findViewById(R.id.tv_ok);
-        finishButton = findViewById(R.id.ibt_back);
-        nativeFileManagerFragment = new NativeFileManagerFragment();
-        volumeFileManagerFragment = new VolumeFileManagerFragment();
-        weChatFileManagerFragment = new WeChatFileManagerFragment();
-        initView();
+        if (!Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            ToastUtils.show(this, com.inspur.emmcloud.basemodule.R.string.baselib_sd_not_exist);
+            finish();
+        }
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.STORAGE, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                setContentView(R.layout.activity_native_volume_file_manager);
+                setStatus();
+                fileTablayout = findViewById(R.id.tl_files_source);
+                fileViewPager = findViewById(R.id.viewpager_file_fragment);
+                okTextView = findViewById(R.id.tv_ok);
+                finishButton = findViewById(R.id.ibt_back);
+                nativeFileManagerFragment = new NativeFileManagerFragment();
+                volumeFileManagerFragment = new VolumeFileManagerFragment();
+                weChatFileManagerFragment = new WeChatFileManagerFragment();
+                initView();
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(NativeVolumeFileManagerActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(NativeVolumeFileManagerActivity.this, permissions));
+                finish();
+            }
+        });
+
     }
 
     private void initView() {

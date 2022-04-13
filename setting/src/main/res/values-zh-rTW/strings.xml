@@ -1,3 +1,6 @@
+<!DOCTYPE resources [
+<!ENTITY appnameTW "雲+">
+]>
 <resources>
     <string name="setting_more_feedback">意見回饋</string>
     <string name="setting_feed_back_content_hint">請輸入建議和意見</string>
@@ -46,7 +49,7 @@
 
     <string name="setting_check_update_text">檢查新版本</string>
 
-    <string name="setting_invite_friends_text">把雲+推薦給朋友</string>
+    <string name="setting_invite_friends_text">把&appnameTW;推薦給朋友</string>
 
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
     <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>
@@ -60,7 +63,7 @@
     <string name="setting_create_gesture_confirm_correct">設置成功</string>
     <string name="setting_create_gesture_reset">重新設置</string>
     <string name="setting_create_gesture_code">創建手勢密碼</string>
-    <string name="setting_create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
+    <string name="setting_create_gesture_guid">您可以創建一個&appnameTW;解鎖圖案，這樣他人在借用您的手機時，將無法可打開&appnameTW;</string>
     <!--安全中心-->
     <string name="setting_safe_gesture_face">指紋、手勢密碼</string>
     <string name="setting_face_unlock">刷臉解鎖設定</string>
@@ -91,7 +94,7 @@
 
     <string name="setting_language_set_text">語言</string>
 
-    <string name="setting_mine_theme_switch">皮膚</string>
+    <string name="setting_mine_theme_switch">換膚</string>
     <string name="setting_mine_theme_white">清新白</string>
     <string name="setting_mine_theme_grey">優雅灰</string>
     <string name="setting_mine_theme_blue">商務藍</string>
@@ -118,7 +121,7 @@
     <string name="setting_net_ping_url_baidu">百度</string>
     <string name="setting_net_ping_url_inspur">浪潮</string>
     <string name="setting_net_ping_url_ali">阿里</string>
-    <string name="setting_net_ping_url_cloud">雲＋</string>
+    <string name="setting_net_ping_url_cloud">&appnameTW;</string>
     <string name="setting_net_check_error_detail_title">異常信息</string>
     <string name="setting_net_check_net_url">網址</string>
     <string name="setting_net_check_net_request_result">請求結果</string>
@@ -152,7 +155,7 @@
     <string name="setting_enter_app">進入應用</string>
     <string name="setting_log_off">用戶註銷</string>
     <string name="setting_log_offed">註銷成功</string>
-    <string name="setting_log_off_dialog_info">帳號註銷後，您在雲+的所有消息記錄，帳號資訊等均會清除且無法恢復，請您謹慎操作。請確認是否繼續註銷帳號？</string>
+    <string name="setting_log_off_dialog_info">帳號註銷後，您在&appnameTW;的所有消息記錄，帳號資訊等均會清除且無法恢復，請您謹慎操作。請確認是否繼續註銷帳號？</string>
 
 
 </resources>

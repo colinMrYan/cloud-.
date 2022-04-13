@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appname "云+">
+]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">Cloud+</string>
     <string name="app_name_beiqi">Cloud+</string>
@@ -24,7 +27,7 @@
     <string name="nothing">Nothing </string>
     <string name="function_intr">Function Introduction </string>
     <string name="user_depart_info_text">Departmental Information</string>
-    <string name="sweep">Scan</string>
+    <string name="sweep">Scan QR</string>
     <string name="send">Send</string>
     <string name="picture">Picture</string>
     <string name="album">Album</string>
@@ -126,7 +129,7 @@
     <string name="cutdown_month">m</string>
     <string name="notice">Notice</string>
     <string name="close">Close</string>
-    <string name="commoly_use_app">Commonly</string>
+    <string name="commoly_use_app">Common</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
     <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
@@ -179,6 +182,12 @@
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="channel_single_chat_images">Images</string>
+    <string name="channel_report">Report</string>
+    <string name="channel_report_hint">Please enter the report content</string>
+    <string name="feed_back_without_name">Anonymous submit</string>
+    <string name="report_submit">submit report</string>
+    <string name="report_out_of_length">The number of words you entered has exceeded the limit</string>
+    <string name="report_no_empty">Please enter the report content</string>
     <string name="channel_single_chat_files">Files</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>
@@ -301,7 +310,7 @@
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
-    <string name="message_create_group">New Chat</string>
+    <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
     <string name="no_channel_file">No content</string>
@@ -315,6 +324,8 @@
     <string name="voice_call">Voice Call</string>
     <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
+    <string name="message_type_node_me">[There is someone @ me]</string>
+    <string name="message_type_node_all">All</string>
     <string name="quit_group">Quit Group</string>
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
@@ -500,7 +511,6 @@
     <string name="settings">Settings</string>
     <string name="settings_protect">Protected</string>
     <string name="settings_clear_cache">Clear Cache</string>
-    <string name="settings_aboutIMP">About</string>
     <string name="settings_clean_imgae_attachment">Clear images and attachments</string>
     <string name="settings_clean_web">Clear web cache</string>
     <string name="settings_clean_all">Clear all application cache</string>
@@ -517,7 +527,7 @@
     <string name="wallet">Cards</string>
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
-    <string name="app_customer">Cloud+ Customer</string>
+    <string name="app_customer"> Customer</string>
 
 
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
@@ -555,7 +565,6 @@
     <string name="modify_user_password">Passwords do not match, make sure</string>
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
-    <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
     <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
     <string name="setting_update_this_time_hint">Update</string>
     <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
@@ -775,6 +784,7 @@
 
     <string name="setting_net_diagnosis_copy">Click here to copy</string>
     <string name="net_no_network_available">No Network Available</string>
+    <string name="mobile_network">Mobile Network</string>>
 
     <string name="function_net_load_fail">Loading Fail</string>
     <string name="function_net_over_load">Reload</string>
@@ -802,7 +812,7 @@
     <string name="load_fail">Loading Failed</string>
     <string name="see_more">More</string>
     <string name="pull_down_loading_history">Drop load history message</string>
-    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“云+”软件产品（以下
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“&appname;”软件产品（以下
 
 简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
 
@@ -1067,6 +1077,7 @@
     <string name="unread_detail_title">Message recipients list</string>
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
     <string name="root_toast">current mobile phone is root. Please pay attention to protect your account security</string>
+    <string name="network_change_tip">The network environment has changed, currently:</string>
 
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
@@ -1074,6 +1085,9 @@
     <string name="privacy_reject_dialog_title">Whether to confirm disagree and exit?</string>
     <string name="privacy_reject_dialog_quit">Quit</string>
     <string name="privacy_reject_dialog_cancel">Cancel</string>
+    <string name="pass_login_confirm">Pass confirmation login</string>
+    <string name="confirm_login_by_self">In order to ensure the security of the account, please ensure that it is operated by yourself</string>
+    <string name="save_to_storage">Save to album</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

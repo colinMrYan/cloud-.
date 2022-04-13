@@ -24,6 +24,13 @@ public class LoginAPIUri {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
     }
 
+    public static String getCancelEmmTokenUrl() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/user/sign_out";
+    }
+
+    public static String getDestroyEcmTokenUrl() {
+        return WebServiceRouterManager.getInstance().getClusterChatSocket() + "/chat/rest/v1/oauth";
+    }
 
     /**
      * 请求短信验证码

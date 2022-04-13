@@ -121,7 +121,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
 
     // 开始进行设备管理检查
     public void startMDM() {
-        // TODO Auto-generated method stub
         String userName = PreferencesUtils.getString(activity, "userRealName",
                 "");
         String tanentId = BaseApplication.getInstance().getCurrentEnterprise().getId();
@@ -130,7 +129,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         mdm.addOnMDMListener(new MDMListener() {
             @Override
             public void MDMStatusPass(int doubleValidation) {
-                // TODO Auto-generated method stub
                 PreferencesByUserAndTanentUtils.putInt(BaseApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
                 PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, true);
                 saveLoginInfo();
@@ -141,7 +139,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
 
             @Override
             public void MDMStatusNoPass() {
-                // TODO Auto-generated method stub
                 clearLoginInfo();
                 //当设备因为设备管理无法进入时，把记住选择企业选项情况，让用户重新选择企业进入
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
@@ -151,7 +148,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
 
             @Override
             public void dimissExternalLoadingDlg() {
-                // TODO Auto-generated method stub
                 if (loadingDlg != null && loadingDlg.isShowing()) {
                     loadingDlg.dismiss();
                 }

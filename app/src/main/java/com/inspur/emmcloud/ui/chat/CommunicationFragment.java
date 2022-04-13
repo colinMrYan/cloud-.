@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +150,8 @@ public class CommunicationFragment extends BaseFragment {
     private boolean isFirstConnectWebsocket = true;//判断是否第一次连上websocket
     private LoadingDialog loadingDlg;
     private CheckingNetStateUtils checkingNetStateUtils;
+    private String channelRefreshId = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -975,6 +978,9 @@ public class CommunicationFragment extends BaseFragment {
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 conversation = (Conversation) eventMessage.getMessageObj();
+                ArrayList<Conversation> conversations = new ArrayList<>();
+                conversations.add(conversation);
+                ConversationGroupIconUtils.getInstance().create(conversations);
                 index = displayUIConversationList.indexOf(new UIConversation(conversation.getId()));
                 if (index != -1) {
                     displayUIConversationList.get(index).setTitle(conversation.getName());
@@ -1021,6 +1027,28 @@ public class CommunicationFragment extends BaseFragment {
             case Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED:
                 String cid = (String) eventMessage.getMessageObj();
                 notifyConversationMessageDataChanged(cid);
+                break;
+            case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED:
+                WebSocketPush.getInstance().startWebSocket();
+                WSCommand command = (WSCommand) eventMessage.getMessageObj();
+                //删除其它成员不发送信息，删除自己继续发送信息
+                if (command.getAction().equals("client.chat.channel.group.member.remove")) {
+                    String removeParams = command.getParams();
+                    String[] uids = JSONUtils.getStringArray(removeParams, "members", new String[100]);
+                    boolean forceRefresh = false;
+                    for (String uid : uids) {
+                        if (uid.equals(BaseApplication.getInstance().getUid())) {
+                            forceRefresh = true;
+                        }
+                    }
+                    if (!forceRefresh) break;
+                }
+                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
+                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
+                    channelRefreshId = command.getChannel();
+                }
+                getConversationList();
+                getMessage();
                 break;
         }
     }
@@ -1273,6 +1301,13 @@ public class CommunicationFragment extends BaseFragment {
                     public void accept(List<Conversation> conversationList) throws Exception {
                         sortConversationList();
                         createGroupIcon(conversationList);
+                        if (!TextUtils.isEmpty(channelRefreshId)) {
+                            Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelRefreshId);
+                            if (conversation != null) {
+                                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, conversation));
+                                channelRefreshId = "";
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

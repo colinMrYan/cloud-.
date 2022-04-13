@@ -143,7 +143,7 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
                                                             .setCallback(mShareListener)
                                                             .share();
                                                 } else {
-                                                    UMImage thumb = new UMImage(context, R.drawable.ic_launcher_share);
+                                                    UMImage thumb = new UMImage(context, R.drawable.ic_launcher);
                                                     UMWeb web = new UMWeb(cardPackageBean.getBarcodeUrl());
                                                     web.setThumb(thumb);
                                                     web.setDescription("发票二维码");

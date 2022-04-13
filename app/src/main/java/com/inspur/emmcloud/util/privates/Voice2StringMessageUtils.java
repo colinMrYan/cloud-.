@@ -15,6 +15,7 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.bean.system.VoiceResult;
@@ -162,7 +163,7 @@ public class Voice2StringMessageUtils {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "");
+        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, BaseApplication.getInstance().getExternalCacheDir().getPath());
     }
 
     public void setNeedChangeLanguage(boolean needChangeLanguage) {

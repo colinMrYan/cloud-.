@@ -16,6 +16,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
@@ -24,6 +25,12 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * com.inspur.emmcloud.util.privates.ChatCreateUtils create at 2016年11月29日 下午7:44:41
@@ -54,7 +61,7 @@ public class ConversationCreateUtils {
 
     public void createGroupConversation(Activity context, JSONArray peopleArray,
                                         OnCreateGroupConversationListener onCreateGroupConversationListener) {
-        createGroupConversation(context, peopleArray, null, onCreateGroupConversationListener);
+        createGroupConversation(context, getLastSortedSearchMembers(peopleArray,true), null, onCreateGroupConversationListener);
     }
 
     //增加群聊名称  会议过来的使用会议名称
@@ -65,12 +72,15 @@ public class ConversationCreateUtils {
         JSONArray uidArray = new JSONArray();
         JSONArray nameArray = new JSONArray();
         LogUtils.jasonDebug("peopleArray=" + peopleArray.length());
+        List<String> uidList = new ArrayList<>();
         for (int i = 0; i < peopleArray.length(); i++) {
             try {
-                uidArray.put(i, peopleArray.getJSONObject(i).getString("pid"));
-
-                nameArray
-                        .put(i, peopleArray.getJSONObject(i).getString("name"));
+                String targetUid = getUidFromIdInfo(peopleArray.getJSONObject(i).getString("pid"));
+                if (!uidList.contains(targetUid)) {
+                    uidArray.put(i, targetUid);
+                    nameArray.put(i, peopleArray.getJSONObject(i).getString("name"));
+                    uidList.add(targetUid);
+                }
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -84,7 +94,6 @@ public class ConversationCreateUtils {
         loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(context);
         apiService.setAPIInterface(new WebService());
-        uidArray.put(MyApplication.getInstance().getUid());
         apiService.createGroupConversation(groupName, uidArray);
     }
 
@@ -92,28 +101,68 @@ public class ConversationCreateUtils {
      * 获取群组名称
      *
      * @param nameArray
-     * @return//群组名称最多显示5人人名
+     * @return//群组名称最多显示4人人名
      */
-    private String createChannelGroupName(JSONArray nameArray) {
-        // TODO Auto-generated method stub
+    public static String createChannelGroupName(JSONArray nameArray) {
         StringBuilder nameBuilder = new StringBuilder();
-        String myName = PreferencesUtils.getString(context, "userRealName");
         int length = Math.min(4, nameArray.length());
-        nameBuilder.append(myName);
         for (int i = 0; i < length; i++) {
             String name = "";
             try {
                 name = nameArray.getString(i);
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            nameBuilder.append("、" + name);
+            if (i == length - 1){
+                nameBuilder.append(name);
+            } else {
+                nameBuilder.append(name + "、");
+            }
         }
         if (nameArray.length() > 4) {
             nameBuilder.append("...");
         }
         return nameBuilder.toString();
+    }
+
+    //群聊用户排序
+    public static JSONArray getLastSortedSearchMembers(JSONArray peopleArray, boolean withOwner) {
+        JSONArray finalPeopleArray = new JSONArray();
+        Map<Integer, String> map = new TreeMap<>();
+        if (withOwner) {
+            map.put(Integer.valueOf(MyApplication.getInstance().getUid()), PreferencesUtils.getString(BaseApplication.getInstance(), "userRealName", ""));
+        }
+        try {
+            for (int i = 0; i < peopleArray.length(); i++) {
+                JSONObject peopleObj = peopleArray.getJSONObject(i);
+                if (peopleObj.getString("pid") != null) {
+                    map.put(Integer.valueOf(getUidFromIdInfo(peopleObj.getString("pid"))), peopleObj.getString("name"));
+                }
+            }
+            TreeMap<Integer, String> sortedMap = new TreeMap<>(map);
+            if (sortedMap.size() != 0){
+                for (Map.Entry<Integer, String> entry : sortedMap.entrySet()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("pid", entry.getKey().toString());
+                    jsonObject.put("name", entry.getValue());
+                    finalPeopleArray.put(jsonObject);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return finalPeopleArray;
+    }
+
+    //获取兼职账号对应的主账号id
+    public static String getUidFromIdInfo(String uid) {
+        String finalUid = uid;
+        int SUB_USER_ADD_LENGTH = ((int)Math.pow(10,8) + "").length();
+        int uidLength = uid.length();
+        if (uid.length() > SUB_USER_ADD_LENGTH) {
+            finalUid = uid.substring(0, uidLength - SUB_USER_ADD_LENGTH).trim();
+        }
+        return finalUid;
     }
 
 //    public interface OnCreateDirectConversationListener {

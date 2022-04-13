@@ -127,7 +127,7 @@ public class MailSendActivity extends BaseActivity {
      */
     private void init() {
         String username = PreferencesUtils.getString(this, "userRealName", "");
-        String content = "\n\n\n\n" + username + "\n\t" + "---发自我的云+移动端";
+        String content = "\n\n\n\n" + username + "\n\t" + "---发自我的" + getResources().getString(R.string.app_name) + "移动端";
         contentSendEditText.setText(content);
         loadingDlg = new LoadingDialog(this);
         recipientRichEdit.setInputWatcher(new RichEdit.InputWatcher() {
