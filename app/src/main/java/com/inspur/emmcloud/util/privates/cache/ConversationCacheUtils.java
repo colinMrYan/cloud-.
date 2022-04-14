@@ -40,12 +40,6 @@ public class ConversationCacheUtils {
             if (conversationList == null || conversationList.size() == 0) {
                 return;
             }
-            Conversation conversation = conversationList.get(0);
-            conversation.setName("服务号");
-            conversation.setId("10000");
-            conversation.setAction("专业团队 为您服务");
-            conversation.setType(Conversation.TYPE_SERVICE);
-            conversationList.add(conversation);
             DbCacheUtils.getDb(context).saveOrUpdate(conversationList);
         } catch (Exception e) {
             // TODO: handle exception
