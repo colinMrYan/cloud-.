@@ -78,7 +78,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void showUserOrientedLayout(ArrayList<String> userIds) {
-        if (listener != null) listener.showWhisper();
+        if (listener != null) listener.showFunction();
         ArrayList<String> targetUsers = userIds;
         targetUsers.remove(BaseApplication.getInstance().getUid());
         if (targetUsers.isEmpty()) return;
@@ -102,7 +102,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void closeUserOrientedLayout() {
-        if (listener != null) listener.closeWhisper();
+        if (listener != null) listener.closeFunction();
         setDisplayingUI(false);
         selectedUser.clear();
         if (mentionView != null) mentionView.setVisibility(View.GONE);
@@ -159,12 +159,11 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
 
     private void showMentionView(String content) {
         if (userInfoView != null) {
+            if (mentionView != null) mentionView.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(content)) {
-                if (mentionView != null) mentionView.setVisibility(View.VISIBLE);
-                userInfoView.setText(userInfoView.getContext().getString(R.string.voice_input_mention, content));
+                userInfoView.setText(userInfoView.getContext().getString(R.string.voice_input_mention) + ": " + content);
             } else {
-                userInfoView.setText("");
-                mentionView.setVisibility(View.GONE);
+                userInfoView.setText(userInfoView.getContext().getString(R.string.voice_input_mention));
             }
         }
     }

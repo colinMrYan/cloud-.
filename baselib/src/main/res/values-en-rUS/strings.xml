@@ -996,6 +996,7 @@
     <string name="voice_input_hint_speak_now">Speak now...</string>
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
+    <string name="voice_input_mention">Send to</string>
     <string name="communication_has_leave">Hung up</string>
     <string name="voice_communication_notification_group_title">Voice Call</string>
     <string name="voice_communication_notification_group_content">Tap to recover</string>

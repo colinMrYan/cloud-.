@@ -1282,8 +1282,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 userOrientedConversationHelper.closeUserOrientedLayout();
                 break;
             case WHISPER:
-                localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser(), mentionsMap);
-                userOrientedConversationHelper.closeUserOrientedLayout();
+                if (userOrientedConversationHelper.getSelectedUser().isEmpty()) {
+                    localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                } else {
+                    localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser(), mentionsMap);
+                    userOrientedConversationHelper.closeUserOrientedLayout();
+                }
                 break;
             case STANDARD:
             default:
