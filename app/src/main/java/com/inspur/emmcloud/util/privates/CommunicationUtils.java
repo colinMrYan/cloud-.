@@ -126,7 +126,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combineLocalTextWhisperMessage(String text, String cid, List<String> toUidList) {
+    public static Message combineLocalTextWhisperMessage(String text, String cid, List<String> toUidList, Map<String, String> mentionsMap) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -138,11 +138,16 @@ public class CommunicationUtils {
         if (toUidList != null && toUidList.size() > 0) {
             msgContentTextPlain.setWhisperUsers(toUidList);
         }
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
         message.setContent(msgContentTextPlain.toString());
         return message;
     }
 
-    public static Message combineLocalTextBurnMessage(String text, String cid) {
+    public static Message combineLocalTextBurnMessage(String text, String cid, Map<String, String> mentionsMap) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -152,6 +157,9 @@ public class CommunicationUtils {
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
         msgContentTextPlain.setMsgType(Message.MESSAGE_TYPE_TEXT_BURN);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
         String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
         message.setShowContent(showContent);
         message.setContent(msgContentTextPlain.toString());

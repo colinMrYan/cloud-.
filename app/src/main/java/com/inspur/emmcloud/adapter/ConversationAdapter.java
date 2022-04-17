@@ -312,16 +312,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 if (mentionsMap.containsKey(key)) {
                     String newString = "";
                     String uid = mentionsMap.get(key);
+                    boolean isWhisperType = !message.getMsgContentTextPlain().getWhisperUsers().isEmpty();
                     if (uid.equals("EVERYBODY")) {
-                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：@" + context.getString(R.string.message_type_node_all) + " ";
+                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：@" + context.getString(R.string.message_type_node_all) + (isWhisperType ? " " + BaseApplication.getInstance().getString(R.string.send_a_whispers) : " ");
                         int startPosition = contentStringBuilder.indexOf(patternString);
-                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        contentStringBuilder.replace(startPosition, isWhisperType ? contentStringBuilder.length() : startPosition + patternString.length(), newString);
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
                     } else if (BaseApplication.getInstance().getUid().equals(uid)) {
-                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": @" + ContactUserCacheUtils.getUserName(uid) + " ";
+                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": @" + ContactUserCacheUtils.getUserName(uid) + (isWhisperType ? " " + BaseApplication.getInstance().getString(R.string.send_a_whispers) : " ");
                         int startPosition = contentStringBuilder.indexOf(patternString);
-                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        contentStringBuilder.replace(startPosition, isWhisperType ? contentStringBuilder.length() : startPosition + patternString.length(), newString);
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
                     }

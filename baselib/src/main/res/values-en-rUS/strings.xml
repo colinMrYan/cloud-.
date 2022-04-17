@@ -326,7 +326,7 @@
     <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
     <string name="message_type_node_me">[There is someone @ me]</string>
-    <string name="message_type_node_all">All</string>
+    <string name="message_type_node_all">All members</string>
     <string name="quit_group">Quit Group</string>
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>

@@ -125,6 +125,11 @@ public class WSAPIService {
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
             bodyObj.put("text", msgContentTextPlain.getText());
+            Map<String, String> mentionsMap = msgContentTextPlain.getMentionsMap();
+            if (mentionsMap != null && mentionsMap.size() > 0) {
+                JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
+                bodyObj.put("mentions", mentionsObj);
+            }
             bodyObj.put("tmpId", fakeMessage.getId());
             bodyObj.put("whispers", JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
             object.put("body", bodyObj);

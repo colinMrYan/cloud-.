@@ -93,6 +93,12 @@ public class UIConversation implements Serializable {
             String fromUserName = "";
             String messageType = message.getType();
             if (!StringUtils.isBlank(message.getRecallFrom())) {
+                boolean recallFromSender = message.getRecallFromUid().equals(message.getFromUser());
+                if (!recallFromSender && message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                    messageList.remove(message);
+                    setUIConversationContent();
+                    return;
+                }
                 content = CommunicationUtils.getRecallMessageShowContent(message);
             } else {
                 if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {

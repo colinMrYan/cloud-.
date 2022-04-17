@@ -1266,23 +1266,19 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
         Message localMessage;
-        if (mentionsMap != null && mentionsMap.size() != 0) {
-            localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
-        } else {
-            switch (userOrientedConversationHelper.getConversationType()) {
-                case BURN:
-                    localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid);
-                    userOrientedConversationHelper.closeUserOrientedLayout();
-                    break;
-                case WHISPER:
-                    localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser());
-                    userOrientedConversationHelper.closeUserOrientedLayout();
-                    break;
-                case STANDARD:
-                default:
-                    localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
-                    break;
-            }
+        switch (userOrientedConversationHelper.getConversationType()) {
+            case BURN:
+                localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid, mentionsMap);
+                userOrientedConversationHelper.closeUserOrientedLayout();
+                break;
+            case WHISPER:
+                localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser(), mentionsMap);
+                userOrientedConversationHelper.closeUserOrientedLayout();
+                break;
+            case STANDARD:
+            default:
+                localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                break;
         }
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
@@ -1843,7 +1839,10 @@ public class ConversationActivity extends ConversationBaseActivity {
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                    operationIdList.add(R.string.chat_long_click_copy);
+                    break;
                 case Message.MESSAGE_TYPE_TEXT_BURN:
+                    if (!message.getFromUser().equals(BaseApplication.getInstance().getUid())) break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     operationIdList.add(R.string.chat_long_click_copy);
                     operationIdList.add(R.string.chat_long_click_transmit);
