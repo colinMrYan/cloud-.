@@ -1067,6 +1067,20 @@ public class ECMChatInputMenu extends LinearLayout {
         return true;
     }
 
+    public void updateVoiceAndMoreLayout(boolean show) {
+        addBtn.setVisibility(show ? VISIBLE : GONE);
+        voiceBtn.setVisibility(show ? VISIBLE : GONE);
+        if (!show){
+            if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                setOtherLayoutHeightLock(true);
+                setAddMenuLayoutShow(false);
+                setOtherLayoutHeightLock(false);
+            } else {
+                changeAddMenuLayoutContent(false);
+            }
+        }
+    }
+
 
     private void startVoiceCall(String type) {
         //语音通话

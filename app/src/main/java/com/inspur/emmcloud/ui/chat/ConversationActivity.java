@@ -235,7 +235,17 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     private void initOrientedHelper() {
-        userOrientedConversationHelper = new UserOrientedConversationHelper((View)findViewById(R.id.main_layout), conversation.getType(), this);
+        userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
+            @Override
+            public void closeFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(true);
+            }
+
+            @Override
+            public void showFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(false);
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决

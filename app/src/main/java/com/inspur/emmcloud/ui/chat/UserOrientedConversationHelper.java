@@ -35,12 +35,18 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private ArrayList<String> selectedUser = new ArrayList<>();
     private String channelType = "";
     private boolean displayingUI = false;
+    private OnWhisperEventListener listener;
 
     public enum ConversationType {
         STANDARD, WHISPER, BURN
     }
 
-    public UserOrientedConversationHelper(View targetView, String type, Context context) {
+    public interface OnWhisperEventListener{
+        void closeFunction();
+        void showFunction();
+    }
+
+    public UserOrientedConversationHelper(View targetView, String type, Context context, OnWhisperEventListener onWhisperEventListener) {
         this.mentionView = targetView.findViewById(R.id.mention_layout);
         closeBtn = mentionView.findViewById(R.id.close_icon);
         userInfoView = mentionView.findViewById(R.id.mention_info);
@@ -64,6 +70,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         memberListView.setAdapter(recyclerGridAdapter);
         channelType = type;
         conversationType = ConversationType.STANDARD;
+        listener = onWhisperEventListener;
     }
 
     public ConversationType getConversationType() {
@@ -71,6 +78,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void showUserOrientedLayout(ArrayList<String> userIds) {
+        if (listener != null) listener.showWhisper();
         ArrayList<String> targetUsers = userIds;
         targetUsers.remove(BaseApplication.getInstance().getUid());
         if (targetUsers.isEmpty()) return;
@@ -94,6 +102,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void closeUserOrientedLayout() {
+        if (listener != null) listener.closeWhisper();
         setDisplayingUI(false);
         selectedUser.clear();
         if (mentionView != null) mentionView.setVisibility(View.GONE);
