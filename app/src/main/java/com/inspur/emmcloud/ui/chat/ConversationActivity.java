@@ -1856,12 +1856,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_copy);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_BURN:
-                    if (!message.getFromUser().equals(BaseApplication.getInstance().getUid())) break;
+                    if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                    }
+                    break;
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    operationIdList.add(R.string.chat_long_click_copy);
-                    operationIdList.add(R.string.chat_long_click_transmit);
-                    if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
-                        operationIdList.add(R.string.chat_long_click_schedule);
+                    if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        break;
+                    } else if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                        if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                            operationIdList.add(R.string.chat_long_click_copy);
+                            operationIdList.add(R.string.chat_long_click_transmit);
+                        }
+                    } else {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                        if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
+                            operationIdList.add(R.string.chat_long_click_schedule);
+                        }
                     }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
