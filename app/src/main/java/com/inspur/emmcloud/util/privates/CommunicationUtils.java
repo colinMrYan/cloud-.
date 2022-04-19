@@ -93,6 +93,8 @@ public class CommunicationUtils {
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
+        }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            title = BaseApplication.getInstance().getString(R.string.address_servicenum_text);
         }
         return title;
     }
@@ -571,6 +573,8 @@ public class CommunicationUtils {
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             icon = "drawable://" + R.drawable.ic_file_transfer;
+        }  else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            icon = "drawable://" + R.drawable.ic_channel_service;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }

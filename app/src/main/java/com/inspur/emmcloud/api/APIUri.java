@@ -1155,7 +1155,7 @@ public class APIUri {
      * @return
      */
     public static String getConversationServiceListUrl() {
-        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/user";
+        return getECMChatServiceConversationBaseUrl() + "/user";
     }
 
     /**
@@ -1163,7 +1163,7 @@ public class APIUri {
      * @return
      */
     public static String getConversationServiceListAllUrl() {
-        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service";
+        return getECMChatServiceConversationBaseUrl() + "?checkUserSubscribe=true";
     }
 
     /**
@@ -1172,7 +1172,7 @@ public class APIUri {
      * @return
      */
     public static String getFollowConversationServiceUrl() {
-        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/subscription";
+        return getECMChatServiceConversationBaseUrl() + "/subscription";
     }
 
     /**
@@ -1181,7 +1181,16 @@ public class APIUri {
      * @return
      */
     public static String getSearchConversationServiceUrl(String name) {
-        return getECMChatConversationBaseUrl() + "/chat/rest/v1/service/name/" + name;
+        return getECMChatServiceConversationBaseUrl() + "/name/" + name;
+    }
+
+    /**
+     * 获取chat service v1 channel base url
+     *
+     * @return
+     */
+    public static String getECMChatServiceConversationBaseUrl() {
+        return getECMChatUrl() + "/rest/service";
     }
 
 }

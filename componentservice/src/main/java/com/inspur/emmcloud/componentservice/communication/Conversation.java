@@ -87,7 +87,7 @@ public class Conversation implements Serializable {
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
-        this.hide = false;
+        this.hide = JSONUtils.getBoolean(obj, "hide", false);
         this.action = JSONUtils.getString(obj, "action", "");
         Router router = Router.getInstance();
         if (router != null) {
@@ -111,6 +111,15 @@ public class Conversation implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getServiceConversationId(){
+        String conversationId = "";
+        if (this.id.startsWith("FIBER")){
+            String[] strings = id.split(":");
+            conversationId = strings[1];
+        }
+        return conversationId;
     }
 
     public void setId(String id) {

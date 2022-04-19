@@ -417,6 +417,7 @@ public class CommunicationFragment extends BaseFragment {
      * 沟通页网络异常提示框
      *
      * @param netState 通过Action获取操作类型
+     * 刷新关注服务号列表
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
@@ -427,6 +428,11 @@ public class CommunicationFragment extends BaseFragment {
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
+        }else if (netState.getAction().equals(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE)){
+            WebSocketPush.getInstance().startWebSocket();
+            getConversationList();
+            getMessage();
+            getAppRole();
         }
     }
 
@@ -1273,6 +1279,13 @@ public class CommunicationFragment extends BaseFragment {
             @Override
             public void subscribe(ObservableEmitter<List<Conversation>> emitter) throws Exception {
                 List<Conversation> conversationList = getConversationListResult.getConversationList();
+                //创建服务号保存到本地
+                Conversation serviceConversation = new Conversation();
+                serviceConversation.setType(Conversation.TYPE_SERVICE);
+                serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
+                serviceConversation.setAvatar("drawable://" + R.drawable.ic_channel_service);
+                serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
+                conversationList.add(serviceConversation);
                 List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                 //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
                 for (Conversation conversation : conversationList) {

@@ -80,6 +80,9 @@ public class UIConversation implements Serializable {
             case Conversation.TYPE_TRANSFER:
                 icon = "drawable//" + R.drawable.ic_file_transfer;
                 break;
+            case Conversation.TYPE_SERVICE:
+                icon = "drawable//" + R.drawable.ic_channel_service;
+                break;
             default:
                 icon = "drawable//" + R.drawable.icon_channel_group_default;
                 break;
@@ -252,6 +255,8 @@ public class UIConversation implements Serializable {
             UIConversation uiConversationA = (UIConversation) lhs;
             UIConversation uiConversationB = (UIConversation) rhs;
             long diff = uiConversationA.getLastUpdate() - uiConversationB.getLastUpdate();
+            if (uiConversationA.getConversation().getType().equals(Conversation.TYPE_SERVICE) && !uiConversationB.getConversation().getType().equals(Conversation.TYPE_SERVICE)) return -1;
+            if (!uiConversationA.getConversation().getType().equals(Conversation.TYPE_SERVICE) && uiConversationB.getConversation().getType().equals(Conversation.TYPE_SERVICE)) return 1;
             if (uiConversationA.getConversation().isStick() && !uiConversationB.getConversation().isStick()) {
                 return -1;
             }

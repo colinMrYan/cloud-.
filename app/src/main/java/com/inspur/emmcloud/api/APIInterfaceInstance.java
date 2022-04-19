@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -37,6 +38,7 @@ import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabRes
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
@@ -798,7 +800,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnGetConversationServiceListSuccess(GetConversationListResult getConversationListResult) {
+    public void returnGetConversationServiceListSuccess(GetServiceChannelInfoListResult getConversationListResult) {
 
     }
 
@@ -808,7 +810,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnGetConversationServiceListAllSuccess(GetConversationListResult getConversationListResult) {
+    public void returnGetConversationServiceListAllSuccess(GetServiceChannelInfoListResult getConversationListResult) {
 
     }
 
@@ -818,7 +820,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSearchConversationServiceSuccess(GetConversationListResult getConversationListResult) {
+    public void returnSearchConversationServiceSuccess(GetServiceChannelInfoListResult getConversationListResult) {
 
     }
 
@@ -828,7 +830,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnFollowConversationServiceSuccess(Conversation conversations) {
+    public void returnFollowConversationServiceSuccess(ServiceChannelInfo conversations) {
 
     }
 

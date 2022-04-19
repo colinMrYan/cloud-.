@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="25dp"
             android:layout_toRightOf="@id/ibt_back"
             android:ellipsize="end"
@@ -43,10 +43,9 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
-            android:layout_toRightOf="@+id/header_text"
             android:layout_toLeftOf="@+id/header_service_state"
-            android:src="?attr/ic_config"
-            android:tint="?attr/header_text_color_e1" />
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_task_search" />
 
         <TextView
             android:id="@+id/header_service_state"

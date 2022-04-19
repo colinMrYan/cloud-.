@@ -2,8 +2,8 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -24,7 +24,7 @@ import java.util.List;
  * @author Administrator
  */
 public class ConversationCacheUtils {
-
+    public static String serviceConversationId = "service_default_conversation";
 
     /**
      * 存储会话列表

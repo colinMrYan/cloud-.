@@ -10,17 +10,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
+import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +39,11 @@ public class ConversationServiceActivity extends BaseActivity {
     private Conversation conversation;
     private LoadingDialog loadingDlg;
     private boolean apiRequesting = false;
-    private PageState state = PageState.FOCUS;
+    private PageState state = PageState.ALL;
     private ConversationServiceAdapter adapter;
-    private List<Conversation> conversationServiceList = new ArrayList<>();
+    private List<ServiceChannelInfo> conversationServiceList = new ArrayList<>();
     private TextView searchStateView;
+    private List<Conversation> serviceConversationList = new ArrayList<>();
 
     public enum PageState {
         ALL, FOCUS
@@ -47,8 +57,24 @@ public class ConversationServiceActivity extends BaseActivity {
             finish();
             return;
         }
+        cacheConversationList(null);
         initView();
-//        getConversationServiceList();
+        getConversationServiceList();
+
+    }
+
+    /**
+     * 获取消息会话列表
+     */
+    private void getConversationList() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            ChatAPIService apiService = new ChatAPIService(ConversationServiceActivity.this);
+            apiService.setAPIInterface(new WebService());
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put("private");
+            apiService.getConversationList(jsonArray);
+        }
     }
 
     @Override
@@ -70,9 +96,9 @@ public class ConversationServiceActivity extends BaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(ConversationServiceActivity.this);
-        ((TextView) findViewById(R.id.header_text)).setText(conversation.getName());
-        searchStateView = findViewById(R.id.header_service_state);
-        searchStateView.setText(getString(R.string.all));
+        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.address_servicenum_text));
+        searchStateView = (TextView) findViewById(R.id.header_service_state);
+        changePageState();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.rv_service_list));
@@ -99,15 +125,17 @@ public class ConversationServiceActivity extends BaseActivity {
         }
     }
 
-    private void requestFollowService(String cid) {
+    private void requestFollowService(String cid, boolean subscribeAlready) {
         if (apiRequesting) return;
         apiRequesting = true;
+        loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(ConversationServiceActivity.this);
         apiService.setAPIInterface(new WebService());
-        apiService.requestFollowOrRemoveConversationService(cid, true);
+        apiService.requestFollowOrRemoveConversationService(cid, subscribeAlready);
     }
 
-    private void updatePageByInterface(boolean getDateSuccess, GetConversationListResult result) {
+    private void updatePageByInterface(boolean getDateSuccess, GetServiceChannelInfoListResult result) {
+        loadingDlg.dismiss();
         if (getDateSuccess) {
             conversationServiceList.clear();
             conversationServiceList.addAll(result.getConversationList());
@@ -115,25 +143,36 @@ public class ConversationServiceActivity extends BaseActivity {
         } else {
             changePageState();
         }
-        loadingDlg.dismiss();
     }
 
     private void changePageState() {
         switch (state) {
             case ALL:
                 state = PageState.FOCUS;
-                searchStateView.setText(getString(R.string.focus));
+                searchStateView.setText(getString(R.string.all));
                 break;
             case FOCUS:
                 state = PageState.ALL;
-                searchStateView.setText(getString(R.string.all));
+                searchStateView.setText(getString(R.string.focus));
                 break;
+        }
+    }
+
+    private void cacheConversationList(final GetConversationListResult getConversationListResult) {
+        List<Conversation> conversationList = new ArrayList<>(ConversationCacheUtils.getConversationList(this));
+        if (getConversationListResult != null) {
+            conversationList.addAll(getConversationListResult.getConversationList());
+        }
+        for (Conversation conversation : conversationList) {
+            if (conversation.isHide() && conversation.getId().startsWith("FIBER")) {
+                serviceConversationList.add(conversation);
+            }
         }
     }
 
     private class WebService extends APIInterfaceInstance {
         @Override
-        public void returnGetConversationServiceListSuccess(GetConversationListResult result) {
+        public void returnGetConversationServiceListSuccess(GetServiceChannelInfoListResult result) {
             updatePageByInterface(true, result);
         }
 
@@ -143,7 +182,7 @@ public class ConversationServiceActivity extends BaseActivity {
         }
 
         @Override
-        public void returnGetConversationServiceListAllSuccess(GetConversationListResult result) {
+        public void returnGetConversationServiceListAllSuccess(GetServiceChannelInfoListResult result) {
             updatePageByInterface(true, result);
         }
 
@@ -153,20 +192,36 @@ public class ConversationServiceActivity extends BaseActivity {
         }
 
         @Override
-        public void returnFollowConversationServiceSuccess(Conversation changedConversations) {
-            for (Conversation conversation : conversationServiceList) {
-                if (conversation.getId().equals(changedConversations.getId())) {
-                    conversation.setFocus(changedConversations.getFocus());
+        public void returnFollowConversationServiceSuccess(ServiceChannelInfo changedConversations) {
+            loadingDlg.dismiss();
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
+            for (int i = 0; i < conversationServiceList.size(); i++) {
+                ServiceChannelInfo serviceChannelInfo = conversationServiceList.get(i);
+                if (serviceChannelInfo.getId().equals(changedConversations.getId())) {
+                    serviceChannelInfo.setSubscribe(!serviceChannelInfo.isSubscribe());
+                    adapter.notifyItemChanged(i);
+                    getConversationList();
                     break;
                 }
             }
-            adapter.notifyDataSetChanged();
             apiRequesting = false;
         }
 
         @Override
         public void returnFollowConversationServiceFail(String error, int errorCode) {
+            loadingDlg.dismiss();
             apiRequesting = false;
+        }
+
+        @Override
+        public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
+            cacheConversationList(getConversationListResult);
+            loadingDlg.dismiss();
+        }
+
+        @Override
+        public void returnConversationListFail(String error, int errorCode) {
+            loadingDlg.dismiss();
         }
     }
 
@@ -179,18 +234,18 @@ public class ConversationServiceActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ServiceItemViewHolder holder, int arg1) {
-            final Conversation conversation = conversationServiceList.get(arg1);
-            if (conversation == null) return;
-            holder.titleText.setText(conversation.getName());
-            holder.titleDesc.setText(conversation.getAction());
+            final ServiceChannelInfo serviceChannelInfo = conversationServiceList.get(arg1);
+            if (serviceChannelInfo == null) return;
+            holder.itemImg.setBackgroundResource(R.drawable.ic_channel_service);
+            holder.titleText.setText(serviceChannelInfo.getName());
+            holder.titleDesc.setText(serviceChannelInfo.getDescription());
             switch (state) {
                 case ALL:
                     holder.itemFocusImg.setVisibility(View.VISIBLE);
-                    // todo 关注icon
-                    if (conversation.getFocus() == 1) {
-                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_photo_default));
+                    if (serviceChannelInfo.isSubscribe()) {
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_foucus));
                     } else {
-                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_chat_owner));
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_unfoucus));
                     }
                     break;
                 case FOCUS:
@@ -200,15 +255,17 @@ public class ConversationServiceActivity extends BaseActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String cid = conversation.getId();
-                    if (TextUtils.isEmpty(cid)) return;
                     switch (state) {
                         case ALL:
-                            requestFollowService(cid);
+                            requestFollowService(serviceChannelInfo.getId(), serviceChannelInfo.isSubscribe());
                             break;
                         case FOCUS:
                         default:
-                            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), cid);
+                            Conversation conversation = getServiceConversation(serviceChannelInfo.getCast());
+                            if (conversation == null) {
+                                ToastUtils.show(R.string.error);
+                                return;
+                            }
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                             IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
@@ -223,6 +280,13 @@ public class ConversationServiceActivity extends BaseActivity {
             LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             View view = mInflater.inflate(R.layout.conversation_service_item_view, arg0, false);
             return new ServiceItemViewHolder(view);
+        }
+
+        private Conversation getServiceConversation(String cid) {
+            for (Conversation conversation : serviceConversationList) {
+                if (conversation.getServiceConversationId().equals(cid)) return conversation;
+            }
+            return null;
         }
     }
 

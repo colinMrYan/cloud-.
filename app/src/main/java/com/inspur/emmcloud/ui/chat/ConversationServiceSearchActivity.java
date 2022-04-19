@@ -23,8 +23,9 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.bean.chat.GetConversationListResult;
-import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
+import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private boolean apiRequesting = false;
     private ConversationServiceSearchAdapter adapter;
-    private List<Conversation> conversationServiceList = new ArrayList<>();
+    private List<ServiceChannelInfo> conversationServiceList = new ArrayList<>();
     private ClearEditText searchEdit;
     /**
      * 虚拟键盘
@@ -41,6 +42,12 @@ public class ConversationServiceSearchActivity extends BaseActivity {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String searchText = searchEdit.getText().toString().trim();
+                if (!StringUtils.isBlank(searchText)) {
+                    getSearchConversationServiceList(searchText);
+                } else {
+                    ToastUtils.show("搜索内容不可为空");
+                }
                 InputMethodUtils.hide(ConversationServiceSearchActivity.this);
                 return true;
             }
@@ -90,15 +97,15 @@ public class ConversationServiceSearchActivity extends BaseActivity {
         }
     }
 
-    private void requestFollowService(String cid) {
+    private void requestFollowService(String cid, boolean subscribeAlready) {
         if (apiRequesting) return;
         apiRequesting = true;
         ChatAPIService apiService = new ChatAPIService(ConversationServiceSearchActivity.this);
         apiService.setAPIInterface(new WebService());
-        apiService.requestFollowOrRemoveConversationService(cid, true);
+        apiService.requestFollowOrRemoveConversationService(cid, subscribeAlready);
     }
 
-    private void updatePageByInterface(boolean getDateSuccess, GetConversationListResult result) {
+    private void updatePageByInterface(boolean getDateSuccess, GetServiceChannelInfoListResult result) {
         if (getDateSuccess) {
             conversationServiceList.clear();
             conversationServiceList.addAll(result.getConversationList());
@@ -109,10 +116,10 @@ public class ConversationServiceSearchActivity extends BaseActivity {
 
     private class WebService extends APIInterfaceInstance {
         @Override
-        public void returnFollowConversationServiceSuccess(Conversation changedConversations) {
-            for (Conversation conversation : conversationServiceList) {
-                if (conversation.getId().equals(changedConversations.getId())) {
-                    conversation.setFocus(changedConversations.getFocus());
+        public void returnFollowConversationServiceSuccess(ServiceChannelInfo changedConversations) {
+            for (ServiceChannelInfo serviceChannelInfo : conversationServiceList) {
+                if (serviceChannelInfo.getId().equals(changedConversations.getId())) {
+                    serviceChannelInfo.setSubscribe(!serviceChannelInfo.isSubscribe());
                     break;
                 }
             }
@@ -126,7 +133,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
         }
 
         @Override
-        public void returnSearchConversationServiceSuccess(GetConversationListResult getConversationListResult) {
+        public void returnSearchConversationServiceSuccess(GetServiceChannelInfoListResult getConversationListResult) {
             updatePageByInterface(true, getConversationListResult);
         }
 
@@ -145,23 +152,23 @@ public class ConversationServiceSearchActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ServiceItemViewHolder holder, int arg1) {
-            final Conversation conversation = conversationServiceList.get(arg1);
-            if (conversation == null) return;
-            holder.titleText.setText(conversation.getName());
-            holder.titleDesc.setText(conversation.getAction());
+            final ServiceChannelInfo serviceChannelInfo = conversationServiceList.get(arg1);
+            if (serviceChannelInfo == null) return;
+            holder.titleText.setText(serviceChannelInfo.getName());
+            holder.titleDesc.setText(serviceChannelInfo.getDescription());
             holder.itemFocusImg.setVisibility(View.VISIBLE);
             // todo 关注icon
-            if (conversation.getFocus() == 1) {
-                holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_photo_default));
+            if (serviceChannelInfo.isSubscribe()) {
+                holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_foucus));
             } else {
-                holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.icon_chat_owner));
+                holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_unfoucus));
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String cid = conversation.getId();
+                    String cid = serviceChannelInfo.getCast();
                     if (TextUtils.isEmpty(cid)) return;
-                    requestFollowService(cid);
+                    requestFollowService(cid, serviceChannelInfo.isSubscribe());
                 }
             });
         }
@@ -206,12 +213,6 @@ public class ConversationServiceSearchActivity extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-            String searchText = searchEdit.getText().toString().trim();
-            if (!StringUtils.isBlank(searchText)) {
-                getSearchConversationServiceList(searchText);
-            } else {
-                ToastUtils.show("搜索内容不可为空");
-            }
         }
     }
 }
