@@ -319,9 +319,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
                     } else if (BaseApplication.getInstance().getUid().equals(uid)) {
-                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": @" + ContactUserCacheUtils.getUserName(uid) + " ";
-                        int startPosition = contentStringBuilder.indexOf(patternString);
-                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) +": " + message.getShowContent();
+//                        int startPosition = contentStringBuilder.indexOf(patternString);
+//                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
+                        contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
                     }
