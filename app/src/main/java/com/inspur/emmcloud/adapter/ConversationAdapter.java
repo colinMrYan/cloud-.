@@ -312,19 +312,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 if (mentionsMap.containsKey(key)) {
                     String newString = "";
                     String uid = mentionsMap.get(key);
-                    if (uid.equals("EVERYBODY")) {
-                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：@" + context.getString(R.string.message_type_node_all) + " ";
-                        int startPosition = contentStringBuilder.indexOf(patternString);
-                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
-                        message.setContent(contentStringBuilder.toString());
-                        messageList.add(message);
-                    } else if (BaseApplication.getInstance().getUid().equals(uid)) {
+                    if (uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid)) {
                         newString = ContactUserCacheUtils.getUserName(message.getFromUser()) +": " + message.getShowContent();
-//                        int startPosition = contentStringBuilder.indexOf(patternString);
-//                        contentStringBuilder.replace(startPosition, startPosition + patternString.length(), newString);
                         contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
                         message.setContent(contentStringBuilder.toString());
                         messageList.add(message);
+                        break;
                     }
                 }
             }
