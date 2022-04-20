@@ -83,6 +83,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private TextView msgSendTimeText;
     private TextView senderNameText;
     private ImageView msgContentImg;
+    private TextView msgContent;
     private String cid = "";
     private RelativeLayout msgDisplayLayout;
     private LayoutInflater inflater;
@@ -205,24 +206,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void displayMsgDetail() {
         disPlayCommonInfo();
         View msgDisplayView = null;
-        if (!message.getType().equals("media/image")) {
-            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
-            msgDisplayView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-                    String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
-                    ;
-                    if (!StringUtils.isBlank(fileDownloadPath)) {
-                        FileUtils.openFile(ChannelMessageDetailActivity.this, fileDownloadPath);
-                    } else {
-                        Intent intent = new Intent(ChannelMessageDetailActivity.this, ChatFileDownloadActivtiy.class);
-                        intent.putExtra("message", message);
-                        ChannelMessageDetailActivity.this.startActivity(intent);
-                    }
-                }
-            });
-        } else {
+        if (message.getType().equals("media/image")){
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
                     .findViewById(R.id.content_img);
@@ -252,6 +236,29 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             });
             fileNameText.setText(fileName);
             fileSizeText.setText(fileSize);
+        } else if (message.getType().equals("text/plain")){
+            msgDisplayView = inflater.inflate(R.layout.msg_common_text_detail, null);
+            msgContent = (TextView) msgDisplayView
+                    .findViewById(R.id.content_text);
+            msgContent.setText(message.getMsgContentTextPlain().getText());
+
+        }else{
+            msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
+            msgDisplayView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                    String fileDownloadPath = FileDownloadManager.getInstance().getDownloadFilePath(DownloadFileCategory.CATEGORY_MESSAGE, message.getId(), msgContentFile.getName());
+                    ;
+                    if (!StringUtils.isBlank(fileDownloadPath)) {
+                        FileUtils.openFile(ChannelMessageDetailActivity.this, fileDownloadPath);
+                    } else {
+                        Intent intent = new Intent(ChannelMessageDetailActivity.this, ChatFileDownloadActivtiy.class);
+                        intent.putExtra("message", message);
+                        ChannelMessageDetailActivity.this.startActivity(intent);
+                    }
+                }
+            });
         }
         msgDisplayView.setLayoutParams(new LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));

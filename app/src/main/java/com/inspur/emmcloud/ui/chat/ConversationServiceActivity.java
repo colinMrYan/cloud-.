@@ -164,7 +164,7 @@ public class ConversationServiceActivity extends BaseActivity {
             conversationList.addAll(getConversationListResult.getConversationList());
         }
         for (Conversation conversation : conversationList) {
-            if (conversation.isHide() && conversation.getId().startsWith("FIBER")) {
+            if (conversation.getId().startsWith("FIBER")) {
                 serviceConversationList.add(conversation);
             }
         }
@@ -267,6 +267,8 @@ public class ConversationServiceActivity extends BaseActivity {
                                 return;
                             }
                             Bundle bundle = new Bundle();
+                            conversation.setType(Conversation.TYPE_SERVICE);
+                            conversation.setInput("31");
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                             IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
                             break;

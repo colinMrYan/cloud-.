@@ -1873,6 +1873,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     } else {
                         operationIdList.add(R.string.chat_long_click_copy);
                         operationIdList.add(R.string.chat_long_click_transmit);
+                        operationIdList.add(R.string.chat_long_click_reply);
                         if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
                             operationIdList.add(R.string.chat_long_click_schedule);
                         }

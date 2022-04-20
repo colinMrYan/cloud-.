@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -94,7 +95,7 @@ public class CommunicationUtils {
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
         }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
-            title = BaseApplication.getInstance().getString(R.string.address_servicenum_text);
+            title = TextUtils.isEmpty(title) ? BaseApplication.getInstance().getString(R.string.address_servicenum_text) : title;
         }
         return title;
     }
