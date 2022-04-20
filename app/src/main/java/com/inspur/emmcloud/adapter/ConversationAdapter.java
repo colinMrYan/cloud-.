@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -252,10 +253,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
         } else {
             // 添加@用户/@所有人功能
-            List<Message> nodeUserMessageList = unreadMessageNodeMeOrAll(uiConversation);
+            String nodeUserInfo = unreadMessageNodeMeOrAll(uiConversation);
             String content = uiConversation.getContent();
-            if (nodeUserMessageList.size() != 0) {
-                content = "<font color='#FF0000'>" + context.getString(R.string.message_type_node_me) + "</font>" + nodeUserMessageList.get(nodeUserMessageList.size() - 1).getContent();
+            if (!nodeUserInfo.isEmpty()) {
+                content = "<font color='#FF0000'>" + context.getString(R.string.message_type_node_me) + "</font>" + nodeUserInfo;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     holder.contentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
                 } else {
@@ -287,8 +288,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     }
 
-    private List<Message> unreadMessageNodeMeOrAll(UIConversation uiConversation) {
-        List<Message> messageList = new ArrayList<>();
+    private String unreadMessageNodeMeOrAll(UIConversation uiConversation) {
         int count = uiConversation.getMessageList().size();
         List<Message> unReadMessageList = new ArrayList<>();
         if ((int) uiConversation.getUnReadCount() > count) {
@@ -296,33 +296,32 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         } else {
             unReadMessageList = uiConversation.getMessageList().subList(count - (int) uiConversation.getUnReadCount(), count);
         }
+        if (unReadMessageList.isEmpty()) return "";
+        Collections.reverse(unReadMessageList);
         for (Message message : unReadMessageList) {
             String content = message.getMsgContentTextPlain().getText();
-            if (StringUtils.isBlank(content)) {
-                return messageList;
-            }
-            Map<String, String> mentionsMap = message.getMsgContentTextPlain().getMentionsMap();
-            StringBuilder contentStringBuilder = new StringBuilder();
-            contentStringBuilder.append(content);
-            Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
-            Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
-            while (mentionMatcher.find()) {
-                String patternString = mentionMatcher.group();
-                String key = patternString.substring(1, patternString.length() - 1).trim();
-                if (mentionsMap.containsKey(key)) {
-                    String newString = "";
-                    String uid = mentionsMap.get(key);
-                    if (uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid)) {
-                        newString = ContactUserCacheUtils.getUserName(message.getFromUser()) +": " + message.getShowContent();
-                        contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
-                        message.setContent(contentStringBuilder.toString());
-                        messageList.add(message);
-                        break;
+            if (!StringUtils.isBlank(content)) {
+                Map<String, String> mentionsMap = message.getMsgContentTextPlain().getMentionsMap();
+                StringBuilder contentStringBuilder = new StringBuilder();
+                contentStringBuilder.append(content);
+                Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
+                Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
+                while (mentionMatcher.find()) {
+                    String patternString = mentionMatcher.group();
+                    String key = patternString.substring(1, patternString.length() - 1).trim();
+                    if (mentionsMap.containsKey(key)) {
+                        String newString = "";
+                        String uid = mentionsMap.get(key);
+                        if (uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid)) {
+                            newString = ContactUserCacheUtils.getUserName(message.getFromUser()) +": " + message.getShowContent();
+                            contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
+                            return contentStringBuilder.toString();
+                        }
                     }
                 }
             }
         }
-        return messageList;
+        return "";
     }
 
     @Override
