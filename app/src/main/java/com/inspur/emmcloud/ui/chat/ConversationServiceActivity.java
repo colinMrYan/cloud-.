@@ -24,6 +24,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
 import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -59,8 +60,12 @@ public class ConversationServiceActivity extends BaseActivity {
         }
         cacheConversationList(null);
         initView();
-        getConversationServiceList();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getConversationServiceList();
     }
 
     /**
@@ -241,6 +246,7 @@ public class ConversationServiceActivity extends BaseActivity {
             holder.titleDesc.setText(serviceChannelInfo.getDescription());
             switch (state) {
                 case ALL:
+                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
                     holder.itemFocusImg.setVisibility(View.VISIBLE);
                     if (serviceChannelInfo.isSubscribe()) {
                         holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_foucus));
@@ -250,6 +256,19 @@ public class ConversationServiceActivity extends BaseActivity {
                     break;
                 case FOCUS:
                     holder.itemFocusImg.setVisibility(View.INVISIBLE);
+                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
+                    Conversation conversation = ConversationCacheUtils.getConversation(ConversationServiceActivity.this, serviceChannelInfo.getCast());
+                    if (conversation == null) {
+                        conversation = getServiceConversation(serviceChannelInfo.getCast());
+                    }
+                    if (conversation == null) {
+                        return;
+                    }
+                    UIConversation uiConversation = new UIConversation(conversation);
+                    if (uiConversation.getUnReadCount() > 0) {
+                        holder.itemNewMsg.setVisibility(View.VISIBLE);
+                        holder.itemNewMsg.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+                    }
                     break;
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -261,15 +280,18 @@ public class ConversationServiceActivity extends BaseActivity {
                             break;
                         case FOCUS:
                         default:
-                            Conversation conversation = getServiceConversation(serviceChannelInfo.getCast());
+                            Conversation conversation = ConversationCacheUtils.getConversation(ConversationServiceActivity.this, serviceChannelInfo.getFiber());
+                            if (conversation == null) {
+                                conversation = getServiceConversation(serviceChannelInfo.getFiber());
+                            }
                             if (conversation == null) {
                                 ToastUtils.show(R.string.error);
                                 return;
                             }
                             Bundle bundle = new Bundle();
                             conversation.setType(Conversation.TYPE_SERVICE);
-                            conversation.setInput("31");
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
                             IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
                             break;
                     }
@@ -297,6 +319,7 @@ public class ConversationServiceActivity extends BaseActivity {
         TextView titleDesc;
         ImageView itemImg;
         ImageView itemFocusImg;
+        TextView itemNewMsg;
 
         public ServiceItemViewHolder(View view) {
             super(view);
@@ -304,6 +327,7 @@ public class ConversationServiceActivity extends BaseActivity {
             titleDesc = (TextView) view.findViewById(R.id.tv_desc);
             itemImg = (ImageView) view.findViewById(R.id.item_icon);
             itemFocusImg = (ImageView) view.findViewById(R.id.item_focus);
+            itemNewMsg = (TextView) view.findViewById(R.id.msg_new_text);
         }
 
     }

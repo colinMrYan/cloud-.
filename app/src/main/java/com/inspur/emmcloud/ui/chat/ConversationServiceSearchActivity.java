@@ -20,11 +20,15 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
 import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +121,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnFollowConversationServiceSuccess(ServiceChannelInfo changedConversations) {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
             for (ServiceChannelInfo serviceChannelInfo : conversationServiceList) {
                 if (serviceChannelInfo.getId().equals(changedConversations.getId())) {
                     serviceChannelInfo.setSubscribe(!serviceChannelInfo.isSubscribe());

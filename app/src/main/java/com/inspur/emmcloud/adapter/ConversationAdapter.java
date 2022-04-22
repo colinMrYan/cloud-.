@@ -55,6 +55,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
+        updateServiceConversationMsgState();
         if (adapterListener != null) {
             adapterListener.onDataChange();
         }
@@ -64,11 +65,25 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
+            updateServiceConversationMsgState();
             if (adapterListener != null) {
                 adapterListener.onDataChange();
             }
         }
+    }
 
+    // 服务号未读消息数量
+    public void updateServiceConversationMsgState() {
+        if (uiConversationList.isEmpty()) return;
+        int unreadServiceNum = 0;
+        for (UIConversation uiConversation : uiConversationList) {
+            if (!uiConversation.getConversation().isServiceConversationType()) {
+                unreadServiceNum += uiConversation.getUnReadCount();
+            }
+        }
+        if (uiConversationList.get(0).getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+            uiConversationList.get(0).setUnReadCount(unreadServiceNum);
+        }
     }
 
     @Override
@@ -176,7 +191,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
-            holder.timeText.setText(TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
+            holder.timeText.setText(uiConversation.isServiceContainer() ?  "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
@@ -192,8 +207,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 String conversationName = context.getString(R.string.chat_file_transfer);
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
-            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号**/
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
                 holder.titleText.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+            }   else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
+                holder.titleText.setText(uiConversation.getConversation().getName());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
             }  else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
@@ -246,6 +264,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation) {
+        if (uiConversation.isServiceContainer()) {
+            if (uiConversation.getUnReadCount() != 0) {
+                holder.contentText.setText(R.string.notification_switch);
+                return;
+            }
+        }
         String chatDrafts = uiConversation.getConversation().getDraft();
         if (!StringUtils.isBlank(chatDrafts)) {
             String content = "<font color='#FF0000'>" + context.getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
@@ -281,7 +305,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
         holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount() > 0) {
+        if (uiConversation.getUnReadCount() > 0 && !uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
             holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
         }
     }

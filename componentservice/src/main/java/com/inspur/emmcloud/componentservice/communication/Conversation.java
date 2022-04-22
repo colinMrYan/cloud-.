@@ -59,9 +59,9 @@ public class Conversation implements Serializable {
     private String pyFull = "";
     @Column(name = "showName")
     private String showName = "";
+    @Column(name = "serviceId")
+    private String serviceId = "";
     private String draft = "";
-    // 服务号关注
-    private int focus = 0;
 
     public Conversation() {
 
@@ -89,6 +89,7 @@ public class Conversation implements Serializable {
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
         this.hide = JSONUtils.getBoolean(obj, "hide", false);
         this.action = JSONUtils.getString(obj, "action", "");
+        this.serviceId = JSONUtils.getString(obj, "serviceId", "");
         Router router = Router.getInstance();
         if (router != null) {
             CommunicationService contactService = router.getService(CommunicationService.class);
@@ -267,14 +268,17 @@ public class Conversation implements Serializable {
         this.showName = showName;
     }
 
-    public int getFocus() {
-        return focus;
+    public String getServiceId() {
+        return serviceId;
     }
 
-    public void setFocus(int focus) {
-        this.focus = focus;
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 
+    public boolean isServiceConversationType(){
+        return !serviceId.isEmpty();
+    }
 
     public SearchModel conversation2SearchModel() {
         SearchModel searchModel = new SearchModel();

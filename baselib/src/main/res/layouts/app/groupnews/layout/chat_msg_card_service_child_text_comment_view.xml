@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_strokeColor="?attr/color_stroke_46_aa"
+    app:bl_strokeWidth="0.5px">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/comment_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:minWidth="60dp"
+            android:text="@string/comment_hallcomment_text"
+            android:textColor="?attr/text_color_e1"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/divider_view"
+            android:layout_below="@id/comment_title_text"
+            android:layout_width="match_parent"
+            android:background="?attr/text_color_e1"
+            android:layout_marginTop="8dp"
+            android:layout_height="0.5dp"/>
+
+        <com.inspur.emmcloud.widget.TextViewWithSpan
+            android:id="@+id/comment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider_view"
+            android:lineSpacingMultiplier="1.2"
+            android:minWidth="60dp"
+            android:paddingTop="8dp"
+            android:textColor="?attr/text_color_e1"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>

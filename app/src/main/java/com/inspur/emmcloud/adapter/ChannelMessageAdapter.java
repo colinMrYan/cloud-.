@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
@@ -33,6 +34,7 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
+import com.inspur.emmcloud.ui.chat.DisplayServiceCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -233,7 +235,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    if (channelType.equals(Conversation.TYPE_SERVICE)) {
+                        cardContentView = DisplayServiceCommentTextPlainMsg.getView(context, message);
+                    } else {
+                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    }
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     cardContentView = DisplayExtendedLinksMsg.getView(context, message);
