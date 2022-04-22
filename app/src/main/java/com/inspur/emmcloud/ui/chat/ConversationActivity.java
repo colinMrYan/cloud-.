@@ -1434,7 +1434,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
                 conversation.setMembers(JSONUtils.toJSONString(memberList));
                 adapter.updateMemberList(memberList);
-                userOrientedConversationHelper.showUserOrientedLayout(memberList);
+                if (userOrientedConversationHelper.isDisplayingUI()) {
+                    userOrientedConversationHelper.showUserOrientedLayout(memberList);
+                }
                 break;
             case Constant.EVENTBUS_TAG_COMMENT_MESSAGE:
                 Message message = (Message) simpleEventMessage.getMessageObj();

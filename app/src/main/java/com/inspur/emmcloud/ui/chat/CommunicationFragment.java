@@ -318,10 +318,11 @@ public class CommunicationFragment extends BaseFragment {
                 //设置消息tab页面的小红点（未读消息提醒）的显示
                 int unReadCount = 0;
                 for (UIConversation uiConversation : displayUIConversationList) {
-                    if (!uiConversation.getConversation().isServiceConversationType() || !uiConversation.isServiceContainer()) {
-                        return;
+                    if (uiConversation.getConversation().isServiceConversationType() || uiConversation.isServiceContainer()) {
+                        unReadCount += 0;
+                    } else {
+                        unReadCount += uiConversation.getUnReadCount();
                     }
-                    unReadCount += uiConversation.getUnReadCount();
                 }
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
             }
