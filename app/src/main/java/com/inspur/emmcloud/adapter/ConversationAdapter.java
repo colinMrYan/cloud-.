@@ -77,7 +77,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if (uiConversationList.isEmpty()) return;
         int unreadServiceNum = 0;
         for (UIConversation uiConversation : uiConversationList) {
-            if (!uiConversation.getConversation().isServiceConversationType()) {
+            if (uiConversation.getConversation().isServiceConversationType()) {
                 unreadServiceNum += uiConversation.getUnReadCount();
             }
         }

@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.componentservice.communication;
 
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
@@ -277,7 +279,7 @@ public class Conversation implements Serializable {
     }
 
     public boolean isServiceConversationType(){
-        return !serviceId.isEmpty();
+        return !TextUtils.isEmpty(serviceId);
     }
 
     public SearchModel conversation2SearchModel() {

@@ -171,7 +171,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String cid = serviceChannelInfo.getCast();
+                    String cid = serviceChannelInfo.getId();
                     if (TextUtils.isEmpty(cid)) return;
                     requestFollowService(cid, serviceChannelInfo.isSubscribe());
                 }

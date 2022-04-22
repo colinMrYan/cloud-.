@@ -1181,7 +1181,7 @@ public class APIUri {
      * @return
      */
     public static String getSearchConversationServiceUrl(String name) {
-        return getECMChatServiceConversationBaseUrl() + "/name/" + name;
+        return getECMChatServiceConversationBaseUrl() + "/name/" + name + "?checkUserSubscribe=true";
     }
 
     /**
