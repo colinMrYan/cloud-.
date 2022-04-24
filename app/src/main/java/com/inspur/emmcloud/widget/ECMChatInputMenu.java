@@ -852,6 +852,7 @@ public class ECMChatInputMenu extends LinearLayout {
             boolean isSendEmailEnable = false;
             boolean isVideoCallEnable = false;
             boolean isWhisperEnable = false;
+            boolean isBurnEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -862,6 +863,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 1:
                         isInputPhotoEnable = controlValue.equals("1");
                         isWhisperEnable = controlValue.endsWith("1");
+                        isBurnEnable = controlValue.endsWith("1");
                         break;
                     case 2:
                         isInputFileEnable = controlValue.equals("1");
@@ -919,7 +921,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (isWhisperEnable) {
                     inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
                 }
-            }else {
+            } else if (isBurnEnable) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
             }
 

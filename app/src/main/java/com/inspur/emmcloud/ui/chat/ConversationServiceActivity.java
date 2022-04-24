@@ -15,6 +15,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -29,12 +30,18 @@ import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
 
 public class ConversationServiceActivity extends BaseActivity {
     public static final String EXTRA_CONVERSATION_ID = "cid";
@@ -264,6 +271,7 @@ public class ConversationServiceActivity extends BaseActivity {
                             }
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            setConversationRead(new UIConversation(conversation));
                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
                             IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
                     }
@@ -308,6 +316,17 @@ public class ConversationServiceActivity extends BaseActivity {
                 if (conversation.getServiceConversationId().equals(cid)) return conversation;
             }
             return null;
+        }
+
+        /**
+         * 将单个频道消息置为已读
+         *
+         * @param uiConversation
+         */
+        private void setConversationRead(final UIConversation uiConversation) {
+            if (uiConversation.getUnReadCount() > 0) {
+                MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
+            }
         }
     }
 

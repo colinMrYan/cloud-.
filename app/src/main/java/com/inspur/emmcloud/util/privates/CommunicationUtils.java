@@ -92,6 +92,7 @@ public class CommunicationUtils {
                     AppUtils.getManifestAppVersionFlag(MyApplication.getInstance()).equals("zhihuichengjian")) {
                 title = "消息到达";
             }
+            if (conversation.isServiceConversationType()) title = conversation.getName();
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
         }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {

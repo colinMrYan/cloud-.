@@ -61,11 +61,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private ECMChatInputMenu chatInputMenu;
     private ArrayList<String> mExceptSelfMemberList = new ArrayList<>();
     private String uid = BaseApplication.getInstance().getUid();
+    private boolean serviceConversation = false;
 
-    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList) {
+    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList, boolean isServiceCoversation) {
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
+        this.serviceConversation = isServiceCoversation;
         List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(memberList);
         for (ContactUser contact : totalList) {
             mExceptSelfMemberList.add(contact.getId());
@@ -235,7 +237,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    if (channelType.equals(Conversation.TYPE_SERVICE)) {
+                    if (serviceConversation) {
                         cardContentView = DisplayServiceCommentTextPlainMsg.getView(context, message);
                     } else {
                         cardContentView = DisplayCommentTextPlainMsg.getView(context, message);

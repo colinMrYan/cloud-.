@@ -359,6 +359,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
             headerText.setText(CommunicationUtils.getConversationTitle(conversation));
+            configView.setVisibility(conversation.isServiceConversationType() ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -668,7 +669,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
-                chatInputMenu, conversation.getMemberList());
+                chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
         mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -1986,6 +1987,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 context.startActivity(intent);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                // 服务号不可点击评论
+                if (conversation.isServiceConversationType()) return;
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     String mid = message.getMsgContentComment().getMessage();
