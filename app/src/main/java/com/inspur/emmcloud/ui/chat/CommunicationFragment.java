@@ -826,11 +826,16 @@ public class CommunicationFragment extends BaseFragment {
         if (message != null) {
             message.setRecallFrom(wsCommand.getFrom());
             message.setRead(Message.MESSAGE_READ);
-            MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+            // 阅后即焚移除撤回消息类型
+            if (message.getRecallFromUid().equals(message.getFromUser())) {
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+            } else {
+                MessageCacheUtil.deleteMessageById(mid);
+            }
             notifyConversationMessageDataChanged(cid);
-        }
-        if (BaseApplication.getInstance().getCurrentChannelCid().equals(cid)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE, message));
+            if (BaseApplication.getInstance().getCurrentChannelCid().equals(cid)) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE, message));
+            }
         }
     }
 

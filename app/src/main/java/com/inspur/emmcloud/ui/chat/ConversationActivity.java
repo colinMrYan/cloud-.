@@ -1401,9 +1401,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (StringUtils.isBlank(recallUIMessage.getMessage().getRecallFrom())) {
                         UIMessage uiMessage = new UIMessage(recallMessage);
                         uiMessageList.remove(index);
-                        uiMessageList.add(index, uiMessage);
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemChanged(index);
+                        // 阅后即焚移除撤回消息类型
+                        if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                            uiMessageList.add(index, uiMessage);
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        } else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 break;
@@ -1592,11 +1598,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (index != -1) {
                     UIMessage uiMessage = new UIMessage(recallMessage);
                     uiMessageList.remove(index);
-                    uiMessageList.add(index, uiMessage);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyItemChanged(index);
+                    if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                        uiMessageList.add(index, uiMessage);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemChanged(index);
+                        MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
+                    } else {
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyDataSetChanged();
+                    }
+
                 }
-                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
                 if (index == uiMessageList.size() - 1) {
                     notifyConversationListChange();
                 }
