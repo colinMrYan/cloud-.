@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -244,33 +245,6 @@ public class ConversationServiceActivity extends BaseActivity {
             holder.itemImg.setBackgroundResource(R.drawable.ic_channel_service);
             holder.titleText.setText(serviceChannelInfo.getName());
             holder.titleDesc.setText(serviceChannelInfo.getDescription());
-            switch (state) {
-                case ALL:
-                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
-                    holder.itemFocusImg.setVisibility(View.VISIBLE);
-                    if (serviceChannelInfo.isSubscribe()) {
-                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_foucus));
-                    } else {
-                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_unfoucus));
-                    }
-                    break;
-                case FOCUS:
-                    holder.itemFocusImg.setVisibility(View.INVISIBLE);
-                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
-                    Conversation conversation = ConversationCacheUtils.getConversation(ConversationServiceActivity.this, serviceChannelInfo.getCast());
-                    if (conversation == null) {
-                        conversation = getServiceConversation(serviceChannelInfo.getCast());
-                    }
-                    if (conversation == null) {
-                        return;
-                    }
-                    UIConversation uiConversation = new UIConversation(conversation);
-                    if (uiConversation.getUnReadCount() > 0) {
-                        holder.itemNewMsg.setVisibility(View.VISIBLE);
-                        holder.itemNewMsg.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
-                    }
-                    break;
-            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -289,14 +263,37 @@ public class ConversationServiceActivity extends BaseActivity {
                                 return;
                             }
                             Bundle bundle = new Bundle();
-                            conversation.setType(Conversation.TYPE_SERVICE);
                             bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
                             IntentUtils.startActivity(ConversationServiceActivity.this, ConversationActivity.class, bundle);
-                            break;
                     }
                 }
             });
+            switch (state) {
+                case ALL:
+                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
+                    holder.itemFocusImg.setVisibility(View.VISIBLE);
+                    if (serviceChannelInfo.isSubscribe()) {
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_foucus));
+                    } else {
+                        holder.itemFocusImg.setImageDrawable(getDrawable(R.drawable.ic_channel_service_unfoucus));
+                    }
+                    break;
+                case FOCUS:
+                    holder.itemFocusImg.setVisibility(View.INVISIBLE);
+                    holder.itemNewMsg.setVisibility(View.INVISIBLE);
+                    Conversation conversation = ConversationCacheUtils.getConversation(ConversationServiceActivity.this, serviceChannelInfo.getFiber());
+                    if (conversation == null) {
+                        conversation = getServiceConversation(serviceChannelInfo.getFiber());
+                    }
+                    if (conversation != null) {
+                        UIConversation uiConversation = new UIConversation(conversation);
+                        if (uiConversation.getUnReadCount() > 0) {
+                            holder.itemNewMsg.setVisibility(View.VISIBLE);
+                            holder.itemNewMsg.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+                        }
+                    }
+            }
         }
 
         @Override

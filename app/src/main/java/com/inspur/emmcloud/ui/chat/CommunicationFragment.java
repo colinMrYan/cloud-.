@@ -594,6 +594,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private boolean isConversationShow(UIConversation uiConversation) {
         Conversation conversation = uiConversation.getConversation();
+        if (conversation.isServiceConversationType()) return false;
         if (conversation.isHide()) {
             if (uiConversation.getUnReadCount() != 0) {
                 conversation.setHide(false);

@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void updateServiceConversationMsgState() {
         if (uiConversationList.isEmpty()) return;
         int unreadServiceNum = 0;
-        for (UIConversation uiConversation : uiConversationList) {
+        for (Conversation conversation : ConversationCacheUtils.getConversationList(context)) {
+            UIConversation uiConversation = new UIConversation(conversation);
             if (uiConversation.getConversation().isServiceConversationType()) {
                 unreadServiceNum += uiConversation.getUnReadCount();
             }

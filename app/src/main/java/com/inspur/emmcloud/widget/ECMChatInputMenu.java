@@ -851,6 +851,7 @@ public class ECMChatInputMenu extends LinearLayout {
             boolean isVoiceCallEnable = false;
             boolean isSendEmailEnable = false;
             boolean isVideoCallEnable = false;
+            boolean isWhisperEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
@@ -860,6 +861,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                     case 1:
                         isInputPhotoEnable = controlValue.equals("1");
+                        isWhisperEnable = controlValue.endsWith("1");
                         break;
                     case 2:
                         isInputFileEnable = controlValue.equals("1");
@@ -914,7 +916,9 @@ public class ECMChatInputMenu extends LinearLayout {
             //如果是群组的话添加@功能
             if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
-                inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
+                if (isWhisperEnable) {
+                    inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
+                }
             }else {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
             }
