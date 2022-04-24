@@ -8,14 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -37,11 +35,6 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.schedulers.Schedulers;
 
 public class ConversationServiceActivity extends BaseActivity {
     public static final String EXTRA_CONVERSATION_ID = "cid";
@@ -266,7 +259,12 @@ public class ConversationServiceActivity extends BaseActivity {
                                 conversation = getServiceConversation(serviceChannelInfo.getFiber());
                             }
                             if (conversation == null) {
+                                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE));
                                 ToastUtils.show(R.string.error);
+                                return;
+                            }
+                            if (ConversationCacheUtils.getConversation(BaseApplication.getInstance(), serviceChannelInfo.getGroup()) != null) {
+                                ToastUtils.show(R.string.warning_service_enter_by_creator);
                                 return;
                             }
                             Bundle bundle = new Bundle();

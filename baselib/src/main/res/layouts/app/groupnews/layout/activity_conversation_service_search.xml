@@ -90,7 +90,16 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_service_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/search_bar" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_marginTop="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/no_search_term"/>
 
 </RelativeLayout>

@@ -39,6 +39,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
     private ConversationServiceSearchAdapter adapter;
     private List<ServiceChannelInfo> conversationServiceList = new ArrayList<>();
     private ClearEditText searchEdit;
+    private TextView emptyText;
     /**
      * 虚拟键盘
      */
@@ -85,6 +86,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ConversationServiceSearchAdapter();
         searchEdit = findViewById(R.id.ev_search_input);
+        emptyText = findViewById(R.id.empty_view);
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         recyclerView.setAdapter(adapter);
@@ -116,6 +118,7 @@ public class ConversationServiceSearchActivity extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
         loadingDlg.dismiss();
+        emptyText.setVisibility(conversationServiceList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private class WebService extends APIInterfaceInstance {
