@@ -1090,6 +1090,9 @@
     <string name="pass_login_confirm">Pass confirmation login</string>
     <string name="confirm_login_by_self">In order to ensure the security of the account, please ensure that it is operated by yourself</string>
     <string name="save_to_storage">Save to album</string>
+    <string name="service_conversation_desc">Professional team to serve you</string>
+    <string name="service_conversation_search">Search service number</string>
+    <string name="service_search">Service number search</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

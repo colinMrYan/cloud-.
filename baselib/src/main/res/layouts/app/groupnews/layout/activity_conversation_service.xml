@@ -37,24 +37,14 @@
             android:textSize="@dimen/header_textsize"
             android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:layout_toLeftOf="@+id/header_service_state"
-            android:layout_marginLeft="30dp"
-            android:src="@drawable/ic_task_search" />
-
         <TextView
             android:id="@+id/header_service_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_alignParentRight="true"
             android:ellipsize="end"
             android:gravity="center"
             android:onClick="onClick"
@@ -65,10 +55,34 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_search_contact"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_height="30dp"
+        android:onClick="onClick"
+        android:layout_below="@+id/rl_header"
+        android:background="@drawable/bg_search_service"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:drawableLeft="@drawable/bg_search"
+            android:gravity="center"
+            android:text="@string/service_conversation_search"
+            android:textColor="@color/color_text_common_level_two" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_service_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_header" />
+        android:layout_below="@+id/rl_search_contact" />
 
 </RelativeLayout>

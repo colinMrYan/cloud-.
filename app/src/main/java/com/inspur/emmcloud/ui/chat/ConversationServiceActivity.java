@@ -92,7 +92,7 @@ public class ConversationServiceActivity extends BaseActivity {
         int id = v.getId();
         if (id == R.id.ibt_back) {
             finish();
-        } else if (id == R.id.iv_search) {
+        } else if (id == R.id.rl_search_contact) {
             IntentUtils.startActivity(this, ConversationServiceSearchActivity.class);
         } else if (id == R.id.header_service_state) {
             changePageState();

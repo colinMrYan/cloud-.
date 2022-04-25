@@ -267,10 +267,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation) {
         if (uiConversation.isServiceContainer()) {
-            if (uiConversation.getUnReadCount() != 0) {
-                holder.contentText.setText(R.string.notification_switch);
-                return;
-            }
+            holder.contentText.setText(R.string.service_conversation_desc);
+            return;
         }
         String chatDrafts = uiConversation.getConversation().getDraft();
         if (!StringUtils.isBlank(chatDrafts)) {

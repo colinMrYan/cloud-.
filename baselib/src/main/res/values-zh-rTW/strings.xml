@@ -1095,7 +1095,9 @@
     <string name="root_toast">&appnameTW;提醒您，當前手機已root，請注意保護你的帳號安全</string>
     <string name="network_change_tip">網路環境發生變化，當前為</string>
     <string name="warning_service_enter_by_creator">您是管理員，請進入管理員群</string>
-
+    <string name="service_conversation_desc">專業團隊 為您服務</string>
+    <string name="service_conversation_search"></string>
+    <string name="service_search">服務號蒐索</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>

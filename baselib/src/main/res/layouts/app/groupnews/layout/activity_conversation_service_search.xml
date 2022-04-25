@@ -33,6 +33,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
+            android:text="@string/service_search"
             android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_textsize"
             android:visibility="visible" />
@@ -74,7 +75,7 @@
                 android:drawableRight="?attr/delete_input_icon"
                 android:freezesText="true"
                 android:gravity="center_vertical"
-                android:hint="@string/communication_search"
+                android:hint="@string/service_conversation_search"
                 android:imeOptions="actionSearch"
                 android:paddingLeft="8dp"
                 android:paddingTop="5dp"
@@ -98,7 +99,7 @@
         android:layout_marginTop="200dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="16dp"
         android:gravity="center_horizontal"
         android:text="@string/no_search_term"/>
 

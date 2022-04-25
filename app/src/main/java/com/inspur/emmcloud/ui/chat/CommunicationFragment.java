@@ -343,6 +343,8 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
+        // 服务号入口不可长按
+        if (uiConversation.isServiceContainer()) return;
         final String[] items;
         if (uiConversation.getConversation().getType().equals("CAST")) {
             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top)};

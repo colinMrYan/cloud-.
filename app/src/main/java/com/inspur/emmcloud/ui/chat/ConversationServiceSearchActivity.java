@@ -79,7 +79,6 @@ public class ConversationServiceSearchActivity extends BaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(ConversationServiceSearchActivity.this);
-        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.communication_search));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.rv_service_list));
