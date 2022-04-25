@@ -859,11 +859,11 @@ public class ECMChatInputMenu extends LinearLayout {
                 switch (i) {
                     case 0:
                         isInputTextEnable = controlValue.equals("1");
+                        isWhisperEnable = controlValue.endsWith("1");
+                        isBurnEnable = controlValue.endsWith("1");
                         break;
                     case 1:
                         isInputPhotoEnable = controlValue.equals("1");
-                        isWhisperEnable = controlValue.endsWith("1");
-                        isBurnEnable = controlValue.endsWith("1");
                         break;
                     case 2:
                         isInputFileEnable = controlValue.equals("1");
@@ -895,7 +895,8 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             }
             if (isChannelTypeService) {
-                isInputVoiceEnable = false;
+                isBurnEnable = false;
+                isWhisperEnable = false;
             }
 
             if (isInputPhotoEnable && AppRoleUtils.isCanSendImage()) {

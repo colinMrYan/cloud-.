@@ -174,7 +174,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
             }
         });
-        chatInputMenu.setInputLayout("1", false);
+        chatInputMenu.setInputLayout("1", true);
     }
 
 
@@ -284,6 +284,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
         intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
+        intent.putExtra(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
         startActivity(intent);
     }
 

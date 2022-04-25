@@ -434,7 +434,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             }
         });
-        chatInputMenu.setInputLayout(conversation.getInput(), false);
+        chatInputMenu.setInputLayout(conversation.getInput(), conversation.isServiceConversationType());
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
@@ -1996,6 +1996,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                intent.putExtra(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
                 context.startActivity(intent);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
