@@ -1080,7 +1080,7 @@
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
     <string name="root_toast">current mobile phone is root. Please pay attention to protect your account security</string>
     <string name="network_change_tip">The network environment has changed, currently:</string>
-    <string name="warning_service_enter_by_creator">you are an administrator, please enter the administrator group</string>
+    <string name="warning_service_enter_by_creator">Service account managers can not enter the service account channel, please go to the customer service group</string>
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
     <string name="privacy_reject">Reject</string>
