@@ -435,7 +435,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      */
     private void getComment() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            WSAPIService.getInstance().getMessageComment(mid);
+            WSAPIService.getInstance().getMessageComment(mid, cid);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }

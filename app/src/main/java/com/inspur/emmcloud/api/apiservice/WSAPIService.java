@@ -173,9 +173,6 @@ public class WSAPIService {
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "post");
             actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            JSONObject channelObj = new JSONObject();
-            channelObj.put("channelId", fakeMessage.getChannel());
-            actionObj.put("query", channelObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -419,13 +416,16 @@ public class WSAPIService {
 
     }
 
-    public void getMessageComment(String mid) {
+    public void getMessageComment(String mid,String cid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message/" + mid + "/comment");
+            JSONObject channelObj = new JSONObject();
+            channelObj.put("channelId", cid);
+            actionObj.put("query", channelObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
