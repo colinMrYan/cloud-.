@@ -114,6 +114,10 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         this.displayingUI = displayingUI;
     }
 
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
+    }
+
     private void adjustViewHeight(boolean heightForSure){
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) memberListView.getLayoutParams();
         if (heightForSure){
@@ -136,6 +140,9 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
                 break;
             case "DIRECT":
                 setConversationType(ConversationType.BURN);
+                break;
+            default:
+                setConversationType(ConversationType.STANDARD);
                 break;
         }
     }

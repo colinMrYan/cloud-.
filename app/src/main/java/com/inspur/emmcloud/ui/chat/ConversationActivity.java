@@ -639,6 +639,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (userOrientedConversationHelper.isDisplayingUI()) {
                         userOrientedConversationHelper.closeUserOrientedLayout();
                     } else {
+                        userOrientedConversationHelper.setChannelType(conversation.getType());
                         userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
                     }
                 }
@@ -900,7 +901,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-
+            // 分享隐藏阅后即焚和悄悄话选择界面
+            if (userOrientedConversationHelper.isDisplayingUI()) {
+                userOrientedConversationHelper.closeUserOrientedLayout();
+            }
         }
     }
 
@@ -1433,9 +1437,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 sendMessageWithText(actionContent, true, null);
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
-                String name = ((Conversation) simpleEventMessage.getMessageObj()).getName();
-                conversation.setName(name);
-                headerText.setText(name);
+                Conversation newConversation = ((Conversation) simpleEventMessage.getMessageObj());
+                conversation.setName(newConversation.getName());
+                headerText.setText(newConversation.getName());
+                if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
+                    conversation.setMembers(newConversation.getMembers());
+                    if (!newConversation.getType().equals(conversation.getType())){
+                        conversation.setType(newConversation.getType());
+                        initChatInputMenu();
+                    }
+                    adapter.updateMemberList(conversation.getMemberList());
+                }
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS:
                 ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
