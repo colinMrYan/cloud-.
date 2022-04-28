@@ -1081,7 +1081,13 @@ public class CommunicationFragment extends BaseFragment {
                 Message receivedWSMessage = new Message(contentObj);
                 MessageSendManager.getInstance().onMessageSendSuccess(receivedWSMessage);
                 //验重处理
-                if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
+                // 移除服务号频道消息
+                Message fiberMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+                if (fiberMessage != null && fiberMessage.getChannel().startsWith("FIBER")) {
+                    MessageCacheUtil.deleteMessageById(fiberMessage.getId());
+                }
+                Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+                if (message == null) {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
