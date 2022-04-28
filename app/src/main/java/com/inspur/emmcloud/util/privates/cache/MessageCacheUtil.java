@@ -677,6 +677,8 @@ public class MessageCacheUtil {
      * @param message
      */
     public static void handleRealMessage(Context context, Message message) {
+        // 服务号频道消息屏蔽
+        if (message.getChannel().startsWith("FIBER")) return;
         Message messageTmp = MessageCacheUtil.getMessageByMid(context, message.getTmpId());
         if (messageTmp != null) {
             //如果发送的消息是音频消息，在发送成功后删除本地消息
