@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -37,6 +40,7 @@ import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayServiceCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
+import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -206,6 +210,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         View cardContentView = null;
+        boolean bottomViewUsed;
         if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
             String type = message.getType();
             switch (type) {
@@ -282,6 +287,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     holder.bottomInfoTypeRight.setVisibility(View.GONE);
                     holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
                 }
+                bottomViewUsed = true;
             } else if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
                 if (isMyMsg) {
                     holder.bottomIconTypeRight.setVisibility(View.VISIBLE);
@@ -290,11 +296,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     holder.bottomIconTypeRight.setVisibility(View.GONE);
                     holder.bottomIconTypeLeft.setVisibility(View.VISIBLE);
                 }
+                bottomViewUsed = true;
             } else {
                 holder.bottomInfoTypeRight.setVisibility(View.GONE);
                 holder.bottomInfoTypeLeft.setVisibility(View.GONE);
                 holder.bottomIconTypeRight.setVisibility(View.GONE);
                 holder.bottomIconTypeLeft.setVisibility(View.GONE);
+                bottomViewUsed = false;
             }
         } else {
             cardContentView = DisplayRecallMsg.getView(context, uiMessage);
@@ -303,6 +311,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             holder.bottomInfoTypeLeft.setVisibility(View.GONE);
             holder.bottomIconTypeRight.setVisibility(View.GONE);
             holder.bottomIconTypeLeft.setVisibility(View.GONE);
+            bottomViewUsed = true;
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
                     && (System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5 * 60 * 1000)
@@ -316,7 +325,49 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 }
             });
         }
+        if (serviceConversation) bottomViewUsed = true;
         holder.cardLayout.addView(cardContentView);
+
+        //处理已读未读
+        if (bottomViewUsed || !NetUtils.isNetworkConnected(context)) {
+            holder.unreadText.setVisibility(View.GONE);
+            return;
+        }
+        Map<String, Set<String>> statesMap = uiMessage.getStatesMap();
+        Set<String> readList = statesMap.get(ChannelMessageStates.READ);
+        Set<String> sentList = statesMap.get(ChannelMessageStates.SENT);
+        Set<String> deliveredList = statesMap.get(ChannelMessageStates.DELIVERED);
+        int readSize = readList == null ? 0 : readList.size();
+        int sentSize = sentList == null ? 0 : sentList.size();
+        int deliveredSize = deliveredList == null ? 0 : deliveredList.size();
+        int allSize = readSize + sentSize + deliveredSize;
+        if (allSize == 0 || !uiMessage.getMessage().getFromUser().equals(uid)) {
+            holder.unreadText.setVisibility(View.GONE);
+        } else if (allSize == 1) {
+            holder.unreadText.setVisibility(View.VISIBLE);
+            holder.unreadText.setText(context.getResources().getString(readSize == 1 ? R.string.read : R.string.unread));
+            holder.unreadText.setTextColor(Color.parseColor(readSize == 1 ? "#999999" : "#36A5F6"));
+            holder.unreadText.setOnClickListener(null);
+        } else if (allSize > 1) {
+            holder.unreadText.setVisibility(View.VISIBLE);
+            if (readSize >= allSize) {
+                holder.unreadText.setText(context.getResources().getString(R.string.all_read));
+                holder.unreadText.setTextColor(Color.parseColor("#999999"));
+                holder.unreadText.setOnClickListener(null);
+            } else {
+                holder.unreadText.setText((sentSize + deliveredSize) + context.getResources().getString(R.string.left_unread));
+                holder.unreadText.setTextColor(Color.parseColor("#36A5F6"));
+                holder.unreadText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, UnReadDetailActivity.class);
+                        intent.putExtra(UnReadDetailActivity.UI_MESSAGE, uiMessage);
+                        intent.putStringArrayListExtra(UnReadDetailActivity.CONVERSATION_ALL_MEMBER, mExceptSelfMemberList);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -483,6 +534,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView bottomIconTypeRight;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
+        public TextView unreadText;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
             super(view);
@@ -511,6 +563,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.chat_icon_bottom_left);
             bottomIconTypeRight = (ImageView) view
                     .findViewById(R.id.chat_icon_bottom_right);
+            unreadText = (TextView) view
+                    .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
             itemView.setOnClickListener(this);
 
