@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -19,7 +21,6 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeService;
-import com.inspur.emmcloud.componentservice.web.WebMediaCallback;
 import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
 import com.inspur.emmcloud.componentservice.web.WebMediaService;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
@@ -28,6 +29,8 @@ import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordErrorCode;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecorderManager;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,53 +38,66 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
-import java.util.UUID;
 
 import lbc.com.denosex.denosexUtil;
 
 public class MediaServiceImpl implements WebMediaService {
     private android.media.AudioManager audioManager;
     private AudioRecorderManager audioRecorderManager;
+    private float durationTime = 0;
+    private int volumeSize = 0;
 
     @Override
-    public void startAudioRecord() {
+    public void startAudioRecord(final Handler handler) {
         if (VoiceCommunicationManager.getInstance().isVoiceBusy()) {
             ToastUtils.show(R.string.voice_communication_can_not_use_this_feature);
             return;
         }
+        durationTime = 0;
+        volumeSize = 0;
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (audioManager == null) {
                     audioManager = (android.media.AudioManager) BaseApplication.getInstance().getBaseContext().getSystemService(Context.AUDIO_SERVICE);
                 }
-                audioManager.requestAudioFocus(null, android.media.AudioManager.STREAM_MUSIC,
-                        android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 if (audioRecorderManager == null) {
                     audioRecorderManager = AudioRecorderManager.getInstance();
-                    audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
-                        @Override
-                        public void onDataChange(int volume, float duration) {
-                        }
-
-                        @Override
-                        public void onWavAudioPrepareState(int state) {
-                            switch (state) {
-                                case AudioRecordErrorCode.SUCCESS:
-                                    if (audioRecorderManager != null) {
-                                        audioRecorderManager.startRecord();
-                                    }
-                                    break;
-                                case AudioRecordErrorCode.E_NOSDCARD:
-                                    ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
-                                    break;
-                                case AudioRecordErrorCode.E_ERROR:
-                                default:
-                                    break;
+                }
+                audioManager.requestAudioFocus(null, android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                audioRecorderManager.setCallBack(new AudioRecorderManager.AudioDataCallBack() {
+                    @Override
+                    public void onDataChange(int volume, float duration) {
+                        if (duration - durationTime > 0.2) {
+                            durationTime = duration;
+                            volumeSize = volume;
+                            if (handler != null) {
+                                Message msg = new Message();
+                                msg.arg1 = volumeSize;
+                                msg.arg2 = (int) durationTime;
+                                msg.what = 4;
+                                handler.sendMessage(msg);
                             }
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onWavAudioPrepareState(int state) {
+                        switch (state) {
+                            case AudioRecordErrorCode.SUCCESS:
+                                if (audioRecorderManager != null) {
+                                    audioRecorderManager.startRecord();
+                                }
+                                break;
+                            case AudioRecordErrorCode.E_NOSDCARD:
+                                ToastUtils.show(MyApplication.getInstance(), MyApplication.getInstance().getString(R.string.error_no_sdcard));
+                                break;
+                            case AudioRecordErrorCode.E_ERROR:
+                            default:
+                                break;
+                        }
+                    }
+                });
                 audioRecorderManager.stopRecord();
                 audioRecorderManager.prepareWavAudioRecord();
             }
@@ -96,23 +112,25 @@ public class MediaServiceImpl implements WebMediaService {
     @Override
     public void stopAudioRecord(WebMediaCallbackImpl callback) {
         if (audioRecorderManager == null || audioManager == null) return;
-        audioManager.abandonAudioFocus(null);
         audioRecorderManager.stopRecord();
+        audioManager.abandonAudioFocus(null);
+        durationTime = 0;
+        volumeSize = 0;
+        if (callback == null) return;
         getRecordAudioResultFile(audioRecorderManager.getCurrentFilePath(), callback);
     }
 
     @Override
     public void playAudio(final String fileResourcePath) {
         String sourceName;
-        if (!fileResourcePath.startsWith("http")) return;
-        sourceName = fileResourcePath.substring(fileResourcePath.lastIndexOf('/') + 1).replace(".mp3", ".wav");
-        final String localSourcePath = getWavFilePath() + "11122.wav";
+//        sourceName = fileResourcePath.substring(fileResourcePath.lastIndexOf('/') + 1).replace(".mp3", ".wav");
+        sourceName = fileResourcePath.substring(fileResourcePath.lastIndexOf('/') + 1);
+        final String localSourcePath = getWavFilePath() + sourceName;
         if (MediaPlayerManagerUtils.getManager().isPlaying(localSourcePath)) {
-            MediaPlayerManagerUtils.getManager().stop();
             return;
         }
         if (MediaPlayerManagerUtils.getManager().isPlaying()) {
-            MediaPlayerManagerUtils.getManager().stop();
+            return;
         }
         if (!FileUtils.isFileExist(localSourcePath)) {
             new DownLoaderUtils().startDownLoad(fileResourcePath, localSourcePath, new APIDownloadCallBack(fileResourcePath) {
@@ -134,13 +152,16 @@ public class MediaServiceImpl implements WebMediaService {
                 }
             });
         } else {
-            MediaPlayerManagerUtils.getManager().play(localSourcePath, null);
+            MediaPlayerManagerUtils.getManager().play(localSourcePath,null);
         }
     }
 
     @Override
     public void stopAudio(String path) {
         if (MediaPlayerManagerUtils.getManager().isPlaying(path)) {
+            MediaPlayerManagerUtils.getManager().stop();
+        }
+        if (MediaPlayerManagerUtils.getManager().isPlaying()) {
             MediaPlayerManagerUtils.getManager().stop();
         }
     }
@@ -170,49 +191,26 @@ public class MediaServiceImpl implements WebMediaService {
             Router router = Router.getInstance();
             if (router.getService(VolumeService.class) != null) {
                 VolumeService service = router.getService(VolumeService.class);
-                service.uploadFile(mockVolumeFile, sourceFile.getPath(), callback);
+                service.uploadFile(mockVolumeFile, fileUploadPath, callback);
             }
         }
     }
 
     private void getRecordAudioResultFile(final String filePathRaw, final WebMediaCallbackImpl callback) {
-        final String[] convertPath = new String[1];
-        /**文件操作**/
-        if (FileUtils.getFileSize(filePathRaw) > 0) {
-            try {
-                String BasePath = MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
-                String id = UUID.randomUUID().toString();
-                String namePcm = id + ".pcm";
-                String filePcmNew = BasePath + namePcm;
-                voiceAgc(filePathRaw, filePcmNew);
-                deNoseX(filePathRaw, filePcmNew);
-                if ((FileUtils.getFileSize(filePathRaw) <= 0)) {
-                    if (callback != null) {
-                        callback.onFail();
-                    }
-                    return;
-                } else {
-                    File tempFile = new File(filePcmNew);
-                    String wavName = filePathRaw.replace(".raw", ".wav");
-                    convertPcmToWav(filePathRaw, wavName, 16000, 1, 16);
-                    tempFile.delete();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         AndroidMp3ConvertUtils.with(BaseApplication.getInstance()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {
             @Override
             public void onSuccess(String mp3FilePath) {
-                convertPath[0] = mp3FilePath;
                 if (callback != null) {
-                    callback.onRecordEnd(mp3FilePath);
+                    try {
+                        callback.onRecordEnd(mp3FilePath);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                convertPath[0] = filePathRaw;
                 if (callback != null) {
                     callback.onFail();
                 }

@@ -9,7 +9,7 @@ import android.util.Log;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.web.plugin.amaplocation.AmapLocateService;
 import com.inspur.emmcloud.web.plugin.app.AppService;
-import com.inspur.emmcloud.web.plugin.audio.AudioService;
+import com.inspur.emmcloud.web.plugin.audio.IMPAudioService;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
 import com.inspur.emmcloud.web.plugin.broadcast.BroadcastService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
@@ -262,7 +262,7 @@ public class PluginMgr {
             } else if (serviceName.endsWith("ScreenshotService")) {
                 serviceName = ScreenshotService.class.getCanonicalName();
             } else if (serviceName.endsWith("AudioService")) {
-                serviceName = AudioService.class.getCanonicalName();
+                serviceName = IMPAudioService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }

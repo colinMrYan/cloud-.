@@ -60,7 +60,7 @@ import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.R2;
 import com.inspur.emmcloud.web.plugin.IPlugin;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
-import com.inspur.emmcloud.web.plugin.audio.AudioService;
+import com.inspur.emmcloud.web.plugin.audio.IMPAudioService;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
@@ -904,7 +904,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                         serviceName = WindowService.class.getCanonicalName();
                         break;
                     case REQUEST_CODE_RECORD_AUDIO:
-                        serviceName = AudioService.class.getCanonicalName();
+                        serviceName = IMPAudioService.class.getCanonicalName();
                         break;
                     default:
                         break;

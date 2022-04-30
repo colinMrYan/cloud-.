@@ -1,11 +1,12 @@
 package com.inspur.emmcloud.componentservice.web;
 
+import android.os.Handler;
+
 import com.inspur.emmcloud.componentservice.CoreService;
-import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 
 public interface WebMediaService extends CoreService {
 
-    void startAudioRecord();
+    void startAudioRecord(Handler handler);
 
     void stopAudioRecord(WebMediaCallbackImpl callback);
 

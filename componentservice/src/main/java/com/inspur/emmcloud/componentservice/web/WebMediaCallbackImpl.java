@@ -2,6 +2,8 @@ package com.inspur.emmcloud.componentservice.web;
 
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
+import org.json.JSONException;
+
 public abstract class WebMediaCallbackImpl implements WebMediaCallback{
 
     @Override
@@ -20,7 +22,7 @@ public abstract class WebMediaCallbackImpl implements WebMediaCallback{
     }
 
     @Override
-    public void onRecordEnd(String resourceLocalPath) {
+    public void onRecordEnd(String resourceLocalPath) throws JSONException {
 
     }
 }

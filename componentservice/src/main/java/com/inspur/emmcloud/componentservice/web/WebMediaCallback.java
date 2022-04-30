@@ -3,6 +3,8 @@ package com.inspur.emmcloud.componentservice.web;
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 
+import org.json.JSONException;
+
 public interface WebMediaCallback extends ProgressCallback {
     @Override
     void onSuccess(VolumeFile volumeFile);
@@ -13,5 +15,5 @@ public interface WebMediaCallback extends ProgressCallback {
     @Override
     void onFail();
 
-    void onRecordEnd(String resourceLocalPath);
+    void onRecordEnd(String resourceLocalPath) throws JSONException;
 }
