@@ -12,8 +12,8 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 import java.util.List;
 

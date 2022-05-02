@@ -999,6 +999,8 @@
     <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
     <string name="notification_switch">New Notification</string>
+    <string name="caring_switch">Font Size</string>
+    <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
     <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
 

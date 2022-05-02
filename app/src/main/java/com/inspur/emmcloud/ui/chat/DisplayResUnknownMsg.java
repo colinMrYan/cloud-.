@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 public class DisplayResUnknownMsg {
     public static View getView(final Context context, boolean isMyMsg) {

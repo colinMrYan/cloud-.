@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.bubble;
+package com.inspur.emmcloud.basemodule.widget.bubble;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;

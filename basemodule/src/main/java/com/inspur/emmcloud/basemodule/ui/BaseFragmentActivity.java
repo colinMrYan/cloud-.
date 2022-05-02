@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -59,6 +60,20 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 //            //目前仅有可能时隐私H5页
 //            onCreate();
 //        }
+    }
+
+
+    private void initFontScale() {
+        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
+        if (0 == Float.compare(1.0f, fontScale)) {
+            return;
+        }
+        Configuration configuration = getResources().getConfiguration();
+        configuration.fontScale = fontScale;
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        metrics.scaledDensity = configuration.fontScale * metrics.density;
+        getBaseContext().getResources().updateConfiguration(configuration, metrics);
     }
 
     private void checkNecessaryPermission() {
@@ -115,6 +130,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         } else {
             onCreate();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        initFontScale();
+        super.onResume();
     }
 
     public abstract void onCreate();

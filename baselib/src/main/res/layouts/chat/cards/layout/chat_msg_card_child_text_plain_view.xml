@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bl_card"
     android:layout_width="wrap_content"
@@ -12,7 +12,7 @@
     app:bl_strokeColor="?attr/color_stroke_46_aa"
     app:bl_strokeWidth="0.5px">
 
-    <com.inspur.emmcloud.widget.TextViewFixTouchConsume
+    <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:lineSpacingMultiplier="1.2"
         android:padding="10dp"
         android:textSize="16sp" />
-</com.inspur.emmcloud.widget.bubble.BubbleLayout>
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
 
 
 

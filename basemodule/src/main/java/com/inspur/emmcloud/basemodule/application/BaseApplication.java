@@ -331,7 +331,6 @@ public abstract class BaseApplication extends MultiDexApplication {
     /******************************租户信息*******************************************/
 
     public void initTanent() {
-        // TODO Auto-generated method stub
         // UriUtils.res = "res_dev";
         currentEnterprise = null;
         String myInfo = PreferencesUtils.getString(getInstance(), "myInfo");
