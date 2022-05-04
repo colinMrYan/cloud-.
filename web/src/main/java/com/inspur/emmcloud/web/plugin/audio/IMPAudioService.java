@@ -121,21 +121,21 @@ public class IMPAudioService extends ImpPlugin {
                 if (saveToLocal) {
                     JSONObject json = new JSONObject();
                     json.put("path", resourceLocalPath);
-                    Log.e("printf","resourceLocalPath: "+ resourceLocalPath);
                     jsCallback(recordingAudioCallback, json);
                 } else {
                     if (resourceLocalPath != null) {
                         service.uploadAudioFile(uploadPath, resourceLocalPath, new WebMediaCallbackImpl() {
                                     @Override
-                                    public void onSuccess(VolumeFile volumeFile) {
+                                    public void onSuccess(String webPath) {
                                         try {
                                             JSONObject json = new JSONObject();
-                                            json.put("path", JSONUtils.getString(volumeFile.getResource(), "url", ""));
+                                            json.put("path", JSONUtils.getString(webPath, "url", ""));
                                             jsCallback(recordingAudioCallback, json);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
+
 
                                     @Override
                                     public void onFail() {

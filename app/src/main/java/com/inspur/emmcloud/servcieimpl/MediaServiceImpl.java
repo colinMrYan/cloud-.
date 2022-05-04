@@ -1,24 +1,34 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.componentservice.download.ProgressCallback;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeService;
 import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
@@ -30,6 +40,8 @@ import com.inspur.emmcloud.widget.audiorecord.AudioRecordErrorCode;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecorderManager;
 
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.http.RequestParams;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -180,21 +192,38 @@ public class MediaServiceImpl implements WebMediaService {
 
     /**
      * 上传文件
-     *
+     *上传文件到资源服务器 (此处需要将调用端代码改为非线程)
      * @param fileUploadPath
-     * @param sourceFile
      * @param callback
      */
-    private void uploadFileToWebVolume(String fileUploadPath, File sourceFile, ProgressCallback callback) {
-        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
-            VolumeFile mockVolumeFile = VolumeFile.getMockVolumeFile(sourceFile, "f55dbc534197d62aa35edb2ddde7c4e66601abbab82372c3d9bebd99864ba9fe");
-            Router router = Router.getInstance();
-            if (router.getService(VolumeService.class) != null) {
-                VolumeService service = router.getService(VolumeService.class);
-                service.uploadFile(mockVolumeFile, fileUploadPath, callback);
-            }
+    private void uploadFileToWebVolume(final String fileUploadPath, final File file, final WebMediaCallbackImpl callback) {
+            final String completeUrl = fileUploadPath;
+            RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
+            params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
+            params.addBodyParameter("file", file);
+            HttpUtils.request(BaseApplication.getInstance(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(BaseApplication.getInstance(), completeUrl) {
+
+                @Override
+                public void callbackTokenExpire(long requestTime) {
+                }
+
+                @Override
+                public void callbackSuccess(byte[] arg0) {
+                    // TODO Auto-generated method stub
+                        try {
+                            JSONObject jsonObject = new JSONObject(new String(arg0));
+                            callback.onSuccess(jsonObject.getString("path"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                }
+
+                @Override
+                public void callbackFail(String error, int responseCode) {
+                    callback.onFail();
+                }
+            });
         }
-    }
 
     private void getRecordAudioResultFile(final String filePathRaw, final WebMediaCallbackImpl callback) {
         AndroidMp3ConvertUtils.with(BaseApplication.getInstance()).setCallBack(new AndroidMp3ConvertUtils.AndroidMp3ConvertCallback() {

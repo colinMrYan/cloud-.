@@ -6,6 +6,10 @@ import org.json.JSONException;
 
 public abstract class WebMediaCallbackImpl implements WebMediaCallback{
 
+    public void onSuccess(String webPath) {
+
+    }
+
     @Override
     public void onSuccess(VolumeFile volumeFile) {
 
