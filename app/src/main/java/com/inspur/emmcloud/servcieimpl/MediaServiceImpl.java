@@ -1,15 +1,11 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
@@ -18,19 +14,12 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
-import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
-import com.inspur.emmcloud.componentservice.download.ProgressCallback;
-import com.inspur.emmcloud.componentservice.login.OauthCallBack;
-import com.inspur.emmcloud.componentservice.volume.VolumeFile;
-import com.inspur.emmcloud.componentservice.volume.VolumeService;
 import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
 import com.inspur.emmcloud.componentservice.web.WebMediaService;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;

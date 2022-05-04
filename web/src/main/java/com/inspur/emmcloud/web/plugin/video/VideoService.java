@@ -34,6 +34,7 @@ public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
     private String recordVideoFilePath;
+    private boolean returnBase64;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -41,7 +42,7 @@ public class VideoService extends ImpPlugin {
         failCb = JSONUtils.getString(paramsObject, "fail", "");
 
         if (action.equals("recordVideo")) {
-            startRecordVideo(paramsObject);
+            startRecordVideo(paramsObject, false);
         } else if (action.equals("playVideo")) {
             JSONObject optionObj = paramsObject.optJSONObject("options");
             String path = optionObj.optString("path");
@@ -74,12 +75,14 @@ public class VideoService extends ImpPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if(action.equals("takeShortVideo")) {
+            startRecordVideo(paramsObject, true);
         } else {
             showCallIMPMethodErrorDlg();
         }
     }
 
-    private void startRecordVideo(final JSONObject paramsObject) {
+    private void startRecordVideo(final JSONObject paramsObject, final boolean uploadShortVideo) {
         try {
             final JSONObject optionsObj = paramsObject.getJSONObject("options");
 
@@ -91,6 +94,7 @@ public class VideoService extends ImpPlugin {
                                 Uri fileUri = null;
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                 String fileName = optionsObj.optString("id");
+                                returnBase64 = optionsObj.optBoolean("isReturnBase64");
                                 try {
                                     File file = createMediaFile(fileName);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -114,10 +118,10 @@ public class VideoService extends ImpPlugin {
                                     e.printStackTrace();
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600);
+                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, uploadShortVideo ? optionsObj.optString("time") : 600);
 
                                 if (getImpCallBackInterface() != null) {
-                                    getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
+                                    getImpCallBackInterface().onStartActivityForResult(intent, uploadShortVideo ? ImpFragment.REQUEST_CODE_RECORD_SHORT_VIDEO : ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }
                             }
 
@@ -186,16 +190,44 @@ public class VideoService extends ImpPlugin {
 
     }
 
+    private void uploadShortVideo(String localSource){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("path", localSource);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        jsCallback(successCb, json);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
             if (data != null && data.getData() != null) {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("path", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                     jsCallback(successCb, json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                    jsCallback(failCb, json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (requestCode == ImpFragment.REQUEST_CODE_RECORD_SHORT_VIDEO){
+            if (data != null && data.getData() != null) {
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("path", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                    uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
