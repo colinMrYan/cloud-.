@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -25,6 +26,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -37,11 +39,11 @@ import java.util.ArrayList;
 
 public class ScreenshotService extends ImpPlugin {
     private CustomShareListener mShareListener;
-
+    private String successCb, failCb;
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
-            screenshot();
+            screenshot(paramsObject);
         } else if(action.equals("enableScreenshot")){
             setWindowSecure(true);
         } else if(action.equals("disableScreenshot")){
@@ -78,10 +80,12 @@ public class ScreenshotService extends ImpPlugin {
         }
     }
 
-    private void screenshot() {
+    private void screenshot(JSONObject paramsObject) {
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().hideScreenshotImg();
         }
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
         AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
@@ -108,7 +112,44 @@ public class ScreenshotService extends ImpPlugin {
                 , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
         PlatformConfig.setWeixin(Constant.WECHAT_APPID, "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
-        mShareListener = new CustomShareListener(getActivity());
+        mShareListener = new CustomShareListener(getActivity(), new ShareCallback() {
+            @Override
+            public void shareSuccess() {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                    JSONObject result = new JSONObject();
+                    json.put("result", result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCb, json);
+            }
+
+            @Override
+            public void shareFailure(String errorMessage) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 0);
+                    json.put("errorMessage", errorMessage);
+                    jsCallback(failCb, json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void shareCancel() {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 2);
+                    json.put("errorMessage", "取消分享");
+                    jsCallback(failCb, json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         ShareAction shareAction = new ShareAction(getActivity());
         shareAction.setShareboardclickCallback(new ShareBoardlistener() {
@@ -157,12 +198,21 @@ public class ScreenshotService extends ImpPlugin {
 
     }
 
+    private interface ShareCallback {
+        void shareSuccess();
+        void shareFailure(String errorMessage);
+        void shareCancel();
+    }
+
     private static class CustomShareListener implements UMShareListener {
 
         private WeakReference<BaseActivity> mActivity;
+        private ShareCallback shareCallback;
+        private String failure;
 
-        private CustomShareListener(Activity activity) {
+        private CustomShareListener(Activity activity, ShareCallback callback) {
             mActivity = new WeakReference(activity);
+            shareCallback = callback;
         }
 
         @Override
@@ -181,12 +231,12 @@ public class ScreenshotService extends ImpPlugin {
             if (t != null) {
                 LogUtils.jasonDebug("throw:" + t.getMessage());
             }
-
+            shareCallback.shareFailure(t != null ? t.getMessage() : "分享失败！！");
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-
+            shareCallback.shareCancel();
         }
     }
 }

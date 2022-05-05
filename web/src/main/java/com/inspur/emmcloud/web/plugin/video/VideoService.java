@@ -112,6 +112,7 @@ public class VideoService extends ImpPlugin {
                                     try {
                                         JSONObject json = new JSONObject();
                                         json.put("errorMessage", "文件操作异常");
+                                        json.put("status",0);
                                         jsCallback(failCb, json);
                                     } catch (JSONException e1) {
                                         e1.printStackTrace();
@@ -150,6 +151,7 @@ public class VideoService extends ImpPlugin {
                         try {
                             JSONObject json = new JSONObject();
                             json.put("errorMessage", "文件夹创建失败");
+                            json.put("status",0);
                             jsCallback(failCb, json);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -172,6 +174,7 @@ public class VideoService extends ImpPlugin {
         }
         try {
             JSONObject json = new JSONObject();
+            json.put("status",0);
             json.put("errorMessage", "文件操作失败");
             jsCallback(failCb, json);
         } catch (JSONException e) {
@@ -196,33 +199,41 @@ public class VideoService extends ImpPlugin {
         try {
             json.put("status", 1);
             JSONObject result = new JSONObject();
-            result.put("base64", decodeVideoToBase64(localSource));
-            result.put("value", localSource);
+            decodeVideoToBase64(localSource, result);
             json.put("result", result);
-            jsCallback(successCb, json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         jsCallback(successCb, json);
     }
 
-    private String decodeVideoToBase64(String localPath){
-        String base64 = "";
-            try {
-                File file = new File(localPath);
-                FileInputStream inputFile = new FileInputStream(file);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int count = 0;
-                while((count = inputFile.read(buffer)) >= 0){
-                    baos.write(buffer, 0, count);//读取输入流并写入输出字节流中
-                }
-                inputFile.close();//关闭文件输入流
-                base64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-            } catch (Exception e) {
-                return null;
+    private void decodeVideoToBase64(String localPath, JSONObject result) {
+        try {
+            File file = new File(localPath);
+            FileInputStream inputFile = new FileInputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = inputFile.read(buffer)) >= 0) {
+                baos.write(buffer, 0, count);//读取输入流并写入输出字节流中
             }
-        return base64;
+            inputFile.close();//关闭文件输入流
+            result.put("base64", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+            result.put("value", localPath);
+            result.put("duration",15);
+            result.put("type","mp4");
+            result.put("fileSize",count);
+            result.put("name",file.getName());
+        } catch (Exception e) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("errorMessage", e.getMessage());
+                json.put("status",0);
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();
+            }
+            jsCallback(failCb, json);
+        }
     }
 
     @Override
@@ -235,7 +246,10 @@ public class VideoService extends ImpPlugin {
                         uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                     } else {
                         JSONObject json = new JSONObject();
-                        json.put("path", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                        json.put("status", 1);
+                        JSONObject result = new JSONObject();
+                        result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                        json.put("result", result);
                         jsCallback(successCb, json);
                     }
                 } catch (JSONException e) {
@@ -245,6 +259,7 @@ public class VideoService extends ImpPlugin {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                    json.put("status",0);
                     jsCallback(failCb, json);
                 } catch (JSONException e) {
                     e.printStackTrace();

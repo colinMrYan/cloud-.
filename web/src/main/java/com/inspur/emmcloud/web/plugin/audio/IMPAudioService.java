@@ -120,7 +120,10 @@ public class IMPAudioService extends ImpPlugin {
             public void onRecordEnd(String resourceLocalPath) throws JSONException {
                 if (saveToLocal) {
                     JSONObject json = new JSONObject();
-                    json.put("path", resourceLocalPath);
+                    json.put("status", 1);
+                    JSONObject result = new JSONObject();
+                    result.put("path", resourceLocalPath);
+                    json.put("result", result);
                     jsCallback(recordingAudioCallback, json);
                 } else {
                     if (resourceLocalPath != null) {
@@ -129,7 +132,10 @@ public class IMPAudioService extends ImpPlugin {
                                     public void onSuccess(String webPath) {
                                         try {
                                             JSONObject json = new JSONObject();
-                                            json.put("path", JSONUtils.getString(webPath, "url", ""));
+                                            JSONObject result = new JSONObject();
+                                            result.put("path", webPath);
+                                            json.put("status", 1);
+                                            json.put("result", result);
                                             jsCallback(recordingAudioCallback, json);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -142,6 +148,7 @@ public class IMPAudioService extends ImpPlugin {
                                         try {
                                             JSONObject json = new JSONObject();
                                             json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
+                                            json.put("status", 0);
                                             jsCallback(recordingAudioCallback, json);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
