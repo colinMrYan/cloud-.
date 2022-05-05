@@ -105,7 +105,6 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public static final int BARCODE_SERVER__SCAN_REQUEST = 8;
     public static final int SELECT_FILE_SERVICE_REQUEST = 9;
     public static final int REQUEST_CODE_RECORD_VIDEO = 10;
-    public static final int REQUEST_CODE_RECORD_SHORT_VIDEO = 14;
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final int REQUEST_EDIT_SCREENSHOT_IMG = 11;
     public static final int SHARE_WEB_URL_REQUEST = 12;
@@ -896,7 +895,6 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                         serviceName = FileTransferService.class.getCanonicalName().trim();
                         break;
                     case REQUEST_CODE_RECORD_VIDEO:
-                    case REQUEST_CODE_RECORD_SHORT_VIDEO:
                         serviceName = VideoService.class.getCanonicalName();
                         break;
                     case REQUEST_EDIT_SCREENSHOT_IMG:
