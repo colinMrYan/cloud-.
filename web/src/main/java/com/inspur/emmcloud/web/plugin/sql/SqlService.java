@@ -32,7 +32,14 @@ public class SqlService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        operateDataBase(action, paramsObject);
+        if (action.equals("executeSql")) {
+            operateDataBase(paramsObject);
+        } else if(action.equals("close")){
+            closeDataBase(paramsObject);
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
+
     }
 
     @Override
@@ -44,11 +51,9 @@ public class SqlService extends ImpPlugin {
     /**
      * 操作数据库的逻辑
      *
-     * @param action
      * @param paramsObject
      */
-    private void operateDataBase(String action, JSONObject paramsObject) {
-        if ("executeSql".equals(action)) {
+    private void operateDataBase(JSONObject paramsObject) {
             JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
             this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
             if (database != null) {
@@ -58,8 +63,24 @@ public class SqlService extends ImpPlugin {
             } else {
                 ToastUtils.show("database connect error");
             }
+    }
+
+    /**
+     * 关闭数据库的逻辑
+     *
+     * @param paramsObject
+     */
+    private void closeDataBase(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if (database != null) {
+            database.close();
+            jsCallback(successCb, "");
         } else {
-            showCallIMPMethodErrorDlg();
+            ToastUtils.show("database not find");
+            jsCallback(failCb, "database not find");
         }
     }
 
