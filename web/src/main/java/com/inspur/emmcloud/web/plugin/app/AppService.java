@@ -31,7 +31,7 @@ public class AppService extends ImpPlugin {
             registerAppEnterForegroundListener(paramsObject);
         } else if ("removeAppEnterBackgroundListener".equals(action)) {
             removeEnterBackgroundListener(paramsObject);
-        }  else if ("removeAppEnterForegroundListener".equals(action)) {
+        } else if ("removeAppEnterForegroundListener".equals(action)) {
             removeEnterForegroundListener(paramsObject);
         } else {
             showCallIMPMethodErrorDlg();
@@ -48,9 +48,9 @@ public class AppService extends ImpPlugin {
             registerAppEnterBackgroundListener(paramsObject);
         } else if ("addAppEnterForegroundListener".equals(action)) {
             registerAppEnterForegroundListener(paramsObject);
-        }  else if ("removeAppEnterBackgroundListener".equals(action)) {
+        } else if ("removeAppEnterBackgroundListener".equals(action)) {
             removeEnterBackgroundListener(paramsObject);
-        }  else if ("removeAppEnterForegroundListener".equals(action)) {
+        } else if ("removeAppEnterForegroundListener".equals(action)) {
             removeEnterForegroundListener(paramsObject);
         } else {
             showCallIMPMethodErrorDlg();
@@ -116,7 +116,9 @@ public class AppService extends ImpPlugin {
     public void onActivityResume() {
         if (!isForeground) {
             isForeground = true;
-            jsCallback(appEnterForegroundListener, "");
+            if (appEnterForegroundListener != null) {
+                jsCallback(appEnterForegroundListener, "");
+            }
         }
     }
 
@@ -124,12 +126,15 @@ public class AppService extends ImpPlugin {
     public void onActivityPause() {
         if (!isAppOnForeground()) {
             isForeground = false;
-            jsCallback(appEnterBackgroundListener, "");
+            if (appEnterBackgroundListener != null) {
+                jsCallback(appEnterBackgroundListener, "");
+            }
         }
     }
 
     /**
      * 判断app是否处于前台
+     *
      * @return
      */
     public boolean isAppOnForeground() {
