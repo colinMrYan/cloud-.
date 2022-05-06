@@ -40,6 +40,7 @@ import java.util.ArrayList;
 public class ScreenshotService extends ImpPlugin {
     private CustomShareListener mShareListener;
     private String successCb, failCb;
+    private boolean shareThirdParty = true;
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
@@ -84,6 +85,8 @@ public class ScreenshotService extends ImpPlugin {
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().hideScreenshotImg();
         }
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        shareThirdParty = JSONUtils.getBoolean(options, "isShare", true);
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
@@ -99,7 +102,9 @@ public class ScreenshotService extends ImpPlugin {
         if (resultCode == Activity.RESULT_OK) {
             String screenshotImgPath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
             AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
-            shareScreenshotImg(screenshotImgPath);
+            if (shareThirdParty) {
+                shareScreenshotImg(screenshotImgPath);
+            }
 
         }
     }
