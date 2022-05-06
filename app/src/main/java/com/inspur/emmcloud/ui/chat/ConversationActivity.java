@@ -1936,7 +1936,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+            if (!conversation.isServiceConversationType() && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
         }
