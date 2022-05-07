@@ -1162,7 +1162,7 @@
 
     <string name="root_toast">&appname;提醒您，当前手机已root，请注意保护你的账号安全</string>
     <string name="network_change_tip">网络环境发生变化，当前为</string>
-    <string name="warning_service_enter_by_creator">服务号管理人员不能进入服务号频道，请到客服群</string>
+    <string name="warning_service_enter_by_creator">客服不能进入服务号频道，请到客服群</string>
     <string name="service_conversation_desc">专业团队 为您服务</string>
     <string name="service_conversation_search">搜索服务号</string>
     <string name="service_search">服务号搜索</string>
