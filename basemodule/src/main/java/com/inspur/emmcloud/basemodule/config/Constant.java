@@ -119,6 +119,7 @@ public class Constant {
     //频道消息发生变化
     public static final String EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED = "tag_conversation_message_data_changed";
     public static final String EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED = "tag_group_conversation_data_changed";
+    public static final String EVENTBUS_TAG_MULTI_MESSAGE_SEND = "tag_multi_message_send";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
     public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";
@@ -295,6 +296,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/ContactSearchActivity"; //通讯录选择界面
     public static final String AROUTER_CLASS_CONVERSATION_SEARCH = "/chat/ConversationSearchActivity"; //最近联系人选择界面
+    public static final String AROUTER_CLASS_CONVERSATION_SEND_MORE = "/chat/ConversationSendMoreActivity"; //消息转发多人揭界面
     public static final String AROUTER_CLASS_CONTACT_USERINFO = "/contact/UserInfoActivity";
 
     public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
@@ -343,6 +345,8 @@ public class Constant {
     public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
+    // 消息转发多选
+    public static final String MULTI_SEND_CONTENT = "multi_send_content";
     //TODO:更新除微信外appid
     public static final String UMENT_APPKEY = "5c6cf18ff1f55645e900092a";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
@@ -368,4 +372,6 @@ public class Constant {
     public static final String APP_ROLE = "app_role";
 
     public static final int APP_THEME_DARK = 3;
+
+    public static final int MULTI_SELECT_COUNT = 9;
 }

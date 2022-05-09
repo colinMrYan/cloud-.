@@ -409,8 +409,21 @@
             android:resizeableActivity="true"
             android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".ui.chat.SearchSendMultiActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.CommunicationSearchModelMoreActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".ui.chat.CommunicationSearchSendMultiModelMoreActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="behind"
@@ -647,6 +660,11 @@
             android:theme="@style/Theme.UMDefault" />
         <activity
             android:name=".ui.chat.mvp.view.ConversationSearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".ui.chat.mvp.view.ConversationSendMultiActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:resizeableActivity="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

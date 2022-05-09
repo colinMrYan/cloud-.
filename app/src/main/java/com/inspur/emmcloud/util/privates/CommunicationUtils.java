@@ -19,6 +19,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
@@ -553,6 +554,29 @@ public class CommunicationUtils {
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+            }
+        }
+        return icon;
+    }
+
+    public static String getHeadUrl(MessageForwardMultiBean bean) {
+        String icon = "";
+        if (bean.getType().equals(Conversation.TYPE_GROUP)) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + bean.getConversationId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+            }
+        } else if (bean.getType().equals(Conversation.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
+        } else if (bean.getType().equals(SearchModel.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
+        } else if (bean.getType().equals(SearchModel.TYPE_DIRECT)) {
+            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), bean.getConversationId());
+            icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+        } else {
+            if (!bean.getContactId().equals("null")) {
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), bean.getContactId());
             }
         }
         return icon;

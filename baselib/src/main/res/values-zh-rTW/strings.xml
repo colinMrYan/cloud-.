@@ -15,6 +15,8 @@
     <string name="Network_WIFI">已經連接到WIFI</string>
     <string name="send_to_app">發送到&appnameTW;</string>
     <string name="ok">確定</string>
+    <string name="ok_number">確定(%d)</string>
+    <string name="send_more_select_limit_warning">最多選擇9人/群聊</string>
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
     <string name="retry">重試</string>
@@ -370,6 +372,7 @@
     <string name="chat_search_group_chats">群聊</string>
     <string name="chat_search_mention_all">全部成員</string>
     <string name="chat_contact_more_select">多選</string>
+    <string name="chat_contact_single_select">單選</string>
     <string name="chat_contact_related_message">%1$d條相關的聊天記錄</string>
     <string name="chat_search_related_messages">%1$s的記錄</string>
     <string name="chat_group_member_size">%1$s(%2$d)</string>
