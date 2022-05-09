@@ -78,10 +78,14 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     }
 
     public void showUserOrientedLayout(ArrayList<String> userIds) {
+        ArrayList<String> robotIds = new ArrayList<>();
+        for (String userId : userIds) {
+            if (ContactUserCacheUtils.getContactUserByUid(userId) == null) robotIds.add(userId);
+        }
         if (listener != null) listener.showFunction();
+        robotIds.add(BaseApplication.getInstance().getUid());
         ArrayList<String> targetUsers = userIds;
-        targetUsers.remove(BaseApplication.getInstance().getUid());
-        if (targetUsers.isEmpty()) return;
+        targetUsers.removeAll(robotIds);
         adjustViewHeight(targetUsers.size() > 5);
         setDisplayingUI(true);
         initAndUpdateChannelType();
@@ -232,12 +236,12 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         @Override
         public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
             final String uid = contactUserList.get(position);
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(contactUserList.get(position));
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser == null) return;
             String userName = ContactUserCacheUtils.getUserName(uid);
             String userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
             holder.nameTv.setText(userName);
-            holder.selectImg.setVisibility(View.GONE);
+            holder.selectImg.setVisibility(selectedUser.contains(uid) ? View.VISIBLE : View.GONE);
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headerImg, userPhotoUrl, R.drawable.icon_person_default);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
