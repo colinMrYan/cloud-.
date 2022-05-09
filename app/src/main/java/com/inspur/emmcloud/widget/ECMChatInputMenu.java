@@ -189,6 +189,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private ECMChatInputMenuCallback inputMenuClickCallback;
     private List<String> languageList = new ArrayList<>();
     private ValueAnimator animator;
+    private boolean displayingWhisperOrBurnView = false;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -315,7 +316,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setVisibility(isContentBlank ? GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
+                addBtn.setVisibility(isContentBlank && !displayingWhisperOrBurnView ? VISIBLE : GONE);
                 if (isGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -906,7 +907,7 @@ public class ECMChatInputMenu extends LinearLayout {
             if (isInputFileEnable && AppRoleUtils.isCanSendFile()) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[2], functionNameArray[2], functionActionArray[2]));
             }
-            if (isInputVoiceEnable) {
+            if (isInputVoiceEnable && !displayingWhisperOrBurnView) {
                 voiceBtn.setVisibility(VISIBLE);
             } else {
                 voiceBtn.setVisibility(GONE);
@@ -939,7 +940,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             if (inputTypeBeanList.size() > 0) {
-                addBtn.setVisibility(VISIBLE);
+                addBtn.setVisibility(displayingWhisperOrBurnView ? GONE : VISIBLE);
                 sendMsgBtn.setVisibility(GONE);
             }
 
@@ -1075,9 +1076,10 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     public void updateVoiceAndMoreLayout(boolean show) {
+        displayingWhisperOrBurnView = !show;
         addBtn.setVisibility(show ? VISIBLE : GONE);
         voiceBtn.setVisibility(show ? VISIBLE : GONE);
-        if (!show){
+        if (!show) {
             if (viewpagerLayout.getVisibility() == View.VISIBLE) {
                 setOtherLayoutHeightLock(true);
                 setAddMenuLayoutShow(false);
@@ -1087,7 +1089,6 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         }
     }
-
 
     private void startVoiceCall(String type) {
         //语音通话
