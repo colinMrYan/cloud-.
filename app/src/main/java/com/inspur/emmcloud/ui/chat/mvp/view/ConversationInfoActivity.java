@@ -141,6 +141,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
             mPresenter.updateSearchMoreState();
+            quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT) || uiConversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             isOwner = false;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
