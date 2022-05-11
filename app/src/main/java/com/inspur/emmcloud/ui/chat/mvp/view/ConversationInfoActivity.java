@@ -81,6 +81,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     SwitchCompat conversationStickySwitch;
     @BindView(R.id.switch_conversation_mute_notification)
     SwitchCompat conversationMuteNotificationSwitch;
+    @BindView(R.id.switch_conversation_show)
+    SwitchCompat conversationShowSwitch;
     @BindView(R.id.tv_conversation_quit_title)
     TextView quitTextView;
     @BindView(R.id.rl_conversation_qr)
@@ -95,6 +97,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout searchRecordMarginLayout;
     @BindView(R.id.rl_conversation_report)
     RelativeLayout conversationReportRl;
+    @BindView(R.id.rl_conversation_show)
+    RelativeLayout conversationShow;
 
     private Conversation uiConversation;
     private ConversationMembersHeadAdapter channelMembersHeadAdapter;
@@ -154,6 +158,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
             muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
         }
+        conversationShowSwitch.setChecked(uiConversation.isHide());
+        conversationShowSwitch.setOnCheckedChangeListener(this);
+        conversationShow.setVisibility(uiConversation.isHide() ? View.VISIBLE : View.GONE);
         channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList, uiConversation.getOwner());
         Configuration configuration = getResources().getConfiguration();
         // 适配横屏头像显示
@@ -353,6 +360,17 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 if (!b == uiConversation.isDnd()) {
                     loadingDialog.show();
                     mPresenter.setMuteNotification(b, uiConversation.getId());
+                }
+                break;
+            case R.id.switch_conversation_show:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    conversationMuteNotificationSwitch.setChecked(!b);
+                    return;
+                }
+                if (!b == uiConversation.isHide()) {
+                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), uiConversation.getId(), false);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED, uiConversation.getId()));
                 }
                 break;
             default:

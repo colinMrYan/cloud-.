@@ -283,6 +283,8 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             public void callbackSuccess(byte[] arg0) {
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 mConversation = new Conversation(object);
+                Conversation conversation = ConversationCacheUtils.getConversation(context, mConversation.getId());
+                mConversation.setHide(conversation.isHide());
                 mView.initView(mConversation);
             }
 
