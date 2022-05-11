@@ -182,6 +182,7 @@
     <string name="channel_group_members_name">Group Name</string>
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
+    <string name="channel_hide">Hide</string>
     <string name="channel_single_chat_images">Images</string>
     <string name="channel_report">Report</string>
     <string name="channel_report_hint">Please enter the report content</string>

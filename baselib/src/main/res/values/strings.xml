@@ -193,6 +193,7 @@
     <string name="channel_set_top"> 置顶</string>
     <string name="channel_set_sticky"> 置顶</string>
     <string name="message_without_interruption">消息免打扰</string>
+    <string name="channel_hide">隐藏</string>
     <string name="channel_report">投诉</string>
     <string name="channel_report_hint">请输入投诉内容</string>
     <string name="feed_back_without_name">匿名提交</string>

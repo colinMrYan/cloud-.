@@ -63,7 +63,6 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         EventBus.getDefault().register(this);
         initConversationInfo();
         recordUserClickChannel();
-        setConversationUnHide();
         configView.setVisibility(View.VISIBLE);
         showWaterMark();
     }
@@ -103,18 +102,18 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         watermarkView.setText(getMyInfoResult.getName());
     }
 
-    /**
-     * 当进入这个聊天时将取消这个聊天的隐藏状态
-     */
-    private void setConversationUnHide() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), cid, false);
-            }
-        }).start();
-
-    }
+//    /**
+//     * 当进入这个聊天时将取消这个聊天的隐藏状态
+//     */
+//    private void setConversationUnHide() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), cid, false);
+//            }
+//        }).start();
+//
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
