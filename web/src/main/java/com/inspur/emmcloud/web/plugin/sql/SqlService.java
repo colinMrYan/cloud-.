@@ -5,13 +5,17 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.util.StrUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
 
 
 /**
@@ -34,8 +38,12 @@ public class SqlService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("executeSql")) {
             operateDataBase(paramsObject);
-        } else if(action.equals("close")){
+        } else if (action.equals("close")) {
             closeDataBase(paramsObject);
+        } else if (action.equals("executeTransaction")) {
+            transactionDataBase(paramsObject);
+        } else if (action.equals("delete")) {
+            deleteDataBase(paramsObject);
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -54,15 +62,16 @@ public class SqlService extends ImpPlugin {
      * @param paramsObject
      */
     private void operateDataBase(JSONObject paramsObject) {
-            JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-            this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
-            if (database != null) {
-                successCb = JSONUtils.getString(paramsObject, "success", "");
-                failCb = JSONUtils.getString(paramsObject, "fail", "");
-                executeSql(paramsObject);
-            } else {
-                ToastUtils.show("database connect error");
-            }
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null) {
+            successCb = JSONUtils.getString(paramsObject, "success", "");
+            failCb = JSONUtils.getString(paramsObject, "fail", "");
+            executeSql(paramsObject);
+        } else {
+            ToastUtils.show("database connect error");
+        }
     }
 
     /**
@@ -81,6 +90,67 @@ public class SqlService extends ImpPlugin {
         } else {
             ToastUtils.show("database not find");
             jsCallback(failCb, "database not find");
+        }
+    }
+
+    /**
+     * 删除数据库的逻辑
+     *
+     * @param paramsObject
+     */
+    private void deleteDataBase(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "");
+        if (StringUtils.isEmpty(dbName) || dbName.equals("default.db") || (dbName.equals("emm.db"))) {
+            jsCallback(failCb, "local database cannot be deleted");
+            return;
+        }
+        this.database = getSQLiteDatabase(dbName);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if (database != null) {
+            if (getActivity().getApplicationContext().deleteDatabase(dbName)) {
+                jsCallback(successCb, "");
+            } else {
+                jsCallback(successCb, "");
+            }
+        } else {
+            jsCallback(failCb, "database not found");
+        }
+    }
+
+    /**
+     * 数据库执行事务的逻辑
+     *
+     * @param paramsObject
+     */
+    private void transactionDataBase(JSONObject paramsObject) {
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String sqlList = JSONUtils.getString(optionsJsonObject, "sqls", "");
+        Cursor myCursor = null;
+        try {
+            if (isSelectSql(sqlList)) {
+                myCursor = this.database.rawQuery(sqlList, null);
+                this.processResults(myCursor);
+                if (myCursor != null) {
+                    myCursor.close();
+                }
+            } else {
+                database.beginTransaction();
+                this.database.execSQL(sqlList);
+                database.setTransactionSuccessful();
+                jsCallback(successCb, "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (myCursor != null) {
+                myCursor.close();
+                myCursor = null;
+            }
+            // 将错误信息反馈回前台
+            jsCallback(failCb, getErrorJson(e.getMessage()));
+        } finally {
+            database.endTransaction();
         }
     }
 
