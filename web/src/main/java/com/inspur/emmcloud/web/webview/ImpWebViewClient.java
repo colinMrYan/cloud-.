@@ -389,7 +389,11 @@ public class ImpWebViewClient extends WebViewClient {
             if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
                 isLogin = true;
                 String redirectUri = appRedirectResult.getRedirect_uri();
-                webView.loadUrl(redirectUri, getWebViewHeaders(redirectUri));
+                Map<String, String> webViewHeaders = getWebViewHeaders(redirectUri);
+                if (!webViewHeaders.containsKey("X-ECC-Current-Enterprise") && BaseApplication.getInstance().getCurrentEnterprise() != null) {
+                    webViewHeaders.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+                }
+                webView.loadUrl(redirectUri, webViewHeaders);
             }
         }
 

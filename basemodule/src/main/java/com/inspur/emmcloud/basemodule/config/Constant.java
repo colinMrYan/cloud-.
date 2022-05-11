@@ -246,6 +246,7 @@ public class Constant {
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
     public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
+    public static final String CARING_SWITCH_FLAG = "caring_switch_flag";
     public static final String JPUSH_REGISTER_ID = "JpushRegId";
     public static final String MIPUSH_REGISTER_ID = "mi_push_register_id";
     public static final String HUAWEI_FLAG = "huawei";

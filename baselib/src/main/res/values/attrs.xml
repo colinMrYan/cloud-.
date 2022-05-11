@@ -58,6 +58,7 @@
     <attr name="header_bg_1c" format="reference" />
     <attr name="header_bg_search_1c" format="reference" />
     <attr name="header_text_color_e1" format="reference" />
+    <attr name="header_button_text_color_e1" format="reference" />
     <attr name="content_bg_30" format="reference" />
     <attr name="text_color_e1" format="reference" />
     <attr name="color_bg_00" format="reference" />

@@ -1016,6 +1016,8 @@
     <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
     <string name="notification_switch">新消息通知</string>
+    <string name="caring_switch">字體大小</string>
+    <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
 

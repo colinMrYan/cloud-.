@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.bubble;
+package com.inspur.emmcloud.basemodule.widget.bubble;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,7 +9,8 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.R;
+
 
 /**
  * Bubble View for Android with custom stroke width and color, arrow size, position and direction.

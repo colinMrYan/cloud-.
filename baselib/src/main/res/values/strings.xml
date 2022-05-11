@@ -1071,6 +1071,8 @@
     <string name="voice_input_mention">发送给</string>
 
     <string name="notification_switch">新消息通知</string>
+    <string name="caring_switch">字体大小</string>
+    <string name="caring_switch_tip">需要云+重启后才能生效</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
     <string name="notification_switch_open_setting">系统中的&appname;消息通知已关闭，前往打开？</string>
 

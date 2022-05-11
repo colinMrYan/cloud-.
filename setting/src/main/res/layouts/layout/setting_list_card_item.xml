@@ -18,7 +18,10 @@
             android:background="@drawable/shape_top_rectangle_with_radius"
             android:gravity="center_vertical"
             android:paddingLeft="22dp"
+            android:paddingRight="50dp"
             android:textColor="@color/color_text_Anti_White"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="17sp" />
         <ImageView
             android:id="@+id/iv_card_package_qrcode"
@@ -51,7 +54,7 @@
             <TextView
                 android:id="@+id/company_tax_view"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:gravity="top"
                 android:layout_gravity="top"
                 android:text="@string/setting_card_package_taxpayer"
@@ -85,7 +88,7 @@
             <TextView
                 android:id="@+id/company_address_view"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:gravity="top"
                 android:layout_gravity="top"
                 android:layout_marginRight="24dp"
@@ -118,7 +121,7 @@
             <TextView
                 android:id="@+id/link_phone_view"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:gravity="top"
                 android:layout_gravity="top"
                 android:layout_marginRight="24dp"
@@ -152,7 +155,7 @@
             <TextView
                 android:id="@+id/bank_view"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="24dp"
                 android:gravity="top"
                 android:layout_gravity="top"
@@ -186,7 +189,7 @@
             <TextView
                 android:id="@+id/bank_account_view"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="24dp"
                 android:gravity="top"
                 android:layout_gravity="top"

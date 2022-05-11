@@ -60,6 +60,7 @@
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
         <item name="header_text_color_e1">@color/header_text_black</item>
+        <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
@@ -155,6 +156,7 @@
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
         <item name="header_text_color_e1">@color/header_text_grey</item>
+        <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
@@ -249,6 +251,7 @@
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
         <item name="header_text_color_e1">@color/header_text</item>
+        <item name="header_button_text_color_e1">@color/white</item>
         <item name="content_bg">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
@@ -343,6 +346,7 @@
         <item name="footer_bg_color">@color/footer_bg_dark</item>
         <item name="header_text_color">@color/header_text</item>
         <item name="header_text_color_e1">@color/header_text_e1</item>
+        <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg_dark</item>
         <item name="content_bg_level_two">@color/content_bg_dark_level_two</item>
         <item name="content_bg_f6_1c">@color/color_bg_common_dark</item>

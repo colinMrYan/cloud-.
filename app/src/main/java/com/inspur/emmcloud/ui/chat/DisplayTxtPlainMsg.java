@@ -5,6 +5,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -14,8 +15,8 @@ import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 /**
  * DisplayTxtRichMsg
@@ -39,7 +40,7 @@ public class DisplayTxtPlainMsg {
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
-        final TextViewFixTouchConsume contentText = cardContentView
+        final TextView contentText = cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));

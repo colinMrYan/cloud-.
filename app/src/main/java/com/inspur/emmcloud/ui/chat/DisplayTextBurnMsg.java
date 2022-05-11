@@ -14,8 +14,8 @@ import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 public class DisplayTextBurnMsg {
 

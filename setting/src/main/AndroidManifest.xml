@@ -70,6 +70,12 @@
             android:screenOrientation="behind" />
 
         <activity
+            android:name=".ui.setting.TextSizeSettingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+
+        <activity
             android:name=".ui.setting.PhoneRecognizeActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

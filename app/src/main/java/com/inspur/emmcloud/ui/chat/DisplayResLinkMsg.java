@@ -14,8 +14,8 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 /**
  * DisplayResLinkMsg
