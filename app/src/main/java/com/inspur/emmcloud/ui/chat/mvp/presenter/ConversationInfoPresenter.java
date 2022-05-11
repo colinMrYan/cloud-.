@@ -556,9 +556,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
 
     // 判断是否需要更新群聊名称
     private boolean needUpdateGroupName(List<String> memberList) {
-        // todo 隐藏群聊改名
-//        return mConversation.getName().equals(createChannelGroupName(createSequenceUserArray(memberList)));
-        return false;
+        return mConversation.getName().equals(createChannelGroupName(createSequenceUserArray(memberList)));
     }
 
     // 群用户根据id排序

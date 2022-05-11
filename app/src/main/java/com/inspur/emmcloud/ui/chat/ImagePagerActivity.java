@@ -69,6 +69,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
     private static final int RESULT_MENTIONS = 5;
     private static final int CHECK_IMG_COMMENT = 1;
+    public static final String EXTRA_CHANNEL_ID = "channelId";
     ImageDetailFragment.DownLoadProgressRefreshListener downLoadProgressRefreshListener;
     private ECMChatInputMenuImgComment ecmChatInputMenu;
     private HackyViewPager mPager;
@@ -401,7 +402,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     private void getImgCommentCount(String mid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            WSAPIService.getInstance().getMessageCommentCount(mid);
+            WSAPIService.getInstance().getMessageCommentCount(mid, getIntent().hasExtra(EXTRA_CHANNEL_ID) ? getIntent().getStringExtra(EXTRA_CHANNEL_ID) : "");
         }
     }
 

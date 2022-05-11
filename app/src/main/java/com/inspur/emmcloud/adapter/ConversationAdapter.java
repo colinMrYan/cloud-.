@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
+        updateServiceConversationMsgState();
         if (adapterListener != null) {
             adapterListener.onDataChange();
         }
@@ -64,11 +66,26 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
+            updateServiceConversationMsgState();
             if (adapterListener != null) {
                 adapterListener.onDataChange();
             }
         }
+    }
 
+    // 服务号未读消息数量
+    public void updateServiceConversationMsgState() {
+        if (uiConversationList.isEmpty()) return;
+        int unreadServiceNum = 0;
+        for (Conversation conversation : ConversationCacheUtils.getConversationList(context)) {
+            UIConversation uiConversation = new UIConversation(conversation);
+            if (uiConversation.getConversation().isServiceConversationType()) {
+                unreadServiceNum += uiConversation.getUnReadCount();
+            }
+        }
+        if (uiConversationList.get(0).getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+            uiConversationList.get(0).setUnReadCount(unreadServiceNum);
+        }
     }
 
     @Override
@@ -176,7 +193,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
-            holder.timeText.setText(TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
+            holder.timeText.setText(uiConversation.isServiceContainer() ?  "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
@@ -192,7 +209,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 String conversationName = context.getString(R.string.chat_file_transfer);
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
-            } else {
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
+                holder.titleText.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+            }   else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
+                holder.titleText.setText(uiConversation.getConversation().getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+            }  else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
             setConversationLastMessageSendStatus(holder, uiConversation);
@@ -243,6 +266,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation) {
+        if (uiConversation.isServiceContainer()) {
+            holder.contentText.setText(R.string.service_conversation_desc);
+            return;
+        }
         String chatDrafts = uiConversation.getConversation().getDraft();
         if (!StringUtils.isBlank(chatDrafts)) {
             String content = "<font color='#FF0000'>" + context.getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
@@ -278,7 +305,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
         holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount() > 0) {
+        if (uiConversation.getUnReadCount() > 0 && !uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
             holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
         }
     }
@@ -306,14 +333,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 contentStringBuilder.append(content);
                 Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
                 Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
+                boolean isWhisperType = !message.getMsgContentTextPlain().getWhisperUsers().isEmpty();
+                ArrayList<String> uidList = new ArrayList<>();
                 while (mentionMatcher.find()) {
                     String patternString = mentionMatcher.group();
                     String key = patternString.substring(1, patternString.length() - 1).trim();
                     if (mentionsMap.containsKey(key)) {
                         String newString = "";
                         String uid = mentionsMap.get(key);
-                        if (uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid)) {
-                            newString = ContactUserCacheUtils.getUserName(message.getFromUser()) +": " + message.getShowContent();
+                        uidList.add(uid);
+                        if ((uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid))) {
+                            newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + (isWhisperType ? BaseApplication.getInstance().getString(R.string.send_a_whispers) : message.getShowContent());
                             contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
                             return contentStringBuilder.toString();
                         }

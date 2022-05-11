@@ -128,6 +128,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER = "tag_refresh_conversation_adapter";
     public static final String EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE = "tag_send_action_content_message";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_NAME = "tag_update_channel_name";
+    public static final String EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE = "tag_update_service_channel";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS = "tag_update_channel_members";
     public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";

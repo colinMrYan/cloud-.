@@ -51,6 +51,12 @@ public class WSAPIService {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 sendChatTextPlainMsg(fakeMessage);
                 break;
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                sendChatTextWhisperMsg(fakeMessage);
+                break;
+            case Message.MESSAGE_TYPE_TEXT_BURN:
+                sendChatTextBurnMsg(fakeMessage);
+                break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 sendChatCommentTextPlainMsg(fakeMessage);
                 break;
@@ -91,6 +97,66 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
+            bodyObj.put("tmpId", fakeMessage.getId());
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendChatTextWhisperMsg(Message fakeMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            JSONObject whisperObj = new JSONObject();
+            whisperObj.put("to",JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
+            actionObj.put("query", whisperObj);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", fakeMessage.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+            bodyObj.put("text", msgContentTextPlain.getText());
+            Map<String, String> mentionsMap = msgContentTextPlain.getMentionsMap();
+            if (mentionsMap != null && mentionsMap.size() > 0) {
+                JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
+                bodyObj.put("mentions", mentionsObj);
+            }
+            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put("whispers", JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+//            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendChatTextBurnMsg(Message fakeMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", fakeMessage.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+            bodyObj.put("text", msgContentTextPlain.getText());
+            bodyObj.put("messageType", Message.MESSAGE_TYPE_TEXT_BURN);
             bodyObj.put("tmpId", fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
@@ -350,13 +416,16 @@ public class WSAPIService {
 
     }
 
-    public void getMessageComment(String mid) {
+    public void getMessageComment(String mid,String cid) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message/" + mid + "/comment");
+            JSONObject channelObj = new JSONObject();
+            channelObj.put("channelId", cid);
+            actionObj.put("query", channelObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
@@ -433,13 +502,16 @@ public class WSAPIService {
         }
     }
 
-    public void getMessageCommentCount(String mid) {
+    public void getMessageCommentCount(String mid, String channelId) {
         try {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("method", "get");
             actionObj.put("path", "/message/" + mid + "/comment/count");
+            JSONObject channelObj = new JSONObject();
+            channelObj.put("channelId", channelId);
+            actionObj.put("query", channelObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());

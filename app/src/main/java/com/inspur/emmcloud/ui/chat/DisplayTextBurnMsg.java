@@ -5,7 +5,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -18,37 +17,22 @@ import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
 import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
-/**
- * DisplayTxtRichMsg
- *
- * @author sunqx 展示富文本卡片 2016-08-19
- */
-public class DisplayTxtPlainMsg {
+public class DisplayTextBurnMsg {
 
-    /**
-     * 富文本卡片
-     *
-     * @param context
-     * @param message
-     */
     public static View getView(final Context context, Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
-                R.layout.chat_msg_card_child_text_plain_view, null);
+                R.layout.chat_msg_card_child_text_burn_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
-        final TextView contentText = cardContentView
+        final TextViewFixTouchConsume contentText = cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
-        String msgType = message.getMsgContentTextPlain().getMsgType();
         String text = message.getMsgContentTextPlain().getText();
-        if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
-            text = context.getString(R.string.click_to_burn);
-        }
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);

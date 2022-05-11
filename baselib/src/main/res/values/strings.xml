@@ -290,6 +290,8 @@
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
     <string name="send_a_meeting_request">[会议审批]</string>
+    <string name="send_a_burn">[阅后即焚]</string>
+    <string name="send_a_whispers">[悄悄话]</string>
     <string name="send_a_message_of_unknown_type">[未知类型]</string>
     <string name="direct_no_message">暂无新消息</string>
     <string name="group_no_message">已经进入群组，打个招呼吧</string>
@@ -638,7 +640,9 @@
     <string name="contact_exception">数据异常,无法打开</string>
     <string name="contact_select_limit_warning">超过了建议选择人数限制</string>
     <string name="contact_add_system">添加到通讯录</string>
-
+    <string name="focus">关注</string>
+    <string name="chat_whisper">悄悄话: %1$s</string>
+    <string name="chat_whisper_static">悄悄话</string>
     <!-- 会议室部分 -->
     <string name="schedule_meeting_topic">会议主题</string>
     <string name="schedule_title">日程标题</string>
@@ -1036,6 +1040,9 @@
     <string name="voice_communication_can_not_use_this_feature">语音通话中，无法使用此功能</string>
     <string name="voice_communication_calling">正在打电话</string>
     <string name="video_call">视频通话</string>
+    <string name="read_disappear">阅后即焚</string>
+    <string name="voice_whisper">悄悄话</string>
+    <string name="click_to_burn">点击查看</string>
     <string name="video_communication_turn_to_voice_call">切到语音通话</string>
     <string name="video_communication_switch_camera">切换摄像头</string>
     <string name="video_communication_waiting_answer">连接中...</string>
@@ -1061,6 +1068,7 @@
     <string name="voice_input_hint_speak_now">请说话...</string>
     <string name="voice_input_tip_speak">按下说话</string>
     <string name="voice_input_clear">清空</string>
+    <string name="voice_input_mention">发送给</string>
 
     <string name="notification_switch">新消息通知</string>
     <string name="caring_switch">字体大小</string>
@@ -1157,7 +1165,10 @@
 
     <string name="root_toast">&appname;提醒您，当前手机已root，请注意保护你的账号安全</string>
     <string name="network_change_tip">网络环境发生变化，当前为</string>
-
+    <string name="warning_service_enter_by_creator">客服不能进入服务号频道，请到客服群</string>
+    <string name="service_conversation_desc">专业团队 为您服务</string>
+    <string name="service_conversation_search">搜索服务号</string>
+    <string name="service_search">服务号搜索</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

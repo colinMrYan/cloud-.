@@ -88,6 +88,7 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                bundle.putString(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
                 bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);

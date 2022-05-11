@@ -618,7 +618,7 @@
     <string name="contact_exception">Data exception cannot be opened</string>
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
     <string name="contact_add_system">Save to Contacts</string>
-
+    <string name="focus">Focus</string>
     <!-- 会议室部分 -->
     <string name="schedule_meeting_topic">Meeting</string>
     <string name="schedule_title">Schedule</string>
@@ -969,6 +969,9 @@
     <string name="voice_communication_can_not_use_this_feature">Unable to uses this feature during call</string>
     <string name="voice_communication_calling">Calling</string>
     <string name="video_call">Video Call</string>
+    <string name="read_disappear">Burn after reading</string>
+    <string name="voice_whisper">whisper</string>
+    <string name="click_to_burn">Click to view</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>
     <string name="video_communication_waiting_answer">Connection...</string>
@@ -994,6 +997,7 @@
     <string name="voice_input_hint_speak_now">Speak now...</string>
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
+    <string name="voice_input_mention">Send to</string>
     <string name="communication_has_leave">Hung up</string>
     <string name="voice_communication_notification_group_title">Voice Call</string>
     <string name="voice_communication_notification_group_content">Tap to recover</string>
@@ -1079,7 +1083,7 @@
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
     <string name="root_toast">current mobile phone is root. Please pay attention to protect your account security</string>
     <string name="network_change_tip">The network environment has changed, currently:</string>
-
+    <string name="warning_service_enter_by_creator">Customer service can not enter the service number channel, please go to the customer service group</string>
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
     <string name="privacy_reject">Reject</string>
@@ -1089,6 +1093,9 @@
     <string name="pass_login_confirm">Pass confirmation login</string>
     <string name="confirm_login_by_self">In order to ensure the security of the account, please ensure that it is operated by yourself</string>
     <string name="save_to_storage">Save to album</string>
+    <string name="service_conversation_desc">Professional team to serve you</string>
+    <string name="service_conversation_search">Search service number</string>
+    <string name="service_search">Service number search</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

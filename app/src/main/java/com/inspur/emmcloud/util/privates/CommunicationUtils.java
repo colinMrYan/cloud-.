@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -91,8 +92,11 @@ public class CommunicationUtils {
                     AppUtils.getManifestAppVersionFlag(MyApplication.getInstance()).equals("zhihuichengjian")) {
                 title = "消息到达";
             }
+            if (conversation.isServiceConversationType()) title = conversation.getName();
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
+        }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            title = TextUtils.isEmpty(title) ? BaseApplication.getInstance().getString(R.string.address_servicenum_text) : title;
         }
         return title;
     }
@@ -117,6 +121,46 @@ public class CommunicationUtils {
         message.setType("text/plain");
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
+    public static Message combineLocalTextWhisperMessage(String text, String cid, List<String> toUidList, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_TEXT_WHISPER);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        if (toUidList != null && toUidList.size() > 0) {
+            msgContentTextPlain.setWhisperUsers(toUidList);
+        }
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
+    public static Message combineLocalTextBurnMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_TEXT_BURN);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        msgContentTextPlain.setMsgType(Message.MESSAGE_TYPE_TEXT_BURN);
         if (mentionsMap != null && mentionsMap.size() > 0) {
             msgContentTextPlain.setMentionsMap(mentionsMap);
         }
@@ -531,6 +575,8 @@ public class CommunicationUtils {
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             icon = "drawable://" + R.drawable.ic_file_transfer;
+        }  else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            icon = "drawable://" + R.drawable.ic_channel_service;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }

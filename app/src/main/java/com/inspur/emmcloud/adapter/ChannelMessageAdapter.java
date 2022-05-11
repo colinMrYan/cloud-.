@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amazonaws.mobile.auth.core.signin.ui.DisplayUtils;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -25,6 +25,7 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
+import com.inspur.emmcloud.ui.chat.DisplayServiceCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
@@ -43,6 +45,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.umeng.socialize.utils.UmengText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,11 +65,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private ECMChatInputMenu chatInputMenu;
     private ArrayList<String> mExceptSelfMemberList = new ArrayList<>();
     private String uid = BaseApplication.getInstance().getUid();
+    private boolean serviceConversation = false;
 
-    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList) {
+    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList, boolean isServiceCoversation) {
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
+        this.serviceConversation = isServiceCoversation;
         List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(memberList);
         for (ContactUser contact : totalList) {
             mExceptSelfMemberList.add(contact.getId());
@@ -92,7 +97,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
     }
 
-    public void updateMemberList(ArrayList<String> memberList){
+    public void updateMemberList(ArrayList<String> memberList) {
         if (memberList == null) {
             return;
         }
@@ -201,14 +206,16 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         } else {
             params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         }
-
         holder.cardParentLayout.setLayoutParams(params);
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         View cardContentView = null;
+        boolean bottomViewUsed;
         if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
             String type = message.getType();
             switch (type) {
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     cardContentView = DisplayTxtPlainMsg.getView(context,
                             message);
@@ -235,7 +242,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    if (serviceConversation) {
+                        cardContentView = DisplayServiceCommentTextPlainMsg.getView(context, message);
+                    } else {
+                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                    }
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     cardContentView = DisplayExtendedLinksMsg.getView(context, message);
@@ -262,16 +273,49 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     if (mItemClickListener != null) {
                         mItemClickListener.onCardItemClick(view, uiMessage);
                     }
-
                 }
             });
+            //悄悄话、阅后即焚 标识
+            List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
+            String msgType = message.getMsgContentTextPlain().getMsgType();
+            if (!whispers.isEmpty()) {
+                if (isMyMsg) {
+                    holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
+                    holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+                    holder.bottomInfoTypeRight.setText(context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+                } else {
+                    holder.bottomInfoTypeRight.setVisibility(View.GONE);
+                    holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
+                }
+                bottomViewUsed = true;
+            } else if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                if (isMyMsg) {
+                    holder.bottomIconTypeRight.setVisibility(View.VISIBLE);
+                    holder.bottomIconTypeLeft.setVisibility(View.GONE);
+                } else {
+                    holder.bottomIconTypeRight.setVisibility(View.GONE);
+                    holder.bottomIconTypeLeft.setVisibility(View.VISIBLE);
+                }
+                bottomViewUsed = true;
+            } else {
+                holder.bottomInfoTypeRight.setVisibility(View.GONE);
+                holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+                holder.bottomIconTypeRight.setVisibility(View.GONE);
+                holder.bottomIconTypeLeft.setVisibility(View.GONE);
+                bottomViewUsed = false;
+            }
         } else {
             cardContentView = DisplayRecallMsg.getView(context, uiMessage);
             //撤回5分钟以内的文本消息显示撤回选线IG
+            holder.bottomInfoTypeRight.setVisibility(View.GONE);
+            holder.bottomInfoTypeLeft.setVisibility(View.GONE);
+            holder.bottomIconTypeRight.setVisibility(View.GONE);
+            holder.bottomIconTypeLeft.setVisibility(View.GONE);
+            bottomViewUsed = true;
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
-                    &&(System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5* 60 *1000)
-                    && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()))?View.VISIBLE:View.GONE);
+                    && (System.currentTimeMillis() - uiMessage.getMessage().getCreationDate() <= 5 * 60 * 1000)
+                    && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid())) ? View.VISIBLE : View.GONE);
             cardContentView.findViewById(R.id.tv_edit_again).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -281,10 +325,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 }
             });
         }
+        if (serviceConversation) bottomViewUsed = true;
         holder.cardLayout.addView(cardContentView);
 
         //处理已读未读
-        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) || !NetUtils.isNetworkConnected(context)) {
+        if (bottomViewUsed || !NetUtils.isNetworkConnected(context)) {
             holder.unreadText.setVisibility(View.GONE);
             return;
         }
@@ -323,7 +368,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 });
             }
         }
-
     }
 
     /**
@@ -346,6 +390,23 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         } else {
             holder.sendTimeText.setVisibility(View.GONE);
         }
+    }
+
+    private String createChannelGroupName(List<String> uidList) {
+        if (uidList.isEmpty()) return "";
+        List<ContactUser> contactUsers = ContactUserCacheUtils.getContactUserListById(uidList);
+        StringBuilder nameBuilder = new StringBuilder();
+        int length = Math.min(4, uidList.size());
+        nameBuilder.append(contactUsers.get(0).getName());
+        for (int i = 1; i < length; i++) {
+            String name = "";
+            name = contactUsers.get(i).getName();
+            nameBuilder.append("、").append(name);
+        }
+        if (uidList.size() > 4) {
+            nameBuilder.append("...");
+        }
+        return nameBuilder.toString();
     }
 
     /**
@@ -467,9 +528,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView sendFailImg;
         public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
-        public TextView unreadText;
+        public TextView bottomInfoTypeLeft;
+        public TextView bottomInfoTypeRight;
+        public ImageView bottomIconTypeLeft;
+        public ImageView bottomIconTypeRight;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
+        public TextView unreadText;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
             super(view);
@@ -490,6 +555,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
+            bottomInfoTypeLeft = (TextView) view
+                    .findViewById(R.id.chat_msg_bottom_text_left);
+            bottomInfoTypeRight = (TextView) view
+                    .findViewById(R.id.chat_msg_bottom_text_right);
+            bottomIconTypeLeft = (ImageView) view
+                    .findViewById(R.id.chat_icon_bottom_left);
+            bottomIconTypeRight = (ImageView) view
+                    .findViewById(R.id.chat_icon_bottom_right);
             unreadText = (TextView) view
                     .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
