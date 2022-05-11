@@ -4,6 +4,7 @@
 
     <string name="web_put_qrcode_in_frame">將取景框對準二維碼/條碼，</string>
     <string name="web_can_auto_scan">即可自動掃描</string>
+    <string name="web_identify_qr_code">識別二維碼/條形碼</string>
     <string name="web_scan_result">掃描結果</string>
     <string name="web_can_not_recognize">無法識別</string>
     <string name="web_qrcode_not_found">未發現二維碼</string>

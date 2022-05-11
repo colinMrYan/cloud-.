@@ -904,6 +904,8 @@
     <string name="can_not_replay">当前状态不能重置播放</string>
     <string name="can_not_stop">当前状态不能停止</string>
     <string name="turn_on_light">开灯</string>
+    <string name="touch_turn_on_light">轻触照亮</string>
+    <string name="touch_turn_off_light">轻触关闭</string>
     <string name="turn_off_light">关灯</string>
     <string name="function_not_implemented">内测期间，暂不开放</string>
     <string name="msg_default_time">时间</string>

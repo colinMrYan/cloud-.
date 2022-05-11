@@ -904,6 +904,8 @@
     <string name="can_not_replay">當前狀態不能重置播放</string>
     <string name="can_not_stop">當前狀態不能停止</string>
     <string name="turn_on_light">開燈</string>
+    <string name="touch_turn_on_light">輕觸照亮</string>
+    <string name="touch_turn_off_light">輕觸關閉</string>
     <string name="turn_off_light">關燈</string>
     <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
     <string name="file_select_limit_warning">最多只能選擇%1$d個檔案</string>

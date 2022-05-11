@@ -34,9 +34,10 @@ public class ScanView extends RelativeLayout {
 
     private void init(Context ctx) {
         LayoutInflater.from(ctx).inflate(R.layout.web_barcode_view_scan, this, true);
-        FinderView finderView = (FinderView) findViewById(R.id.finder_view);
         mRayView = (RayView) findViewById(R.id.ray_view);
-        mRayView.setFinderView(finderView);
+        // 去掉阴影
+//        FinderView finderView = (FinderView) findViewById(R.id.finder_view);
+//        mRayView.setFinderView(finderView);
     }
 
     public void onStartScan() {

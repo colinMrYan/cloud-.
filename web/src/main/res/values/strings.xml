@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="web_put_qrcode_in_frame">将取景框对准二维码/条形码，</string>
+    <string name="web_identify_qr_code">识别二维码/条形码</string>
     <string name="web_can_auto_scan">即可自动扫描</string>
     <string name="web_scan_result">扫描结果</string>
     <string name="web_can_not_recognize">无法识别</string>
