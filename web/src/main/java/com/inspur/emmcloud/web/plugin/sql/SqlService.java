@@ -64,10 +64,14 @@ public class SqlService extends ImpPlugin {
     private void operateDataBase(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if (!StringUtils.isEmpty(dbName) && (dbName.equals("default.db") || (dbName.equals("emm.db")))) {
+            jsCallback(failCb, "database name conflict ！！");
+            return;
+        }
         this.database = getSQLiteDatabase(dbName);
         if (database != null) {
-            successCb = JSONUtils.getString(paramsObject, "success", "");
-            failCb = JSONUtils.getString(paramsObject, "fail", "");
             executeSql(paramsObject);
         } else {
             ToastUtils.show("database connect error");
@@ -101,13 +105,13 @@ public class SqlService extends ImpPlugin {
     private void deleteDataBase(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (StringUtils.isEmpty(dbName) || dbName.equals("default.db") || (dbName.equals("emm.db"))) {
             jsCallback(failCb, "local database cannot be deleted");
             return;
         }
         this.database = getSQLiteDatabase(dbName);
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (database != null) {
             if (getActivity().getApplicationContext().deleteDatabase(dbName)) {
                 jsCallback(successCb, "");
@@ -127,31 +131,20 @@ public class SqlService extends ImpPlugin {
     private void transactionDataBase(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String sqlList = JSONUtils.getString(optionsJsonObject, "sqls", "");
-        Cursor myCursor = null;
-        try {
-            if (isSelectSql(sqlList)) {
-                myCursor = this.database.rawQuery(sqlList, null);
-                this.processResults(myCursor);
-                if (myCursor != null) {
-                    myCursor.close();
-                }
-            } else {
-                database.beginTransaction();
-                this.database.execSQL(sqlList);
-                database.setTransactionSuccessful();
-                jsCallback(successCb, "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (myCursor != null) {
-                myCursor.close();
-                myCursor = null;
-            }
-            // 将错误信息反馈回前台
-            jsCallback(failCb, getErrorJson(e.getMessage()));
-        } finally {
-            database.endTransaction();
+        String dbName = JSONUtils.getString(optionsJsonObject, "dbName", "");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        if (!StringUtils.isEmpty(dbName) && (dbName.equals("default.db") || (dbName.equals("emm.db")))) {
+            jsCallback(failCb, "database name conflict ！！");
+            return;
         }
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null) {
+            executeTransaction(sqlList);
+        } else {
+            jsCallback(failCb, "database not found");
+        }
+
     }
 
     /**
@@ -181,6 +174,34 @@ public class SqlService extends ImpPlugin {
             AssetsDatabaseManager mg = AssetsDatabaseManager.getManager();
             // 通过管理对象获取数据库
             return mg.getDatabase("default.db");
+        }
+    }
+
+    private void executeTransaction(String sqlList) {
+        Cursor myCursor = null;
+        try {
+            if (isSelectSqlList(sqlList)) {
+                myCursor = this.database.rawQuery(sqlList, null);
+                this.processResults(myCursor);
+                if (myCursor != null) {
+                    myCursor.close();
+                }
+            } else {
+                database.beginTransaction();
+                this.database.execSQL(sqlList);
+                database.setTransactionSuccessful();
+                jsCallback(successCb, "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (myCursor != null) {
+                myCursor.close();
+                myCursor = null;
+            }
+            // 将错误信息反馈回前台
+            jsCallback(failCb, getErrorJson(e.getMessage()));
+        } finally {
+            database.endTransaction();
         }
     }
 
@@ -251,6 +272,20 @@ public class SqlService extends ImpPlugin {
     private boolean isSelectSql(String sql) {
         String cmd = sql.toLowerCase();
         if (cmd.startsWith(SELECT)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否查询SQL语句
+     *
+     * @param sqlList
+     * @return
+     */
+    private boolean isSelectSqlList(String sqlList) {
+        String cmd = sqlList.toLowerCase();
+        if (cmd.contains(SELECT)) {
             return true;
         }
         return false;
