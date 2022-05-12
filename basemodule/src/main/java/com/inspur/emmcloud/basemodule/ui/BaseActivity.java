@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -26,6 +27,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -58,6 +60,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         statusType = getStatusType();
         setTheme();
+        initFontScale();
+
         super.onCreate(savedInstanceState);
 
         int layoutResId = getLayoutResId();
@@ -65,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             setContentView(layoutResId);
         }
         setStatus();
-        if(checkedNecessaryPermission){
+        if (checkedNecessaryPermission) {
             onCreate();
             return;
         }
@@ -151,6 +155,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             onCreate();
         }
+    }
+
+
+    private void initFontScale() {
+        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
+        if (0 == Float.compare(1.0f, fontScale)) {
+            return;
+        }
+        Configuration configuration = getResources().getConfiguration();
+        configuration.fontScale = (this instanceof IIgnoreFontScaleActivity) ? 1.0f: fontScale;
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        metrics.scaledDensity = configuration.fontScale * metrics.density;
+        getBaseContext().getResources().updateConfiguration(configuration, metrics);
     }
 
     /**

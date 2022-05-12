@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.bubble;
+package com.inspur.emmcloud.basemodule.widget.bubble;
 
 /**
  * Created by sudamasayuki on 16/06/14.

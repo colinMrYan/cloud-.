@@ -407,6 +407,44 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_conversation_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_conversation_show_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/channel_hide"
+                    android:textColor="?attr/text_color_e1"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_conversation_show"
+                    android:layout_width="51dp"
+                    android:layout_height="31dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:checked="true"
+                    android:src="@drawable/ic_arrow_right"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
+
+                <View
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_conversation_show_title" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rl_conversation_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

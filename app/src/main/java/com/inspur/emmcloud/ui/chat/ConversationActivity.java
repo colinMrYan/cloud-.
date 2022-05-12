@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -168,6 +169,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @BindView(R.id.robot_photo_img)
     ImageView robotPhotoImg;
+
     @BindView(R.id.btn_conversation_unread)
     CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
@@ -181,6 +183,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
+    private UserOrientedConversationHelper userOrientedConversationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +194,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
+        initOrientedHelper();
     }
 
     private void handleMessage() {
@@ -228,6 +232,21 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         };
+    }
+
+
+    private void initOrientedHelper() {
+        userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
+            @Override
+            public void closeFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(true);
+            }
+
+            @Override
+            public void showFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(false);
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -341,6 +360,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
             headerText.setText(CommunicationUtils.getConversationTitle(conversation));
+            configView.setVisibility(conversation.isServiceConversationType() ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -415,7 +435,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             }
         });
-        chatInputMenu.setInputLayout(conversation.getInput(), false);
+        chatInputMenu.setInputLayout(conversation.getInput(), conversation.isServiceConversationType());
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
@@ -613,7 +633,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 } else {
                     sendEmail(userList);
                 }
-
+                break;
+            case "read_disappear":
+            case "whisper":
+                if (userOrientedConversationHelper != null) {
+                    if (userOrientedConversationHelper.isDisplayingUI()) {
+                        userOrientedConversationHelper.closeUserOrientedLayout();
+                    } else {
+                        userOrientedConversationHelper.setChannelType(conversation.getType());
+                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
+                    }
+                }
                 break;
         }
     }
@@ -642,7 +672,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
-                chatInputMenu, conversation.getMemberList());
+                chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
         mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -874,7 +904,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-
+            // 分享隐藏阅后即焚和悄悄话选择界面
+            if (userOrientedConversationHelper.isDisplayingUI()) {
+                userOrientedConversationHelper.closeUserOrientedLayout();
+            }
         }
     }
 
@@ -1276,7 +1309,25 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 发送文本消息
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
-        Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+        Message localMessage;
+        switch (userOrientedConversationHelper.getConversationType()) {
+            case BURN:
+                localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid, mentionsMap);
+                userOrientedConversationHelper.closeUserOrientedLayout();
+                break;
+            case WHISPER:
+                if (userOrientedConversationHelper.getSelectedUser().isEmpty()) {
+                    localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                } else {
+                    localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser(), mentionsMap);
+                    userOrientedConversationHelper.closeUserOrientedLayout();
+                }
+                break;
+            case STANDARD:
+            default:
+                localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                break;
+        }
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
@@ -1383,9 +1434,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (StringUtils.isBlank(recallUIMessage.getMessage().getRecallFrom())) {
                         UIMessage uiMessage = new UIMessage(recallMessage);
                         uiMessageList.remove(index);
-                        uiMessageList.add(index, uiMessage);
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemChanged(index);
+                        // 阅后即焚移除撤回消息类型
+                        if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                            uiMessageList.add(index, uiMessage);
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        } else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 break;
@@ -1409,9 +1466,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 sendMessageWithText(actionContent, true, null);
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
-                String name = ((Conversation) simpleEventMessage.getMessageObj()).getName();
-                conversation.setName(name);
-                headerText.setText(name);
+                Conversation newConversation = ((Conversation) simpleEventMessage.getMessageObj());
+                conversation.setName(newConversation.getName());
+                headerText.setText(newConversation.getName());
+                if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
+                    conversation.setMembers(newConversation.getMembers());
+                    if (!newConversation.getType().equals(conversation.getType())){
+                        conversation.setType(newConversation.getType());
+                        initChatInputMenu();
+                    }
+                    adapter.updateMemberList(conversation.getMemberList());
+                }
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS:
                 ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
@@ -1571,11 +1636,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (index != -1) {
                     UIMessage uiMessage = new UIMessage(recallMessage);
                     uiMessageList.remove(index);
-                    uiMessageList.add(index, uiMessage);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyItemChanged(index);
+                    if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                        uiMessageList.add(index, uiMessage);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemChanged(index);
+                        MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
+                    } else {
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyDataSetChanged();
+                    }
+
                 }
-                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
                 if (index == uiMessageList.size() - 1) {
                     notifyConversationListChange();
                 }
@@ -1834,11 +1905,31 @@ public class ConversationActivity extends ConversationBaseActivity {
             //operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
-                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
                     operationIdList.add(R.string.chat_long_click_copy);
-                    operationIdList.add(R.string.chat_long_click_transmit);
-                    if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
-                        operationIdList.add(R.string.chat_long_click_schedule);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_BURN:
+                    if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                    }
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        break;
+                    } else if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                        if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                            operationIdList.add(R.string.chat_long_click_copy);
+                            operationIdList.add(R.string.chat_long_click_transmit);
+                        }
+                    } else {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                        operationIdList.add(R.string.chat_long_click_reply);
+                        if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
+                            operationIdList.add(R.string.chat_long_click_schedule);
+                        }
                     }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -1871,7 +1962,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+            if (!conversation.isServiceConversationType() && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
         }
@@ -1894,7 +1985,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                         UserInfoActivity.class, bundle);
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                boolean isMyMsg = MyApplication.getInstance().getUid().equals(uiMessage.getMessage().getFromUser());
+                String msgType = message.getMsgContentTextPlain().getMsgType();
+                if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
+//                    recallSendingMessage(uiMessage);
+                    requestToRecallMessage(uiMessage.getMessage());
+                    Intent intent = new Intent(context, ConversationBurnContentActivity.class);
+                    intent.putExtra("content", message.getMsgContentTextPlain().getText());
+                    startActivity(intent);
+                }
                 break;
+            case Message.MESSAGE_TYPE_TEXT_BURN:
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;
             case MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -1912,7 +2014,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
@@ -1933,9 +2034,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                intent.putExtra(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
                 context.startActivity(intent);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                // 服务号不可点击评论
+                if (conversation.isServiceConversationType()) return;
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     String mid = message.getMsgContentComment().getMessage();
@@ -2241,7 +2345,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void requestToRecallMessage(Message message) {
-        if (System.currentTimeMillis() - message.getCreationDate() >= 120000) {
+        if ((System.currentTimeMillis() - message.getCreationDate() >= 120000) && !message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
             showInfoDlg(getString(R.string.recall_fail_for_timeout));
         } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();

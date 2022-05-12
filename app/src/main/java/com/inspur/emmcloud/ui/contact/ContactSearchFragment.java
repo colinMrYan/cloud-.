@@ -434,7 +434,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      * 初始化第二组的数据
      */
     private void initSecondGroup() {
-        // TODO Auto-generated method stub
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
                 getActivity().getApplicationContext(), 5, searchContent, null);
@@ -513,7 +512,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
                 @Override
                 public void onItemClick(View view, int position) {
-                    // TODO Auto-generated method stub
                     clickGroupTitle(position);
                 }
             });
@@ -522,7 +520,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    // TODO Auto-generated method stub
                     if (originCurrentArea == SEARCH_CONTACT) {
                         Contact contact = openGroupContactList.get(position);
                         changeMembers(contact.contact2SearchModel());
@@ -1122,8 +1119,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-
-                        // TODO Auto-generated method stub
                         changeMembers(searchChannelGroupList.get(position));
 
                     }
@@ -1133,7 +1128,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // TODO Auto-generated method stub
                 Contact contact = searchContactList.get(position);
                 changeMembers(contact.contact2SearchModel());
 

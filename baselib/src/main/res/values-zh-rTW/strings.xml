@@ -193,6 +193,7 @@
     <string name="channel_group_qrcode_valid">該二維碼7天內（%1$s之前）有效，重新進入將更新</string>
     <string name="channel_set_top"> 置頂</string>
     <string name="message_without_interruption">消息免打擾</string>
+    <string name="channel_hide">隱藏</string>
     <string name="channel_report">投訴</string>
     <string name="channel_report_hint">請輸入投訴内容</string>
     <string name="feed_back_without_name">匿名提交</string>
@@ -390,6 +391,9 @@
     <!--语音通话提示-->
     <string name="voice_communication_end">聊天已結束</string>
     <string name="video_call">視頻通話</string>
+    <string name="read_disappear">閱後即焚</string>
+    <string name="voice_whisper">悄悄话</string>
+    <string name="click_to_burn">點擊查看</string>
     <string name="video_communication_turn_to_voice_call">切到語音通話</string>
     <string name="video_communication_switch_camera">切換監視器</string>
     <string name="video_communication_waiting_answer">連接中…</string>
@@ -640,7 +644,7 @@
     <string name="contact_exception">數據异常，無法打開 </string>
     <string name="contact_select_limit_warning">已達到最大可選人數</string>
     <string name="contact_add_system">添加到通訊錄</string>
-
+    <string name="focus">關注</string>
     <!-- 會議室部分 -->
     <string name="schedule_meeting_topic">會議主題</string>
     <string name="schedule_title">日期主題</string>
@@ -1010,12 +1014,15 @@
     <string name="voice_input_hint_speak_now">請説話...</string>
     <string name="voice_input_tip_speak">按下説話</string>
     <string name="voice_input_clear">清空</string>
+    <string name="voice_input_mention">發送給</string>
     <string name="communication_has_leave">已掛斷</string>
     <string name="voice_communication_notification_group_title">語音通話</string>
     <string name="voice_communication_notification_group_content">點擊恢復</string>
     <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
     <string name="notification_switch">新消息通知</string>
+    <string name="caring_switch">字體大小</string>
+    <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
 
@@ -1095,8 +1102,10 @@
 
     <string name="root_toast">&appnameTW;提醒您，當前手機已root，請注意保護你的帳號安全</string>
     <string name="network_change_tip">網路環境發生變化，當前為</string>
-
-
+    <string name="warning_service_enter_by_creator">客服不能進入服務號頻道，請到客服群</string>
+    <string name="service_conversation_desc">專業團隊 為您服務</string>
+    <string name="service_conversation_search"></string>
+    <string name="service_search">服務號蒐索</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>

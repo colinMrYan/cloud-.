@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -37,6 +38,7 @@ import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabRes
 import com.inspur.emmcloud.componentservice.application.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.componentservice.communication.ServiceChannelInfo;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
@@ -797,4 +799,43 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
+    @Override
+    public void returnGetConversationServiceListSuccess(GetServiceChannelInfoListResult getConversationListResult) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListAllSuccess(GetServiceChannelInfoListResult getConversationListResult) {
+
+    }
+
+    @Override
+    public void returnGetConversationServiceListAllFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnSearchConversationServiceSuccess(GetServiceChannelInfoListResult getConversationListResult) {
+
+    }
+
+    @Override
+    public void returnSearchConversationServiceFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnFollowConversationServiceSuccess(ServiceChannelInfo conversations) {
+
+    }
+
+    @Override
+    public void returnFollowConversationServiceFail(String error, int errorCode) {
+
+    }
 }

@@ -80,6 +80,9 @@ public class UIConversation implements Serializable {
             case Conversation.TYPE_TRANSFER:
                 icon = "drawable//" + R.drawable.ic_file_transfer;
                 break;
+            case Conversation.TYPE_SERVICE:
+                icon = "drawable//" + R.drawable.ic_channel_service;
+                break;
             default:
                 icon = "drawable//" + R.drawable.icon_channel_group_default;
                 break;
@@ -93,6 +96,12 @@ public class UIConversation implements Serializable {
             String fromUserName = "";
             String messageType = message.getType();
             if (!StringUtils.isBlank(message.getRecallFrom())) {
+                boolean recallFromSender = message.getRecallFromUid().equals(message.getFromUser());
+                if (!recallFromSender && message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                    messageList.remove(message);
+                    setUIConversationContent();
+                    return;
+                }
                 content = CommunicationUtils.getRecallMessageShowContent(message);
             } else {
                 if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
@@ -101,6 +110,17 @@ public class UIConversation implements Serializable {
                 switch (messageType) {
                     case Message.MESSAGE_TYPE_TEXT_PLAIN:
                         content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                        if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                            content = MyApplication.getInstance().getString(R.string.send_a_burn);
+                        } else if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
+                            content = MyApplication.getInstance().getString(R.string.send_a_whispers);
+                        }
+                        break;
+                    case Message.MESSAGE_TYPE_TEXT_BURN:
+                        content = MyApplication.getInstance().getString(R.string.send_a_burn);
+                        break;
+                    case Message.MESSAGE_TYPE_TEXT_WHISPER:
+                        content = MyApplication.getInstance().getString(R.string.send_a_whispers);
                         break;
                     case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
@@ -215,6 +235,10 @@ public class UIConversation implements Serializable {
         this.icon = icon;
     }
 
+    public boolean isServiceContainer() {
+        return conversation.getType().equals(Conversation.TYPE_SERVICE);
+    }
+
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
@@ -235,6 +259,8 @@ public class UIConversation implements Serializable {
             UIConversation uiConversationA = (UIConversation) lhs;
             UIConversation uiConversationB = (UIConversation) rhs;
             long diff = uiConversationA.getLastUpdate() - uiConversationB.getLastUpdate();
+            if (uiConversationA.getConversation().getType().equals(Conversation.TYPE_SERVICE) && !uiConversationB.getConversation().getType().equals(Conversation.TYPE_SERVICE)) return -1;
+            if (!uiConversationA.getConversation().getType().equals(Conversation.TYPE_SERVICE) && uiConversationB.getConversation().getType().equals(Conversation.TYPE_SERVICE)) return 1;
             if (uiConversationA.getConversation().isStick() && !uiConversationB.getConversation().isStick()) {
                 return -1;
             }

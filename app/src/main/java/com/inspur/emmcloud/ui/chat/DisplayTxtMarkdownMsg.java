@@ -35,8 +35,8 @@ import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
-import com.inspur.emmcloud.widget.bubble.ArrowDirection;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
 import java.io.File;
 import java.util.ArrayList;

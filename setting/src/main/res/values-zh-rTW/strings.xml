@@ -40,6 +40,10 @@
 
 
     <string name="setting_about_text">關於</string>
+    <string name="setting_font_size_set">字體大小</string>
+    <string name="setting_font_size_tip1">調整字體大小。</string>
+    <string name="setting_font_size_tip2">滑動下麵的滑塊，可設定字體大小。</string>
+    <string name="setting_font_size_tip3">設定後，會改變聊天文字消息中的字體大小。 如果在使用過程中存在問題或意見，可以在&appnameTW;迴響。</string>
     <string name="setting_about_welcome_text">歡迎頁面</string>
     <string name="setting_about_protocol_text">服務協定</string>
     <string name="setting_about_privacy_text">隱私協定</string>

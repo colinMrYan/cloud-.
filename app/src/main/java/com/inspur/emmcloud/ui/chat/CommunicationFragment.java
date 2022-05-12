@@ -294,7 +294,11 @@ public class CommunicationFragment extends BaseFragment {
                                 IntentUtils.startActivity(getActivity(), emmAction.getUrl());
                             }
                         }
-                    } else {
+                    } else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConversationServiceActivity.EXTRA_CONVERSATION_ID, conversation.getId());
+                        IntentUtils.startActivity(getActivity(), ConversationServiceActivity.class, bundle);
+                    }  else {
                         ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                     }
                     setConversationRead(uiConversation);
@@ -315,7 +319,11 @@ public class CommunicationFragment extends BaseFragment {
                 //设置消息tab页面的小红点（未读消息提醒）的显示
                 int unReadCount = 0;
                 for (UIConversation uiConversation : displayUIConversationList) {
-                    unReadCount += uiConversation.getUnReadCount();
+                    if (uiConversation.getConversation().isServiceConversationType() || uiConversation.isServiceContainer()) {
+                        unReadCount += 0;
+                    } else {
+                        unReadCount += uiConversation.getUnReadCount();
+                    }
                 }
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
             }
@@ -336,6 +344,8 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
+        // 服务号入口不可长按
+        if (uiConversation.isServiceContainer()) return;
         final String[] items;
         if (uiConversation.getConversation().getType().equals("CAST")) {
             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top)};
@@ -414,6 +424,7 @@ public class CommunicationFragment extends BaseFragment {
      * 沟通页网络异常提示框
      *
      * @param netState 通过Action获取操作类型
+     * 刷新关注服务号列表
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
@@ -424,6 +435,11 @@ public class CommunicationFragment extends BaseFragment {
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
+        }else if (netState.getAction().equals(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE)){
+            WebSocketPush.getInstance().startWebSocket();
+            getConversationList();
+            getMessage();
+            getAppRole();
         }
     }
 
@@ -581,6 +597,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private boolean isConversationShow(UIConversation uiConversation) {
         Conversation conversation = uiConversation.getConversation();
+        if (conversation.isServiceConversationType()) return false;
         if (conversation.isHide()) {
             if (uiConversation.getUnReadCount() != 0) {
                 conversation.setHide(false);
@@ -812,11 +829,16 @@ public class CommunicationFragment extends BaseFragment {
         if (message != null) {
             message.setRecallFrom(wsCommand.getFrom());
             message.setRead(Message.MESSAGE_READ);
-            MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+            // 阅后即焚移除撤回消息类型
+            if (message.getRecallFromUid().equals(message.getFromUser())) {
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+            } else {
+                MessageCacheUtil.deleteMessageById(mid);
+            }
             notifyConversationMessageDataChanged(cid);
-        }
-        if (BaseApplication.getInstance().getCurrentChannelCid().equals(cid)) {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE, message));
+            if (BaseApplication.getInstance().getCurrentChannelCid().equals(cid)) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE, message));
+            }
         }
     }
 
@@ -1027,24 +1049,23 @@ public class CommunicationFragment extends BaseFragment {
                 break;
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED:
                 WebSocketPush.getInstance().startWebSocket();
-                // TODO: 2022/4/18 4.9.9版本隐藏群聊改名 后续版本开放
-//                WSCommand command = (WSCommand) eventMessage.getMessageObj();
+                WSCommand command = (WSCommand) eventMessage.getMessageObj();
                 //删除其它成员不发送信息，删除自己继续发送信息
-//                if (command.getAction().equals("client.chat.channel.group.member.remove")) {
-//                    String removeParams = command.getParams();
-//                    String[] uids = JSONUtils.getStringArray(removeParams, "members", new String[100]);
-//                    boolean forceRefresh = false;
-//                    for (String uid : uids) {
-//                        if (uid.equals(BaseApplication.getInstance().getUid())) {
-//                            forceRefresh = true;
-//                        }
-//                    }
-//                    if (!forceRefresh) break;
-//                }
-//                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
-//                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
-//                    channelRefreshId = command.getChannel();
-//                }
+                if (command.getAction().equals("client.chat.channel.group.member.remove")) {
+                    String removeParams = command.getParams();
+                    String[] uids = JSONUtils.getStringArray(removeParams, "members", new String[100]);
+                    boolean forceRefresh = false;
+                    for (String uid : uids) {
+                        if (uid.equals(BaseApplication.getInstance().getUid())) {
+                            forceRefresh = true;
+                        }
+                    }
+                    if (!forceRefresh) break;
+                }
+                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
+                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
+                    channelRefreshId = command.getChannel();
+                }
                 getConversationList();
                 getMessage();
                 break;
@@ -1070,7 +1091,13 @@ public class CommunicationFragment extends BaseFragment {
                 Message receivedWSMessage = new Message(contentObj);
                 MessageSendManager.getInstance().onMessageSendSuccess(receivedWSMessage);
                 //验重处理
-                if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
+                // 移除服务号频道消息
+                Message fiberMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+                if (fiberMessage != null && fiberMessage.getChannel().startsWith("FIBER")) {
+                    MessageCacheUtil.deleteMessageById(fiberMessage.getId());
+                }
+                Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+                if (message == null) {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
@@ -1280,6 +1307,13 @@ public class CommunicationFragment extends BaseFragment {
             @Override
             public void subscribe(ObservableEmitter<List<Conversation>> emitter) throws Exception {
                 List<Conversation> conversationList = getConversationListResult.getConversationList();
+                //创建服务号保存到本地
+                Conversation serviceConversation = new Conversation();
+                serviceConversation.setType(Conversation.TYPE_SERVICE);
+                serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
+                serviceConversation.setAvatar("drawable://" + R.drawable.ic_channel_service);
+                serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
+                conversationList.add(serviceConversation);
                 List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                 //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
                 for (Conversation conversation : conversationList) {

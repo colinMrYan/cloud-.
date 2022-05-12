@@ -487,12 +487,10 @@
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
@@ -565,6 +563,24 @@
 
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+
+        <activity
+            android:name=".ui.chat.ConversationServiceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="behind"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.chat.ConversationServiceSearchActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <activity
+            android:name=".ui.chat.ConversationBurnContentActivity"
+            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="behind" />
 
@@ -661,8 +677,8 @@
         <activity
             android:name=".ui.chat.mvp.view.ConversationSearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:resizeableActivity="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:resizeableActivity="true" />
+
         <activity
             android:name=".ui.chat.mvp.view.ConversationSendMultiActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
