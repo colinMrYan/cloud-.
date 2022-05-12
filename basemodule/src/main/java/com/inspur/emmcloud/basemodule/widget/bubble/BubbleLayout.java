@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.inspur.emmcloud.basemodule.R;
@@ -137,6 +138,21 @@ public class BubbleLayout extends FrameLayout {
             paddingBottom += mStrokeWidth;
         }
         setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+    }
+
+    // 拦截点击down事件
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                return false;
+            default:
+                break;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 
     private void resetPadding() {
