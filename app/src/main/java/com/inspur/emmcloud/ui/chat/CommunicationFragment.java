@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
@@ -188,7 +189,7 @@ public class CommunicationFragment extends BaseFragment {
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls,(new NetUtils()).getHttpUrls());
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         //将此句挪到此处，为了防止广播注册太晚接收不到WS状态，这里重新获取下
         showSocketStatusInTitle(WebSocketPush.getInstance().getWebsocketStatus());
         return view;
@@ -223,7 +224,7 @@ public class CommunicationFragment extends BaseFragment {
     }
 
     private void getAppRole() {
-        if(NetUtils.isNetworkConnected(getActivity(),false)){
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             AppAPIService appAPIService = new AppAPIService(getActivity());
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getAppRole();
@@ -457,7 +458,7 @@ public class CommunicationFragment extends BaseFragment {
     private void showPopupWindow() {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
         List<MenuItem> menuItemList = new ArrayList<>();
-        if(AppTabUtils.hasContactPermission(getActivity())){
+        if (AppTabUtils.hasContactPermission(getActivity())) {
             menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
         }
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
@@ -468,7 +469,7 @@ public class CommunicationFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 switch (position) {
                     case 0:
-                        if(AppTabUtils.hasContactPermission(getActivity())){
+                        if (AppTabUtils.hasContactPermission(getActivity())) {
                             Intent contactIntent = new Intent();
                             contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                             contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
@@ -477,7 +478,7 @@ public class CommunicationFragment extends BaseFragment {
                                     getActivity().getString(R.string.message_create_group));
                             contactIntent.setClass(getActivity(), ContactSearchActivity.class);
                             startActivityForResult(contactIntent, CREATE_CHANNEL_GROUP);
-                        }else{
+                        } else {
                             AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                         }
                         break;
@@ -1068,6 +1069,15 @@ public class CommunicationFragment extends BaseFragment {
                 getConversationList();
                 getMessage();
                 break;
+            case Constant.EVENTBUS_TAG_MULTI_MESSAGE_SEND:
+                // 多人消息转发后，communicationFragment列表可能更新不全，原因暂未查明。先发送event刷新list解决此问题
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getConversationList();
+                    }
+                }, 1000);
+                break;
         }
     }
 
@@ -1347,7 +1357,7 @@ public class CommunicationFragment extends BaseFragment {
                 });
     }
 
-    public void notifyCommunicationDoubleClick(){
+    public void notifyCommunicationDoubleClick() {
         conversationAdapter.notifyCommunicationDoubleClick();
     }
 
@@ -1451,7 +1461,7 @@ public class CommunicationFragment extends BaseFragment {
         @Override
         public void returnAppRoleSuccess(String appRole) {
             super.returnAppRoleSuccess(appRole);
-            PreferencesByUserAndTanentUtils.putString(getActivity(),Constant.APP_ROLE,appRole);
+            PreferencesByUserAndTanentUtils.putString(getActivity(), Constant.APP_ROLE, appRole);
         }
 
         @Override

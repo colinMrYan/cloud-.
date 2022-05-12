@@ -12,6 +12,8 @@
     <string name="Network_WIFI">Connected to WIFI</string>
     <string name="send_to_app">Send to Cloud+</string>
     <string name="ok">OK</string>
+    <string name="ok_number">OK(%d)</string>
+    <string name="send_more_select_limit_warning">Select up to 9 people/groups</string>
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
@@ -366,6 +368,7 @@
     <string name="quit_dismiss_group">Delete and Leave</string>
     <string name="chat_search_mention_all">All</string>
     <string name="chat_contact_more_select">More</string>
+    <string name="chat_contact_single_select">Single</string>
     <string name="chat_contact_related_message">%1$d related messages</string>
     <string name="chat_group_member_size">%1$s (%2$d)</string>
     <string name="chat_group_qr_code_share">Share Group QrCode</string>
@@ -882,6 +885,8 @@
     <string name="can_not_replay">The current layoutState of play can not be reset</string>
     <string name="can_not_stop">The current layoutState can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
+    <string name="touch_turn_on_light">Turn on the light</string>
+    <string name="touch_turn_off_light">Turn off the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
     <string name="file_select_limit_warning">You can select up to %1$d files</string>

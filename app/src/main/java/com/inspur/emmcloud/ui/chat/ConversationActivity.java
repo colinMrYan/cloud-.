@@ -40,7 +40,6 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -72,6 +71,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -91,7 +91,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -144,6 +144,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
+    private static final int SHARE_MULTI_REQUEST_CODE = 33;
     private static final int VOICE_CALL_MEMBER_CODE = 32;
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_NEW_MESSAGE = 7;
@@ -662,6 +663,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private JSONArray mNonExistentUidArray;
+
     /**
      * 初始化消息列表UI
      */
@@ -705,7 +707,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     ConversationActivity.this.onCardItemClick(ConversationActivity.this, view, uiMessage);
-                }else if(!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())){
+                } else if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
                     chatInputMenu.getInputEdit().setText(uiMessage.getMessage().getShowContent());
                     setEditTextCursorLocation(chatInputMenu.getInputEdit());
                 }
@@ -734,6 +736,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 光标定位到最后
+     *
      * @param editText
      */
     public void setEditTextCursorLocation(ChatInputEdit editText) {
@@ -993,6 +996,32 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     break;
+                case SHARE_MULTI_REQUEST_CODE:
+                    // 单选时
+                    SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                    if (searchModel != null) {
+                        String userOrChannelId = searchModel.getId();
+                        boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+                        share2Conversation(userOrChannelId, isUser);
+                        return;
+                    }
+                    // 多选时消息转发多人
+                    List<MessageForwardMultiBean> selectList = (List<MessageForwardMultiBean>) data.getSerializableExtra("selectList");
+                    if (selectList != null) {
+                        for (int i = 0; i < selectList.size(); i++) {
+                            MessageForwardMultiBean bean = selectList.get(i);
+                            boolean isUser = bean.getType().equals(SearchModel.TYPE_USER);
+                            if (isUser) {
+                                share2Conversation(bean.getContactId(), true);
+                            } else {
+                                share2Conversation(bean.getConversationId(), false);
+                            }
+                        }
+                    }
+                    // 多人消息转发后，communicationFragment列表可能更新不全，原因暂未查明。先发送event刷新list解决此问题
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MULTI_MESSAGE_SEND, ""));
+
+                    break;
                 case VOICE_CALL_MEMBER_CODE:
                     List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
                     String voiceResult = data.getStringExtra("searchResult");
@@ -1012,7 +1041,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
                 case REQUEST_OPERATE_CHANNELGROUP:
-                    if (data == null || !data.hasExtra("operate")){
+                    if (data == null || !data.hasExtra("operate")) {
                         break;
                     }
                     int dateExtra = data.getIntExtra("operate", -1);
@@ -1032,7 +1061,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         default:
                             break;
                     }
-                //去掉主动弹出窗口
+                    //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {
 //                        if(!Settings.canDrawOverlays(this)){
@@ -1334,8 +1363,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void wrapperLocalMessageStates(Message message) {
         JSONArray sentArray = new JSONArray();
         List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
-        for(ContactUser user : totalList){
-            if(!TextUtils.equals(BaseApplication.getInstance().getUid(), user.getId())){
+        for (ContactUser user : totalList) {
+            if (!TextUtils.equals(BaseApplication.getInstance().getUid(), user.getId())) {
                 sentArray.put(user.getId());
             }
         }
@@ -1489,8 +1518,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
                     }
                     //本地过来的途径可能没有states
-                    if(receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
-                            && TextUtils.isEmpty(receivedWSMessage.getStates())){
+                    if (receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
+                            && TextUtils.isEmpty(receivedWSMessage.getStates())) {
                         wrapperLocalMessageStates(receivedWSMessage);
                     }
                     if (index == -1) {
@@ -1692,11 +1721,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的状态变化
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResponseChannelMessageStates(EventMessage eventMessage) {
-        if (!eventMessage.getTag().equals(Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES)){
+        if (!eventMessage.getTag().equals(Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES)) {
             return;
         }
         ChannelMessageStates channelMessageStates = new ChannelMessageStates(eventMessage.getContent());
-        if(!TextUtils.equals(cid, channelMessageStates.channel)){
+        if (!TextUtils.equals(cid, channelMessageStates.channel)) {
             return;
         }
         adapter.updatesChannelMessageState(channelMessageStates.message, channelMessageStates.statesMap);
@@ -2309,9 +2338,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
         } else {
-            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            Intent shareIntent = new Intent(this, ConversationSendMultiActivity.class);
             shareIntent.putExtra(Constant.SHARE_CONTENT, result);
-            startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
+            startActivityForResult(shareIntent, SHARE_MULTI_REQUEST_CODE);
         }
     }
 

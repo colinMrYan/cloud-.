@@ -3,6 +3,7 @@
 
     <string name="web_put_qrcode_in_frame">The viewfinder is aligned QR code/barcode，</string>
     <string name="web_can_auto_scan">can automatically scan</string>
+    <string name="web_identify_qr_code">Identification QR code/barcode</string>
     <string name="web_scan_result">Scan Results</string>
     <string name="web_can_not_recognize">Unrecognized</string>
     <string name="web_qrcode_not_found">QR Code not found</string>
