@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -48,17 +49,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 设置是否开启原生页面自动旋转
-        boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
-                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
-        if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+        statusType = getStatusType();
+        // 8.0 activity透明时，不能设置setRequestedOrientation，目前只有AppSchemeHandleActivity，ShareToConversationBlankActivity
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && statusType == STATUS_TRANSPARENT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            // 设置是否开启原生页面自动旋转
+            boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
+                    Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+            if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
         }
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        statusType = getStatusType();
         setTheme();
         initFontScale();
 
@@ -164,7 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         Configuration configuration = getResources().getConfiguration();
-        configuration.fontScale = (this instanceof IIgnoreFontScaleActivity) ? 1.0f: fontScale;
+        configuration.fontScale = (this instanceof IIgnoreFontScaleActivity) ? 1.0f : fontScale;
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         metrics.scaledDensity = configuration.fontScale * metrics.density;
