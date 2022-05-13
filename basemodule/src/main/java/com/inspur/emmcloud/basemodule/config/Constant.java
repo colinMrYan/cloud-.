@@ -373,6 +373,7 @@ public class Constant {
 
     public static final String APP_ROLE = "app_role";
 
+    public static final int APP_THEME_BLUE = 2;
     public static final int APP_THEME_DARK = 3;
 
     public static final int MULTI_SELECT_COUNT = 9;
