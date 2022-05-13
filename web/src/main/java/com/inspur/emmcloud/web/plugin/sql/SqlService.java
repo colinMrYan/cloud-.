@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.inspur.emmcloud.baselib.util.FileUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -18,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -147,7 +150,8 @@ public class SqlService extends ImpPlugin {
      */
     private void transactionDataBase(JSONObject paramsObject) {
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String sqlList = JSONUtils.getString(optionsJsonObject, "sqls", "");
+        JSONArray sqlArray = JSONUtils.getJSONArray(JSONUtils.getString(optionsJsonObject, "sqls", ""), new JSONArray());
+        ArrayList<String> sqlList = JSONUtils.JSONArray2List(sqlArray, new ArrayList<String>());
         String dbName = JSONUtils.getString(optionsJsonObject, "dbName", "");
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
@@ -195,14 +199,13 @@ public class SqlService extends ImpPlugin {
         }
     }
 
-    private void executeTransaction(String sqlList) {
+    private void executeTransaction(ArrayList<String> sqlList) {
         Cursor myCursor = null;
         try {
             database.beginTransaction();
             boolean showSelectedDate = false;
-            String[] sqls = sqlList.split(";");
-            for (int i = 0 ; i < sqls.length; i++){
-                String singleSql = sqls[i];
+            for (int i = 0 ; i < sqlList.size() ; i++){
+                String singleSql = sqlList.get(i);
                 singleSql += ";";
                 if (isSelectSql(singleSql)) {
                     myCursor = this.database.rawQuery(singleSql, null);
@@ -214,7 +217,7 @@ public class SqlService extends ImpPlugin {
                 } else {
                     this.database.execSQL(singleSql);
                     // 将查询结果传回前台
-                    if (i == sqls.length-1 && !showSelectedDate) jsCallback(successCb, "");
+                    if ((i == sqlList.size()-1) && !showSelectedDate) jsCallback(successCb, "");
                 }
             }
             database.setTransactionSuccessful();
@@ -270,7 +273,6 @@ public class SqlService extends ImpPlugin {
             }
         } catch (Exception e) {
             callbackDatabaseFail(0, e.getMessage());
-            jsCallback(failCb, getErrorJson(e.getMessage()));
             e.printStackTrace();
             if (myCursor != null) {
                 myCursor.close();
