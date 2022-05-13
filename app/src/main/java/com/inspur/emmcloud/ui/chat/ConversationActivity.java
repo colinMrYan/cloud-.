@@ -688,6 +688,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (mediaVoiceReRecognizerPop != null && mediaVoiceReRecognizerPop.isShowing()) {
                     mediaVoiceReRecognizerPop.dismiss();
                 }
+                if (mPopupWindowList != null && mPopupWindowList.isShowing()) {
+                    mPopupWindowList.hide();
+                }
             }
 
             @Override
@@ -1471,7 +1474,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 headerText.setText(newConversation.getName());
                 if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
                     conversation.setMembers(newConversation.getMembers());
-                    if (!newConversation.getType().equals(conversation.getType())){
+                    if (!newConversation.getType().equals(conversation.getType())) {
                         conversation.setType(newConversation.getType());
                         initChatInputMenu();
                     }
