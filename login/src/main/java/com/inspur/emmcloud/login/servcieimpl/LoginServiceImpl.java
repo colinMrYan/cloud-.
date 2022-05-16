@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.login.servcieimpl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 
@@ -12,6 +14,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
@@ -81,6 +84,36 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
             PreferencesByUserAndTanentUtils.putInt(BaseApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
         }
 
+        // 防止川煤等“同包名不同应用”的用户登录云+
+        if (uploadMDMInfoResult.getState() == 2) {
+            showWarningDlg();
+        }
+    }
+
+    private void showWarningDlg() {
+        final Activity context = BaseApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity();
+        String title = "";
+
+        title = context.getString(R.string.login_device_disabled_cannot_login);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context,
+                android.R.style.Theme_Holo_Light_Dialog);
+
+        builder.setTitle(context.getString(R.string.prompt));
+        builder.setMessage(title);
+        builder.setPositiveButton(context.getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BaseApplication.getInstance().signout();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent);
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
 }
