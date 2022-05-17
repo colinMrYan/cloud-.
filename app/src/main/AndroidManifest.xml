@@ -395,6 +395,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="behind"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.VoiceCommunicationActivity"
