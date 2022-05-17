@@ -12,7 +12,7 @@
     app:bl_strokeColor="?attr/color_stroke_46_aa"
     app:bl_strokeWidth="0.5px">
 
-    <TextView
+    <com.inspur.emmcloud.widget.TextViewFixTouchConsume
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
