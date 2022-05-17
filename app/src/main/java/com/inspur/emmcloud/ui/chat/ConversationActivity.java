@@ -688,9 +688,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (mediaVoiceReRecognizerPop != null && mediaVoiceReRecognizerPop.isShowing()) {
                     mediaVoiceReRecognizerPop.dismiss();
                 }
-                if (mPopupWindowList != null && mPopupWindowList.isShowing()) {
-                    mPopupWindowList.hide();
-                }
             }
 
             @Override
