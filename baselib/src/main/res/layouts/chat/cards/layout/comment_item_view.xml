@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="12dp"
-                android:textColor="@color/color_text_tip"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="15sp" />
 
             <TextView
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout"
             android:layout_marginTop="3dp"
-            android:textColor="@color/color_text_tip"
+            android:textColor="@color/color_text_common_level_two"
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 

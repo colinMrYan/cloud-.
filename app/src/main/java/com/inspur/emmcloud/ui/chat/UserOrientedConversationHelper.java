@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -36,6 +37,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private String channelType = "";
     private boolean displayingUI = false;
     private OnWhisperEventListener listener;
+    private Context mContext;
 
     public enum ConversationType {
         STANDARD, WHISPER, BURN
@@ -48,11 +50,19 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
 
     public UserOrientedConversationHelper(View targetView, String type, Context context, OnWhisperEventListener onWhisperEventListener) {
         this.mentionView = targetView.findViewById(R.id.mention_layout);
+        this.mContext = context;
         closeBtn = mentionView.findViewById(R.id.close_icon);
         userInfoView = mentionView.findViewById(R.id.mention_info);
         memberListView = targetView.findViewById(R.id.members_recyclerview);
         closeBtn.setOnClickListener(this);
+        // 适配横屏头像显示
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 5);
+        Configuration configuration = mContext.getResources().getConfiguration();
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridLayoutManager.setSpanCount(8);
+        } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridLayoutManager.setSpanCount(5);
+        }
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         memberListView.setLayoutManager(gridLayoutManager);
         recyclerGridAdapter = new RecyclerGridAdapter(context, new ArrayList<String>());
