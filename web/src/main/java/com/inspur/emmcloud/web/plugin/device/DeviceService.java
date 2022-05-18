@@ -43,6 +43,14 @@ public class DeviceService extends ImpPlugin {
         String res = "";
         if ("getInfo".equals(action)) {
             res = conbineDeviceInfo().toString();
+        }
+        // 打开震动
+        else if (action.equals("startVibrate")) {
+            openVibrate(paramsObject);
+        }
+        // 关闭震动
+        else if (action.equals("closeVibrate")) {
+            closeVibrator();
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -90,9 +98,13 @@ public class DeviceService extends ImpPlugin {
             if ("beep".equals(action)) {
                 beep(jsonObject);
             }
-            // 震动
-            else if (action.equals("vibrate")) {
-                vibrate(jsonObject);
+            // 打开震动
+            else if (action.equals("startVibrate")) {
+                openVibrate(jsonObject);
+            }
+            // 关闭震动
+            else if (action.equals("closeVibrate")) {
+                closeVibrator();
             } else {
                 showCallIMPMethodErrorDlg();
             }
@@ -198,13 +210,16 @@ public class DeviceService extends ImpPlugin {
      *
      * @param
      */
-    private void vibrate(JSONObject jsonObject) {
+    private void openVibrate(JSONObject jsonObject) {
         long time = 0l;
+        boolean repeat = true;
+        JSONObject optionObj = jsonObject.optJSONObject("options");
         try {
-            if (!jsonObject.isNull("time")) {
-
-                time = jsonObject.getLong("time");
-
+            if (!optionObj.isNull("time")) {
+                time = optionObj.getLong("time");
+            }
+            if (!optionObj.isNull("repeat")) {
+                repeat = optionObj.getBoolean("repeat");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -214,7 +229,21 @@ public class DeviceService extends ImpPlugin {
         // 调用系统服务的vibrator组件
         Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(
                 Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(time);
+        long[] patter = {time, 1000L, time, 1000L};
+        vibrator.vibrate(patter, repeat ? 0 : -1);
+    }
+
+    /**
+     * Description vibration中的vibrate实现与设定
+     *
+     * @param
+     */
+    private void closeVibrator() {
+        // 调用系统服务的vibrator组件
+        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(
+                Context.VIBRATOR_SERVICE);
+        vibrator.cancel();
+        jsCallback(successCb);
     }
 
     @Override
