@@ -104,20 +104,20 @@ public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFont
     }
 
     private void refreshChatUi() {
-        int headWidth = (int) (DensityUtil.dip2px(43) * mFontScale);
-        int headHeight = (int) (DensityUtil.dip2px(43) * mFontScale);
-        ViewGroup.LayoutParams linearParamsHead1 = mHead1.getLayoutParams(); //取控件textView当前的布局参数
-        linearParamsHead1.width = headWidth;
-        linearParamsHead1.height = headHeight;
-        mHead1.setLayoutParams(linearParamsHead1);
-        ViewGroup.LayoutParams linearParamsHead2 = mHead2.getLayoutParams(); //取控件textView当前的布局参数
-        linearParamsHead2.width = headWidth;
-        linearParamsHead2.height = headHeight;
-        mHead2.setLayoutParams(linearParamsHead2);
-        ViewGroup.LayoutParams linearParamsHead3 = mHead3.getLayoutParams(); //取控件textView当前的布局参数
-        linearParamsHead3.width = headWidth;
-        linearParamsHead3.height = headHeight;
-        mHead3.setLayoutParams(linearParamsHead3);
+//        int headWidth = (int) (DensityUtil.dip2px(43) * mFontScale);
+//        int headHeight = (int) (DensityUtil.dip2px(43) * mFontScale);
+//        ViewGroup.LayoutParams linearParamsHead1 = mHead1.getLayoutParams(); //取控件textView当前的布局参数
+//        linearParamsHead1.width = headWidth;
+//        linearParamsHead1.height = headHeight;
+//        mHead1.setLayoutParams(linearParamsHead1);
+//        ViewGroup.LayoutParams linearParamsHead2 = mHead2.getLayoutParams(); //取控件textView当前的布局参数
+//        linearParamsHead2.width = headWidth;
+//        linearParamsHead2.height = headHeight;
+//        mHead2.setLayoutParams(linearParamsHead2);
+//        ViewGroup.LayoutParams linearParamsHead3 = mHead3.getLayoutParams(); //取控件textView当前的布局参数
+//        linearParamsHead3.width = headWidth;
+//        linearParamsHead3.height = headHeight;
+//        mHead3.setLayoutParams(linearParamsHead3);
         mText1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16 * mFontScale);
         mText2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16 * mFontScale);
         mText3.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16 * mFontScale);
