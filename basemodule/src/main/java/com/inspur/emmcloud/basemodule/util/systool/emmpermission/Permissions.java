@@ -14,6 +14,7 @@ public final class Permissions {
     public static final String WRITE_CALENDAR = "android.permission.WRITE_CALENDAR";
 
     public static final String CAMERA = "android.permission.CAMERA";
+    public static final String FLASHLIGHT = "android.permission.FLASHLIGHT";
 
     public static final String READ_CONTACTS = "android.permission.READ_CONTACTS";
     public static final String WRITE_CONTACTS = "android.permission.WRITE_CONTACTS";

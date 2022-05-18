@@ -20,5 +20,8 @@ public interface SettingService extends CoreService {
 
     boolean getGestureCodeIsOpenByUser(Context context);
 
+    boolean openWebRotate();// 打开Web旋转
+
+    boolean closeWebRotate();// 关闭Web旋转
 
 }

@@ -4,8 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.AppConfig;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
+import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.ui.MoreFragment;
 import com.inspur.emmcloud.setting.ui.setting.CreateGestureActivity;
 import com.inspur.emmcloud.setting.ui.setting.FaceVerifyActivity;
@@ -26,6 +31,16 @@ public class SettingServiceImpl extends SettingAPIInterfaceImpl implements Setti
     @Override
     public boolean getGestureCodeIsOpenByUser(Context context) {
         return CreateGestureActivity.getGestureCodeIsOpenByUser(context);
+    }
+
+    @Override
+    public boolean openWebRotate() {
+        return saveWebAutoRotateConfig(true);
+    }
+
+    @Override
+    public boolean closeWebRotate() {
+        return saveWebAutoRotateConfig(false);
     }
 
     @Override
@@ -66,5 +81,15 @@ public class SettingServiceImpl extends SettingAPIInterfaceImpl implements Setti
         return CreateGestureActivity.getGestureCodeIsOpenByUser(BaseApplication.getInstance());
     }
 
+    private boolean saveWebAutoRotateConfig(boolean enable){
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(enable));
+            AppConfigCacheUtils.saveAppConfig(BaseApplication.getInstance(), appConfig);
+            SettingAPIService apiService = new SettingAPIService(BaseApplication.getInstance());
+            apiService.saveWebAutoRotateConfig(enable);
+            return true;
+        }
+        return false;
+    }
 
 }

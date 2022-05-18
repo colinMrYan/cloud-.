@@ -1,20 +1,37 @@
 package com.inspur.emmcloud.web.plugin.device;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.ui.ImpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.TimeZone;
+
+import butterknife.ButterKnife;
 
 /**
  * 设备信息
@@ -35,6 +52,10 @@ public class DeviceService extends ImpPlugin {
 
     // beep组件的响的次数
     private int count;
+    private Camera m_Camera;
+    private CameraManager manager;
+    private int mBackCameraId = 0;
+    private int mFrontCameraId = 1;
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
@@ -43,14 +64,6 @@ public class DeviceService extends ImpPlugin {
         String res = "";
         if ("getInfo".equals(action)) {
             res = conbineDeviceInfo().toString();
-        }
-        // 打开震动
-        else if (action.equals("startVibrate")) {
-            openVibrate(paramsObject);
-        }
-        // 关闭震动
-        else if (action.equals("closeVibrate")) {
-            closeVibrator();
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -93,21 +106,23 @@ public class DeviceService extends ImpPlugin {
         failCb = JSONUtils.getString(jsonObject, "fail", "");
         if ("getInfo".equals(action)) {
             jsCallback(successCb, conbineDeviceInfo());
-        } else
-            // 使用notification中的beep组件
-            if ("beep".equals(action)) {
-                beep(jsonObject);
-            }
-            // 打开震动
-            else if (action.equals("startVibrate")) {
-                openVibrate(jsonObject);
-            }
-            // 关闭震动
-            else if (action.equals("closeVibrate")) {
-                closeVibrator();
-            } else {
-                showCallIMPMethodErrorDlg();
-            }
+        } else if ("beep".equals(action)) {
+            beep(jsonObject);
+        } else if (action.equals("startVibrate")) {
+            openVibrate(jsonObject);
+        } else if (action.equals("closeVibrate")) {
+            closeVibrator();
+        } else if (action.equals("openFlashlamp")) {
+            openFlashLamp();
+        } else if (action.equals("closeFlashlamp")) {
+            closeFlashLamp();
+        } else if (action.equals("openWebRevolve")) {
+            openWebRevolve();
+        } else if (action.equals("closeWebRevolve")) {
+            closeWebRevolve();
+        } else {
+            showCallIMPMethodErrorDlg();
+        }
 
     }
 
@@ -210,6 +225,7 @@ public class DeviceService extends ImpPlugin {
      *
      * @param
      */
+    @SuppressLint("MissingPermission")
     private void openVibrate(JSONObject jsonObject) {
         long time = 0l;
         boolean repeat = true;
@@ -222,15 +238,14 @@ public class DeviceService extends ImpPlugin {
                 repeat = optionObj.getBoolean("repeat");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            jsCallback(failCb, e.getMessage());
         }
         if (time == 0L)
             time = 500L;
-        // 调用系统服务的vibrator组件
-        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(
-                Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         long[] patter = {time, 1000L, time, 1000L};
         vibrator.vibrate(patter, repeat ? 0 : -1);
+        jsCallback(successCb);
     }
 
     /**
@@ -238,16 +253,161 @@ public class DeviceService extends ImpPlugin {
      *
      * @param
      */
+    @SuppressLint("MissingPermission")
     private void closeVibrator() {
-        // 调用系统服务的vibrator组件
-        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(
-                Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.cancel();
         jsCallback(successCb);
     }
 
+    /**
+     * 初始化摄像头信息。
+     */
+    private void initCameraInfo() {
+        //callback成员变量初始化
+
+        int numberOfCameras = Camera.getNumberOfCameras();// 获取摄像头个数
+        for (int cameraId = 0; cameraId < numberOfCameras; cameraId++) {
+            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(cameraId, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                // 后置摄像头信息
+                mBackCameraId = cameraId;
+            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                // 前置摄像头信息
+                mFrontCameraId = cameraId;
+            }
+        }
+    }
+
+    private void openFlashLamp() {
+        String[] cameraPermissions = new String[]{Permissions.FLASHLIGHT, Permissions.CAMERA};
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), cameraPermissions, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        if (manager == null) {
+                            manager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
+                        }
+                        manager.setTorchMode("0", true);
+                        jsCallback(successCb, "");
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                        jsCallback(failCb, e.getMessage());
+                    }
+                } else {
+                    try {
+                        initCameraInfo();
+                        if (m_Camera == null) {
+                            m_Camera = Camera.open(mBackCameraId);
+                        }
+                        Camera.Parameters mParameters = m_Camera.getParameters();
+                        mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        m_Camera.setParameters(mParameters);
+                        m_Camera.startPreview();
+                        jsCallback(successCb, "");
+                    } catch (Exception ex) {
+                        if (m_Camera != null) {
+                            m_Camera.setPreviewCallback(null);
+                            m_Camera.stopPreview();
+                            m_Camera.release();
+                        }
+                        m_Camera = null;
+                        jsCallback(failCb, ex.getMessage());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getActivity(), permissions));
+            }
+        });
+    }
+
+    private void closeFlashLamp() {
+
+        String[] cameraPermissions = new String[]{Permissions.FLASHLIGHT, Permissions.CAMERA};
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), cameraPermissions, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        if (manager == null) {
+                            manager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
+                        }
+                        manager.setTorchMode("0", false);
+                        jsCallback(successCb, "");
+                    } catch (CameraAccessException e) {
+                        jsCallback(failCb, e.getMessage());
+                    }
+                } else {
+                    try {
+                        if (m_Camera == null) {
+                            m_Camera = Camera.open(mBackCameraId);
+                        }
+                        Camera.Parameters mParameters = m_Camera.getParameters();
+                        mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        m_Camera.setParameters(mParameters);
+                        m_Camera.setPreviewCallback(null);
+                        m_Camera.stopPreview();
+                        m_Camera.release();
+                        m_Camera = null;
+                        jsCallback(successCb, "");
+                    } catch (Exception ex) {
+                        if (m_Camera != null) {
+                            m_Camera.setPreviewCallback(null);
+                            m_Camera.stopPreview();
+                            m_Camera.release();
+                        }
+                        m_Camera = null;
+                        jsCallback(failCb, ex.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getActivity(), permissions));
+            }
+        });
+
+    }
+
+    private void openWebRevolve() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class) != null) {
+            SettingService service = router.getService(SettingService.class);
+            if (service.openWebRotate()) {
+                jsCallback(successCb, "");
+            } else {
+                jsCallback(failCb, "network error!!");
+            }
+        }
+    }
+
+    private void closeWebRevolve() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class) != null) {
+            SettingService service = router.getService(SettingService.class);
+            if (service.closeWebRotate()) {
+                jsCallback(successCb, "");
+            } else {
+                jsCallback(failCb, "network error!!");
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
+        if (m_Camera != null) {
+            m_Camera.setPreviewCallback(null);
+            m_Camera.stopPreview();
+            m_Camera.release();
+            m_Camera = null;
+        }
     }
 
 }
