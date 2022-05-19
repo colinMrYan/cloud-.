@@ -160,4 +160,5 @@ dependencies {
     api deps.rx.rxjava
     api deps.rx.rxandroid
     api 'org.xutils:xutils:3.9.0'
+    api deps.tencentShortVideo
 }
