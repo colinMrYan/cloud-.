@@ -434,6 +434,7 @@ public class ConversationCacheUtils {
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
                         .where("id", "!=", "")
                         .and(WhereBuilder.b("showName", "like", searchStr).or("pyFull", "like", searchStrPYFull))
+                        .and(WhereBuilder.b("serviceId", "=", ""))
                         .and(WhereBuilder.b("type", "=", Conversation.TYPE_DIRECT).or("type", "=", Conversation.TYPE_TRANSFER)
                                 .or("type", "=", Conversation.TYPE_CAST))
                         .orderBy("lastUpdate", true).findAll();
