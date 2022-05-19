@@ -34,65 +34,70 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="?attr/home_common_bg">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/phone_display"
-            android:src="@drawable/setting_phone_recognize"
-            android:layout_marginTop="10dp"
-            android:layout_width="300dp"
-            android:layout_height="300dp"/>
-
-        <TextView
-            android:id="@+id/open_overlay_window"
-            android:layout_width="320dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="****"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:background="@drawable/setting_permission_selector_state" />
-
-        <TextView
-            android:id="@+id/open_phone_read"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:text="****"
-            android:background="@drawable/setting_permission_selector_state"
-            android:layout_marginTop="30dp"/>
-
-        <TextView
-            android:id="@+id/introduction_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_header"
+            android:background="?attr/home_common_bg"
             android:gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="?attr/text_color_e1"
-            android:textSize="16sp"
-            android:text="****"/>
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/phone_display"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/setting_phone_recognize" />
+
+            <TextView
+                android:id="@+id/open_overlay_window"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting_permission_selector_state"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="****"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/open_phone_read"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/setting_permission_selector_state"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="****"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/introduction_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="****"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

@@ -110,20 +110,33 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/comment_count_text"
+                <LinearLayout
+                    android:id="@+id/comment_count_text_ll"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginRight="24dp"
-                    android:clickable="true"
-                    android:drawableLeft="@drawable/ic_chat_img_display_comment"
-                    android:drawablePadding="9dp"
-                    android:gravity="center"
                     android:onClick="onClick"
-                    android:padding="5dp"
-                    android:textColor="@color/color_text_Anti_White"
-                    android:textSize="16sp"
-                    android:visibility="gone" />
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_chat_img_display_comment" />
+
+                    <TextView
+                        android:id="@+id/comment_count_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="9dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:textColor="@color/color_text_Anti_White"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/download_img"

@@ -84,6 +84,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private ImagePagerAdapter mAdapter;
     private RelativeLayout functionLayout;
     private TextView commentCountText;
+    private LinearLayout commentCountll;
     private TextView originalPictureDownLoadTextView;
     private Map<String, Integer> commentCountMap = new ArrayMap<>();
     private Boolean isNeedTransformIn;
@@ -147,6 +148,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             (findViewById(R.id.write_comment_layout)).setVisibility(View.VISIBLE);
             cid = imgTypeMessageList.get(0).getChannel();
             commentCountText = (TextView) findViewById(R.id.comment_count_text);
+            commentCountll =  findViewById(R.id.comment_count_text_ll);
+            commentCountll.setVisibility(View.VISIBLE);
         }
 
         initEcmChatInputMenu();
@@ -206,7 +209,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 IntentUtils.startActivity(ImagePagerActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.comment_count_text:
+            case R.id.comment_count_text_ll:
                 bundle = new Bundle();
                 bundle.putString("mid", imgTypeMessageList.get(pagerPosition).getId());
                 bundle.putString("cid", imgTypeMessageList.get(pagerPosition).getChannel());
