@@ -488,10 +488,12 @@
         <activity
             android:name=".ui.chat.ImagePagerV0Activity"
             android:resizeableActivity="true"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustPan" />
 
         <activity

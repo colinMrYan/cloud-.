@@ -88,7 +88,6 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
         Configuration configuration = resources.getConfiguration();
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));
-        configuration.fontScale = 1.0f;
         return context.createConfigurationContext(configuration);
     }
 

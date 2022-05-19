@@ -534,7 +534,6 @@ public class SettingActivity extends BaseActivity {
      * 弹出清除全部缓存提示框
      */
     private void showClearCacheWarningDlg() {
-        // TODO Auto-generated method stub
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

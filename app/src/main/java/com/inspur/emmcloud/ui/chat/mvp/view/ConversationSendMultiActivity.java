@@ -250,10 +250,10 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     private void showSelectType() {
         if (isSelectMore) {
             // 变为单选
-            selectMoreTv.setText(R.string.chat_contact_single_select);
+            selectMoreTv.setText(R.string.chat_contact_more_select);
         } else {
             // 变为多选
-            selectMoreTv.setText(R.string.chat_contact_more_select);
+            selectMoreTv.setText(R.string.chat_contact_single_select);
         }
         isSelectMore = !isSelectMore;
         // 传入adapter多选还是单选

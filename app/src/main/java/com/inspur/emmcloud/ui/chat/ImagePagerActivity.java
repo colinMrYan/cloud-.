@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -96,7 +98,15 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     @Override
+    protected void onRestart() {
+        // 强制隐藏状态栏，防止出现白色状态栏
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+        super.onRestart();
+    }
+
+    @Override
     public void onCreate() {
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setNavigationBarColor(android.R.color.black);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
