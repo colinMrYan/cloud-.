@@ -64,6 +64,9 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         initConversationInfo();
         recordUserClickChannel();
         configView.setVisibility(View.VISIBLE);
+        if (conversation != null) {
+            configView.setVisibility(conversation.isServiceConversationType() ? View.GONE : View.VISIBLE);
+        }
         showWaterMark();
     }
 
