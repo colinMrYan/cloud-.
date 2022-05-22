@@ -133,26 +133,12 @@ public class ScreenshotService extends ImpPlugin {
 
             @Override
             public void shareFailure(String errorMessage) {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("status", 0);
-                    json.put("errorMessage", errorMessage);
-                    jsCallback(failCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                jsCallback(failCb, errorMessage);
             }
 
             @Override
             public void shareCancel() {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("status", 2);
-                    json.put("errorMessage", "取消分享");
-                    jsCallback(failCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                jsCallback(failCb, "取消分享");
             }
         });
 

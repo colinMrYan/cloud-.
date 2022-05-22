@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 public class IMPAudioService extends ImpPlugin {
     WebMediaService service = null;
-    private String recordingAudioCallback;
+    private String successCal, failCal;
     private AudioDialogChooseManager audioDialogChooseManager;
     private static final int VOICE_MESSAGE = 4;
     private boolean saveToLocal = false;
@@ -48,7 +48,8 @@ public class IMPAudioService extends ImpPlugin {
     };
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        recordingAudioCallback = JSONUtils.getString(paramsObject, "callBack", "");
+        successCal = JSONUtils.getString(paramsObject, "success", "");
+        failCal = JSONUtils.getString(paramsObject, "fail", "");
         Router router = Router.getInstance();
         if (router.getService(WebMediaService.class) == null) return;
         if (service == null) {
@@ -124,7 +125,7 @@ public class IMPAudioService extends ImpPlugin {
                     JSONObject result = new JSONObject();
                     result.put("path", resourceLocalPath);
                     json.put("result", result);
-                    jsCallback(recordingAudioCallback, json);
+                    jsCallback(successCal, json);
                 } else {
                     if (resourceLocalPath != null) {
                         service.uploadAudioFile(uploadPath, resourceLocalPath, new WebMediaCallbackImpl() {
@@ -136,23 +137,16 @@ public class IMPAudioService extends ImpPlugin {
                                             result.put("path", webPath);
                                             json.put("status", 1);
                                             json.put("result", result);
-                                            jsCallback(recordingAudioCallback, json);
+                                            jsCallback(successCal, json);
                                         } catch (JSONException e) {
-                                            e.printStackTrace();
+                                            jsCallback(failCal, e.getMessage());
                                         }
                                     }
 
 
                                     @Override
                                     public void onFail() {
-                                        try {
-                                            JSONObject json = new JSONObject();
-                                            json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                                            json.put("status", 0);
-                                            jsCallback(recordingAudioCallback, json);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        jsCallback(failCal, getFragmentContext().getString(R.string.web_video_record_fail));
                                     }
                                 }
                         );

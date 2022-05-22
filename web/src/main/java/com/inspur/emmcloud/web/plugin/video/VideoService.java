@@ -109,15 +109,7 @@ public class VideoService extends ImpPlugin {
                                     }
 
                                 } catch (IOException e) {
-                                    try {
-                                        JSONObject json = new JSONObject();
-                                        json.put("errorMessage", "文件操作异常");
-                                        json.put("status",0);
-                                        jsCallback(failCb, json);
-                                    } catch (JSONException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                    e.printStackTrace();
+                                    jsCallback(failCb, e.getMessage());
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : optionsObj.optString("time"));
@@ -147,15 +139,7 @@ public class VideoService extends ImpPlugin {
                 File mediaStorageDir = new File(path);
                 if (!mediaStorageDir.exists()) {
                     if (!mediaStorageDir.mkdirs()) {
-                        Log.e("TAG", "文件夹创建失败");
-                        try {
-                            JSONObject json = new JSONObject();
-                            json.put("errorMessage", "文件夹创建失败");
-                            json.put("status",0);
-                            jsCallback(failCb, json);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        jsCallback(failCb, "文件夹创建失败");
                         return null;
                     }
                 }
@@ -172,14 +156,7 @@ public class VideoService extends ImpPlugin {
                 return mediaFile;
             }
         }
-        try {
-            JSONObject json = new JSONObject();
-            json.put("status",0);
-            json.put("errorMessage", "文件操作失败");
-            jsCallback(failCb, json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        jsCallback(failCb, "文件操作失败");
         return null;
     }
 
@@ -225,14 +202,7 @@ public class VideoService extends ImpPlugin {
             result.put("fileSize",count);
             result.put("name",file.getName());
         } catch (Exception e) {
-            JSONObject json = new JSONObject();
-            try {
-                json.put("errorMessage", e.getMessage());
-                json.put("status",0);
-            } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
-            }
-            jsCallback(failCb, json);
+            jsCallback(failCb, e.getMessage());
         }
     }
 
@@ -256,14 +226,7 @@ public class VideoService extends ImpPlugin {
                     e.printStackTrace();
                 }
             } else {
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                    json.put("status",0);
-                    jsCallback(failCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                jsCallback(failCb, getFragmentContext().getString(R.string.web_video_record_fail));
             }
         }
     }

@@ -518,7 +518,7 @@ public class FileTransferService extends ImpPlugin {
                 result = FileUtils.encodeBase64File(filePath);
                 callbackSuccess(result);
             } catch (Exception e) {
-                callbackFail(result);
+                callbackFail(e.getMessage());
                 e.printStackTrace();
             }
         }
