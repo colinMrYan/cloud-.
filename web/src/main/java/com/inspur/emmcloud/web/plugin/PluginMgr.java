@@ -11,6 +11,7 @@ import com.inspur.emmcloud.web.plugin.amaplocation.AmapLocateService;
 import com.inspur.emmcloud.web.plugin.app.AppService;
 import com.inspur.emmcloud.web.plugin.audio.IMPAudioService;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
+import com.inspur.emmcloud.web.plugin.bluetooth.BlueToothService;
 import com.inspur.emmcloud.web.plugin.broadcast.BroadcastService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.datetime.DatePickerService;
@@ -263,6 +264,8 @@ public class PluginMgr {
                 serviceName = ScreenshotService.class.getCanonicalName();
             } else if (serviceName.endsWith("AudioService")) {
                 serviceName = IMPAudioService.class.getCanonicalName();
+            } else if (serviceName.endsWith("BlueToothService")) {
+                serviceName = BlueToothService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }
