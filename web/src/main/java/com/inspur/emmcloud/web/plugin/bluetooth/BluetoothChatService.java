@@ -1,13 +1,11 @@
 package com.inspur.emmcloud.web.plugin.bluetooth;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +16,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 @SuppressLint("MissingPermission")
@@ -355,13 +354,21 @@ public class BluetoothChatService {
             // given BluetoothDevice
             try {
                 if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(
-                            MY_UUID_SECURE);
+//                    tmp = device.createRfcommSocketToServiceRecord(
+//                            MY_UUID_SECURE);
+                    try {
+                        tmp = (BluetoothSocket) mmDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(mmDevice,2);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     tmp = device.createInsecureRfcommSocketToServiceRecord(
                             MY_UUID_INSECURE);
                 }
-            } catch (IOException e) {
+            } catch (IOException | NoSuchMethodException e) {
+                e.printStackTrace();
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;

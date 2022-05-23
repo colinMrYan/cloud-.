@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.web.plugin.bluetooth;
 
 import static com.inspur.emmcloud.web.ui.ImpFragment.REQUEST_CONNECT_DEVICE_SECURE;
-import static com.inspur.emmcloud.web.ui.ImpFragment.REQUEST_ENABLE_BT;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,11 +13,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -32,9 +29,7 @@ import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,18 +37,6 @@ import java.util.Set;
 public class BlueToothService extends ImpPlugin {
     private String successCal, failCal;
     HashMap<String, String> discoveryDevicesMap = new HashMap<>();
-    private BluetoothAdapter.LeScanCallback mScanCb = new BluetoothAdapter.LeScanCallback() {
-        @Override
-        public void onLeScan(final BluetoothDevice device, final int rssi,
-                             byte[] scanRecord) {
-            final BleAdvertisedData badata = BleUtil.parseAdertisedData(scanRecord);
-            String deviceName = device.getName();
-            if (StringUtils.isEmpty(deviceName)) {
-                deviceName = badata.getName();
-            }
-            discoveryDevicesMap.put(deviceName, device.getAddress());
-        }
-    };
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -62,12 +45,20 @@ public class BlueToothService extends ImpPlugin {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 //dev_mac_adress.contains(device.getAddress())避免重复添加
-//                if (device.getName() != null && !(discoveryDevicesMap.get(device.getName()).equals(device.getAddress()))) {
-//                }
-                discoveryDevicesMap.put(device.getAddress(), device.getAddress());
-                JSONObject jsonObject = JSONUtils.map2Json(discoveryDevicesMap);
-                Log.e("printf","Address : " + device.getAddress());
-//                jsCallback(successCal, jsonObject);
+                if (device.getName() != null && discoveryDevicesMap.get(device.getName()) == null) {
+                    discoveryDevicesMap.put(device.getName(), device.getAddress());
+                }
+                try {
+                    JSONObject jsonObject = JSONUtils.map2Json(discoveryDevicesMap);
+                    JSONObject json = new JSONObject();
+                    json.put("status", 1);
+                    JSONObject result = new JSONObject();
+                    result.put("data", jsonObject);
+                    json.put("result", result);
+                    jsCallback(successCal, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 // no device find
             } else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
@@ -178,6 +169,7 @@ public class BlueToothService extends ImpPlugin {
     private void closeBluetooth() {
         if (mBluetoothAdapter != null) {
             if (mBluetoothAdapter.isEnabled()) {
+                mChatService.stop();
                 if (mBluetoothAdapter.disable()) {
                     jsCallback(successCal, "");
                 } else {
@@ -216,6 +208,7 @@ public class BlueToothService extends ImpPlugin {
         successCal = JSONUtils.getString(paramsObject, "success", "");
         failCal = JSONUtils.getString(paramsObject, "fail", "");
 
+
     }
 
     private void scanBluetooth() {
@@ -223,19 +216,16 @@ public class BlueToothService extends ImpPlugin {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (AppUtils.isLocationEnabled(getActivity())) {
-                    if (!mBluetoothAdapter.isDiscovering()) {
-                        discoveryDevicesMap.clear();
-//                        if (!mBluetoothAdapter.startLeScan(mScanCb)) {
-//                            jsCallback(failCal, "startDiscovery fail");
-//                        }
-                        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-                        for (BluetoothDevice bluetoothDevice : pairedDevices) {
-                            discoveryDevicesMap.put(bluetoothDevice.getName(), bluetoothDevice.getAddress());
-                        }
-                        enableDiscovery();
-                        if (!isDiscovering()) {
-                            startDiscovery();
-                        }
+                    if (isDiscovering()) {
+                        cancelDiscovery();
+                    }
+                    discoveryDevicesMap.clear();
+                    Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+                    for (BluetoothDevice bluetoothDevice : pairedDevices) {
+                        discoveryDevicesMap.put(bluetoothDevice.getName(), bluetoothDevice.getAddress());
+                    }
+                    if (!isDiscovering()) {
+                        startDiscovery();
                     }
                 } else {
                     new CustomDialog.MessageDialogBuilder(getActivity())
@@ -272,7 +262,8 @@ public class BlueToothService extends ImpPlugin {
     private void connectDevice(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         try {
-            String deviceId = options.getString("address");
+            enableDiscovery();
+            String deviceId = options.getString("value");
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(deviceId);
             mChatService.connect(device, true);
         } catch (JSONException e) {
@@ -321,11 +312,11 @@ public class BlueToothService extends ImpPlugin {
 
     @Override
     public void onDestroy() {
-        if (mBluetoothAdapter != null) {
-            mBluetoothAdapter.cancelDiscovery();
-        }
         if (mChatService != null) {
             mChatService.stop();
+        }
+        if (mBluetoothAdapter != null) {
+            mBluetoothAdapter.cancelDiscovery();
         }
         getActivity().unregisterReceiver(mReceiver);
     }
@@ -339,24 +330,6 @@ public class BlueToothService extends ImpPlugin {
 
                 }
                 break;
-//            case REQUEST_CONNECT_DEVICE_INSECURE:
-//                // When DeviceListActivity returns with a device to connect
-//                if (resultCode == Activity.RESULT_OK) {
-//
-//                }
-//                break;
-            case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    jsCallback(successCal, "");
-                    if (mChatService != null) {
-                        if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
-                            mChatService.start();
-                        }
-                    }
-                } else {
-                    jsCallback(failCal, "open bluetooth failed");
-                }
         }
     }
 }
