@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -270,6 +272,7 @@ public class CommunicationFragment extends BaseFragment {
     private void initRecycleView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
+        updateServiceConversationMsgState(displayUIConversationList.isEmpty() ? null : displayUIConversationList.get(0));
         conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
@@ -545,6 +548,7 @@ public class CommunicationFragment extends BaseFragment {
                     @Override
                     public void accept(List<UIConversation> uiConversationList) throws Exception {
                         displayUIConversationList = uiConversationList;
+                        updateServiceConversationMsgState(displayUIConversationList.get(0));
                         conversationAdapter.setData(displayUIConversationList);
                         conversationAdapter.notifyDataSetChanged();
                     }
@@ -728,6 +732,7 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             }
         }
+        updateServiceConversationMsgState(displayUIConversationList.get(0));
         conversationAdapter.setData(displayUIConversationList);
         conversationAdapter.notifyDataSetChanged();
     }
@@ -749,11 +754,39 @@ public class CommunicationFragment extends BaseFragment {
             int position = displayUIConversationList.indexOf(uiConversation);
             if (position != -1) {
                 displayUIConversationList.get(position).setUnReadCount(0);
+                updateServiceConversationMsgState(displayUIConversationList.get(0));
                 conversationAdapter.setData(displayUIConversationList);
                 conversationAdapter.notifyRealItemChanged(position);
             }
 
         }
+    }
+
+    // 服务号未读消息数量
+    public void updateServiceConversationMsgState(final UIConversation conversation) {
+        if (conversation == null) return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int unreadServiceNum = 0;
+                for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
+                    UIConversation uiConversation = new UIConversation(conversation);
+                    if (uiConversation.getConversation().isServiceConversationType()) {
+                        unreadServiceNum += uiConversation.getUnReadCount();
+                    }
+                }
+                if (conversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                    conversation.setUnReadCount(unreadServiceNum);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            conversationAdapter.notifyRealItemChanged(0);
+                        }
+                    });
+                }
+            }
+        }).start();
+
     }
 
     /**
@@ -1212,6 +1245,7 @@ public class CommunicationFragment extends BaseFragment {
                 long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), uiConversation.getId());
                 uiConversation.setUnReadCount(unReadCount);
             }
+            updateServiceConversationMsgState(displayUIConversationList.get(0));
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyDataSetChanged();
         }

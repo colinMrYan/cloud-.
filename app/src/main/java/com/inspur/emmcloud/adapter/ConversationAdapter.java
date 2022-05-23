@@ -56,35 +56,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
-        updateServiceConversationMsgState();
-        if (adapterListener != null) {
-            adapterListener.onDataChange();
-        }
     }
 
     public void setData(List<UIConversation> uiConversationList) {
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
-            updateServiceConversationMsgState();
-            if (adapterListener != null) {
-                adapterListener.onDataChange();
-            }
-        }
-    }
-
-    // 服务号未读消息数量
-    public void updateServiceConversationMsgState() {
-        if (uiConversationList.isEmpty()) return;
-        int unreadServiceNum = 0;
-        for (Conversation conversation : ConversationCacheUtils.getConversationList(context)) {
-            UIConversation uiConversation = new UIConversation(conversation);
-            if (uiConversation.getConversation().isServiceConversationType()) {
-                unreadServiceNum += uiConversation.getUnReadCount();
-            }
-        }
-        if (uiConversationList.get(0).getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-            uiConversationList.get(0).setUnReadCount(unreadServiceNum);
         }
     }
 
