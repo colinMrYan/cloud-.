@@ -441,7 +441,7 @@ public class DropPopMenu {
             //根据最长文字调整总宽度
             boolean iconIsGone = holder.iconIv.getVisibility() == View.GONE;
             if (position == 0) {
-                mWidth = mMaxTextWidth + mHorizontalMargin * 2;
+                mWidth = mMaxTextWidth + mHorizontalMargin * 2 + 5;
                 if (!iconIsGone) {
                     mWidth += mIconWidth + mIconTextMargin;
                 }
