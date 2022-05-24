@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appname "雲+">
+]>
 <resources>
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -161,8 +164,8 @@
     <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
     <string name="schedule_exchange_login_fail">%1$s 密碼已更改，請到日程設置中更新</string>
     <string name="schedule_account_type">賬戶</string>
-    <string name="schedule_cloud_calendar">云+ 日程</string>
-    <string name="schedule_cloud_meeting">云+ 會議</string>
+    <string name="schedule_cloud_calendar">&appname; 日程</string>
+    <string name="schedule_cloud_meeting">&appname; 會議</string>
     <string name="schedule_sync_sys_calendar">同步到本地日曆</string>
 
 

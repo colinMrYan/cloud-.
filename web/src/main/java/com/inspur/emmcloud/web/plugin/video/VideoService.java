@@ -94,6 +94,7 @@ public class VideoService extends ImpPlugin {
                             public void onPermissionRequestSuccess(List<String> permissions) {
                                 Uri fileUri = null;
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, optionsObj.optInt("quality",1));
                                 String fileName = optionsObj.optString("id");
                                 returnBase64 = optionsObj.optBoolean("isReturnBase64");
                                 try {
@@ -113,7 +114,6 @@ public class VideoService extends ImpPlugin {
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                                 intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : optionsObj.optString("time"));
-
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }

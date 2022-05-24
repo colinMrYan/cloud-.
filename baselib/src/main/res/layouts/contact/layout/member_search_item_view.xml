@@ -55,7 +55,7 @@
                 android:layout_below="@+id/tv_name"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="#888888"
+                android:textColor="@color/color_text_common_level_two"
                 android:textSize="13sp"
                 android:visibility="gone" />
         </RelativeLayout>

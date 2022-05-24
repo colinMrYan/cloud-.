@@ -236,7 +236,7 @@ public class ImageDetailFragment extends Fragment {
      */
     public String saveBitmapFile(Bitmap bitmap) {
         String saveImageFolder = "IMP-Cloud/cache/chat/";
-        File temp = new File(Environment.getExternalStorageDirectory() + "/" + saveImageFolder);// 要保存文件先创建文件夹
+        File temp = new File(getContext().getExternalCacheDir() + "/" + saveImageFolder);// 要保存文件先创建文件夹
         if (!temp.exists()) {
             temp.mkdir();
         }

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appname "云+">
+]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">Cloud+</string>
     <string name="app_name_beiqi">Cloud+</string>
@@ -9,6 +12,8 @@
     <string name="Network_WIFI">Connected to WIFI</string>
     <string name="send_to_app">Send to Cloud+</string>
     <string name="ok">OK</string>
+    <string name="ok_number">OK(%d)</string>
+    <string name="send_more_select_limit_warning">Select up to 9 people/groups</string>
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
@@ -24,7 +29,7 @@
     <string name="nothing">Nothing </string>
     <string name="function_intr">Function Introduction </string>
     <string name="user_depart_info_text">Departmental Information</string>
-    <string name="sweep">Scan</string>
+    <string name="sweep">Scan QR</string>
     <string name="send">Send</string>
     <string name="picture">Picture</string>
     <string name="album">Album</string>
@@ -50,6 +55,7 @@
     <string name="modify_success">Successfully Modified</string>
     <string name="save_success">Saved</string>
     <string name="save_fail">Unsaved</string>
+    <string name="save_format_fail">Text or links cannot be saved locally</string>
     <string name="communication_save_image_success">Image saved to \"%1$s\"</string>
     <string name="picture_cannot_show">Picture cannot be displayed</string>
     <string name="cannot_download_for_network_exception">Network exception,unable to download</string>
@@ -126,7 +132,7 @@
     <string name="cutdown_month">m</string>
     <string name="notice">Notice</string>
     <string name="close">Close</string>
-    <string name="commoly_use_app">Commonly</string>
+    <string name="commoly_use_app">Common</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
     <string name="app_init">Initializing</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
@@ -178,7 +184,14 @@
     <string name="channel_group_members_name">Group Name</string>
     <string name="channel_set_top">Sticky on Top</string>
     <string name="message_without_interruption">Mute Notifications</string>
+    <string name="channel_hide">Hide</string>
     <string name="channel_single_chat_images">Images</string>
+    <string name="channel_report">Report</string>
+    <string name="channel_report_hint">Please enter the report content</string>
+    <string name="feed_back_without_name">Anonymous submit</string>
+    <string name="report_submit">submit report</string>
+    <string name="report_out_of_length">The number of words you entered has exceeded the limit</string>
+    <string name="report_no_empty">Please enter the report content</string>
     <string name="channel_single_chat_files">Files</string>
     <string name="modify_group_name">Group Contact Card</string>
     <string name="choose_common_office">common office address</string>
@@ -301,7 +314,7 @@
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
-    <string name="message_create_group">New Chat</string>
+    <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>
     <string name="no_channel_file">No content</string>
@@ -315,6 +328,8 @@
     <string name="voice_call">Voice Call</string>
     <string name="sure_to_resend_message">resend the message?</string>
     <string name="message_type_drafts">[Drafts]</string>
+    <string name="message_type_node_me">[There is someone @ me]</string>
+    <string name="message_type_node_all">All members</string>
     <string name="quit_group">Quit Group</string>
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
@@ -353,6 +368,7 @@
     <string name="quit_dismiss_group">Delete and Leave</string>
     <string name="chat_search_mention_all">All</string>
     <string name="chat_contact_more_select">More</string>
+    <string name="chat_contact_single_select">Single</string>
     <string name="chat_contact_related_message">%1$d related messages</string>
     <string name="chat_group_member_size">%1$s (%2$d)</string>
     <string name="chat_group_qr_code_share">Share Group QrCode</string>
@@ -500,7 +516,6 @@
     <string name="settings">Settings</string>
     <string name="settings_protect">Protected</string>
     <string name="settings_clear_cache">Clear Cache</string>
-    <string name="settings_aboutIMP">About</string>
     <string name="settings_clean_imgae_attachment">Clear images and attachments</string>
     <string name="settings_clean_web">Clear web cache</string>
     <string name="settings_clean_all">Clear all application cache</string>
@@ -517,7 +532,7 @@
     <string name="wallet">Cards</string>
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
-    <string name="app_customer">Cloud+ Customer</string>
+    <string name="app_customer"> Customer</string>
 
 
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
@@ -555,7 +570,6 @@
     <string name="modify_user_password">Passwords do not match, make sure</string>
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
-    <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
     <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
     <string name="setting_update_this_time_hint">Update</string>
     <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
@@ -607,7 +621,7 @@
     <string name="contact_exception">Data exception cannot be opened</string>
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
     <string name="contact_add_system">Save to Contacts</string>
-
+    <string name="focus">Focus</string>
     <!-- 会议室部分 -->
     <string name="schedule_meeting_topic">Meeting</string>
     <string name="schedule_title">Schedule</string>
@@ -775,6 +789,7 @@
 
     <string name="setting_net_diagnosis_copy">Click here to copy</string>
     <string name="net_no_network_available">No Network Available</string>
+    <string name="mobile_network">Mobile Network</string>>
 
     <string name="function_net_load_fail">Loading Fail</string>
     <string name="function_net_over_load">Reload</string>
@@ -802,7 +817,7 @@
     <string name="load_fail">Loading Failed</string>
     <string name="see_more">More</string>
     <string name="pull_down_loading_history">Drop load history message</string>
-    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“云+”软件产品（以下
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“&appname;”软件产品（以下
 
 简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
 
@@ -870,6 +885,8 @@
     <string name="can_not_replay">The current layoutState of play can not be reset</string>
     <string name="can_not_stop">The current layoutState can not be stopped</string>
     <string name="turn_on_light">Turn on the light</string>
+    <string name="touch_turn_on_light">Turn on the light</string>
+    <string name="touch_turn_off_light">Turn off the light</string>
     <string name="turn_off_light">Turn off the light</string>
     <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
     <string name="file_select_limit_warning">You can select up to %1$d files</string>
@@ -957,6 +974,9 @@
     <string name="voice_communication_can_not_use_this_feature">Unable to uses this feature during call</string>
     <string name="voice_communication_calling">Calling</string>
     <string name="video_call">Video Call</string>
+    <string name="read_disappear">Burn after reading</string>
+    <string name="voice_whisper">whisper</string>
+    <string name="click_to_burn">Click to view</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>
     <string name="video_communication_waiting_answer">Connection...</string>
@@ -982,12 +1002,15 @@
     <string name="voice_input_hint_speak_now">Speak now...</string>
     <string name="voice_input_tip_speak">Hold to Talk</string>
     <string name="voice_input_clear">Clear</string>
+    <string name="voice_input_mention">Send to</string>
     <string name="communication_has_leave">Hung up</string>
     <string name="voice_communication_notification_group_title">Voice Call</string>
     <string name="voice_communication_notification_group_content">Tap to recover</string>
     <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
     <string name="notification_switch">New Notification</string>
+    <string name="caring_switch">Font Size</string>
+    <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
     <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
 
@@ -1064,13 +1087,20 @@
     <string name="unread_detail_title">Message recipients list</string>
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
     <string name="root_toast">current mobile phone is root. Please pay attention to protect your account security</string>
-
+    <string name="network_change_tip">The network environment has changed, currently:</string>
+    <string name="warning_service_enter_by_creator">Customer service can not enter the service number channel, please go to the customer service group</string>
     <string name="privacy_title">Welcome to Cloud+!</string>
     <string name="privacy_agree">Agree</string>
     <string name="privacy_reject">Reject</string>
     <string name="privacy_reject_dialog_title">Whether to confirm disagree and exit?</string>
     <string name="privacy_reject_dialog_quit">Quit</string>
     <string name="privacy_reject_dialog_cancel">Cancel</string>
+    <string name="pass_login_confirm">Pass confirmation login</string>
+    <string name="confirm_login_by_self">In order to ensure the security of the account, please ensure that it is operated by yourself</string>
+    <string name="save_to_storage">Save to album</string>
+    <string name="service_conversation_desc">Professional team to serve you</string>
+    <string name="service_conversation_search">Search service number</string>
+    <string name="service_search">Service number search</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

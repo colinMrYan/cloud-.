@@ -89,6 +89,7 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
             splashResIdList.add(R.drawable.guide_page_new_1);
             splashResIdList.add(R.drawable.guide_page_new_2);
             splashResIdList.add(R.drawable.guide_page_new_3);
+            splashResIdList.add(R.drawable.guide_page_new_4);
         }
 
         for (int i = 0; i < splashResIdList.size(); i++) {

@@ -41,7 +41,6 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
@@ -234,6 +233,7 @@ public class SettingActivity extends BaseActivity {
                 }
             }
         });
+
         if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
@@ -400,8 +400,10 @@ public class SettingActivity extends BaseActivity {
         } else if (i == R.id.rl_setting_switch_tablayout) {
             IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
 
-        } else if(i == R.id.phone_recognize_layout){
+        } else if (i == R.id.phone_recognize_layout) {
             IntentUtils.startActivity(SettingActivity.this, PhoneRecognizeActivity.class);
+        } else if (i == R.id.font_size_layout) {
+            IntentUtils.startActivity(SettingActivity.this, TextSizeSettingActivity.class);
         } else {
         }
     }
@@ -443,6 +445,7 @@ public class SettingActivity extends BaseActivity {
             notificationSwitch.setChecked(isChecked);
         }
     }
+
 
     /**
      * 弹出注销提示框
@@ -531,7 +534,6 @@ public class SettingActivity extends BaseActivity {
      * 弹出清除全部缓存提示框
      */
     private void showClearCacheWarningDlg() {
-        // TODO Auto-generated method stub
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

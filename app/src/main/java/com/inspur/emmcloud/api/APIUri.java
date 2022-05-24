@@ -1150,4 +1150,47 @@ public class APIUri {
         return getEMMBaseUrl() + "api/sys/v3.0/user/close_account";
     }
 
+    /**
+     * 获取服务号首页列表
+     * @return
+     */
+    public static String getConversationServiceListUrl() {
+        return getECMChatServiceConversationBaseUrl() + "/user";
+    }
+
+    /**
+     * 获取服务号所有列表
+     * @return
+     */
+    public static String getConversationServiceListAllUrl() {
+        return getECMChatServiceConversationBaseUrl() + "?checkUserSubscribe=true";
+    }
+
+    /**
+     * 关注服务号
+     *
+     * @return
+     */
+    public static String getFollowConversationServiceUrl() {
+        return getECMChatServiceConversationBaseUrl() + "/subscription";
+    }
+
+    /**
+     * 搜索服务号
+     *
+     * @return
+     */
+    public static String getSearchConversationServiceUrl(String name) {
+        return getECMChatServiceConversationBaseUrl() + "/name/" + name + "?checkUserSubscribe=true";
+    }
+
+    /**
+     * 获取chat service v1 channel base url
+     *
+     * @return
+     */
+    public static String getECMChatServiceConversationBaseUrl() {
+        return getECMChatUrl() + "/rest/service";
+    }
+
 }

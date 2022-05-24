@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.os.Build;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
@@ -17,6 +18,8 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -167,17 +170,37 @@ public class ContactOrgCacheUtils {
             }
             if (contactUserList != null) {
                 contactList.addAll(Contact.contactUserList2ContactList(contactUserList));
-                if(contactUserListSearch.size() > 0){
+                if (contactUserListSearch.size() > 0) {
                     contactList.addAll(Contact.contactUserList2ContactList(contactUserListSearch));
                 }
             }
             List<Contact> contactListExpDup = new ArrayList();
             for (Contact contact : contactList) {
-                if(!contactListExpDup.contains(contact)){
+                if (!contactListExpDup.contains(contact)) {
                     contactListExpDup.add(contact);
                 }
             }
             contactList.clear();
+            Collections.sort(contactListExpDup, new Comparator<Contact>() {
+                @Override
+                public int compare(Contact o1, Contact o2) {
+                    if (o1 == null || o2 == null) {
+                        return 0;
+                    }
+                    if (Contact.TYPE_STRUCT.equals(o1.getType()) && Contact.TYPE_USER.equals(o2.getType())) {
+                        return -1;
+                    }
+                    if (Contact.TYPE_USER.equals(o1.getType()) && Contact.TYPE_STRUCT.equals(o2.getType())) {
+                        return 1;
+                    }
+                    if (o1.getSortOrder() > o2.getSortOrder()) {
+                        return 1;
+                    } else if (o1.getSortOrder() < o2.getSortOrder()) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
             contactList.addAll(contactListExpDup);
 //            ArrayList<Contact> resultList = new ArrayList<Contact>(new LinkedHashSet<Contact>(contactList));
 //            LinkedList<Contact> tmpList = new LinkedList<>(resultList);
@@ -189,11 +212,10 @@ public class ContactOrgCacheUtils {
     }
 
 
-
     /**
      * 删除MultiOrg
      */
-    private static void deleteMultiOrg(){
+    private static void deleteMultiOrg() {
         try {
             DbCacheUtils.getDb().dropTable(MultiOrg.class);
         } catch (Exception e) {
@@ -204,9 +226,10 @@ public class ContactOrgCacheUtils {
 
     /**
      * 保存多组织数据
+     *
      * @param multiOrgList
      */
-    public static void saveMultiOrg(List<MultiOrg> multiOrgList){
+    public static void saveMultiOrg(List<MultiOrg> multiOrgList) {
         deleteMultiOrg();
         try {
             DbCacheUtils.getDb().saveOrUpdate(multiOrgList);
@@ -217,10 +240,11 @@ public class ContactOrgCacheUtils {
 
     /**
      * 根据人员inspurId获取人员的所有组织
+     *
      * @param inspurId
      * @return
      */
-    public static List<ContactOrg> getMultiOrgByInspurId(String inspurId){
+    public static List<ContactOrg> getMultiOrgByInspurId(String inspurId) {
         List<ContactOrg> contactOrgList = new ArrayList<>();
         try {
             List<MultiOrg> multiOrgList = DbCacheUtils.getDb().selector(MultiOrg.class).where("inspurId", "=", inspurId).findAll();
@@ -233,7 +257,7 @@ public class ContactOrgCacheUtils {
         return contactOrgList;
     }
 
-    public static List<ContactUser> getContactUserByInspurId(String inspurId){
+    public static List<ContactUser> getContactUserByInspurId(String inspurId) {
         List<ContactUser> contactUserList = new ArrayList<>();
         try {
             contactUserList.addAll(DbCacheUtils.getDb().selector(ContactUser.class).where("id", "=", inspurId).findAll());
@@ -248,6 +272,7 @@ public class ContactOrgCacheUtils {
 
     /**
      * 通过组织id获取当前组织下，多组织列表里的人员
+     *
      * @param contactOrgId
      * @return
      */
@@ -261,7 +286,7 @@ public class ContactOrgCacheUtils {
             }
             List<ContactUser> contactUserListSearch = DbCacheUtils.getDb().selector(ContactUser.class).where("id",
                     "in", idList).findAll();
-            if(contactUserListSearch != null && contactUserListSearch.size() > 0){
+            if (contactUserListSearch != null && contactUserListSearch.size() > 0) {
                 contactUserList.addAll(contactUserListSearch);
             }
         } catch (Exception e) {

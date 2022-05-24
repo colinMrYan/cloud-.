@@ -12,6 +12,7 @@ import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
+import com.umeng.socialize.UMShareAPI;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
 public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
@@ -51,6 +52,12 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         fragment.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

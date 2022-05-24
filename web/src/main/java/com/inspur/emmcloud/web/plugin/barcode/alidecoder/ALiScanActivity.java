@@ -234,8 +234,8 @@ public class ALiScanActivity extends BaseActivity implements NotSupportLand {
         if (bqcScanService != null) {
             boolean torchOn = bqcScanService.isTorchOn();
             bqcScanService.setTorch(!torchOn);
-            lampText.setText(torchOn ? getString(R.string.turn_on_light) : getString(R.string.turn_off_light));
-            mTorchBtn.setBackgroundResource(torchOn ? R.drawable.web_qrcode_lamp_off : R.drawable.web_qrcode_lamp_on);
+            lampText.setText(torchOn ? getString(R.string.touch_turn_on_light) : getString(R.string.touch_turn_off_light));
+            mTorchBtn.setBackgroundResource(torchOn ? R.drawable.icon_flashing_light_off : R.drawable.icon_flashing_light_on);
         }
     }
 
@@ -385,9 +385,13 @@ public class ALiScanActivity extends BaseActivity implements NotSupportLand {
 
     private void initScanRect() {
         if (scanRect == null) {
-            scanRect = mScanView.getScanRect(
-                    bqcScanService.getCamera(), mSurfaceView.getWidth(), mSurfaceView.getHeight());
-
+//            scanRect = mScanView.getScanRect(
+//                    bqcScanService.getCamera(), mSurfaceView.getWidth(), mSurfaceView.getHeight());
+            // 扫描范围设置成全屏
+            int[] location = new int[2];
+            mSurfaceView.getLocationOnScreen(location);
+            scanRect = new Rect(location[0], location[1],
+                    location[0] + mSurfaceView.getWidth(), location[1] + mSurfaceView.getHeight());
             float cropWidth = mScanView.getCropWidth();
             LoggerFactory.getTraceLogger().debug(TAG, "cropWidth: " + cropWidth);
             if (cropWidth > 0) {

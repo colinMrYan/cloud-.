@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -48,6 +50,8 @@ public class MyInfoActivity extends BaseActivity {
     private static final int REQUEST_CODE_SELECT_IMG = 1;
     private static final int USER_INFO_CHANGE = 10;
 
+    @BindView(R2.id.ibt_back)
+    ImageButton backBtn;
     @BindView(R2.id.iv_photo)
     ImageView photoImg;
     @BindView(R2.id.tv_name)
@@ -92,6 +96,10 @@ public class MyInfoActivity extends BaseActivity {
         getUserProfile();
         getUserInfoConfig();
         showMyInfo();
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        if (currentThemeNo == Constant.APP_THEME_BLUE) {
+            backBtn.setImageResource(R.drawable.ic_back_btn_white);
+        }
     }
 
     @Override

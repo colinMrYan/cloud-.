@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -69,6 +71,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
     private static final int RESULT_MENTIONS = 5;
     private static final int CHECK_IMG_COMMENT = 1;
+    public static final String EXTRA_CHANNEL_ID = "channelId";
     ImageDetailFragment.DownLoadProgressRefreshListener downLoadProgressRefreshListener;
     private ECMChatInputMenuImgComment ecmChatInputMenu;
     private HackyViewPager mPager;
@@ -81,6 +84,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private ImagePagerAdapter mAdapter;
     private RelativeLayout functionLayout;
     private TextView commentCountText;
+    private LinearLayout commentCountll;
     private TextView originalPictureDownLoadTextView;
     private Map<String, Integer> commentCountMap = new ArrayMap<>();
     private Boolean isNeedTransformIn;
@@ -95,7 +99,15 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     @Override
+    protected void onRestart() {
+        // 强制隐藏状态栏，防止出现白色状态栏
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+        super.onRestart();
+    }
+
+    @Override
     public void onCreate() {
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setNavigationBarColor(android.R.color.black);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -136,6 +148,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             (findViewById(R.id.write_comment_layout)).setVisibility(View.VISIBLE);
             cid = imgTypeMessageList.get(0).getChannel();
             commentCountText = (TextView) findViewById(R.id.comment_count_text);
+            commentCountll =  findViewById(R.id.comment_count_text_ll);
+            commentCountll.setVisibility(View.VISIBLE);
         }
 
         initEcmChatInputMenu();
@@ -195,7 +209,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 IntentUtils.startActivity(ImagePagerActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.comment_count_text:
+            case R.id.comment_count_text_ll:
                 bundle = new Bundle();
                 bundle.putString("mid", imgTypeMessageList.get(pagerPosition).getId());
                 bundle.putString("cid", imgTypeMessageList.get(pagerPosition).getChannel());
@@ -401,7 +415,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     private void getImgCommentCount(String mid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            WSAPIService.getInstance().getMessageCommentCount(mid);
+            WSAPIService.getInstance().getMessageCommentCount(mid, getIntent().hasExtra(EXTRA_CHANNEL_ID) ? getIntent().getStringExtra(EXTRA_CHANNEL_ID) : "");
         }
     }
 

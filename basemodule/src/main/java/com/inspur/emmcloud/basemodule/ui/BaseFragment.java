@@ -1,6 +1,14 @@
 package com.inspur.emmcloud.basemodule.ui;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -9,6 +17,9 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+
+import java.util.Objects;
 
 import butterknife.Unbinder;
 
@@ -36,6 +47,25 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    private void initFontScale() {
+        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
+        if (0 == Float.compare(1.0f, fontScale)) {
+            return;
+        }
+        Configuration configuration = getResources().getConfiguration();
+        configuration.fontScale = fontScale;
+        DisplayMetrics metrics = new DisplayMetrics();
+        Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        metrics.scaledDensity = configuration.fontScale * metrics.density;
+        getActivity().getBaseContext().getResources().updateConfiguration(configuration, metrics);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -45,6 +75,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         LogUtils.debug("TilllLog", this + " onResume");
+//        initFontScale();
         super.onResume();
     }
 

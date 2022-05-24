@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
@@ -91,8 +93,11 @@ public class CommunicationUtils {
                     AppUtils.getManifestAppVersionFlag(MyApplication.getInstance()).equals("zhihuichengjian")) {
                 title = "消息到达";
             }
+            if (conversation.isServiceConversationType()) title = conversation.getName();
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
+        }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            title = TextUtils.isEmpty(title) ? BaseApplication.getInstance().getString(R.string.address_servicenum_text) : title;
         }
         return title;
     }
@@ -117,6 +122,46 @@ public class CommunicationUtils {
         message.setType("text/plain");
         MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
         msgContentTextPlain.setText(text);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
+    public static Message combineLocalTextWhisperMessage(String text, String cid, List<String> toUidList, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_TEXT_WHISPER);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        if (toUidList != null && toUidList.size() > 0) {
+            msgContentTextPlain.setWhisperUsers(toUidList);
+        }
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        message.setContent(msgContentTextPlain.toString());
+        return message;
+    }
+
+    public static Message combineLocalTextBurnMessage(String text, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_TEXT_BURN);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setText(text);
+        msgContentTextPlain.setMsgType(Message.MESSAGE_TYPE_TEXT_BURN);
         if (mentionsMap != null && mentionsMap.size() > 0) {
             msgContentTextPlain.setMentionsMap(mentionsMap);
         }
@@ -531,6 +576,8 @@ public class CommunicationUtils {
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             icon = "drawable://" + R.drawable.ic_file_transfer;
+        }  else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+            icon = "drawable://" + R.drawable.ic_channel_service;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }
@@ -553,6 +600,29 @@ public class CommunicationUtils {
         } else {
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+            }
+        }
+        return icon;
+    }
+
+    public static String getHeadUrl(MessageForwardMultiBean bean) {
+        String icon = "";
+        if (bean.getType().equals(Conversation.TYPE_GROUP)) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + bean.getConversationId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+            }
+        } else if (bean.getType().equals(Conversation.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
+        } else if (bean.getType().equals(SearchModel.TYPE_TRANSFER)) {
+            icon = "drawable://" + R.drawable.ic_file_transfer;
+        } else if (bean.getType().equals(SearchModel.TYPE_DIRECT)) {
+            Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), bean.getConversationId());
+            icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
+        } else {
+            if (!bean.getContactId().equals("null")) {
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), bean.getContactId());
             }
         }
         return icon;

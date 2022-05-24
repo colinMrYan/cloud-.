@@ -118,6 +118,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED = "tag_conversation_self_data_changed";
     //频道消息发生变化
     public static final String EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED = "tag_conversation_message_data_changed";
+    public static final String EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED = "tag_group_conversation_data_changed";
+    public static final String EVENTBUS_TAG_MULTI_MESSAGE_SEND = "tag_multi_message_send";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
     public static final String EVENTBUS_TAG_RECERIVER_MESSAGE_STATE_READ = "tag_receive_message_state_read";
@@ -127,6 +129,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION_ADAPTER = "tag_refresh_conversation_adapter";
     public static final String EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE = "tag_send_action_content_message";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_NAME = "tag_update_channel_name";
+    public static final String EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE = "tag_update_service_channel";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS = "tag_update_channel_members";
     public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
@@ -244,6 +247,7 @@ public class Constant {
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
     public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
+    public static final String CARING_SWITCH_FLAG = "caring_switch_flag";
     public static final String JPUSH_REGISTER_ID = "JpushRegId";
     public static final String MIPUSH_REGISTER_ID = "mi_push_register_id";
     public static final String HUAWEI_FLAG = "huawei";
@@ -294,6 +298,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/ContactSearchActivity"; //通讯录选择界面
     public static final String AROUTER_CLASS_CONVERSATION_SEARCH = "/chat/ConversationSearchActivity"; //最近联系人选择界面
+    public static final String AROUTER_CLASS_CONVERSATION_SEND_MORE = "/chat/ConversationSendMoreActivity"; //消息转发多人揭界面
     public static final String AROUTER_CLASS_CONTACT_USERINFO = "/contact/UserInfoActivity";
 
     public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
@@ -350,7 +355,14 @@ public class Constant {
     public static final String SAFE_CENTER_FINGER_PRINT = "safe_center_finger_print";
     //分享内容
     public static final String SHARE_CONTENT = "share_content";
+    // 消息转发多选
+    public static final String MULTI_SEND_CONTENT = "multi_send_content";
+    //TODO:更新除微信外appid
+    public static final String UMENT_APPKEY = "5c6cf18ff1f55645e900092a";
     public static final String WECHAT_APPID = "wx4eb8727ea9c26495";
+    public static final String WECHAT_APP_SECRET = "b0f39cb7f260634d5b0b4a3fe0399f8a";
+    public static final String QQ_APPID = "101983127";
+    public static final String QQ_APP_SECRET = "d6c027d90ae69817b9a03a16bef8e7f8";
 
     public static final String VIDEO_CALL_INVITE = "server.chat.video-call.invite";
     public static final String VIDEO_CALL_REFUSE = "server.chat.video-call.refuse";
@@ -369,5 +381,8 @@ public class Constant {
 
     public static final String APP_ROLE = "app_role";
 
+    public static final int APP_THEME_BLUE = 2;
     public static final int APP_THEME_DARK = 3;
+
+    public static final int MULTI_SELECT_COUNT = 9;
 }

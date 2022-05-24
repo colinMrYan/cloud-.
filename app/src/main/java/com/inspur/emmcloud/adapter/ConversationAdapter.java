@@ -20,16 +20,23 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by chenmch on 2018/4/26.
@@ -49,20 +56,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
-        if (adapterListener != null) {
-            adapterListener.onDataChange();
-        }
     }
 
     public void setData(List<UIConversation> uiConversationList) {
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
-            if (adapterListener != null) {
-                adapterListener.onDataChange();
-            }
         }
-
     }
 
     @Override
@@ -170,7 +170,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
-            holder.timeText.setText(TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
+            holder.timeText.setText(uiConversation.isServiceContainer() ?  "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
@@ -186,7 +186,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 String conversationName = context.getString(R.string.chat_file_transfer);
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
-            } else {
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
+                holder.titleText.setText(uiConversation.getTitle());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+            }   else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
+                holder.titleText.setText(uiConversation.getConversation().getName());
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+            }  else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
             setConversationLastMessageSendStatus(holder, uiConversation);
@@ -237,6 +243,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationContent(ViewHolder holder, UIConversation uiConversation) {
+        if (uiConversation.isServiceContainer()) {
+            holder.contentText.setText(R.string.service_conversation_desc);
+            return;
+        }
         String chatDrafts = uiConversation.getConversation().getDraft();
         if (!StringUtils.isBlank(chatDrafts)) {
             String content = "<font color='#FF0000'>" + context.getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
@@ -246,7 +256,19 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.contentText.setText(Html.fromHtml(content));
             }
         } else {
-            holder.contentText.setText(uiConversation.getContent());
+            // 添加@用户/@所有人功能
+            String nodeUserInfo = unreadMessageNodeMeOrAll(uiConversation);
+            String content = uiConversation.getContent();
+            if (!nodeUserInfo.isEmpty()) {
+                content = "<font color='#FF0000'>" + context.getString(R.string.message_type_node_me) + "</font>" + nodeUserInfo;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.contentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+                } else {
+                    holder.contentText.setText(Html.fromHtml(content));
+                }
+            } else {
+                holder.contentText.setText(content);
+            }
         }
         TransHtmlToTextUtils.stripUnderlines(holder.contentText, R.color.msg_content_color);
     }
@@ -260,7 +282,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      */
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
         holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount() > 0) {
+        if (uiConversation.getUnReadCount() > 0 && !uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
             holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
         }
     }
@@ -268,6 +290,45 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void setAdapterListener(AdapterListener adapterListener) {
         this.adapterListener = adapterListener;
 
+    }
+
+    private String unreadMessageNodeMeOrAll(UIConversation uiConversation) {
+        int count = uiConversation.getMessageList().size();
+        List<Message> unReadMessageList = new ArrayList<>();
+        if ((int) uiConversation.getUnReadCount() > count) {
+            unReadMessageList = uiConversation.getMessageList();
+        } else {
+            unReadMessageList = uiConversation.getMessageList().subList(count - (int) uiConversation.getUnReadCount(), count);
+        }
+        if (unReadMessageList.isEmpty()) return "";
+        Collections.reverse(unReadMessageList);
+        for (Message message : unReadMessageList) {
+            String content = message.getMsgContentTextPlain().getText();
+            if (!StringUtils.isBlank(content)) {
+                Map<String, String> mentionsMap = message.getMsgContentTextPlain().getMentionsMap();
+                StringBuilder contentStringBuilder = new StringBuilder();
+                contentStringBuilder.append(content);
+                Pattern mentionPattern = Pattern.compile("@[a-z]*\\d+\\s");
+                Matcher mentionMatcher = mentionPattern.matcher(contentStringBuilder);
+                boolean isWhisperType = !message.getMsgContentTextPlain().getWhisperUsers().isEmpty();
+                ArrayList<String> uidList = new ArrayList<>();
+                while (mentionMatcher.find()) {
+                    String patternString = mentionMatcher.group();
+                    String key = patternString.substring(1, patternString.length() - 1).trim();
+                    if (mentionsMap.containsKey(key)) {
+                        String newString = "";
+                        String uid = mentionsMap.get(key);
+                        uidList.add(uid);
+                        if ((uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid))) {
+                            newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + (isWhisperType ? BaseApplication.getInstance().getString(R.string.send_a_whispers) : message.getShowContent());
+                            contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
+                            return contentStringBuilder.toString();
+                        }
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     @Override

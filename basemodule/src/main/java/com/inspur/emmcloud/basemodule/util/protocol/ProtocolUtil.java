@@ -109,7 +109,8 @@ public class ProtocolUtil {
         int startIndexService;
         switch (environmentLanguage.toLowerCase()) {
             case "zh-hant":
-                agreementStr = "歡迎使用雲+!\n        雲+非常重視您的個人信息和隱私保護，為了更好的向您提供交流溝通、文件傳送、電話撥打、位置定位等相關服務，我們會根據您使用服務的具體功能需要，收集必要的用戶信息（可能涉及賬號、設備、日誌等相關內容）。" +
+                agreementStr = "歡迎使用" + BaseApplication.getInstance().getResources().getString(R.string.app_name) + "!\n        "
+                        + BaseApplication.getInstance().getResources().getString(R.string.app_name) + "非常重視您的個人信息和隱私保護，為了更好的向您提供交流溝通、文件傳送、電話撥打、位置定位等相關服務，我們會根據您使用服務的具體功能需要，收集必要的用戶信息（可能涉及賬號、設備、日誌等相關內容）。" +
                         "\n        在使用我們的產品和服務前，請您務必仔細閱讀、充分理解《服務協定》和《隱私協定》各條款。我們將嚴格按照上述條款為您提供服務，保護您的信息安全，點擊“同意”即表示您已閱讀並同意全部條款，可以開始使用我們的產品和服務。";
                 agreement = new SpannableString(agreementStr);
                 startIndexPrivate = agreementStr.indexOf("《隱私協定》");
@@ -125,7 +126,8 @@ public class ProtocolUtil {
                 break;
             case "en":
             case "en-us":
-                agreementStr = "Cloud+ attaches great importance to your personal information and privacy protection. In order to provide you with related services such as communication, file transfer, telephone dialing, and location service, we will collect the necessary users according to the specific functional needs of your use of the service Information (may involve accounts, devices, logs, etc.). \n     Before using our products and services, please read and fully understand the terms of the \"Service Agreement\" and \"Privacy Policy\". We will provide services to you in strict accordance with the above terms and protect the security of your information. Clicking \"Agree\" means that you have read and agreed to all the terms and can start using our products and services.";
+                agreementStr = BaseApplication.getInstance().getResources().getString(R.string.app_name)
+                        + "! attaches great importance to your personal information and privacy protection. In order to provide you with related services such as communication, file transfer, telephone dialing, and location service, we will collect the necessary users according to the specific functional needs of your use of the service Information (may involve accounts, devices, logs, etc.). \n     Before using our products and services, please read and fully understand the terms of the \"Service Agreement\" and \"Privacy Policy\". We will provide services to you in strict accordance with the above terms and protect the security of your information. Clicking \"Agree\" means that you have read and agreed to all the terms and can start using our products and services.";
                 agreement = new SpannableString(agreementStr);
                 startIndexPrivate = agreementStr.indexOf("Privacy Policy");
                 startIndexService = agreementStr.indexOf("Service Agreement");
@@ -139,7 +141,8 @@ public class ProtocolUtil {
                 agreement.setSpan(urlClickableSpanEn2, startIndexService, startIndexService + 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 break;
             default:
-                agreementStr = "欢迎使用云+!\n        云+非常重视您的个人信息和隐私保护，为了更好的向您提供交流沟通、文件传送、电话拨打、位置定位等相关服务，我们会根据您使用服务的具体功能需要，收集必要的用户信息（可能涉及账号、设备、日志等相关内容）。" +
+                agreementStr = "欢迎使用" + BaseApplication.getInstance().getResources().getString(R.string.app_name) + "!\n        "
+                        + BaseApplication.getInstance().getResources().getString(R.string.app_name) + "非常重视您的个人信息和隐私保护，为了更好的向您提供交流沟通、文件传送、电话拨打、位置定位等相关服务，我们会根据您使用服务的具体功能需要，收集必要的用户信息（可能涉及账号、设备、日志等相关内容）。" +
                         "\n        在使用我们的产品和服务前，请您务必仔细阅读、充分理解《服务协议》和《隐私政策》各条款。我们将严格按照上述条款为您提供服务，保护您的信息安全，点击“同意”即表示您已阅读并同意全部条款，可以开始使用我们的产品和服务。";
                 agreement = new SpannableString(agreementStr);
                 startIndexPrivate = agreementStr.indexOf("《隐私政策》");

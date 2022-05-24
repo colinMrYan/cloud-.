@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -43,20 +44,28 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int THEME_DARK = 3;
     private int statusType;
 
+    private static boolean checkedNecessaryPermission;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // 设置是否开启原生页面自动旋转
-        boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
-                Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
-        if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+        statusType = getStatusType();
+        // 8.0 activity透明时，不能设置setRequestedOrientation，目前只有AppSchemeHandleActivity，ShareToConversationBlankActivity
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && statusType == STATUS_TRANSPARENT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            // 设置是否开启原生页面自动旋转
+            boolean isNativeAutoRotate = PreferencesUtils.getBoolean(this,
+                    Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
+            if (isNativeAutoRotate && !(this instanceof NotSupportLand)) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
         }
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        statusType = getStatusType();
         setTheme();
+
         super.onCreate(savedInstanceState);
 
         int layoutResId = getLayoutResId();
@@ -64,6 +73,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             setContentView(layoutResId);
         }
         setStatus();
+        if (checkedNecessaryPermission) {
+            onCreate();
+            return;
+        }
         //首页先同意隐私协议再检查权限
         if (this instanceof IMainActivity) {
             ProtocolUtil.showProtocolDialog(this, new ProtocolUtil.ProtocolDialogCallback() {
@@ -80,12 +93,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             });
         } else {
-            checkNecessaryPermission();
+            //避免非主页调用不到onCreate
+            onCreate();
         }
+
+//        else {
+//            checkNecessaryPermission();
+//        }
     }
 
 
     private void checkNecessaryPermission() {
+        checkedNecessaryPermission = true;
+
         final String[] necessaryPermissionArray =
                 StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
@@ -129,7 +149,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     ToastUtils.show(BaseApplication.getInstance(),
                                             PermissionRequestManagerUtils.getInstance()
                                                     .getPermissionToast(BaseApplication.getInstance(), permissions));
-                                    BaseApplication.getInstance().exit();
+                                    onCreate();
+//                                    BaseApplication.getInstance().exit();
                                 }
                             });
                 }
@@ -153,6 +174,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
+        float fontScale = PreferencesByUserAndTanentUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
+        if (0 != Float.compare(1.0f, fontScale)) {
+            Configuration config = newBase.getResources().getConfiguration();
+            config.fontScale = this instanceof IIgnoreFontScaleActivity ? 1.0f : fontScale;
+            newBase = newBase.createConfigurationContext(config);
+        }
         super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 

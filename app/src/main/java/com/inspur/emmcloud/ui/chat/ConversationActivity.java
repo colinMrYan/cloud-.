@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -39,7 +40,6 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ListUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -71,6 +71,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -90,7 +91,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -137,12 +138,13 @@ import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FI
 public class ConversationActivity extends ConversationBaseActivity {
 
     public static final String CLOUD_PLUS_CHANNEL_ID = "channel_id";
-    private static final int REQUEST_QUIT_CHANNELGROUP = 1;
+    private static final int REQUEST_OPERATE_CHANNELGROUP = 1;
     private static final int REQUEST_GELLARY = 2;
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
     private static final int SHARE_SEARCH_RUEST_CODE = 31;
+    private static final int SHARE_MULTI_REQUEST_CODE = 33;
     private static final int VOICE_CALL_MEMBER_CODE = 32;
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_NEW_MESSAGE = 7;
@@ -167,6 +169,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @BindView(R.id.robot_photo_img)
     ImageView robotPhotoImg;
+
     @BindView(R.id.btn_conversation_unread)
     CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
@@ -180,6 +183,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
+    private UserOrientedConversationHelper userOrientedConversationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +194,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
+        initOrientedHelper();
     }
 
     private void handleMessage() {
@@ -227,6 +232,21 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         };
+    }
+
+
+    private void initOrientedHelper() {
+        userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
+            @Override
+            public void closeFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(true);
+            }
+
+            @Override
+            public void showFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(false);
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -340,6 +360,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
             headerText.setText(CommunicationUtils.getConversationTitle(conversation));
+            configView.setVisibility(conversation.isServiceConversationType() ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -414,7 +435,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             }
         });
-        chatInputMenu.setInputLayout(conversation.getInput(), false);
+        chatInputMenu.setInputLayout(conversation.getInput(), conversation.isServiceConversationType());
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
@@ -612,7 +633,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 } else {
                     sendEmail(userList);
                 }
-
+                break;
+            case "read_disappear":
+            case "whisper":
+                if (userOrientedConversationHelper != null) {
+                    if (userOrientedConversationHelper.isDisplayingUI()) {
+                        userOrientedConversationHelper.closeUserOrientedLayout();
+                    } else {
+                        userOrientedConversationHelper.setChannelType(conversation.getType());
+                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
+                    }
+                }
                 break;
         }
     }
@@ -632,6 +663,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private JSONArray mNonExistentUidArray;
+
     /**
      * 初始化消息列表UI
      */
@@ -640,7 +672,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
-                chatInputMenu, conversation.getMemberList());
+                chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
         mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -675,7 +707,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     ConversationActivity.this.onCardItemClick(ConversationActivity.this, view, uiMessage);
-                }else if(!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())){
+                } else if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
                     chatInputMenu.getInputEdit().setText(uiMessage.getMessage().getShowContent());
                     setEditTextCursorLocation(chatInputMenu.getInputEdit());
                 }
@@ -704,6 +736,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 光标定位到最后
+     *
      * @param editText
      */
     public void setEditTextCursorLocation(ChatInputEdit editText) {
@@ -871,7 +904,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-
+            // 分享隐藏阅后即焚和悄悄话选择界面
+            if (userOrientedConversationHelper.isDisplayingUI()) {
+                userOrientedConversationHelper.closeUserOrientedLayout();
+            }
         }
     }
 
@@ -934,10 +970,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     break;
-                case REQUEST_QUIT_CHANNELGROUP:
-                    MyApplication.getInstance().setCurrentChannelCid("");
-                    finish();
-                    break;
                 case SHARE_SEARCH_RUEST_CODE:
                     if (NetUtils.isNetworkConnected(getApplicationContext())) {
                         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
@@ -964,6 +996,32 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     break;
+                case SHARE_MULTI_REQUEST_CODE:
+                    // 单选时
+                    SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
+                    if (searchModel != null) {
+                        String userOrChannelId = searchModel.getId();
+                        boolean isUser = searchModel.getType().equals(SearchModel.TYPE_USER);
+                        share2Conversation(userOrChannelId, isUser);
+                        return;
+                    }
+                    // 多选时消息转发多人
+                    List<MessageForwardMultiBean> selectList = (List<MessageForwardMultiBean>) data.getSerializableExtra("selectList");
+                    if (selectList != null) {
+                        for (int i = 0; i < selectList.size(); i++) {
+                            MessageForwardMultiBean bean = selectList.get(i);
+                            boolean isUser = bean.getType().equals(SearchModel.TYPE_USER);
+                            if (isUser) {
+                                share2Conversation(bean.getContactId(), true);
+                            } else {
+                                share2Conversation(bean.getConversationId(), false);
+                            }
+                        }
+                    }
+                    // 多人消息转发后，communicationFragment列表可能更新不全，原因暂未查明。先发送event刷新list解决此问题
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MULTI_MESSAGE_SEND, ""));
+
+                    break;
                 case VOICE_CALL_MEMBER_CODE:
                     List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
                     String voiceResult = data.getStringExtra("searchResult");
@@ -982,7 +1040,28 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     startVoiceOrVideoCall(ECMChatInputMenu.VOICE_CALL, voiceCommunicationUserInfoBeanList);
                     break;
-                //去掉主动弹出窗口
+                case REQUEST_OPERATE_CHANNELGROUP:
+                    if (data == null || !data.hasExtra("operate")) {
+                        break;
+                    }
+                    int dateExtra = data.getIntExtra("operate", -1);
+                    cid = conversation.getId();
+                    switch (dateExtra) {
+                        case 0:
+                            conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
+                            if (conversation == null) {
+                                ToastUtils.show(this, getString(R.string.net_request_failed));
+                                return;
+                            }
+                            setChannelTitle();
+                            break;
+                        case 1:
+                            MyApplication.getInstance().setCurrentChannelCid("");
+                            finish();
+                        default:
+                            break;
+                    }
+                    //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {
 //                        if(!Settings.canDrawOverlays(this)){
@@ -1208,7 +1287,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putString(ConversationInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1219,7 +1298,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
                 intent = new Intent(this, ConversationInfoActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
+                startActivityForResult(intent, REQUEST_OPERATE_CHANNELGROUP);
                 break;
             default:
                 break;
@@ -1230,7 +1309,25 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 发送文本消息
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
-        Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+        Message localMessage;
+        switch (userOrientedConversationHelper.getConversationType()) {
+            case BURN:
+                localMessage = CommunicationUtils.combineLocalTextBurnMessage(content, cid, mentionsMap);
+                userOrientedConversationHelper.closeUserOrientedLayout();
+                break;
+            case WHISPER:
+                if (userOrientedConversationHelper.getSelectedUser().isEmpty()) {
+                    localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                } else {
+                    localMessage = CommunicationUtils.combineLocalTextWhisperMessage(content, cid, userOrientedConversationHelper.getSelectedUser(), mentionsMap);
+                    userOrientedConversationHelper.closeUserOrientedLayout();
+                }
+                break;
+            case STANDARD:
+            default:
+                localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
+                break;
+        }
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUserName(content);
@@ -1266,8 +1363,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void wrapperLocalMessageStates(Message message) {
         JSONArray sentArray = new JSONArray();
         List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(conversation.getMemberList());
-        for(ContactUser user : totalList){
-            if(!TextUtils.equals(BaseApplication.getInstance().getUid(), user.getId())){
+        for (ContactUser user : totalList) {
+            if (!TextUtils.equals(BaseApplication.getInstance().getUid(), user.getId())) {
                 sentArray.put(user.getId());
             }
         }
@@ -1337,9 +1434,15 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (StringUtils.isBlank(recallUIMessage.getMessage().getRecallFrom())) {
                         UIMessage uiMessage = new UIMessage(recallMessage);
                         uiMessageList.remove(index);
-                        uiMessageList.add(index, uiMessage);
-                        adapter.setMessageList(uiMessageList);
-                        adapter.notifyItemChanged(index);
+                        // 阅后即焚移除撤回消息类型
+                        if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                            uiMessageList.add(index, uiMessage);
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
+                        } else {
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 break;
@@ -1363,9 +1466,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 sendMessageWithText(actionContent, true, null);
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
-                String name = ((Conversation) simpleEventMessage.getMessageObj()).getName();
-                conversation.setName(name);
-                headerText.setText(name);
+                Conversation newConversation = ((Conversation) simpleEventMessage.getMessageObj());
+                conversation.setName(newConversation.getName());
+                headerText.setText(newConversation.getName());
+                if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
+                    conversation.setMembers(newConversation.getMembers());
+                    if (!newConversation.getType().equals(conversation.getType())) {
+                        conversation.setType(newConversation.getType());
+                        initChatInputMenu();
+                    }
+                    adapter.updateMemberList(conversation.getMemberList());
+                }
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS:
                 ArrayList<String> memberList = (ArrayList<String>) simpleEventMessage.getMessageObj();
@@ -1407,8 +1518,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
                     }
                     //本地过来的途径可能没有states
-                    if(receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
-                            && TextUtils.isEmpty(receivedWSMessage.getStates())){
+                    if (receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
+                            && TextUtils.isEmpty(receivedWSMessage.getStates())) {
                         wrapperLocalMessageStates(receivedWSMessage);
                     }
                     if (index == -1) {
@@ -1525,11 +1636,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (index != -1) {
                     UIMessage uiMessage = new UIMessage(recallMessage);
                     uiMessageList.remove(index);
-                    uiMessageList.add(index, uiMessage);
-                    adapter.setMessageList(uiMessageList);
-                    adapter.notifyItemChanged(index);
+                    if (recallMessage.getRecallFromUid().equals(recallMessage.getFromUser())) {
+                        uiMessageList.add(index, uiMessage);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemChanged(index);
+                        MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
+                    } else {
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyDataSetChanged();
+                    }
+
                 }
-                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), recallMessage);
                 if (index == uiMessageList.size() - 1) {
                     notifyConversationListChange();
                 }
@@ -1604,11 +1721,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     //接收到websocket发过来的状态变化
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResponseChannelMessageStates(EventMessage eventMessage) {
-        if (!eventMessage.getTag().equals(Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES)){
+        if (!eventMessage.getTag().equals(Constant.EVENTBUS_TAG_CHANNEL_MESSAGE_STATES)) {
             return;
         }
         ChannelMessageStates channelMessageStates = new ChannelMessageStates(eventMessage.getContent());
-        if(!TextUtils.equals(cid, channelMessageStates.channel)){
+        if (!TextUtils.equals(cid, channelMessageStates.channel)) {
             return;
         }
         adapter.updatesChannelMessageState(channelMessageStates.message, channelMessageStates.statesMap);
@@ -1788,11 +1905,31 @@ public class ConversationActivity extends ConversationBaseActivity {
             //operationIdList.add(R.string.delete);
         } else if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_SUCCESS) {
             switch (type) {
-                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                case Message.MESSAGE_TYPE_TEXT_WHISPER:
                     operationIdList.add(R.string.chat_long_click_copy);
-                    operationIdList.add(R.string.chat_long_click_transmit);
-                    if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
-                        operationIdList.add(R.string.chat_long_click_schedule);
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_BURN:
+                    if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                    }
+                    break;
+                case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                    if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        break;
+                    } else if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
+                        if (message.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                            operationIdList.add(R.string.chat_long_click_copy);
+                            operationIdList.add(R.string.chat_long_click_transmit);
+                        }
+                    } else {
+                        operationIdList.add(R.string.chat_long_click_copy);
+                        operationIdList.add(R.string.chat_long_click_transmit);
+                        operationIdList.add(R.string.chat_long_click_reply);
+                        if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
+                            operationIdList.add(R.string.chat_long_click_schedule);
+                        }
                     }
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -1825,7 +1962,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 default:
                     break;
             }
-            if (uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
+            if (!conversation.isServiceConversationType() && uiMessage.getMessage().getFromUser().equals(BaseApplication.getInstance().getUid()) && System.currentTimeMillis() - uiMessage.getCreationDate() < 120000) {
                 operationIdList.add(R.string.chat_long_click_recall);
             }
         }
@@ -1848,7 +1985,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                         UserInfoActivity.class, bundle);
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                boolean isMyMsg = MyApplication.getInstance().getUid().equals(uiMessage.getMessage().getFromUser());
+                String msgType = message.getMsgContentTextPlain().getMsgType();
+                if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
+//                    recallSendingMessage(uiMessage);
+                    requestToRecallMessage(uiMessage.getMessage());
+                    Intent intent = new Intent(context, ConversationBurnContentActivity.class);
+                    intent.putExtra("content", message.getMsgContentTextPlain().getText());
+                    startActivity(intent);
+                }
                 break;
+            case Message.MESSAGE_TYPE_TEXT_BURN:
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;
             case MESSAGE_TYPE_FILE_REGULAR_FILE:
@@ -1866,7 +2014,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
@@ -1887,9 +2034,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                intent.putExtra(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
                 context.startActivity(intent);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                // 服务号不可点击评论
+                if (conversation.isServiceConversationType()) return;
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     String mid = message.getMsgContentComment().getMessage();
@@ -2188,14 +2338,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
         } else {
-            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            Intent shareIntent = new Intent(this, ConversationSendMultiActivity.class);
             shareIntent.putExtra(Constant.SHARE_CONTENT, result);
-            startActivityForResult(shareIntent, SHARE_SEARCH_RUEST_CODE);
+            startActivityForResult(shareIntent, SHARE_MULTI_REQUEST_CODE);
         }
     }
 
     private void requestToRecallMessage(Message message) {
-        if (System.currentTimeMillis() - message.getCreationDate() >= 120000) {
+        if ((System.currentTimeMillis() - message.getCreationDate() >= 120000) && !message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
             showInfoDlg(getString(R.string.recall_fail_for_timeout));
         } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();

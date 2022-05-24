@@ -40,6 +40,8 @@ public interface ConversationInfoContract {
 
         void activityFinish();
 
+        void updateGroupNameSuccess();
+
     }
 
     interface Presenter {
@@ -68,7 +70,5 @@ public interface ConversationInfoContract {
         void quitGroupChannel();
 
         void delChannel();
-
-
     }
 }

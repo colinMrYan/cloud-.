@@ -39,6 +39,10 @@
 
 
     <string name="setting_about_text">About</string>
+    <string name="setting_font_size_set">Font Set</string>
+    <string name="setting_font_size_tip1">Adjust font size.</string>
+    <string name="setting_font_size_tip2">Slide the slider below to set the font size.</string>
+    <string name="setting_font_size_tip3">After setting, the font size in chat text messages will be changed. If there are problems or comments in the use process, you can give feedback in the cloud.</string>
     <string name="setting_about_welcome_text">Welcome Page</string>
     <string name="setting_about_protocol_text">Services Agreement</string>
     <string name="setting_about_privacy_text">Privacy Agreement</string>
@@ -92,7 +96,7 @@
 
     <string name="setting_language_set_text">Language</string>
 
-    <string name="setting_mine_theme_switch">Theme</string>
+    <string name="setting_mine_theme_switch">Change Skin</string>
     <string name="setting_mine_theme_white">White</string>
     <string name="setting_mine_theme_grey">Grey</string>
     <string name="setting_mine_theme_blue">Blue</string>

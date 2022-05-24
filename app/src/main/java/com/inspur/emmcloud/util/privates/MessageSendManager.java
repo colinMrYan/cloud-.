@@ -195,6 +195,8 @@ public class MessageSendManager {
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
+            case Message.MESSAGE_TYPE_TEXT_WHISPER:
+            case Message.MESSAGE_TYPE_TEXT_BURN:
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 WSAPIService.getInstance().sendMessage(message);
                 break;

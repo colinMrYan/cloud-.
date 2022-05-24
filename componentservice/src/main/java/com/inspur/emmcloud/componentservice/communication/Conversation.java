@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.componentservice.communication;
 
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
@@ -24,6 +26,7 @@ public class Conversation implements Serializable {
     public static final String TYPE_CAST = "CAST";
     public static final String TYPE_LINK = "LINK";
     public static final String TYPE_TRANSFER = "FILE_TRANSFER";
+    public static final String TYPE_SERVICE = "SERVICE";
     @Column(name = "id", isId = true)
     private String id;
     @Column(name = "enterprise")
@@ -58,6 +61,8 @@ public class Conversation implements Serializable {
     private String pyFull = "";
     @Column(name = "showName")
     private String showName = "";
+    @Column(name = "serviceId")
+    private String serviceId = "";
     private String draft = "";
 
     public Conversation() {
@@ -84,8 +89,9 @@ public class Conversation implements Serializable {
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
-        this.hide = false;
+        this.hide = JSONUtils.getBoolean(obj, "hide", false);
         this.action = JSONUtils.getString(obj, "action", "");
+        this.serviceId = JSONUtils.getString(obj, "serviceId", "");
         Router router = Router.getInstance();
         if (router != null) {
             CommunicationService contactService = router.getService(CommunicationService.class);
@@ -108,6 +114,15 @@ public class Conversation implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getServiceConversationId(){
+        String conversationId = "";
+        if (this.id.startsWith("FIBER")){
+            String[] strings = id.split(":");
+            conversationId = strings[1];
+        }
+        return conversationId;
     }
 
     public void setId(String id) {
@@ -253,6 +268,18 @@ public class Conversation implements Serializable {
 
     public void setShowName(String showName) {
         this.showName = showName;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public boolean isServiceConversationType(){
+        return !TextUtils.isEmpty(serviceId);
     }
 
     public SearchModel conversation2SearchModel() {

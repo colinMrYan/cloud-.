@@ -320,6 +320,9 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
      */
     public Map<String, String> getWebViewHeaders(String url) {
         addAuthorizationToken(url);
+        if (!webViewHeaders.containsKey("X-ECC-Current-Enterprise") && BaseApplication.getInstance().getCurrentEnterprise() != null) {
+            webViewHeaders.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+        }
         return webViewHeaders;
     }
 
@@ -367,8 +370,8 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                 headerLayout.setBackgroundColor(Color.parseColor(barTintColorString));
             }
             int titleBarHeight = getArguments().getInt(Constant.WEB_FRAGMENT_TITLE_BAR_HEIGHT, -1);
-            if (titleBarHeight >= 0){
-                RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) headerLayout.getLayoutParams();
+            if (titleBarHeight >= 0) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) headerLayout.getLayoutParams();
                 params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
                 params.height = DensityUtil.dip2px(titleBarHeight);
                 headerLayout.setLayoutParams(params);

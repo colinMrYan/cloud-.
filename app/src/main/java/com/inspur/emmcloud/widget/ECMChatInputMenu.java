@@ -189,6 +189,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private ECMChatInputMenuCallback inputMenuClickCallback;
     private List<String> languageList = new ArrayList<>();
     private ValueAnimator animator;
+    private boolean displayingWhisperOrBurnView = false;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -315,7 +316,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setVisibility(isContentBlank ? GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
+                addBtn.setVisibility(isContentBlank && !displayingWhisperOrBurnView ? VISIBLE : GONE);
                 if (isGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -818,15 +819,17 @@ public class ECMChatInputMenu extends LinearLayout {
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
                     R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email,
-                    R.drawable.ic_chat_input_add_video};
+                    R.drawable.ic_chat_input_add_video, R.drawable.ic_chat_input_read_disppear, R.drawable.ic_chat_input_whisper};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file), getContext().getString(R.string.voice_input),
                     getContext().getString(R.string.mention),
                     getContext().getString(R.string.voice_call),
                     getContext().getString(R.string.send_email),
-                    getContext().getString(R.string.video_call)};
-            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL};
+                    getContext().getString(R.string.video_call),
+                    getContext().getString(R.string.read_disappear),
+                    getContext().getString(R.string.voice_whisper)};
+            String[] functionActionArray = {"gallery", "camera", "file", "voice_input", "mention", VOICE_CALL, "send_email", VIDEO_CALL, "read_disappear", "whisper"};
             String inputControl = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -849,12 +852,16 @@ public class ECMChatInputMenu extends LinearLayout {
             boolean isVoiceCallEnable = false;
             boolean isSendEmailEnable = false;
             boolean isVideoCallEnable = false;
+            boolean isWhisperEnable = false;
+            boolean isBurnEnable = false;
 
             for (int i = 0; i < length; i++) {
                 String controlValue = inputControl.charAt(i) + "";
                 switch (i) {
                     case 0:
                         isInputTextEnable = controlValue.equals("1");
+                        isWhisperEnable = controlValue.endsWith("1");
+                        isBurnEnable = controlValue.endsWith("1");
                         break;
                     case 1:
                         isInputPhotoEnable = controlValue.equals("1");
@@ -889,7 +896,8 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             }
             if (isChannelTypeService) {
-                isInputVoiceEnable = false;
+                isBurnEnable = false;
+                isWhisperEnable = false;
             }
 
             if (isInputPhotoEnable && AppRoleUtils.isCanSendImage()) {
@@ -899,7 +907,7 @@ public class ECMChatInputMenu extends LinearLayout {
             if (isInputFileEnable && AppRoleUtils.isCanSendFile()) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[2], functionNameArray[2], functionActionArray[2]));
             }
-            if (isInputVoiceEnable) {
+            if (isInputVoiceEnable && !displayingWhisperOrBurnView) {
                 voiceBtn.setVisibility(VISIBLE);
             } else {
                 voiceBtn.setVisibility(GONE);
@@ -912,6 +920,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //如果是群组的话添加@功能
             if (isGroup) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
+                if (isWhisperEnable) {
+                    inputTypeBeanList.add(new InputTypeBean(functionIconArray[9], functionNameArray[9], functionActionArray[9]));
+                }
+            } else if (isBurnEnable) {
+                inputTypeBeanList.add(new InputTypeBean(functionIconArray[8], functionNameArray[8], functionActionArray[8]));
             }
 
             if (isVoiceCallEnable) {
@@ -927,7 +940,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
 
             if (inputTypeBeanList.size() > 0) {
-                addBtn.setVisibility(VISIBLE);
+                addBtn.setVisibility(displayingWhisperOrBurnView ? GONE : VISIBLE);
                 sendMsgBtn.setVisibility(GONE);
             }
 
@@ -946,8 +959,18 @@ public class ECMChatInputMenu extends LinearLayout {
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
                             break;
                         case "file":
-                            Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
-                            ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
+                            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.STORAGE, new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    Intent intent = new Intent(getContext(), NativeVolumeFileManagerActivity.class);
+                                    ((Activity) getContext()).startActivityForResult(intent, CHOOSE_FILE);
+                                }
+
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+                                    ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
+                                }
+                            });
                             break;
                         case "mention":
                             openMentionPage(false);
@@ -1014,6 +1037,12 @@ public class ECMChatInputMenu extends LinearLayout {
                         case "send_email":
                             inputMenuClickCallback.onInputMenuClick("mail");
                             break;
+                        case "read_disappear":
+                            inputMenuClickCallback.onInputMenuClick("read_disappear");
+                            break;
+                        case "whisper":
+                            inputMenuClickCallback.onInputMenuClick("whisper");
+                            break;
                         default:
                             break;
                     }
@@ -1046,6 +1075,20 @@ public class ECMChatInputMenu extends LinearLayout {
         return true;
     }
 
+    public void updateVoiceAndMoreLayout(boolean show) {
+        displayingWhisperOrBurnView = !show;
+        addBtn.setVisibility(show ? VISIBLE : GONE);
+        voiceBtn.setVisibility(show ? VISIBLE : GONE);
+        if (!show) {
+            if (viewpagerLayout.getVisibility() == View.VISIBLE) {
+                setOtherLayoutHeightLock(true);
+                setAddMenuLayoutShow(false);
+                setOtherLayoutHeightLock(false);
+            } else {
+                changeAddMenuLayoutContent(false);
+            }
+        }
+    }
 
     private void startVoiceCall(String type) {
         //语音通话
