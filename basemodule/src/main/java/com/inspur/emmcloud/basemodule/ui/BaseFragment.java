@@ -48,7 +48,7 @@ public class BaseFragment extends Fragment {
     }
 
     private void initFontScale() {
-        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
+        Float fontScale = PreferencesUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
         if (0 == Float.compare(1.0f, fontScale)) {
             return;
         }

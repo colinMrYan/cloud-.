@@ -441,12 +441,11 @@ public class DropPopMenu {
             //根据最长文字调整总宽度
             boolean iconIsGone = holder.iconIv.getVisibility() == View.GONE;
             if (position == 0) {
-                mWidth = mMaxTextWidth + mHorizontalMargin * 2 + 5;
+                mWidth = mMaxTextWidth + mHorizontalMargin * 2 + dip2px(mContext, 6);
                 if (!iconIsGone) {
                     mWidth += mIconWidth + mIconTextMargin;
                 }
             }
-
             return view;
         }
 

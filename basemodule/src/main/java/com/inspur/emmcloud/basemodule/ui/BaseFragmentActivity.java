@@ -122,7 +122,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        float fontScale = PreferencesByUserAndTanentUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
+        float fontScale = PreferencesUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
         if (0 != Float.compare(1.0f, fontScale)) {
             Configuration config = newBase.getResources().getConfiguration();
             config.fontScale = fontScale;

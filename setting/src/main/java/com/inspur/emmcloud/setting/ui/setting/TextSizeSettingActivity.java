@@ -68,7 +68,7 @@ public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFont
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                PreferencesByUserAndTanentUtils.putFloat(TextSizeSettingActivity.this, Constant.CARING_SWITCH_FLAG, mFontScale);
+                                PreferencesUtils.putFloat(TextSizeSettingActivity.this, Constant.CARING_SWITCH_FLAG, mFontScale);
                                 com.blankj.utilcode.util.AppUtils.relaunchApp(true);
                             }
                         })
@@ -76,7 +76,7 @@ public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFont
 
             }
         });
-        mFontScale = PreferencesByUserAndTanentUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
+        mFontScale = PreferencesUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
         textRatingBar.setRating(getRatingByFontScale(mFontScale));
         runOnUiThread(new Runnable() {
             @Override

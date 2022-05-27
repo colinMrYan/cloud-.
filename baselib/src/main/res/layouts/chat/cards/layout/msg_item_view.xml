@@ -107,7 +107,7 @@
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:textColor="@color/color_text_Anti_White"
-                        android:textSize="@dimen/content_moresmaller_textsize" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
