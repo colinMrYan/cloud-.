@@ -43,7 +43,7 @@ public class BaseFragment extends Fragment {
         if (currentThemeNo != BaseActivity.THEME_DARK) {
             ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
         } else {
-            ImmersionBar.with(getActivity()).statusBarColor(R.color.black).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
+            ImmersionBar.with(getActivity()).statusBarColor(R.color.content_bg_dark).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
         }
     }
 

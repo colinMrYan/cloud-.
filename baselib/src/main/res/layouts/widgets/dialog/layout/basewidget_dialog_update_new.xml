@@ -9,39 +9,40 @@
         android:paddingBottom="20dp">
 
         <LinearLayout
+            android:id="@+id/ll_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="88dp"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/shape_upgrade_dialog"
+            android:background="@drawable/shape_upgrade_dialog_new"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/app_update_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
                 android:gravity="center_horizontal"
-                android:paddingTop="23dp"
-                android:textColor="@color/color_text_tip"
-                android:textSize="@dimen/bigger_textsize" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/header_textsize" />
 
             <TextView
                 android:id="@+id/app_update_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="17dp"
-                android:textColor="@color/color_text_title_yellow"
-                android:textSize="@dimen/content_title_textsize" />
+                android:paddingTop="2dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/header_textsize" />
 
             <TextView
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:adjustViewBounds="true"
                 android:fadeScrollbars="false"
                 android:lineSpacingMultiplier="1.1"
@@ -51,61 +52,55 @@
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
                 android:scrollbars="vertical"
-                android:textColor="@color/color_text_tip"
-                android:textSize="@dimen/header_textsize" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1px"
-                android:background="?attr/color_list_divider" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/content_small_textsize" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:layout_marginTop="10dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="22dp">
 
-                <Button
+                <TextView
                     android:id="@+id/cancel_btn"
+                    style="?android:borderlessButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
-                    android:background="@null"
+                    android:background="@drawable/bg_button_99"
+                    android:foreground="?selectableItemBackground"
                     android:gravity="center"
-                    android:padding="12dp"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_text_tip"
+                    android:textColor="@color/color_e4"
                     android:textSize="@dimen/header_function_textsize" />
 
-                <View
-                    android:layout_width="1px"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="?attr/color_list_divider" />
-
-                <Button
+                <TextView
                     android:id="@+id/ok_btn"
+                    style="?android:borderlessButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_weight="1"
-                    android:background="@null"
+                    android:background="@drawable/bg_button_white"
+                    android:foreground="?selectableItemBackground"
                     android:gravity="center"
-                    android:padding="12dp"
                     android:text="@string/ok"
                     android:textAllCaps="false"
-                    android:textColor="@color/color_text_link"
+                    android:textColor="@color/color_33"
                     android:textSize="@dimen/header_function_textsize" />
             </LinearLayout>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/icon_aircraft"
-            android:layout_width="67dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/icon_update_new" />
     </RelativeLayout>
-
 </LinearLayout>

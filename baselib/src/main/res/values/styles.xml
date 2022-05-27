@@ -79,6 +79,12 @@
         <item name="text_color_33_66">@color/text_color</item>
         <item name="text_color_e1">@color/text_color</item>
         <item name="color_33_e1">@color/text_color</item>
+        <item name="color_4c_ba">@color/color_4c</item>
+        <item name="color_ec_1c">@color/bubble_bg_color</item>
+        <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_ff_33">@color/text_color</item>
+        <item name="color_ff_1c">@color/white</item>
+        <item name="color_99_b3">@color/color_text_common_level_two</item>
         <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
@@ -91,6 +97,7 @@
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
@@ -105,6 +112,7 @@
         <item name="color_stroke_46_9b">@color/color_9b</item>
         <item name="color_stroke_40_ee">@color/button_color_sel</item>
         <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_d8_30">@color/color_d8</item>
         <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/footer_tab_text_sel_blue</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
@@ -112,6 +120,7 @@
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_white</item>
         <item name="bg_tab_app">@drawable/selector_tab_app_btn</item>
         <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn</item>
+        <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
         <item name="bg_tab_communicate">@drawable/selector_tab_message_btn</item>
         <item name="bg_tab_contact">@drawable/selector_tab_contact_btn</item>
         <item name="bg_tab_find">@drawable/selector_tab_find_btn</item>
@@ -175,6 +184,12 @@
         <item name="text_color_33_66">@color/text_color</item>
         <item name="text_color_e1">@color/text_color</item>
         <item name="color_33_e1">@color/text_color</item>
+        <item name="color_4c_ba">@color/color_4c</item>
+        <item name="color_ec_1c">@color/bubble_bg_color</item>
+        <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_ff_33">@color/text_color</item>
+        <item name="color_ff_1c">@color/white</item>
+        <item name="color_99_b3">@color/color_text_common_level_two</item>
         <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
@@ -187,6 +202,8 @@
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
+        <item name="icon_chat_input_voice">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
@@ -201,6 +218,7 @@
         <item name="color_stroke_46_9b">@color/color_9b</item>
         <item name="color_stroke_40_ee">@color/button_color_sel</item>
         <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_d8_30">@color/color_d8</item>
         <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
@@ -208,6 +226,7 @@
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_grey</item>
         <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
         <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
         <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
         <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
         <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
@@ -270,6 +289,12 @@
         <item name="text_color_33_66">@color/text_color</item>
         <item name="text_color_e1">@color/text_color</item>
         <item name="color_33_e1">@color/text_color</item>
+        <item name="color_4c_ba">@color/color_4c</item>
+        <item name="color_ec_1c">@color/bubble_bg_color</item>
+        <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_ff_33">@color/text_color</item>
+        <item name="color_ff_1c">@color/white</item>
+        <item name="color_99_b3">@color/color_text_common_level_two</item>
         <item name="conversation_name_color">@color/color_text_tip</item>
         <item name="text_color_backup">@color/text_color</item>
         <item name="bubble_bg_color">@color/bubble_bg_color</item>
@@ -281,6 +306,7 @@
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
+        <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
@@ -295,6 +321,7 @@
         <item name="color_stroke_46_9b">@color/color_9b</item>
         <item name="color_stroke_40_ee">@color/button_color_sel</item>
         <item name="color_stroke_46_aa">@color/color_aa</item>
+        <item name="color_d8_30">@color/color_d8</item>
         <item name="color_stroke_46_00">@color/color_9900</item>
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -302,6 +329,7 @@
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
         <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
         <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
         <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
         <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
         <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
@@ -365,17 +393,24 @@
         <item name="text_color_33_66">@color/color_text_tip</item>
         <item name="text_color_e1">@color/header_text_e1</item>
         <item name="color_33_e1">@color/header_text_e1</item>
-        <item name="conversation_name_color">@color/header_text_e1</item>
+        <item name="color_4c_ba">@color/color_ba</item>
+        <item name="color_ec_1c">@color/color_bg_common_dark</item>
+        <item name="color_df_21">@color/color_21</item>
+        <item name="color_ff_33">@color/text_color_dark</item>
+        <item name="color_ff_1c">@color/color_bg_common_dark</item>
+        <item name="color_99_b3">@color/color_b3</item>
+        <item name="conversation_name_color">@color/color_text_common_level_two</item>
         <item name="text_color_backup">@color/text_color_dark</item>
         <item name="bubble_bg_color">@color/bubble_bg_color_dark</item>
-        <item name="color_list_divider">@color/color_list_divider_dark</item>
-        <item name="dialog_divider_e3_46">@color/color_list_divider_dark</item>
+        <item name="color_list_divider">@color/color_divider_38</item>
+        <item name="dialog_divider_e3_46">@color/color_divider_38</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran_dark</item>
         <item name="selector_list">@drawable/selector_list_dark</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
         <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
+        <item name="icon_chat_burn">@drawable/icon_chat_burn_dark</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
         <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>
@@ -391,6 +426,7 @@
         <item name="color_stroke_46_9b">@color/color_list_divider_dark</item>
         <item name="color_stroke_40_ee">@color/color_40</item>
         <item name="color_stroke_46_aa">@color/color_list_divider_dark</item>
+        <item name="color_d8_30">@color/bubble_bg_color_dark</item>
         <item name="color_stroke_46_00">@color/color_list_divider_dark</item>
         <item name="header_text_blue_white_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
@@ -398,6 +434,7 @@
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
         <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
         <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_chat_img">@drawable/ic_chat_img_bg_dark</item>
         <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
         <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
         <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>

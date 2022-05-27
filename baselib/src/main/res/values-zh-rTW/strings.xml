@@ -69,6 +69,8 @@
     <string name="upgrade">立即更新 </string>
     <string name="not_upgrade">下次再說</string>
     <string name="app_update_remind">更新提醒</string>
+    <string name="app_update_remind_new">發現新版本啦~</string>
+    <string name="let_message_top">將【%1$s】：</string>
     <string name="app_last_version">最新版本</string>
     <string name="more_work_place">更多辦公點 ...</string>
     <string name="cancel_filter">取消過濾 </string>

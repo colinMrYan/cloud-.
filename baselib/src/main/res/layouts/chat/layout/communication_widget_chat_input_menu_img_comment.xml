@@ -4,45 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/bt_cancel"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl_comment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:paddingLeft="15dp"
-        android:paddingTop="13dp"
-        android:paddingRight="15dp"
-        android:text="@string/cancel"
-        android:textSize="17sp" />
+        android:paddingTop="10dp">
 
-    <TextView
-        android:id="@+id/tv_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"
-        android:paddingTop="9dp"
-        android:text="@string/write_comment"
-        android:textSize="19sp" />
+        <Button
+            android:id="@+id/bt_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/cancel"
+            android:textSize="17sp" />
 
-    <Button
-        android:id="@+id/bt_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@null"
-        android:paddingLeft="15dp"
-        android:paddingTop="13dp"
-        android:paddingRight="15dp"
-        android:text="@string/send"
-        android:textColor="@color/color_text_common_level_two"
-        android:textSize="17sp" />
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:text="@string/write_comment"
+            android:textSize="19sp" />
+
+        <Button
+            android:id="@+id/bt_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/send"
+            android:textColor="@color/color_text_common_level_two"
+            android:textSize="17sp" />
+    </RelativeLayout>
 
     <com.inspur.emmcloud.widget.ChatInputEdit
         android:id="@+id/input_edit"
         android:layout_width="match_parent"
         android:layout_height="71dp"
-        android:layout_below="@id/tv_comment"
+        android:layout_below="@id/rl_comment"
         android:layout_margin="15dp"
         android:gravity="top"
         android:hint="@string/add_new_comment"
@@ -50,6 +57,7 @@
         android:paddingTop="6dp"
         android:paddingRight="10dp"
         android:paddingBottom="6dp"
+        android:textColorHint="@color/color_text_common_88"
         android:textSize="17sp" />
 
     <LinearLayout

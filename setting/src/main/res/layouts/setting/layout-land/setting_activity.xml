@@ -267,8 +267,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingBottom="11dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/setting_phone_recognize"
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
@@ -303,8 +303,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingBottom="11dp"
                         android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
                         android:text="@string/setting_font_size_set"
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
@@ -542,7 +542,7 @@
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
-                <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+                <Button
                     android:id="@+id/bt_setting_signout"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
@@ -550,16 +550,14 @@
                     android:layout_marginTop="25dp"
                     android:layout_marginRight="25dp"
                     android:layout_marginBottom="25dp"
+                    android:background="@drawable/shape_volume_file_download_btn"
                     android:elevation="1dp"
                     android:gravity="center"
                     android:onClick="onClick"
                     android:text="@string/quit_check"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    app:cus_backgroundColor="#36A5F6"
-                    app:cus_borderWidth="0dp"
-                    app:cus_isRadiusAdjustBounds="true" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 

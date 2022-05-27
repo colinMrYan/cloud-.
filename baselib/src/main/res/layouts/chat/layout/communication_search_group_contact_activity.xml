@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="?attr/content_bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -35,7 +35,9 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/tv_cancel"
-            android:background="@drawable/bg_search_contact_edit">
+            android:background="@drawable/bg_search_contact_edit"
+            android:paddingLeft="2dp"
+            android:paddingRight="6dp">
 
             <ImageView
                 android:id="@+id/iv_search_members"

@@ -97,7 +97,7 @@
 
     </RelativeLayout>
 
-    <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+    <Button
         android:id="@+id/bt_submit_feedback"
         android:layout_width="match_parent"
         android:layout_height="42dp"
@@ -106,15 +106,13 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginBottom="45dp"
+        android:background="@drawable/shape_volume_file_download_btn"
         android:elevation="1dp"
         android:gravity="center"
         android:onClick="onClick"
         android:text="@string/report_submit"
         android:textColor="@color/white"
-        android:textSize="15sp"
-        app:cus_backgroundColor="#36A5F6"
-        app:cus_borderWidth="0dp"
-        app:cus_isRadiusAdjustBounds="true" />
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

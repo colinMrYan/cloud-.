@@ -66,6 +66,8 @@
     <string name="upgrade">Update</string>
     <string name="not_upgrade">Skip</string>
     <string name="app_update_remind">Update Reminder</string>
+    <string name="app_update_remind_new">New Version Found</string>
+    <string name="let_message_top">Let【%1$s】：</string>
     <string name="app_last_version">Last Version</string>
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>

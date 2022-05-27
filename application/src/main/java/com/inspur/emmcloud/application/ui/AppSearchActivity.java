@@ -59,7 +59,7 @@ public class AppSearchActivity extends BaseActivity {
             // TODO Auto-generated method stub
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 InputMethodUtils.hide(AppSearchActivity.this);
-                onSearch(findViewById(R.id.search_btn));
+                onSearch();
                 return true;
             }
             return false;
@@ -107,8 +107,7 @@ public class AppSearchActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        int i = view.getId();
-        if (i == R.id.ibt_back) {
+        if (view.getId() == R.id.tv_cancel) {
             finish();
         }
     }
@@ -137,7 +136,7 @@ public class AppSearchActivity extends BaseActivity {
         finish();
     }
 
-    public void onSearch(View v) {
+    public void onSearch() {
         String keyword = searchEdit.getText().toString();
         if (StringUtils.isBlank(keyword)) {
             ToastUtils.show(getApplicationContext(),

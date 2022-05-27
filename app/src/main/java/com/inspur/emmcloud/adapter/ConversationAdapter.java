@@ -170,9 +170,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
-            holder.timeText.setText(uiConversation.isServiceContainer() ?  "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
+            holder.timeText.setText(uiConversation.isServiceContainer() ? "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
+            if (position == 0 || uiConversation.getConversation().isStick()) {
+                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list_top));
+            } else {
+                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list));
+            }
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
             if (isConversationTypeGroup) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
@@ -189,10 +194,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
                 holder.titleText.setText(uiConversation.getTitle());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
-            }   else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
                 holder.titleText.setText(uiConversation.getConversation().getName());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
-            }  else {
+            } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
             setConversationLastMessageSendStatus(holder, uiConversation);
@@ -364,7 +369,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         smoothMoveToPosition(mRecyclerView, 0);
     }
 
-    private void scrollToPosition(final LinearLayoutManager linearLayoutManager, final int i){
+    private void scrollToPosition(final LinearLayoutManager linearLayoutManager, final int i) {
         mRecyclerView.post(new Runnable() {
             @Override
             public void run() {

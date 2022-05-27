@@ -13,6 +13,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -46,10 +47,11 @@ public class DisplayMediaImageMsg {
         final CustomLoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
         MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
         String imageUri = msgContentMediaImage.getRawMedia();
+        int chatImgBg = ResourceUtils.getResValueOfAttr(context, R.attr.bg_chat_img);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.ic_chat_img_bg)
-                .showImageOnFail(R.drawable.ic_chat_img_bg)
-                .showImageOnLoading(R.drawable.ic_chat_img_bg)
+                .showImageForEmptyUri(chatImgBg)
+                .showImageOnFail(chatImgBg)
+                .showImageOnLoading(chatImgBg)
                 .considerExifParams(true)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)

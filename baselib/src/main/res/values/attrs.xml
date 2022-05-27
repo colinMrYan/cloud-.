@@ -8,6 +8,10 @@
     <attr name="text_ll_color_nor" format="reference|color" />
     <attr name="text_ll_color_sel" format="reference|color" />
     <attr name="text_color" format="reference|color" />
+    <attr name="color_4c_ba" format="reference|color" />
+    <attr name="color_ec_1c" format="reference|color" />
+    <attr name="color_df_21" format="reference|color" />
+    <attr name="color_d8_30" format="reference|color" />
     <attr name="text_color_backup" format="reference|color" />
     <attr name="bubble_bg_color" format="reference|color" />
     <attr name="color_list_divider" format="reference|color" />
@@ -27,6 +31,7 @@
 
     <attr name="bg_tab_app" format="reference" />
     <attr name="bg_tab_cloud_tweet" format="reference" />
+    <attr name="bg_chat_img" format="reference" />
     <attr name="bg_tab_communicate" format="reference" />
     <attr name="bg_tab_contact" format="reference" />
     <attr name="bg_tab_find" format="reference" />
@@ -71,6 +76,8 @@
     <attr name="text_color_33_66" format="reference" />
     <attr name="content_bg_f6_1c" format="reference" />
     <attr name="delete_input_icon" format="reference" />
+    <attr name="icon_chat_burn" format="reference" />
+    <attr name="icon_chat_input_voice" format="reference" />
     <attr name="delete_emotion_icon" format="reference" />
     <attr name="dialog_common_bg_36" format="reference" />
     <attr name="contact_struct_icon" format="reference" />
@@ -92,6 +99,9 @@
     <attr name="wallet_bottom_rectangle_with_shade" format="reference" />
     <attr name="ic_wallet_back_btn" format="reference" />
     <attr name="ic_wallet_setting" format="reference" />
+    <attr name="color_ff_33" format="reference|color" />
+    <attr name="color_ff_1c" format="reference|color" />
+    <attr name="color_99_b3" format="reference|color" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
