@@ -8,8 +8,8 @@
     <string name="application_app_input_search_key"> Please input the key words</string>
     <string name="application_app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
     <string name="application_app_center">APP Center</string>
-    <string name="application_app_commonly_use">Common mode</string>
-    <string name="application_app_commonly_use_close">Common off</string>
+    <string name="application_app_commonly_use">Common On</string>
+    <string name="application_app_commonly_use_close">Common Off</string>
     <string name="application_app_center_more_apps">More Apps</string>
     <string name="application_app_input_mail_password">Please Enter the company email password</string>
     <string name="application_app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
