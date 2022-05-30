@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
@@ -171,7 +174,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
             holder.timeText.setText(uiConversation.isServiceContainer() ? "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
-            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
+            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? VISIBLE : GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
             if (uiConversation.getConversation().isStick()) {
                 holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list_top));
@@ -226,18 +229,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 //            }
             switch (status) {
                 case Message.MESSAGE_SEND_ING:
-                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setVisibility(VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);
                     break;
                 case Message.MESSAGE_SEND_FAIL:
-                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setVisibility(VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_send_fail);
                     break;
                 default:
-                    holder.sendStatusImg.setVisibility(View.GONE);
+                    holder.sendStatusImg.setVisibility(GONE);
             }
         } else {
-            holder.sendStatusImg.setVisibility(View.GONE);
+            holder.sendStatusImg.setVisibility(GONE);
         }
     }
 
@@ -286,9 +289,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
-        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount() > 0 && !uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-            holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? VISIBLE : View.INVISIBLE);
+        if (uiConversation.getUnReadCount() > 0) {
+            if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)){
+                holder.unreadIcon.setVisibility(VISIBLE);
+                holder.unreadText.setVisibility(GONE);
+            }else {
+                holder.unreadIcon.setVisibility(GONE);
+                holder.unreadText.setVisibility(VISIBLE);
+                holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+            }
         }
     }
 
@@ -445,6 +455,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView unreadText;
         private ImageView dndImg;
         private AdapterListener adapterListener;
+        private ImageView unreadIcon;
 
         public ViewHolder(View convertView, AdapterListener adapterListener) {
             super(convertView);
@@ -469,6 +480,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     .findViewById(R.id.msg_dnd_img);
             sendStatusImg = (ImageView) convertView
                     .findViewById(R.id.img_sending_status);
+            unreadIcon = (ImageView) convertView
+                    .findViewById(R.id.msg_new_icon);
         }
 
 
