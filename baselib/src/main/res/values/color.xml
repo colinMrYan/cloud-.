@@ -207,5 +207,8 @@
     <color name="color_tran_40">#66111111</color>
     <color name="color_whisper_bg">#DFEEFF</color>
     <color name="color_whisper_text">#89A5C9</color>
+    <color name="color_burn_bg">#FAEAE2</color>
+    <color name="color_burn_bg_dark">#212121</color>
+    <color name="color_burn_text">#F18871</color>
 
 </resources>

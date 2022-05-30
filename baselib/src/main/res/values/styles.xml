@@ -82,6 +82,7 @@
         <item name="color_4c_ba">@color/color_4c</item>
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_chat_burn">@color/color_burn_bg</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -187,6 +188,7 @@
         <item name="color_4c_ba">@color/color_4c</item>
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_chat_burn">@color/color_burn_bg</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -292,6 +294,7 @@
         <item name="color_4c_ba">@color/color_4c</item>
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
+        <item name="color_chat_burn">@color/color_burn_bg</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -396,6 +399,7 @@
         <item name="color_4c_ba">@color/color_ba</item>
         <item name="color_ec_1c">@color/color_bg_common_dark</item>
         <item name="color_df_21">@color/color_21</item>
+        <item name="color_chat_burn">@color/color_burn_bg_dark</item>
         <item name="color_ff_33">@color/text_color_dark</item>
         <item name="color_ff_1c">@color/color_bg_common_dark</item>
         <item name="color_99_b3">@color/color_b3</item>
@@ -410,7 +414,7 @@
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
         <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
-        <item name="icon_chat_burn">@drawable/icon_chat_burn_dark</item>
+        <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
         <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>

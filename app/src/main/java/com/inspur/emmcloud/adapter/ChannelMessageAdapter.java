@@ -3,6 +3,7 @@ package com.inspur.emmcloud.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -278,30 +279,32 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             //悄悄话、阅后即焚 标识
             List<String> whispers = message.getMsgContentTextPlain().getWhisperUsers();
             String msgType = message.getMsgContentTextPlain().getMsgType();
-            if (!whispers.isEmpty()) {
+            boolean isBurnMsg = msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN);
+            if (!whispers.isEmpty() || isBurnMsg) {
+                int iconDrawableId = whispers.isEmpty() ? R.drawable.icon_chat_burn : R.drawable.icon_chat_whisper;
+                Drawable iconDrawable = context.getResources().getDrawable(iconDrawableId);
+                iconDrawable.setBounds(0, 0, iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight());
+                int bgDrawableId = whispers.isEmpty() ? R.drawable.bg_corner_burn_r10 : R.drawable.bg_corner_whisper_r10;
+                int textColor = whispers.isEmpty() ? R.color.color_burn_text : R.color.color_whisper_text;
                 if (isMyMsg) {
-                    holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
                     holder.bottomInfoTypeLeft.setVisibility(View.GONE);
-                    holder.bottomInfoTypeRight.setText(context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+                    holder.bottomInfoTypeRight.setVisibility(View.VISIBLE);
+                    holder.bottomInfoTypeRight.setCompoundDrawables(iconDrawable, null, null, null);
+                    holder.bottomInfoTypeRight.setBackgroundResource(bgDrawableId);
+                    holder.bottomInfoTypeRight.setTextColor(context.getResources().getColor(textColor));
+                    holder.bottomInfoTypeRight.setText(whispers.isEmpty() ? context.getString(R.string.read_disappear) : context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
                 } else {
                     holder.bottomInfoTypeRight.setVisibility(View.GONE);
                     holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
-                }
-                bottomViewUsed = true;
-            } else if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
-                if (isMyMsg) {
-                    holder.bottomIconTypeRight.setVisibility(View.VISIBLE);
-                    holder.bottomIconTypeLeft.setVisibility(View.GONE);
-                } else {
-                    holder.bottomIconTypeRight.setVisibility(View.GONE);
-                    holder.bottomIconTypeLeft.setVisibility(View.VISIBLE);
+                    holder.bottomInfoTypeLeft.setCompoundDrawables(iconDrawable, null, null, null);
+                    holder.bottomInfoTypeLeft.setBackgroundResource(bgDrawableId);
+                    holder.bottomInfoTypeLeft.setTextColor(context.getResources().getColor(textColor));
+                    holder.bottomInfoTypeLeft.setText(whispers.isEmpty() ? context.getString(R.string.read_disappear) : context.getString(R.string.voice_whisper));
                 }
                 bottomViewUsed = true;
             } else {
                 holder.bottomInfoTypeRight.setVisibility(View.GONE);
                 holder.bottomInfoTypeLeft.setVisibility(View.GONE);
-                holder.bottomIconTypeRight.setVisibility(View.GONE);
-                holder.bottomIconTypeLeft.setVisibility(View.GONE);
                 bottomViewUsed = false;
             }
         } else {
@@ -309,8 +312,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             //撤回5分钟以内的文本消息显示撤回选线IG
             holder.bottomInfoTypeRight.setVisibility(View.GONE);
             holder.bottomInfoTypeLeft.setVisibility(View.GONE);
-            holder.bottomIconTypeRight.setVisibility(View.GONE);
-            holder.bottomIconTypeLeft.setVisibility(View.GONE);
             bottomViewUsed = true;
             cardContentView.findViewById(R.id.tv_edit_again).setVisibility((uiMessage.getMessage().getType()
                     .equals(Message.MESSAGE_TYPE_TEXT_PLAIN)
@@ -530,8 +531,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public TextView sendTimeText;
         public TextView bottomInfoTypeLeft;
         public TextView bottomInfoTypeRight;
-        public ImageView bottomIconTypeLeft;
-        public ImageView bottomIconTypeRight;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
         public TextView unreadText;
@@ -559,10 +558,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.chat_msg_bottom_text_left);
             bottomInfoTypeRight = (TextView) view
                     .findViewById(R.id.chat_msg_bottom_text_right);
-            bottomIconTypeLeft = (ImageView) view
-                    .findViewById(R.id.chat_icon_bottom_left);
-            bottomIconTypeRight = (ImageView) view
-                    .findViewById(R.id.chat_icon_bottom_right);
             unreadText = (TextView) view
                     .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
