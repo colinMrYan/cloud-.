@@ -273,7 +273,6 @@ public class CommunicationFragment extends BaseFragment {
     private void initRecycleView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
-        updateServiceConversationMsgState(displayUIConversationList.isEmpty() ? null : displayUIConversationList.get(0));
         conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
@@ -525,7 +524,6 @@ public class CommunicationFragment extends BaseFragment {
                     @Override
                     public void accept(List<UIConversation> uiConversationList) throws Exception {
                         displayUIConversationList = uiConversationList;
-                        updateServiceConversationMsgState(displayUIConversationList.get(0));
                         conversationAdapter.setData(displayUIConversationList);
                         conversationAdapter.notifyDataSetChanged();
                     }
@@ -564,7 +562,33 @@ public class CommunicationFragment extends BaseFragment {
                 if (isConversationShow(uiConversation)) {
                     uiConversationList.add(uiConversation);
                 }
-
+            }
+            // 调整服务号入口顺序
+            if (uiConversationList.size() > 0) {
+                UIConversation serviceConversation = null;
+                for (UIConversation uiConversation : uiConversationList) {
+                    if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                        serviceConversation = uiConversation;
+                    }
+                }
+                if (serviceConversation != null && serviceConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                    int unreadServiceNum = 0;
+                    long lastReadTime = 0L;
+                    for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
+                        UIConversation uiConversation = new UIConversation(conversation);
+                        if (uiConversation.getConversation().isServiceConversationType()) {
+                            unreadServiceNum += uiConversation.getUnReadCount();
+                            if (uiConversation.getLastUpdate() > lastReadTime) {
+                                lastReadTime = uiConversation.getLastUpdate();
+                            }
+                        }
+                    }
+                    // 服务号入口展示设置时间5月30日00：00分
+                    serviceConversation.getConversation().setCreationDate(lastReadTime == 0L ? 1653840000000L : lastReadTime);
+                    serviceConversation.setLastUpdate(lastReadTime == 0L ? 1653840000000L : lastReadTime);
+                    ConversationCacheUtils.updateConversation(BaseApplication.getInstance(), serviceConversation.getConversation(), "lastUpdate");
+                    serviceConversation.setUnReadCount(unreadServiceNum);
+                }
             }
             return uiConversationList;
         }
@@ -709,7 +733,6 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             }
         }
-        updateServiceConversationMsgState(displayUIConversationList.get(0));
         conversationAdapter.setData(displayUIConversationList);
         conversationAdapter.notifyDataSetChanged();
     }
@@ -720,7 +743,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param uiConversation
      */
     private void setConversationRead(final UIConversation uiConversation) {
-        if (uiConversation.getUnReadCount() > 0) {
+        if (!uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE) && uiConversation.getUnReadCount() > 0) {
             WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             Observable.create(new ObservableOnSubscribe<Void>() {
                 @Override
@@ -731,39 +754,11 @@ public class CommunicationFragment extends BaseFragment {
             int position = displayUIConversationList.indexOf(uiConversation);
             if (position != -1) {
                 displayUIConversationList.get(position).setUnReadCount(0);
-                updateServiceConversationMsgState(displayUIConversationList.get(0));
                 conversationAdapter.setData(displayUIConversationList);
                 conversationAdapter.notifyRealItemChanged(position);
             }
 
         }
-    }
-
-    // 服务号未读消息数量
-    public void updateServiceConversationMsgState(final UIConversation conversation) {
-        if (conversation == null) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int unreadServiceNum = 0;
-                for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
-                    UIConversation uiConversation = new UIConversation(conversation);
-                    if (uiConversation.getConversation().isServiceConversationType()) {
-                        unreadServiceNum += uiConversation.getUnReadCount();
-                    }
-                }
-                if (conversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-                    conversation.setUnReadCount(unreadServiceNum);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            conversationAdapter.notifyRealItemChanged(0);
-                        }
-                    });
-                }
-            }
-        }).start();
-
     }
 
     /**
@@ -1223,7 +1218,6 @@ public class CommunicationFragment extends BaseFragment {
                 long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), uiConversation.getId());
                 uiConversation.setUnReadCount(unReadCount);
             }
-            updateServiceConversationMsgState(displayUIConversationList.get(0));
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyDataSetChanged();
         }
@@ -1325,6 +1319,9 @@ public class CommunicationFragment extends BaseFragment {
                 serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
                 serviceConversation.setAvatar("drawable://" + R.drawable.ic_channel_service);
                 serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
+                serviceConversation.setCreationDate(1653840000000L);
+                serviceConversation.setLastUpdate(1653840000000L);
+
                 conversationList.add(serviceConversation);
                 List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                 //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
