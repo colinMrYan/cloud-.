@@ -30,8 +30,12 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
             android:text="@string/setting_safe_gesture_face"
             android:textColor="?attr/header_text_color_e1"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
