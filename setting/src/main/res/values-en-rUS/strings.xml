@@ -45,7 +45,7 @@
     <string name="setting_font_size_tip3">After setting, the font size in chat text messages will be changed. If there are problems or comments in the use process, you can give feedback in the cloud+.</string>
     <string name="setting_about_welcome_text">Welcome Page</string>
     <string name="setting_about_protocol_text">Services Agreement</string>
-    <string name="setting_about_privacy_text">Privacy Agreement</string>
+    <string name="setting_about_privacy_text">Privacy Policy</string>
     <string name="setting_feed_back_no_empty">Feedback</string>
     <string name="setting_feed_back_out_of_length">Please limit your feedback to 200 words</string>
 
