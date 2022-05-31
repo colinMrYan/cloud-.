@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
@@ -139,6 +140,13 @@ public class SafeCenterActivity extends BaseActivity {
         } else if (id == R.id.rl_setting_safe_account_device) {
             IntentUtils.startActivity(this, DeviceManagerActivity.class);
         } else if (id == R.id.rl_password_modify) {
+            String modifyUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(modifyUrl) && modifyUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", modifyUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
         } else if (id == R.id.rl_password_reset) {
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
