@@ -53,9 +53,11 @@
     <style name="AppTheme_0" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_white</item>
+        <item name="mine_header_bg_color">@color/header_bg_white</item>
         <item name="header_bg_search_1c">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_white</item>
+        <item name="mine_header_bg_1c">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
@@ -153,15 +155,21 @@
         <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
         <item name="ic_wallet_back_btn">@drawable/ic_card_back_btn</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set</item>
+        <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
+        <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
+        <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
 
     </style>
 
     <style name="AppTheme_1" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_grey</item>
+        <item name="mine_header_bg_color">@color/header_bg_white</item>
         <item name="header_bg_search_1c">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_grey</item>
+        <item name="mine_header_bg_1c">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
@@ -259,15 +267,21 @@
         <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
         <item name="ic_wallet_back_btn">@drawable/ic_card_back_btn</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set</item>
+        <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
+        <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
+        <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
 
     </style>
 
     <style name="AppTheme_2" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_blue</item>
+        <item name="mine_header_bg_color">@color/header_bg_blue</item>
         <item name="header_bg_search_1c">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_blue</item>
+        <item name="mine_header_bg_1c">@drawable/shape_header_bg_blue</item>
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
@@ -364,15 +378,21 @@
         <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_black</item>
+        <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
+        <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
+        <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
 
     </style>
 
     <style name="AppTheme_3" parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/color_bg_common_dark</item>
+        <item name="mine_header_bg_color">@color/color_bg_common_dark</item>
         <item name="header_bg_search_1c">@color/color_bg_common_dark</item>
         <item name="header_bg">@drawable/shape_header_bg_dark</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_dark_1c</item>
+        <item name="mine_header_bg_1c">@drawable/shape_header_bg_dark_1c</item>
         <item name="footer_bg">@drawable/footer_bg_dark</item>
         <item name="footer_bg_color">@color/footer_bg_dark</item>
         <item name="header_text_color">@color/header_text</item>
@@ -469,6 +489,10 @@
         <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade_dark</item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_black</item>
+        <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_dark</item>
+        <item name="ic_chat_button_add">@drawable/ic_chat_button_add_dark</item>
+        <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_dark</item>
+        <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_dark</item>
 
     </style>
 

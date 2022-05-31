@@ -39,6 +39,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
@@ -62,6 +63,7 @@ import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
@@ -1229,7 +1231,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private void setVoiceInputStatus(int tag) {
         if (voiceBtn.getTag() == null || (int) voiceBtn.getTag() != tag) {
             voiceBtn.setTag(tag);
-            voiceBtn.setImageResource((tag == 0) ? R.drawable.ic_chat_input_voice : R.drawable.ic_chat_input_keyboard);
+            voiceBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), tag == 0 ? R.attr.ic_chat_voice_input : R.attr.ic_chat_input_keyboards));
             inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
             audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
             if (tag != 0) {
@@ -1375,7 +1377,7 @@ public class ECMChatInputMenu extends LinearLayout {
         viewpagerLayout.setVisibility(isShowEmotion ? View.GONE : View.VISIBLE);
         emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
         emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
-        emotionBtn.setImageResource(isShowEmotion ? R.drawable.ic_chat_input_keyboard : R.drawable.ic_chat_btn_emotion);
+        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), isShowEmotion ? R.attr.ic_chat_input_keyboards : R.attr.ic_chat_button_emotion));
     }
 
     @OnTouch({R.id.voice_level_img})
@@ -1493,7 +1495,7 @@ public class ECMChatInputMenu extends LinearLayout {
         } else if (addMenuLayout.isShown()) {
             hideAddMenuLayout();
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
-            emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
+            emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(),R.attr.ic_chat_button_emotion));
         }
 
     }
@@ -1507,7 +1509,7 @@ public class ECMChatInputMenu extends LinearLayout {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0, 0);
         addMenuLayout.setLayoutParams(params);
         addMenuLayout.setVisibility(View.GONE);
-        emotionBtn.setImageResource(R.drawable.ic_chat_btn_emotion);
+        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(),R.attr.ic_chat_button_emotion));
     }
 
     public void hideVoiceInputLayout() {

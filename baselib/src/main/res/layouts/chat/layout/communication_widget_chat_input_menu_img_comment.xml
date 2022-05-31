@@ -19,7 +19,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="@string/cancel"
-            android:textSize="17sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_comment"
@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:text="@string/write_comment"
-            android:textSize="19sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/bt_send"
@@ -42,7 +42,7 @@
             android:paddingRight="15dp"
             android:text="@string/send"
             android:textColor="@color/color_text_common_level_two"
-            android:textSize="17sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <com.inspur.emmcloud.widget.ChatInputEdit
@@ -58,7 +58,7 @@
         android:paddingRight="10dp"
         android:paddingBottom="6dp"
         android:textColorHint="@color/color_text_common_88"
-        android:textSize="17sp" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/middle_layout"
@@ -79,7 +79,7 @@
             android:onClick="onClick"
             android:padding="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/comment_image_emotion" />
+            android:src="@drawable/ic_chat_button_emotion_normal" />
 
         <ImageButton
             android:id="@+id/at_people_btn"
@@ -91,7 +91,7 @@
             android:onClick="onClick"
             android:padding="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/comment_image_at" />
+            android:src="@drawable/ic_chat_input_at_normal" />
     </LinearLayout>
 
     <RelativeLayout

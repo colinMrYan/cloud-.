@@ -47,6 +47,14 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    protected void setMineFragmentStatusBar() {
+        int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_header_bg_color);
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(getActivity(), R.attr.status_bar_dark_font);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(currentThemeNo != 3 ? R.color.white : R.color.black).navigationBarDarkIcon(true, 1.0f).init();
+
+    }
+
     private void initFontScale() {
         Float fontScale = PreferencesUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
         if (0 == Float.compare(1.0f, fontScale)) {

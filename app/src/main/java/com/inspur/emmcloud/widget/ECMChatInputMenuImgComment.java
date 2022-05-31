@@ -30,6 +30,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -97,6 +98,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private String cid = "";
     private boolean isAppCloseSoft = false;
     private boolean iconShowEmotion;
+    private int currentThemeNo;
 
     public ECMChatInputMenuImgComment(Context context) {
         this(context, null);
@@ -116,6 +118,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private void initView(final Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
+        currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         setAddMenuLayoutShow(true);
         initDarkSkin();
         initInputEdit();
@@ -129,6 +132,10 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         TextView textView = (TextView) findViewById(R.id.tv_comment);
         textView.setTextColor(DarkUtil.getTextColor());
         findViewById(R.id.communication_edit_rl).setBackgroundColor(DarkUtil.getTextContainerColor());
+        atPeopleBtn.setImageResource(currentThemeNo != THEME_DARK ? R.drawable.ic_chat_input_at_normal
+                : R.drawable.ic_chat_input_at_dark);
+        emotionBtn.setImageResource(currentThemeNo != THEME_DARK ? R.drawable.ic_chat_button_emotion_normal
+                : R.drawable.ic_chat_button_emotion_dark);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -271,10 +278,10 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
         if (isShow) {
             iconShowEmotion = true;
-            emotionBtn.setImageResource(R.drawable.comment_image_keyboard);
+            emotionBtn.setImageResource(currentThemeNo == 3 ? R.drawable.ic_chat_input_keyboard_dark : R.drawable.ic_chat_input_keyboard_normal);
         } else {
             iconShowEmotion = false;
-            emotionBtn.setImageResource(R.drawable.comment_image_emotion);
+            emotionBtn.setImageResource(currentThemeNo == 3 ? R.drawable.ic_chat_button_emotion_dark : R.drawable.ic_chat_button_emotion_normal);
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="header_bg_color" format="reference|color" />
+    <attr name="mine_header_bg_color" format="reference|color" />
     <attr name="header_text_color" format="reference|color" />
     <attr name="content_bg" format="reference|color" />
     <attr name="content_bg_level_two" format="reference|color" />
@@ -62,6 +63,7 @@
 
     <!--暗黑最新UI颜色背景设计-->
     <attr name="header_bg_1c" format="reference" />
+    <attr name="mine_header_bg_1c" format="reference" />
     <attr name="header_bg_search_1c" format="reference" />
     <attr name="header_text_color_e1" format="reference" />
     <attr name="header_button_text_color_e1" format="reference" />
@@ -100,6 +102,10 @@
     <attr name="wallet_bottom_rectangle_with_shade" format="reference" />
     <attr name="ic_wallet_back_btn" format="reference" />
     <attr name="ic_wallet_setting" format="reference" />
+    <attr name="ic_chat_voice_input" format="reference" />
+    <attr name="ic_chat_button_add" format="reference" />
+    <attr name="ic_chat_button_emotion" format="reference" />
+    <attr name="ic_chat_input_keyboards" format="reference" />
     <attr name="color_ff_33" format="reference|color" />
     <attr name="color_ff_1c" format="reference|color" />
     <attr name="color_99_b3" format="reference|color" />
