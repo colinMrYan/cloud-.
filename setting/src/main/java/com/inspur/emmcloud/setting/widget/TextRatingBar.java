@@ -2,7 +2,6 @@ package com.inspur.emmcloud.setting.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -60,7 +59,7 @@ public class TextRatingBar extends View {
         mCirclePaintBig.setColor(Color.parseColor("#EBEFF5"));
         mCirclePaintSmall.setColor(Color.parseColor("#388EFF"));
         mTextBgPaint.setColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#292929" : "#F5F5F5"));
-        mTextPaint.setStrokeWidth(DensityUtil.dip2px(3));
+        mTextPaint.setStrokeWidth(DensityUtil.dip2px(1));
         mTextPaint.setColor(Color.GRAY);
         mRoundRectPadding = DensityUtil.dip2px(2);
     }
