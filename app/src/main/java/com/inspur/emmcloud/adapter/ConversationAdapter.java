@@ -27,11 +27,14 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -195,10 +198,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
-                holder.titleText.setText(uiConversation.getTitle());
+                    holder.titleText.setText(uiConversation.getTitle());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
-            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
-                holder.titleText.setText(uiConversation.getConversation().getName());
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**机器人、服务号频道**/
+                Robot robot = RobotCacheUtils.getRobotById(context, uiConversation.getConversation().getName());
+                if (robot != null) {
+                    holder.titleText.setText(robot.getName());
+                } else {
+                    holder.titleText.setText(uiConversation.getConversation().getName());
+                }
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
             } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
