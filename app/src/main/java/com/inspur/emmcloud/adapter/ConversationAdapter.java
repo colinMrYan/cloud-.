@@ -62,12 +62,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
+        if (adapterListener != null) {
+            adapterListener.onDataChange();
+        }
     }
 
     public void setData(List<UIConversation> uiConversationList) {
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
+        }
+        if (adapterListener != null) {
+            adapterListener.onDataChange();
         }
     }
 
