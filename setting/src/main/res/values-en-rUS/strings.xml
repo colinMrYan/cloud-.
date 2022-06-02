@@ -137,24 +137,24 @@
     <string name="setting_net_check_net_current_state_unknown">Unknown</string>
 
     <string name="settings_device_manager">Device Management</string>
-
+    <string name="setting_os_version">OS Ver</string>
     <string name="setting_service_term">Services Agreement</string>
     <string name="setting_software_service_term">Services Agreement</string>
 
     <string name="setting_device_unbind_sucess">Device unbound successfully!</string>
     <string name="setting_device_other_unbind_warning">After unbinding, log on from %1$s, you need to re register the device</string>
     <string name="setting_device_current_unbind_warning">After unbinding, you need to log in again and register your device</string>
-    <string name="setting_last_use_time">Last use time</string>
+    <string name="setting_last_use_time">Recent Use Time</string>
     <string name="setting_bind_device">Current Binding Devices</string>
     <string name="setting_current_device">Current device</string>
     <string name="setting_history_device">Using Devices History</string>
-    <string name="setting_device_history_use">Historical use</string>
     <string name="setting_device_bind_time_title">Binding time: </string>
     <string name="setting_device_bind_time">Binding time</string>
     <string name="setting_device_info">Device details</string>
-    <string name="setting_device_id">Device ID</string>
+    <string name="setting_device_id">Device UDID</string>
     <string name="setting_unbind_this_device">Unbound this device</string>
     <string name="setting_sure_switch_to">Make sure to switch to %1$s</string>
+    <string name="setting_device_history_use">Device Using Records</string>
 
     <string name="setting_enter_app">Enter the application</string>
     <string name="setting_safe_cloud_touch_id">%1$s </string>

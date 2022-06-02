@@ -65,6 +65,46 @@
                 android:paddingLeft="16dp">
 
                 <RelativeLayout
+                    android:id="@+id/device_version_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/device_version_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="@string/setting_os_version"
+                        android:textColor="?attr/text_color_e1"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/device_version_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/device_version_title"
+                        android:ellipsize="end"
+                        android:gravity="right"
+                        android:maxLines="1"
+                        android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5px"
+                    android:background="?attr/color_list_divider" />
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -117,7 +157,7 @@
                         android:paddingRight="10dp"
                         android:paddingBottom="10dp"
                         android:text="@string/setting_device_id"
-                        android:textColor="?attr/text_color_e1"
+                        android:textColor="@color/app_font_color"
                         android:textSize="17sp" />
 
                     <TextView

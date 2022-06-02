@@ -142,15 +142,16 @@
     <string name="setting_device_unbind_sucess">设备解绑成功！</string>
     <string name="setting_device_other_unbind_warning">解绑后，从%1$s上登录，您需要重新注册设备</string>
     <string name="setting_device_current_unbind_warning">解绑后，您需要重新登录并注册设备</string>
-    <string name="setting_last_use_time">上次使用时间</string>
+    <string name="setting_last_use_time">最近使用时间</string>
+    <string name="setting_os_version">OS版本</string>
     <string name="setting_bind_device">绑定设备</string>
     <string name="setting_current_device">当前设备</string>
     <string name="setting_history_device">历史设备</string>
-    <string name="setting_device_history_use">历史使用</string>
+    <string name="setting_device_history_use">设备使用记录</string>
     <string name="setting_device_bind_time_title">绑定时间：</string>
     <string name="setting_device_bind_time">绑定时间</string>
     <string name="setting_device_info">设备详情</string>
-    <string name="setting_device_id">设备ID</string>
+    <string name="setting_device_id">设备UDID</string>
     <string name="setting_unbind_this_device">解绑此设备</string>
     <string name="setting_sure_switch_to">确定切换到%1$s</string>
 
