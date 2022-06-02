@@ -140,7 +140,7 @@ public class SafeCenterActivity extends BaseActivity {
         } else if (id == R.id.rl_setting_safe_account_device) {
             IntentUtils.startActivity(this, DeviceManagerActivity.class);
         } else if (id == R.id.rl_password_modify) {
-            String modifyUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            String modifyUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_MODIFY_URL);
             if (!StringUtils.isEmpty(modifyUrl) && modifyUrl.startsWith("http")) {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", modifyUrl);
@@ -149,6 +149,13 @@ public class SafeCenterActivity extends BaseActivity {
             }
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
         } else if (id == R.id.rl_password_reset) {
+            String forgetUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             Bundle bundle = new Bundle();
