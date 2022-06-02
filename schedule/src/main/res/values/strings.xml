@@ -173,7 +173,7 @@
     <string name="schedule_calendar_schedules">项日程</string>
     <string name="schedule_meeting_no_meeting_today">暂无会议</string>
     <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
-    <string name="schedule_exchange_login_fail">%1$s 密码已更改，请到日程设置中更新</string>
+    <string name="schedule_exchange_login_fail">%1$s 连接Exchange失败，请确认 Exchange 账号和密码是否正确！</string>
     <string name="schedule_account_type">日历</string>
     <string name="schedule_cloud_calendar">&appname;日程</string>
     <string name="schedule_cloud_meeting">&appname;会议</string>
