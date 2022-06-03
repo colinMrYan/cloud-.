@@ -123,6 +123,9 @@ public class BlueToothService extends ImpPlugin {
             case "scan":
                 scanBluetooth();
                 break;
+            case "cancelScan":
+                cancelDiscovery();
+                break;
             case "connectDevice":
                 connectDevice(paramsObject);
                 break;
@@ -217,7 +220,7 @@ public class BlueToothService extends ImpPlugin {
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (AppUtils.isLocationEnabled(getActivity())) {
                     if (isDiscovering()) {
-                        cancelDiscovery();
+                        return;
                     }
                     discoveryDevicesMap.clear();
                     Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -286,6 +289,28 @@ public class BlueToothService extends ImpPlugin {
     public void cancelDiscovery() {
         if (isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                json.put("result", result);
+                jsCallback(successCal, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                jsCallback(failCal, e.getMessage());
+            }
+        } else {
+            JSONObject json = new JSONObject();
+            try {
+                //当前不在扫描状态
+                json.put("status", 2);
+                JSONObject result = new JSONObject();
+                json.put("result", result);
+                jsCallback(successCal, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                jsCallback(failCal, e.getMessage());
+            }
         }
     }
 
