@@ -47,6 +47,17 @@ public class DarkUtil {
 
     /**
      * 兜底
+     * 暗黑模式适配获取背景色
+     *
+     * @return 背景色
+     */
+    public static int getPopContainerColor() {
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#FFFFFF" : "#404040");
+    }
+
+    /**
+     * 兜底
      * 暗黑模式适配获取list下划线颜色
      *
      * @return list下划线颜色

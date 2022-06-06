@@ -43,12 +43,20 @@ public class BaseFragment extends Fragment {
         if (currentThemeNo != BaseActivity.THEME_DARK) {
             ImmersionBar.with(getActivity()).statusBarColor(R.color.white).navigationBarColor(R.color.white).statusBarDarkFont(true, 0.2f).navigationBarDarkIcon(true, 1.0f).init();
         } else {
-            ImmersionBar.with(getActivity()).statusBarColor(R.color.black).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
+            ImmersionBar.with(getActivity()).statusBarColor(R.color.content_bg_dark).navigationBarColor(R.color.black).statusBarDarkFont(false, 0.2f).navigationBarDarkIcon(false, 1.0f).init();
         }
     }
 
+    protected void setMineFragmentStatusBar() {
+        int color = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_header_bg_color);
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(getActivity(), R.attr.status_bar_dark_font);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        ImmersionBar.with(getActivity()).statusBarColor(color).statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(currentThemeNo != 3 ? R.color.white : R.color.black).navigationBarDarkIcon(true, 1.0f).init();
+
+    }
+
     private void initFontScale() {
-        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
+        Float fontScale = PreferencesUtils.getFloat(getActivity(), Constant.CARING_SWITCH_FLAG, 1);
         if (0 == Float.compare(1.0f, fontScale)) {
             return;
         }

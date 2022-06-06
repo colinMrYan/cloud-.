@@ -204,17 +204,17 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 
     private void showSelectUpgradeDlg() {
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update_new);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        TextView okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
         TextView appUpdateContentText = dialog.findViewById(R.id.text);
         appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
         appUpdateContentText.setText(upgradeMsg);
         TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
         TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        appUpdateTitle.setText(context.getString(R.string.app_update_remind_new));
+        appUpdateVersion.setText("(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,7 +241,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 });
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        TextView cancelBt = dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.not_upgrade));
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,17 +262,17 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
     private void showForceUpgradeDlg() {
         // TODO Auto-generated method stub
         final MyDialog dialog = new MyDialog(context,
-                R.layout.basewidget_dialog_two_buttons);
+                R.layout.basewidget_dialog_update_new);
         dialog.setCancelable(false);
-        Button okBtn = dialog.findViewById(R.id.ok_btn);
+        TextView okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
         TextView appUpdateContentText = dialog.findViewById(R.id.text);
         appUpdateContentText.setMovementMethod(ScrollingMovementMethod.getInstance());
         appUpdateContentText.setText(upgradeMsg);
         TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
-        appUpdateTitle.setText(context.getString(R.string.app_update_remind));
+        appUpdateTitle.setText(context.getString(R.string.app_update_remind_new));
         TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateVersion.setText(context.getString(R.string.app_last_version) + "(" + getUpgradeResult.getLatestVersion() + ")");
+        appUpdateVersion.setText("(" + getUpgradeResult.getLatestVersion() + ")");
         okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -292,7 +292,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
 
             }
         });
-        Button cancelBt = dialog.findViewById(R.id.cancel_btn);
+        TextView cancelBt = dialog.findViewById(R.id.cancel_btn);
         cancelBt.setText(context.getString(R.string.exit));
         cancelBt.setOnClickListener(new View.OnClickListener() {
 

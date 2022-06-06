@@ -3,6 +3,7 @@ package com.inspur.emmcloud.login.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
         int paddingTop = DensityUtil.dip2px(context, 12);
         enterpriseText.setPadding(paddingLeft, paddingTop, paddingRight, paddingTop);
         enterpriseText.setTextColor(DarkUtil.getTextColor());
+        enterpriseText.setEllipsize(TextUtils.TruncateAt.END);
         Enterprise enterprise = enterpriseList.get(position);
         enterpriseText.setText(enterprise.getName());
         return enterpriseText;

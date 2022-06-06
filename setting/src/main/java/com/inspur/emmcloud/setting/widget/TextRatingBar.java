@@ -13,6 +13,7 @@ import android.view.View;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
+import com.inspur.emmcloud.setting.R;
 
 
 public class TextRatingBar extends View {
@@ -58,7 +59,7 @@ public class TextRatingBar extends View {
         mCirclePaintBig.setColor(Color.parseColor("#EBEFF5"));
         mCirclePaintSmall.setColor(Color.parseColor("#388EFF"));
         mTextBgPaint.setColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#292929" : "#F5F5F5"));
-        mTextPaint.setStrokeWidth(DensityUtil.dip2px(3));
+        mTextPaint.setStrokeWidth(DensityUtil.dip2px(1));
         mTextPaint.setColor(Color.GRAY);
         mRoundRectPadding = DensityUtil.dip2px(2);
     }
@@ -89,10 +90,16 @@ public class TextRatingBar extends View {
         //3.画文字
         mTextPaint.setTextSize(DensityUtil.dip2px(14));
         canvas.drawText(texts[0], mLeft, mTop, mTextPaint);
-        canvas.drawRoundRect(new RectF(mLeft + mUnitSize - 8 * mRoundRectPadding, mTop - 7 * mRoundRectPadding, mLeft + mUnitSize + 8 * mRoundRectPadding, mTop + 2 * mRoundRectPadding),
-                mRoundRectPadding, mRoundRectPadding, mTextBgPaint);
 
-        canvas.drawText(texts[1], mLeft + mUnitSize, mTop, mTextPaint);
+        if (isTextEnglish()) {
+            canvas.drawRoundRect(new RectF(mLeft + mUnitSize - 12 * mRoundRectPadding, mTop - 7 * mRoundRectPadding, mLeft + mUnitSize + 12 * mRoundRectPadding, mTop + 2 * mRoundRectPadding),
+                    mRoundRectPadding, mRoundRectPadding, mTextBgPaint);
+        } else {
+            canvas.drawRoundRect(new RectF(mLeft + mUnitSize - 8 * mRoundRectPadding, mTop - 7 * mRoundRectPadding, mLeft + mUnitSize + 8 * mRoundRectPadding, mTop + 2 * mRoundRectPadding),
+                    mRoundRectPadding, mRoundRectPadding, mTextBgPaint);
+        }
+
+        canvas.drawText((String) getResources().getText(R.string.news_font_normal), mLeft + mUnitSize, mTop, mTextPaint);
 
         mTextPaint.setTextSize(DensityUtil.dip2px(20));
         canvas.drawText(texts[4], mLeft + 4 * mUnitSize, mTop, mTextPaint);
@@ -120,6 +127,11 @@ public class TextRatingBar extends View {
         }
         return true;
     }
+
+    private boolean isTextEnglish() {
+        return getResources().getString(R.string.news_font_normal).equals("Normal");
+    }
+
 
     public void setRating(int rating) {
         mRating = rating;

@@ -107,7 +107,15 @@
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:textColor="@color/color_text_Anti_White"
-                        android:textSize="@dimen/content_moresmaller_textsize" />
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/msg_new_icon"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:visibility="gone"
+                        android:background="@drawable/bg_tips_new_message"
+                        android:gravity="center"/>
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

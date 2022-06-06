@@ -13,7 +13,7 @@
         android:childDivider="@android:color/transparent"
         android:descendantFocusability="blocksDescendants"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0.5px"
+        android:dividerHeight="0dp"
         android:listSelector="#00000000" />
 </RelativeLayout>
 

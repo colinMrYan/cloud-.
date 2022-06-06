@@ -38,7 +38,7 @@
     <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
     <color name="content_bg_level_two">#f6f6f6</color>
-    <color name="content_bg_dark">#000000</color>
+    <color name="content_bg_dark">#111111</color>
     <color name="content_bg_dark_level_two">#292929</color>
     <color name="content_bg_dark_30">#303030</color>
     <!-- 原底部文字颜色#698fa7 -->
@@ -123,6 +123,7 @@
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
     <color name="color_list_divider_dark">#464646</color>
+    <color name="color_divider_38">#383838</color>
     <color name="color_list_divider_tran_dark">#99ebedf0</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
@@ -154,6 +155,9 @@
     <color name="color_text_link">#36A5F6</color>
     <!--提示类的文字颜色 或 其他666-->
     <color name="color_text_tip">#666666</color>
+    <color name="color_e4">#E4EFFF</color>
+    <color name="color_33">#338BFF</color>
+    <color name="color_upgrade_new">#4D97FF</color>
     <color name="color_text_red">#FF4242</color>
     <color name="color_text_help">#999999</color>
     <color name="color_text_Anti_White">#FFFFFF</color>
@@ -176,6 +180,9 @@
     <color name="color_divider">#DDDDDD</color>
     <color name="button_color_nor">#FFFFFF</color>
     <color name="button_color_sel">#EEEEEE</color>
+    <color name="color_sel_dark_2D">#2D2D2E</color>
+    <color name="color_nor_dark_23">#232324</color>
+    <color name="color_d8">#d8d8d8</color>
     <color name="button_color_nor_dark">#1C1C1E</color>
     <color name="button_color_sel_dark">#323232</color>
     <color name="text_color">#333333</color>
@@ -193,7 +200,15 @@
     <color name="color_bb">#bbbbbb</color>
     <color name="color_ca">#cacaca</color>
     <color name="color_e3">#e3e3e3</color>
+    <color name="color_4c">#4C4C4C</color>
+    <color name="color_ba">#BABABA</color>
+    <color name="color_21">#212121</color>
+    <color name="color_b3">#B3B3B3</color>
+    <color name="color_tran_40">#66111111</color>
     <color name="color_whisper_bg">#DFEEFF</color>
     <color name="color_whisper_text">#89A5C9</color>
+    <color name="color_burn_bg">#FAEAE2</color>
+    <color name="color_burn_bg_dark">#212121</color>
+    <color name="color_burn_text">#F18871</color>
 
 </resources>

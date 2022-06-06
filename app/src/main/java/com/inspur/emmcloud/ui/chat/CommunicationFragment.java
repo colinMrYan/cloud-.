@@ -1,14 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
-import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.MenuPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -40,7 +38,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -59,7 +57,6 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.CheckingNetStateUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
@@ -85,6 +82,7 @@ import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannel
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -121,6 +119,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
 
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
+
 
 /**
  * 沟通页面
@@ -154,6 +154,7 @@ public class CommunicationFragment extends BaseFragment {
     private LoadingDialog loadingDlg;
     private CheckingNetStateUtils checkingNetStateUtils;
     private String channelRefreshId = "";
+    private PopupWindowList mPopupWindowList;
 
 
     @Override
@@ -272,7 +273,6 @@ public class CommunicationFragment extends BaseFragment {
     private void initRecycleView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
-        updateServiceConversationMsgState(displayUIConversationList.isEmpty() ? null : displayUIConversationList.get(0));
         conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
@@ -301,7 +301,7 @@ public class CommunicationFragment extends BaseFragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationServiceActivity.EXTRA_CONVERSATION_ID, conversation.getId());
                         IntentUtils.startActivity(getActivity(), ConversationServiceActivity.class, bundle);
-                    }  else {
+                    } else {
                         ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                     }
                     setConversationRead(uiConversation);
@@ -312,7 +312,7 @@ public class CommunicationFragment extends BaseFragment {
 
             @Override
             public boolean onItemLongClick(View view, UIConversation uiConversation) {
-                showConversationOperationDlg(uiConversation);
+                showConversationOperationDlg(uiConversation, view);
                 return true;
             }
 
@@ -339,62 +339,38 @@ public class CommunicationFragment extends BaseFragment {
         conversionRecycleView.setAdapter(conversationAdapter);
     }
 
-
     /**
      * 弹出频道操作选择框
      *
-     * @param uiConversation
+     * @param uiConversation 会话
      */
-    private void showConversationOperationDlg(final UIConversation uiConversation) {
-        // TODO Auto-generated method stub
-        // 服务号入口不可长按
+    private void showConversationOperationDlg(final UIConversation uiConversation, View conversationView) {
         if (uiConversation.isServiceContainer()) return;
-        final String[] items;
-        if (uiConversation.getConversation().getType().equals("CAST")) {
-            items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top)};
-        } else {
-            items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
+        if (mPopupWindowList == null) {
+            mPopupWindowList = new PopupWindowList(conversationView.getContext());
         }
-        TextView textView = new TextView(getContext());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        textView.setTextColor(Color.parseColor("#999999"));
-        textView.setText(uiConversation.getTitle());
-        int paddingTop = DensityUtil.dip2px(20);
-        int paddingLeft = DensityUtil.dip2px(24);
-        textView.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
-
-        new CustomDialog.ListDialogBuilder(ctw)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        if (which == 0) {
-                            setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
-                        } else {
-                            setConversationHide(uiConversation);
-                        }
-                    }
-                }).setCustomTitle(textView)
-                .show();
-//        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
-//        new CustomDialog.ListDialogBuilder(ctw)
-//                .setTitle(uiConversation.getTitle())
-//                .setItems(items, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                        if (which == 0) {
-//                            setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
-//                        } else {
-//                            setConversationHide(uiConversation);
-//                        }
-//                    }
-//                })
-//                .setCustomTitle(textView)
-//                .show();
+        List<String> operationList = new ArrayList<>();
+        if (uiConversation.getConversation().getType().equals("CAST")) {
+            operationList.add(uiConversation.getConversation().isStick() ? getString(R.string.chat_remove_from_top) : getString(R.string.chat_stick_on_top));
+        } else {
+            operationList.add(uiConversation.getConversation().isStick() ? getString(R.string.chat_remove_from_top) : getString(R.string.chat_stick_on_top));
+            operationList.add(getString(R.string.chat_remove));
+        }
+        mPopupWindowList.setAnchorView(conversationView);
+        mPopupWindowList.setItemData(operationList);
+        mPopupWindowList.setModal(true);
+        mPopupWindowList.show();
+        mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                if (position == 0) {
+                    setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
+                } else {
+                    setConversationHide(uiConversation);
+                }
+                mPopupWindowList.hide();
+            }
+        });
     }
 
     /**
@@ -427,7 +403,7 @@ public class CommunicationFragment extends BaseFragment {
      * 沟通页网络异常提示框
      *
      * @param netState 通过Action获取操作类型
-     * 刷新关注服务号列表
+     *                 刷新关注服务号列表
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
@@ -438,7 +414,7 @@ public class CommunicationFragment extends BaseFragment {
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
-        }else if (netState.getAction().equals(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE)){
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE)) {
             WebSocketPush.getInstance().startWebSocket();
             getConversationList();
             getMessage();
@@ -548,7 +524,6 @@ public class CommunicationFragment extends BaseFragment {
                     @Override
                     public void accept(List<UIConversation> uiConversationList) throws Exception {
                         displayUIConversationList = uiConversationList;
-                        updateServiceConversationMsgState(displayUIConversationList.get(0));
                         conversationAdapter.setData(displayUIConversationList);
                         conversationAdapter.notifyDataSetChanged();
                     }
@@ -587,7 +562,33 @@ public class CommunicationFragment extends BaseFragment {
                 if (isConversationShow(uiConversation)) {
                     uiConversationList.add(uiConversation);
                 }
-
+            }
+            // 调整服务号入口顺序
+            if (uiConversationList.size() > 0) {
+                UIConversation serviceConversation = null;
+                for (UIConversation uiConversation : uiConversationList) {
+                    if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                        serviceConversation = uiConversation;
+                    }
+                }
+                if (serviceConversation != null && serviceConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                    int unreadServiceNum = 0;
+                    long lastReadTime = 0L;
+                    for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
+                        UIConversation uiConversation = new UIConversation(conversation);
+                        if (uiConversation.getConversation().isServiceConversationType()) {
+                            unreadServiceNum += uiConversation.getUnReadCount();
+                            if (uiConversation.getLastUpdate() > lastReadTime) {
+                                lastReadTime = uiConversation.getLastUpdate();
+                            }
+                        }
+                    }
+                    // 服务号入口展示设置时间5月30日00：00分
+                    serviceConversation.getConversation().setCreationDate(lastReadTime == 0L ? 1653840000000L : lastReadTime);
+                    serviceConversation.setLastUpdate(lastReadTime == 0L ? 1653840000000L : lastReadTime);
+                    ConversationCacheUtils.updateConversation(BaseApplication.getInstance(), serviceConversation.getConversation(), "lastUpdate");
+                    serviceConversation.setUnReadCount(unreadServiceNum);
+                }
             }
             return uiConversationList;
         }
@@ -732,7 +733,6 @@ public class CommunicationFragment extends BaseFragment {
                 WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             }
         }
-        updateServiceConversationMsgState(displayUIConversationList.get(0));
         conversationAdapter.setData(displayUIConversationList);
         conversationAdapter.notifyDataSetChanged();
     }
@@ -743,7 +743,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param uiConversation
      */
     private void setConversationRead(final UIConversation uiConversation) {
-        if (uiConversation.getUnReadCount() > 0) {
+        if (!uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE) && uiConversation.getUnReadCount() > 0) {
             WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
             Observable.create(new ObservableOnSubscribe<Void>() {
                 @Override
@@ -754,39 +754,11 @@ public class CommunicationFragment extends BaseFragment {
             int position = displayUIConversationList.indexOf(uiConversation);
             if (position != -1) {
                 displayUIConversationList.get(position).setUnReadCount(0);
-                updateServiceConversationMsgState(displayUIConversationList.get(0));
                 conversationAdapter.setData(displayUIConversationList);
                 conversationAdapter.notifyRealItemChanged(position);
             }
 
         }
-    }
-
-    // 服务号未读消息数量
-    public void updateServiceConversationMsgState(final UIConversation conversation) {
-        if (conversation == null) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int unreadServiceNum = 0;
-                for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
-                    UIConversation uiConversation = new UIConversation(conversation);
-                    if (uiConversation.getConversation().isServiceConversationType()) {
-                        unreadServiceNum += uiConversation.getUnReadCount();
-                    }
-                }
-                if (conversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-                    conversation.setUnReadCount(unreadServiceNum);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            conversationAdapter.notifyRealItemChanged(0);
-                        }
-                    });
-                }
-            }
-        }).start();
-
     }
 
     /**
@@ -1095,8 +1067,9 @@ public class CommunicationFragment extends BaseFragment {
                     }
                     if (!forceRefresh) break;
                 }
-                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update")) channelRefreshId = "";
-                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())){
+                if (!TextUtils.isEmpty(channelRefreshId) && command.getAction().equals("client.chat.channel.group.name.update"))
+                    channelRefreshId = "";
+                if (!command.getFromUid().equals(MyApplication.getInstance().getUid())) {
                     channelRefreshId = command.getChannel();
                 }
                 getConversationList();
@@ -1245,7 +1218,6 @@ public class CommunicationFragment extends BaseFragment {
                 long unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), uiConversation.getId());
                 uiConversation.setUnReadCount(unReadCount);
             }
-            updateServiceConversationMsgState(displayUIConversationList.get(0));
             conversationAdapter.setData(displayUIConversationList);
             conversationAdapter.notifyDataSetChanged();
         }
@@ -1347,6 +1319,9 @@ public class CommunicationFragment extends BaseFragment {
                 serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
                 serviceConversation.setAvatar("drawable://" + R.drawable.ic_channel_service);
                 serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
+                serviceConversation.setCreationDate(1653840000000L);
+                serviceConversation.setLastUpdate(1653840000000L);
+
                 conversationList.add(serviceConversation);
                 List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
                 //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据

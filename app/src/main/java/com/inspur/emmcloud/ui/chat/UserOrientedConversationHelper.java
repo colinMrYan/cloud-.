@@ -38,13 +38,15 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private boolean displayingUI = false;
     private OnWhisperEventListener listener;
     private Context mContext;
+    private final GridLayoutManager gridLayoutManager;
 
     public enum ConversationType {
         STANDARD, WHISPER, BURN
     }
 
-    public interface OnWhisperEventListener{
+    public interface OnWhisperEventListener {
         void closeFunction();
+
         void showFunction();
     }
 
@@ -56,12 +58,12 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         memberListView = targetView.findViewById(R.id.members_recyclerview);
         closeBtn.setOnClickListener(this);
         // 适配横屏头像显示
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 5);
+        gridLayoutManager = new GridLayoutManager(context, 6);
         Configuration configuration = mContext.getResources().getConfiguration();
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gridLayoutManager.setSpanCount(8);
         } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            gridLayoutManager.setSpanCount(5);
+            gridLayoutManager.setSpanCount(6);
         }
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         memberListView.setLayoutManager(gridLayoutManager);
@@ -96,7 +98,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         robotIds.add(BaseApplication.getInstance().getUid());
         ArrayList<String> targetUsers = userIds;
         targetUsers.removeAll(robotIds);
-        adjustViewHeight(targetUsers.size() > 5);
+        adjustViewHeight(targetUsers.size() > 6);
         setDisplayingUI(true);
         initAndUpdateChannelType();
         if (conversationType.equals(ConversationType.BURN)) {
@@ -132,14 +134,20 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         this.channelType = channelType;
     }
 
-    private void adjustViewHeight(boolean heightForSure){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) memberListView.getLayoutParams();
-        if (heightForSure){
-            layoutParams.height = (int)dp2px(210);
-        } else {
-            layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        }
-        memberListView.setLayoutParams(layoutParams);
+    private void adjustViewHeight(final boolean heightForSure) {
+        memberListView.post(new Runnable() {
+            @Override
+            public void run() {
+                View itemView = gridLayoutManager.getChildAt(0);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) memberListView.getLayoutParams();
+                if (heightForSure) {
+                    layoutParams.height = itemView.getHeight() * 2;
+                } else {
+                    layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                }
+                memberListView.setLayoutParams(layoutParams);
+            }
+        });
     }
 
     private float dp2px(int dp) {

@@ -20,8 +20,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginBottom="100dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,6 +32,7 @@
                     android:id="@+id/rl_setting_account_safe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/text_layout_selector"
                     android:onClick="onClick"
                     android:paddingLeft="16dp"
@@ -170,6 +171,43 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/font_size_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_font_size_set"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:text="@string/caring_switch"
+                        android:textColor="?attr/text_color_e1"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_arrow_right" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:layout_below="@id/tv_font_size_set"
+                        android:background="?attr/color_list_divider" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
                     android:id="@+id/rl_setting_switch_tablayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -217,40 +255,39 @@
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
-
                 <RelativeLayout
-                    android:id="@+id/clear_cache_layout"
+                    android:id="@+id/rl_setting_notification_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:paddingLeft="16dp">
 
                     <TextView
-                        android:id="@+id/tv_setting_clear_cache"
+                        android:id="@+id/tv_setting_notification_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
-                        android:text="@string/settings_clear_cache"
+                        android:text="@string/notification_switch"
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_view_setting_notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
+                        android:layout_marginRight="16dp"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/selector_switch_track" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_clear_cache"
+                        android:layout_below="@id/tv_setting_notification_switch"
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
@@ -258,6 +295,7 @@
                     android:id="@+id/phone_recognize_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/text_layout_selector"
                     android:onClick="onClick"
                     android:paddingLeft="16dp"
@@ -287,113 +325,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:layout_below="@id/tv_setting_phone_recognize"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/font_size_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_font_size_set"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/caring_switch"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_font_size_set"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_setting_web_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/web_app_auto_rotate"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_web_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_web_rotate"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_setting_native_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/native_page_auto_rotate"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_native_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_native_rotate"
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
@@ -434,25 +365,25 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rl_setting_notification_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/text_layout_selector"
                     android:paddingLeft="16dp">
 
                     <TextView
-                        android:id="@+id/tv_setting_notification_switch"
+                        android:id="@+id/tv_setting_native_rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
-                        android:text="@string/notification_switch"
+                        android:text="@string/native_page_auto_rotate"
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_notification"
+                        android:id="@+id/switch_view_setting_native_rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -464,7 +395,41 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_notification_switch"
+                        android:layout_below="@id/tv_setting_native_rotate"
+                        android:background="?attr/color_list_divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:paddingLeft="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_setting_web_rotate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:text="@string/web_app_auto_rotate"
+                        android:textColor="?attr/text_color_e1"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_view_setting_web_rotate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/selector_switch_track" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:layout_below="@id/tv_setting_web_rotate"
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
@@ -543,29 +508,66 @@
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/clear_cache_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_setting_clear_cache"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:text="@string/settings_clear_cache"
+                        android:textColor="?attr/text_color_e1"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_arrow_right" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:layout_below="@id/tv_setting_clear_cache"
+                        android:background="?attr/color_list_divider" />
+                </RelativeLayout>
+
+
             </LinearLayout>
         </ScrollView>
-        >
 
-        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+        <Button
             android:id="@+id/bt_setting_signout"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="45dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="7dp"
+            android:background="@drawable/shape_volume_file_download_btn"
             android:elevation="1dp"
             android:gravity="center"
             android:onClick="onClick"
             android:text="@string/quit_check"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            app:cus_backgroundColor="#36A5F6"
-            app:cus_borderWidth="0dp"
-            app:cus_isRadiusAdjustBounds="true" />
+            android:textSize="15sp" />
 
     </RelativeLayout>
 

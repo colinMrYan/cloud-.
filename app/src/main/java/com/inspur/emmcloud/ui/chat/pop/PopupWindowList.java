@@ -127,7 +127,7 @@ public class PopupWindowList {
             throw new IllegalArgumentException("please fill ListView Data");
         }
         mPopView = new ListView(mContext);
-        mPopView.setBackgroundColor(DarkUtil.getTextContainerColor());
+        mPopView.setBackgroundColor(DarkUtil.getPopContainerColor());
         mPopView.setVerticalScrollBarEnabled(false);
         mPopView.setDivider(null);
         PopAdapter adapter = new PopAdapter(mContext, mItemData);
@@ -160,7 +160,7 @@ public class PopupWindowList {
         mPopupWindow.setFocusable(mModal);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
         if (mContext != null)
-            setBackgroundAlpha((Activity) mContext, 0.8f);
+            setBackgroundAlpha((Activity) mContext, 0.6f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

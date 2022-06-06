@@ -71,6 +71,7 @@ import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabRes
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabProperty;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabResult;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
@@ -159,6 +160,7 @@ public class CommunicationV0Fragment extends BaseFragment {
             }
         }
     };
+    private PopupWindowList mPopupWindowList;
 
     @Override
     public void onAttach(Context context) {
@@ -337,6 +339,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                                            int position, long id) {
                 // TODO Auto-generated method stub
                 showChannelOperationDlg(position);
+//                showChannelOperationDlg(position, view);
                 return true;
             }
 
@@ -401,7 +404,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     private void showPopupWindow(View view) {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
         List<MenuItem> menuItemList = new ArrayList<>();
-        if(AppTabUtils.hasContactPermission(getActivity())){
+        if (AppTabUtils.hasContactPermission(getActivity())) {
             menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
         }
         menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
@@ -412,7 +415,7 @@ public class CommunicationV0Fragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 switch (position) {
                     case 0:
-                        if(AppTabUtils.hasContactPermission(getActivity())){
+                        if (AppTabUtils.hasContactPermission(getActivity())) {
                             Intent intent = new Intent();
                             intent.putExtra("select_content", 2);
                             intent.putExtra("isMulti_select", true);
@@ -421,7 +424,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                                     getActivity().getString(R.string.creat_group));
                             intent.setClass(getActivity(), ContactSearchActivity.class);
                             startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-                        }else{
+                        } else {
                             AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);
                         }
                         break;
@@ -753,6 +756,55 @@ public class CommunicationV0Fragment extends BaseFragment {
             channelTimeText.setTextColor(Color.parseColor("#b8b8b8"));
         }
     }
+
+    /**
+     * 弹出频道操作选择框
+     *
+     * @param position
+     */
+    private void showChannelOperationDlg(final int position, View view) {
+        final boolean isChannelSetTop = ChannelOperationCacheUtils
+                .isChannelSetTop(getActivity(), displayChannelList
+                        .get(position).getCid());
+        if (mPopupWindowList == null) {
+            mPopupWindowList = new PopupWindowList(view.getContext());
+        }
+        List<String> operationList = new ArrayList<>();
+        if (isChannelSetTop) {
+            operationList.add(getString(R.string.chanel_cancel_top));
+        } else {
+            operationList.add(getString(R.string.channel_set_top));
+        }
+        operationList.add(getString(R.string.channel_hide_chat));
+        mPopupWindowList.setAnchorView(view);
+        mPopupWindowList.setItemData(operationList);
+        mPopupWindowList.setModal(true);
+        mPopupWindowList.show();
+        mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    ChannelOperationCacheUtils.setChannelTop(getActivity(),
+                            displayChannelList.get(position).getCid(), !isChannelSetTop);
+                    sortChannelList();
+                } else {
+                    ChannelOperationCacheUtils.setChannelHide(
+                            getActivity(), displayChannelList.get(position)
+                                    .getCid(), true);
+                    // 当隐藏会话时，把该会话的所有消息置为已读
+                    MsgReadCreationDateCacheUtils
+                            .saveMessageReadCreationDate(MyApplication.getInstance(),
+                                    displayChannelList.get(position)
+                                            .getCid(), displayChannelList
+                                            .get(position).getMsgLastUpdate());
+                    displayChannelList.remove(position);
+                    displayData();
+                }
+                mPopupWindowList.hide();
+            }
+        });
+    }
+
 
     /**
      * 弹出频道操作选择框

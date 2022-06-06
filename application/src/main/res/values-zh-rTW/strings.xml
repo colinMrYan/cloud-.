@@ -9,7 +9,7 @@
     <string name="application_app_must_be_app_cannot_edit">當前應用皆為必裝，不可編輯</string>
     <string name="application_app_center">應用中心</string>
     <string name="application_app_commonly_use">開啟常用模式</string>
-    <string name="application_app_commonly_use_close">結束常用模式</string>
+    <string name="application_app_commonly_use_close">關閉常用模式</string>
     <string name="application_app_center_more_apps">更多應用</string>
     <string name="application_app_input_mail_password">請輸入公司郵箱密碼</string>
     <string name="application_app_need_input_mail_password">第一次使用或密碼修改後需要輸入</string>

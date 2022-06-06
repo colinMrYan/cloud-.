@@ -76,13 +76,13 @@
                     <TextView
                         android:id="@+id/tv_checking_hard_title"
                         android:layout_width="match_parent"
-                        android:layout_height="24dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_hard_link_title"
                         android:textColor="?attr/text_color_e1"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="17sp"></TextView>
 
                     <TextView
                         android:id="@+id/tv_checking_hard_content"
@@ -93,7 +93,7 @@
                         android:layout_marginRight="14dp"
                         android:text="@string/setting_net_diagnosis_hard_link_conent"
                         android:textColor="#666666"
-                        android:textSize="15dp"></TextView>
+                        android:textSize="15sp"></TextView>
 
                     <RelativeLayout
                         android:id="@+id/rl_net_error_fix"
@@ -208,13 +208,13 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="24dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_wifi_link_title"
                         android:textColor="?attr/text_color_e1"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="17sp"></TextView>
 
                     <TextView
                         android:id="@+id/tv_checking_portal_content"
@@ -226,7 +226,7 @@
                         android:layout_marginRight="14dp"
                         android:text="@string/setting_net_diagnosis_wifi_link_conent"
                         android:textColor="#666666"
-                        android:textSize="15dp"></TextView>
+                        android:textSize="15sp"></TextView>
 
                     <RelativeLayout
                         android:id="@+id/rl_wifi_checking_img"
@@ -325,13 +325,13 @@
                     <TextView
                         android:id="@+id/tv_checking_dns_title"
                         android:layout_width="match_parent"
-                        android:layout_height="24dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/setting_net_diagnosis_dns_link_title"
                         android:textColor="?attr/text_color_e1"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="17sp"></TextView>
 
                     <RelativeLayout
                         android:id="@+id/rl_checking_inspur"

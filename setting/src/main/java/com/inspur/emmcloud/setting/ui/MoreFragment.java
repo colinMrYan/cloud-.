@@ -80,7 +80,7 @@ public class MoreFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.setting_mine_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
-        setFragmentStatusBarWhite();
+        setMineFragmentStatusBar();
         initData();
         initViews();
         return view;
@@ -90,7 +90,7 @@ public class MoreFragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            setFragmentStatusBarWhite();
+            setMineFragmentStatusBar();
         }
     }
 
@@ -311,7 +311,7 @@ public class MoreFragment extends BaseFragment {
             ExpandableListView expandableListView = (ExpandableListView) parent;
             expandableListView.expandGroup(groupPosition);
             View view = new View(getActivity());
-            int height = groupPosition > 1 ? DensityUtil.dip2px(BaseApplication.getInstance(), 10) : 0;
+            int height = groupPosition > 0 ? DensityUtil.dip2px(BaseApplication.getInstance(), 10) : 0;
             view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
             view.setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), ResourceUtils.getResValueOfAttr(getActivity(), R.attr.content_bg)));
             return view;
