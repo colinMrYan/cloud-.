@@ -156,7 +156,7 @@
     <string name="setting_sure_switch_to">Make sure to switch to %1$s</string>
     <string name="setting_device_history_use">Device Using Records</string>
 
-    <string name="setting_enter_app">Enter the application</string>
+    <string name="setting_enter_app">Enter</string>
     <string name="setting_safe_cloud_touch_id">%1$s </string>
     <string name="setting_log_off">Account log off</string>
     <string name="setting_log_offed">Log off Success</string>
