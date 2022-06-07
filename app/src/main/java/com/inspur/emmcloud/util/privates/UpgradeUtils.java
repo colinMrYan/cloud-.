@@ -211,7 +211,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
         TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind_new));
-        appUpdateVersion.setText("(" + getUpgradeResult.getLatestVersion() + ")");
+        appUpdateVersion.setText(getUpgradeResult.getLatestVersion());
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,7 +260,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         TextView appUpdateTitle = dialog.findViewById(R.id.app_update_title);
         appUpdateTitle.setText(context.getString(R.string.app_update_remind_new));
         TextView appUpdateVersion = dialog.findViewById(R.id.app_update_version);
-        appUpdateVersion.setText("(" + getUpgradeResult.getLatestVersion() + ")");
+        appUpdateVersion.setText(getUpgradeResult.getLatestVersion());
         okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
