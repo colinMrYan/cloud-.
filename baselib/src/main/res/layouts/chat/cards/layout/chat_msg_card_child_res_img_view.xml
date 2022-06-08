@@ -12,6 +12,7 @@
         android:scaleType="fitXY"
         app:riv_border_color="#cccccc"
         app:riv_border_width="0.5px"
+        android:tint="?attr/color_d8_30"
         app:riv_corner_radius="6dp"
         app:riv_oval="false" />
 

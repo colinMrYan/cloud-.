@@ -187,6 +187,12 @@ public class ContactOrgCacheUtils {
                     if (o1 == null || o2 == null) {
                         return 0;
                     }
+                    if (Contact.TYPE_STRUCT.equals(o1.getType()) && Contact.TYPE_USER.equals(o2.getType())) {
+                        return -1;
+                    }
+                    if (Contact.TYPE_USER.equals(o1.getType()) && Contact.TYPE_STRUCT.equals(o2.getType())) {
+                        return 1;
+                    }
                     if (o1.getSortOrder() > o2.getSortOrder()) {
                         return 1;
                     } else if (o1.getSortOrder() < o2.getSortOrder()) {

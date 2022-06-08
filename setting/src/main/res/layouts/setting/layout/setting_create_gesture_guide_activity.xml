@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="?attr/header_bg_1c"
+        android:background="?attr/content_bg"
         android:orientation="vertical"
         android:paddingBottom="38dp">
 

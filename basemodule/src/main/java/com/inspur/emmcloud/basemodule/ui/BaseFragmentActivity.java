@@ -62,20 +62,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 //        }
     }
 
-
-    private void initFontScale() {
-        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
-        if (0 == Float.compare(1.0f, fontScale)) {
-            return;
-        }
-        Configuration configuration = getResources().getConfiguration();
-        configuration.fontScale = fontScale;
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        metrics.scaledDensity = configuration.fontScale * metrics.density;
-        getBaseContext().getResources().updateConfiguration(configuration, metrics);
-    }
-
     private void checkNecessaryPermission() {
         checkedNecessaryPermission = true;
         final String[] necessaryPermissionArray =
@@ -132,16 +118,16 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        initFontScale();
-        super.onResume();
-    }
-
     public abstract void onCreate();
 
     @Override
     protected void attachBaseContext(Context newBase) {
+        float fontScale = PreferencesUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
+        if (0 != Float.compare(1.0f, fontScale)) {
+            Configuration config = newBase.getResources().getConfiguration();
+            config.fontScale = fontScale;
+            newBase = newBase.createConfigurationContext(config);
+        }
         super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 

@@ -14,6 +14,7 @@ public class BindingDevice implements Serializable {
     private String deviceId = "";
     private String deviceModel = "";
     private long deviceLastUserTime = 0L;
+    private String deviceVersion = "";
 
     public BindingDevice() {
 
@@ -23,6 +24,7 @@ public class BindingDevice implements Serializable {
         deviceId = JSONUtils.getString(obj, "udid", "");
         deviceModel = JSONUtils.getString(obj, "device_model", "");
         deviceLastUserTime = JSONUtils.getLong(obj, "last_use_time", 0L);
+        deviceVersion = JSONUtils.getString(obj, "os", "") + " " + JSONUtils.getString(obj, "os_version", "");
     }
 
     public String getDeviceId() {
@@ -35,6 +37,10 @@ public class BindingDevice implements Serializable {
 
     public long getDeviceLastUserTime() {
         return deviceLastUserTime;
+    }
+
+    public String getDeviceVersion() {
+        return deviceVersion;
     }
 
     @Override

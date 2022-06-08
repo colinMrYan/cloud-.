@@ -29,6 +29,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
 import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.R2;
@@ -140,6 +141,12 @@ public class LoginActivity extends BaseActivity {
             loginApp();
 
         } else if (i == R.id.tv_forget_password) {
+            String forgetUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
             IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
 

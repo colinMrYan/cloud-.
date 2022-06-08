@@ -15,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -77,6 +78,7 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
     private void initView() {
         // TODO Auto-generated method stub
         List<Integer> splashResIdList = new ArrayList<>();
+        boolean darkTheme = DarkUtil.isDarkTheme();
         //刚安装App初次进入
         if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
             splashResIdList.add(R.drawable.guide_page_1);
@@ -86,16 +88,18 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
             splashResIdList.add(R.drawable.guide_page_5);
             splashResIdList.add(R.drawable.guide_page_6);
         } else {//版本升级进入
-            splashResIdList.add(R.drawable.guide_page_new_1);
-            splashResIdList.add(R.drawable.guide_page_new_2);
-            splashResIdList.add(R.drawable.guide_page_new_3);
-            splashResIdList.add(R.drawable.guide_page_new_4);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_1 : R.drawable.guide_page_light_1);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_2 : R.drawable.guide_page_light_2);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_3 : R.drawable.guide_page_light_3);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_4 : R.drawable.guide_page_light_4);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_5 : R.drawable.guide_page_light_5);
         }
 
         for (int i = 0; i < splashResIdList.size(); i++) {
             View guideView = LayoutInflater.from(this).inflate(R.layout.setting_view_pager_guide, null);
             ImageView img = (ImageView) guideView.findViewById(R.id.img);
-            ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
+            img.setImageResource(splashResIdList.get(i));
+//            ImageDisplayUtils.getInstance().displayImageNoCache(img, "drawable://" + splashResIdList.get(i));
             if (i == splashResIdList.size() - 1) {
                 Button enterButton = ((Button) guideView
                         .findViewById(R.id.enter_app_btn));

@@ -66,6 +66,8 @@
     <string name="upgrade">Update</string>
     <string name="not_upgrade">Skip</string>
     <string name="app_update_remind">Update Reminder</string>
+    <string name="app_update_remind_new">New Version Found</string>
+    <string name="let_message_top">Let【%1$s】：</string>
     <string name="app_last_version">Last Version</string>
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
@@ -282,6 +284,8 @@
     <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
+    <string name="send_a_burn">[Burn after reading]</string>
+    <string name="send_a_whispers">[Whisper]</string>
     <string name="send_action_message">[Activity]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>
     <string name="send_a_message_of_unknown_type">[Unknown]</string>
@@ -622,6 +626,8 @@
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
     <string name="contact_add_system">Save to Contacts</string>
     <string name="focus">Focus</string>
+    <string name="chat_whisper">Whisper: %1$s</string>
+    <string name="chat_whisper_static">Whisper</string>
     <!-- 会议室部分 -->
     <string name="schedule_meeting_topic">Meeting</string>
     <string name="schedule_title">Schedule</string>

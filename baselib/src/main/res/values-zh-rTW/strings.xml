@@ -69,6 +69,8 @@
     <string name="upgrade">立即更新 </string>
     <string name="not_upgrade">下次再說</string>
     <string name="app_update_remind">更新提醒</string>
+    <string name="app_update_remind_new">發現新版本啦~</string>
+    <string name="let_message_top">將【%1$s】：</string>
     <string name="app_last_version">最新版本</string>
     <string name="more_work_place">更多辦公點 ...</string>
     <string name="cancel_filter">取消過濾 </string>
@@ -288,6 +290,8 @@
     <string name="send_a_voice">[語音]</string>
     <string name="send_a_meeting_invitation">[會議邀請]</string>
     <string name="cancel_a_meeting">[會議取消通知]</string>
+    <string name="send_a_burn">[閱後即焚]</string>
+    <string name="send_a_whispers">[悄悄話]</string>
     <string name="send_a_meeting_request">[會議審批]</string>
     <string name="send_a_message_of_unknown_type">[未知類型]</string>
     <string name="send_action_message">[活動消息]</string>
@@ -645,6 +649,8 @@
     <string name="contact_select_limit_warning">已達到最大可選人數</string>
     <string name="contact_add_system">添加到通訊錄</string>
     <string name="focus">關注</string>
+    <string name="chat_whisper">悄悄話: %1$s</string>
+    <string name="chat_whisper_static">悄悄話</string>
     <!-- 會議室部分 -->
     <string name="schedule_meeting_topic">會議主題</string>
     <string name="schedule_title">日期主題</string>

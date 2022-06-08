@@ -64,7 +64,7 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
 
     @Override
     protected int getStatusType() {
-        return STATUS_WHITE_DARK_FONT;
+        return STATUS_TRANSPARENT;
     }
 
     /**

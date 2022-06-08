@@ -21,7 +21,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/app_center_categories_icon_img"
         android:textColor="?attr/text_color_e1"
-        android:textSize="17dp" />
+        android:textSize="17sp" />
 
     <ImageView
         android:layout_width="8dp"

@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -66,7 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setTheme();
-        initFontScale();
 
         super.onCreate(savedInstanceState);
 
@@ -163,20 +161,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
-    private void initFontScale() {
-        Float fontScale = PreferencesByUserAndTanentUtils.getFloat(this, Constant.CARING_SWITCH_FLAG, 1);
-        if (0 == Float.compare(1.0f, fontScale)) {
-            return;
-        }
-        Configuration configuration = getResources().getConfiguration();
-        configuration.fontScale = (this instanceof IIgnoreFontScaleActivity) ? 1.0f : fontScale;
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        metrics.scaledDensity = configuration.fontScale * metrics.density;
-        getBaseContext().getResources().updateConfiguration(configuration, metrics);
-    }
-
     /**
      * 打开
      */
@@ -190,6 +174,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
+        float fontScale = PreferencesUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
+        if (0 != Float.compare(1.0f, fontScale)) {
+            Configuration config = newBase.getResources().getConfiguration();
+            config.fontScale = this instanceof IIgnoreFontScaleActivity ? 1.0f : fontScale;
+            newBase = newBase.createConfigurationContext(config);
+        }
         super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 

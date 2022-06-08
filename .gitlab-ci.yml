@@ -25,7 +25,7 @@ assembleRelease:
     - app/build/outputs/
   only:
         - master
-        - dev
+#        - dev
   tags:
     - ios
 
@@ -41,7 +41,7 @@ protectAndUpload:
   retry: 2
   only:
         - master
-        - dev
+#        - dev
   tags:
     - ios
 
@@ -55,7 +55,7 @@ sendMail:
  dependencies: []
  only:
          - master
-         - dev
+#         - dev
  tags:
      - ios
 

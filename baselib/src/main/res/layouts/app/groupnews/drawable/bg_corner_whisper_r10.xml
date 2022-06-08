@@ -3,8 +3,8 @@
     android:shape="rectangle">
 
     <!-- 填充的颜色 -->
-    <solid android:color="@color/color_whisper_bg" />
+    <solid android:color="?attr/color_df_21" />
     <!-- 设置矩形的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
-    <corners android:radius="10dp" />
+    <corners android:radius="4dp" />
 </shape>

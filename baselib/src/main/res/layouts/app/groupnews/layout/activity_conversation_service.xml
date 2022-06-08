@@ -26,10 +26,7 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="25dp"
-            android:layout_toRightOf="@id/ibt_back"
+            android:layout_centerInParent="true"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
@@ -58,23 +55,30 @@
     <RelativeLayout
         android:id="@+id/rl_search_contact"
         android:layout_width="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="8dp"
         android:layout_height="30dp"
-        android:onClick="onClick"
         android:layout_below="@+id/rl_header"
-        android:background="@drawable/bg_search_service"
-        android:gravity="center">
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_search_contact"
+        android:gravity="center"
+        android:onClick="onClick">
+
+        <ImageView
+            android:id="@+id/iv_search_members"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_search"
+            android:tint="@color/color_text_common_level_two" />
 
         <TextView
             android:id="@+id/iv_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:drawableLeft="@drawable/bg_search"
-            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/iv_search_members"
             android:text="@string/service_conversation_search"
             android:textColor="@color/color_text_common_level_two" />
     </RelativeLayout>

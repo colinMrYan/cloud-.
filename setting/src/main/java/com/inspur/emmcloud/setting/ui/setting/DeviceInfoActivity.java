@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -46,6 +48,12 @@ public class DeviceInfoActivity extends BaseActivity {
         bindingDevice = (BindingDevice) getIntent().getSerializableExtra("binding_device");
         ((TextView) findViewById(R.id.device_model_text)).setText(bindingDevice.getDeviceModel());
         ((TextView) findViewById(R.id.device_id_text)).setText(bindingDevice.getDeviceId());
+        if (StringUtils.isEmpty(bindingDevice.getDeviceVersion())) {
+            ((RelativeLayout) findViewById(R.id.device_version_container)).setVisibility(View.GONE);
+        } else {
+            ((RelativeLayout) findViewById(R.id.device_version_container)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.device_version_text)).setText(bindingDevice.getDeviceVersion());
+        }
         String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         ((TextView) findViewById(R.id.device_last_use_time_text)).setText(deviceLastUserTime);
         if (getIntent().getBooleanExtra("isCurrentBind", false)) {

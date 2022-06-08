@@ -30,6 +30,8 @@ public class Constant {
     public static final String PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR = "my_app_recommend_lastupdate_hour";
     public static final String PREF_SOFT_INPUT_HEIGHT = "soft_keybord_height";
     public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
+    public static final String PREF_LOGIN_FORGET_URL = "login_forget_url";
+    public static final String PREF_LOGIN_MODIFY_URL = "login_modify_url";
     public static final String PREF_CURRENT_ENTERPRISE_ID = "current_enterprise_id";
     public static final String PREF_CONTACT_USER_LASTQUERYTIME = "contact_user_lastquerytime";
     public static final String PREF_CONTACT_ORG_LASTQUERYTIME = "contact_org_lastquerytime";

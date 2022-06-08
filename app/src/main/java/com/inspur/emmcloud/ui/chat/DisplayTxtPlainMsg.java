@@ -48,6 +48,7 @@ public class DisplayTxtPlainMsg {
         String text = message.getMsgContentTextPlain().getText();
         if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
             text = context.getString(R.string.click_to_burn);
+            contentText.setTextColor(context.getResources().getColor(R.color.color_base_blue));
         }
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);

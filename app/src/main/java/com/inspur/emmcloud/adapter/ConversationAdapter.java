@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,11 +27,14 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +62,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
-        updateServiceConversationMsgState();
         if (adapterListener != null) {
             adapterListener.onDataChange();
         }
@@ -66,25 +71,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
-            updateServiceConversationMsgState();
-            if (adapterListener != null) {
-                adapterListener.onDataChange();
-            }
         }
-    }
-
-    // 服务号未读消息数量
-    public void updateServiceConversationMsgState() {
-        if (uiConversationList.isEmpty()) return;
-        int unreadServiceNum = 0;
-        for (Conversation conversation : ConversationCacheUtils.getConversationList(context)) {
-            UIConversation uiConversation = new UIConversation(conversation);
-            if (uiConversation.getConversation().isServiceConversationType()) {
-                unreadServiceNum += uiConversation.getUnReadCount();
-            }
-        }
-        if (uiConversationList.get(0).getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-            uiConversationList.get(0).setUnReadCount(unreadServiceNum);
+        if (adapterListener != null) {
+            adapterListener.onDataChange();
         }
     }
 
@@ -193,9 +182,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             UIConversation uiConversation = uiConversationList.get(position);
             holder.titleText.setText(uiConversation.getTitle());
-            holder.timeText.setText(uiConversation.isServiceContainer() ?  "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
-            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
+            holder.timeText.setText(uiConversation.isServiceContainer() ? "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
+            holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? VISIBLE : GONE);
             holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
+            if (uiConversation.getConversation().isStick()) {
+                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list_top));
+            } else {
+                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list));
+            }
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
             if (isConversationTypeGroup) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
@@ -210,12 +204,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
-                holder.titleText.setText(uiConversation.getTitle());
+                    holder.titleText.setText(uiConversation.getTitle());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
-            }   else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**服务号频道**/
-                holder.titleText.setText(uiConversation.getConversation().getName());
+            } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**机器人、服务号频道**/
+                Robot robot = RobotCacheUtils.getRobotById(context, uiConversation.getConversation().getName());
+                if (robot != null) {
+                    holder.titleText.setText(robot.getName());
+                } else {
+                    holder.titleText.setText(uiConversation.getConversation().getName());
+                }
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
-            }  else {
+            } else {
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
             setConversationLastMessageSendStatus(holder, uiConversation);
@@ -244,18 +243,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 //            }
             switch (status) {
                 case Message.MESSAGE_SEND_ING:
-                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setVisibility(VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);
                     break;
                 case Message.MESSAGE_SEND_FAIL:
-                    holder.sendStatusImg.setVisibility(View.VISIBLE);
+                    holder.sendStatusImg.setVisibility(VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_send_fail);
                     break;
                 default:
-                    holder.sendStatusImg.setVisibility(View.GONE);
+                    holder.sendStatusImg.setVisibility(GONE);
             }
         } else {
-            holder.sendStatusImg.setVisibility(View.GONE);
+            holder.sendStatusImg.setVisibility(GONE);
         }
     }
 
@@ -304,9 +303,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param uiConversation
      */
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
-        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount() > 0 && !uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
-            holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? VISIBLE : View.INVISIBLE);
+        if (uiConversation.getUnReadCount() > 0) {
+            if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)){
+                holder.unreadIcon.setVisibility(VISIBLE);
+                holder.unreadText.setVisibility(GONE);
+            }else {
+                holder.unreadIcon.setVisibility(GONE);
+                holder.unreadText.setVisibility(VISIBLE);
+                holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
+            }
         }
     }
 
@@ -387,7 +393,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         smoothMoveToPosition(mRecyclerView, 0);
     }
 
-    private void scrollToPosition(final LinearLayoutManager linearLayoutManager, final int i){
+    private void scrollToPosition(final LinearLayoutManager linearLayoutManager, final int i) {
         mRecyclerView.post(new Runnable() {
             @Override
             public void run() {
@@ -463,6 +469,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView unreadText;
         private ImageView dndImg;
         private AdapterListener adapterListener;
+        private ImageView unreadIcon;
 
         public ViewHolder(View convertView, AdapterListener adapterListener) {
             super(convertView);
@@ -487,6 +494,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     .findViewById(R.id.msg_dnd_img);
             sendStatusImg = (ImageView) convertView
                     .findViewById(R.id.img_sending_status);
+            unreadIcon = (ImageView) convertView
+                    .findViewById(R.id.msg_new_icon);
         }
 
 

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
@@ -139,8 +140,22 @@ public class SafeCenterActivity extends BaseActivity {
         } else if (id == R.id.rl_setting_safe_account_device) {
             IntentUtils.startActivity(this, DeviceManagerActivity.class);
         } else if (id == R.id.rl_password_modify) {
+            String modifyUrl = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LOGIN_MODIFY_URL);
+            if (!StringUtils.isEmpty(modifyUrl) && modifyUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", modifyUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
         } else if (id == R.id.rl_password_reset) {
+            String forgetUrl = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             Bundle bundle = new Bundle();
