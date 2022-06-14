@@ -66,7 +66,7 @@ public class BlueToothService extends ImpPlugin {
                 switch (blueState){
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(context , "蓝牙已关闭", Toast.LENGTH_SHORT).show();
-                        if (updateCal != null){
+                        if (updateCal != null && updateState){
                             try {
                                 JSONObject json = new JSONObject();
                                 json.put("status", 0);
@@ -80,7 +80,7 @@ public class BlueToothService extends ImpPlugin {
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Toast.makeText(context , "蓝牙已开启"  , Toast.LENGTH_SHORT).show();
-                        if (updateCal != null){
+                        if (updateCal != null && updateState) {
                             try {
                                 JSONObject json = new JSONObject();
                                 json.put("status", 1);
@@ -136,6 +136,7 @@ public class BlueToothService extends ImpPlugin {
     };
     private BluetoothChatService mChatService;
     private BluetoothAdapter mBluetoothAdapter;
+    private boolean updateState = true;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -240,6 +241,12 @@ public class BlueToothService extends ImpPlugin {
     private void updateBluetoothState(JSONObject paramsObject) {
         updateCal = JSONUtils.getString(paramsObject, "success", "");
         failCal = JSONUtils.getString(paramsObject, "fail", "");
+        try {
+            final JSONObject optionsObj = paramsObject.getJSONObject("options");
+            updateState = optionsObj.optBoolean("value", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void scanBluetooth() {

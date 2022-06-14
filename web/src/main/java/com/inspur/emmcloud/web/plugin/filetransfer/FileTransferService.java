@@ -126,14 +126,14 @@ public class FileTransferService extends ImpPlugin {
                                 + setFormat(downloadSize) + "/"
                                 + setFormat(totalSize);
                         ratioText.setText(text);
-                        if (downloadSucCB != null) {
+                        if (saveFileCallBack != null) {
                             try {
                                 JSONObject json = new JSONObject();
-                                json.put("status", 0);
+                                json.put("status", 1);
                                 JSONObject result = new JSONObject();
                                 result.put("progress", progress);
                                 json.put("result", result);
-                                jsCallback(downloadSucCB, json);
+                                jsCallback(saveFileCallBack, json);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
