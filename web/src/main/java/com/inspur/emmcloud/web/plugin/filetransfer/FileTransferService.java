@@ -126,6 +126,18 @@ public class FileTransferService extends ImpPlugin {
                                 + setFormat(downloadSize) + "/"
                                 + setFormat(totalSize);
                         ratioText.setText(text);
+                        if (downloadSucCB != null) {
+                            try {
+                                JSONObject json = new JSONObject();
+                                json.put("status", 0);
+                                JSONObject result = new JSONObject();
+                                result.put("progress", progress);
+                                json.put("result", result);
+                                jsCallback(downloadSucCB, json);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                     break;
                 // 下载失败

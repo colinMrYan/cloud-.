@@ -35,7 +35,7 @@ import java.util.Set;
 
 @SuppressLint("MissingPermission")
 public class BlueToothService extends ImpPlugin {
-    private String successCal, failCal;
+    private String successCal, failCal, updateCal;
     HashMap<String, String> discoveryDevicesMap = new HashMap<>();
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -62,7 +62,37 @@ public class BlueToothService extends ImpPlugin {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 // no device find
             } else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
-                // no device find
+                int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                switch (blueState){
+                    case BluetoothAdapter.STATE_OFF:
+                        Toast.makeText(context , "蓝牙已关闭", Toast.LENGTH_SHORT).show();
+                        if (updateCal != null){
+                            try {
+                                JSONObject json = new JSONObject();
+                                json.put("status", 0);
+                                JSONObject result = new JSONObject();
+                                json.put("result", result);
+                                jsCallback(updateCal, json);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Toast.makeText(context , "蓝牙已开启"  , Toast.LENGTH_SHORT).show();
+                        if (updateCal != null){
+                            try {
+                                JSONObject json = new JSONObject();
+                                json.put("status", 1);
+                                JSONObject result = new JSONObject();
+                                json.put("result", result);
+                                jsCallback(updateCal, json);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+                }
             }
         }
     };
@@ -208,10 +238,8 @@ public class BlueToothService extends ImpPlugin {
     }
 
     private void updateBluetoothState(JSONObject paramsObject) {
-        successCal = JSONUtils.getString(paramsObject, "success", "");
+        updateCal = JSONUtils.getString(paramsObject, "success", "");
         failCal = JSONUtils.getString(paramsObject, "fail", "");
-
-
     }
 
     private void scanBluetooth() {

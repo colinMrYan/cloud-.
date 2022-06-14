@@ -13,6 +13,8 @@ import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -96,7 +98,7 @@ public class VideoService extends ImpPlugin {
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, optionsObj.optInt("quality",1));
                                 String fileName = optionsObj.optString("id");
-                                returnBase64 = optionsObj.optBoolean("isReturnBase64");
+                                returnBase64 = optionsObj.optBoolean("isReturnBase64", true);
                                 try {
                                     File file = createMediaFile(fileName);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -113,7 +115,7 @@ public class VideoService extends ImpPlugin {
                                     jsCallback(failCb, e.getMessage());
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : optionsObj.optString("time"));
+                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : Integer.parseInt(optionsObj.optString("time")));
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }
@@ -186,7 +188,7 @@ public class VideoService extends ImpPlugin {
 
     private void decodeVideoToBase64(String localPath, JSONObject result) {
         try {
-            File file = new File(localPath);
+            File file = new File(FilePathUtils.getRealPath(localPath));
             FileInputStream inputFile = new FileInputStream(file);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -213,7 +215,17 @@ public class VideoService extends ImpPlugin {
             if (data != null && data.getData() != null) {
                 try {
                     if (returnBase64) {
-                        uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                            }
+
+                            @Override
+                            public void onPermissionRequestFail(List<String> permissions) {
+                                ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                            }
+                        });
                     } else {
                         JSONObject json = new JSONObject();
                         json.put("status", 1);

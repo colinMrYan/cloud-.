@@ -7,6 +7,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -114,21 +115,31 @@ public class AppService extends ImpPlugin {
 
     @Override
     public void onActivityResume() {
-        if (!isForeground) {
-            isForeground = true;
-            if (appEnterForegroundListener != null) {
-                jsCallback(appEnterForegroundListener, "");
+        if (appEnterForegroundListener != null) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                json.put("result", result);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            jsCallback(appEnterForegroundListener, json);
         }
     }
 
     @Override
     public void onActivityPause() {
-        if (!isAppOnForeground()) {
-            isForeground = false;
-            if (appEnterBackgroundListener != null) {
-                jsCallback(appEnterBackgroundListener, "");
+        if (appEnterBackgroundListener != null) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                json.put("result", result);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            jsCallback(appEnterBackgroundListener, json);
         }
     }
 
