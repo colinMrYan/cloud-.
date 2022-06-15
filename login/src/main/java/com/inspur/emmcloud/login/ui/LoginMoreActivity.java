@@ -97,8 +97,8 @@ public class LoginMoreActivity extends BaseActivity {
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
                         PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, "");
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, "");
-                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, "");
+                        PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, "");
+                        PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, "");
                         finish();
                     }
                 })
@@ -113,8 +113,8 @@ public class LoginMoreActivity extends BaseActivity {
                 boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
                 if (isDecodeSuccess) {
                     String msg = data.getStringExtra("msg");
-                    PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, JSONUtils.getString(msg, "forgetPassword", ""));
-                    PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, JSONUtils.getString(msg, "modifyPassword", ""));
+                    PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, JSONUtils.getString(msg, "forgetPassword", ""));
+                    PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, JSONUtils.getString(msg, "modifyPassword", ""));
                     if (JSONUtils.isJsonObjStringHasKey(msg, "u") && JSONUtils.isJsonObjStringHasKey(msg, "n")) {
                         showConfirmDialog(msg);
                     } else {

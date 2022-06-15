@@ -21,6 +21,12 @@
     <attr name="home_common_bg" format="reference|color" />
     <attr name="dialog_divider_e3_46" format="reference|color" />
     <attr name="color_chat_burn" format="reference|color" />
+    <attr name="color_ff_21" format="reference|color" />
+    <attr name="color_00_ff" format="reference|color" />
+    <attr name="color_66_cc" format="reference|color" />
+    <attr name="color_ff_3e" format="reference|color" />
+    <attr name="color_b2_cc" format="reference|color" />
+    <attr name="color_b2_59" format="reference|color" />
 
     <attr name="header_text_blue_white_color" format="reference|color" />
     <attr name="footer_bg_color" format="reference|color" />
@@ -85,6 +91,7 @@
     <attr name="dialog_common_bg_36" format="reference" />
     <attr name="contact_struct_icon" format="reference" />
     <attr name="contact_group_icon" format="reference" />
+    <attr name="icon_upgrade" format="reference" />
     <attr name="color_stroke_46_aa" format="reference" />
     <attr name="color_stroke_46_9b" format="reference" />
     <attr name="color_stroke_40_ee" format="reference" />

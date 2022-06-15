@@ -194,7 +194,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
-        initOrientedHelper();
     }
 
     private void handleMessage() {
@@ -236,17 +235,19 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     private void initOrientedHelper() {
-        userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
-            @Override
-            public void closeFunction() {
-                chatInputMenu.updateVoiceAndMoreLayout(true);
-            }
+        if (userOrientedConversationHelper == null) {
+            userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
+                @Override
+                public void closeFunction() {
+                    chatInputMenu.updateVoiceAndMoreLayout(true);
+                }
 
-            @Override
-            public void showFunction() {
-                chatInputMenu.updateVoiceAndMoreLayout(false);
-            }
-        });
+                @Override
+                public void showFunction() {
+                    chatInputMenu.updateVoiceAndMoreLayout(false);
+                }
+            });
+        }
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -328,6 +329,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void initViews() {
         initPullRefreshLayout();
         initChatInputMenu();
+        initOrientedHelper();
         setChannelTitle();
         initMsgListView();
         sendMsgFromShare();
@@ -435,7 +437,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             }
         });
-        chatInputMenu.setInputLayout(conversation.getInput(), conversation.isServiceConversationType());
+        chatInputMenu.setInputLayout(conversation.getInput(), conversation.isServiceConversationType() || conversation.getType().equals(Conversation.TYPE_TRANSFER));
         String draftMessageContent = MessageCacheUtil.getDraftByCid(ConversationActivity.this, cid);
         if (draftMessageContent != null) {
             chatInputMenu.setChatDrafts(draftMessageContent);
@@ -905,7 +907,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
             }
             // 分享隐藏阅后即焚和悄悄话选择界面
-            if (userOrientedConversationHelper.isDisplayingUI()) {
+            if (userOrientedConversationHelper != null && userOrientedConversationHelper.isDisplayingUI()) {
                 userOrientedConversationHelper.closeUserOrientedLayout();
             }
         }

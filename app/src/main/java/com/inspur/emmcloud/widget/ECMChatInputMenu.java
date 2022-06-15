@@ -808,7 +808,7 @@ public class ECMChatInputMenu extends LinearLayout {
      *
      * @param inputs
      */
-    public void setInputLayout(String inputs, boolean isChannelTypeService) {
+    public void setInputLayout(String inputs, boolean forceHideWhisperOrBurn) {
         //每一位（bit）分别代表：（高位）video voice command file photo text （低位）
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
@@ -897,7 +897,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                 }
             }
-            if (isChannelTypeService) {
+            if (forceHideWhisperOrBurn) {
                 isBurnEnable = false;
                 isWhisperEnable = false;
             }

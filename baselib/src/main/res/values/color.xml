@@ -210,5 +210,8 @@
     <color name="color_burn_bg">#FAEAE2</color>
     <color name="color_burn_bg_dark">#212121</color>
     <color name="color_burn_text">#F18871</color>
+    <color name="color_212433">#212433</color>
+    <color name="color_cc">#cccccc</color>
+    <color name="color_3e">#3E4A59</color>
 
 </resources>

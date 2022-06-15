@@ -67,6 +67,8 @@
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="color_00_ff">@color/header_bg_dark</item>
+        <item name="color_66_cc">@color/color_text_tip</item>
         <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
         <item name="color_bg_common_00">@color/color_bg_common</item>
@@ -76,6 +78,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -85,6 +90,7 @@
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
         <item name="color_chat_burn">@color/color_burn_bg</item>
+        <item name="color_ff_21">@color/white</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -104,6 +110,7 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
         <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
@@ -179,6 +186,8 @@
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="color_00_ff">@color/header_bg_dark</item>
+        <item name="color_66_cc">@color/color_text_tip</item>
         <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
         <item name="color_bg_common_00">@color/color_bg_common</item>
@@ -188,6 +197,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -197,6 +209,7 @@
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
         <item name="color_chat_burn">@color/color_burn_bg</item>
+        <item name="color_ff_21">@color/white</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -217,6 +230,7 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
         <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
@@ -291,6 +305,8 @@
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
+        <item name="color_00_ff">@color/header_bg_dark</item>
+        <item name="color_66_cc">@color/color_text_tip</item>
         <item name="content_bg_f6_1c">@color/content_bg_level_two</item>
         <item name="color_bg_common">@color/color_bg_common</item>
         <item name="color_bg_common_00">@color/color_bg_common</item>
@@ -300,6 +316,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -309,6 +328,7 @@
         <item name="color_ec_1c">@color/bubble_bg_color</item>
         <item name="color_df_21">@color/color_whisper_bg</item>
         <item name="color_chat_burn">@color/color_burn_bg</item>
+        <item name="color_ff_21">@color/white</item>
         <item name="color_ff_33">@color/text_color</item>
         <item name="color_ff_1c">@color/white</item>
         <item name="color_99_b3">@color/color_text_common_level_two</item>
@@ -327,6 +347,7 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
         <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
         <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
@@ -403,6 +424,8 @@
         <item name="content_bg_f6_1c">@color/color_bg_common_dark</item>
         <item name="content_bg_30">@color/content_bg_dark_30</item>
         <item name="content_bg_ff_00">@color/content_bg_dark</item>
+        <item name="color_00_ff">@color/white</item>
+        <item name="color_66_cc">@color/color_cc</item>
         <item name="color_bg_common">@color/color_bg_common_dark</item>
         <item name="color_bg_common_00">@color/content_bg_dark</item>
         <item name="color_3a_88">@color/color_88</item>
@@ -411,6 +434,9 @@
         <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="dialog_common_bg_40">@color/color_40</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>
+        <item name="color_ff_3e">@color/white</item>
+        <item name="color_b2_cc">@color/color_cc</item>
+        <item name="color_b2_59">@color/umeng_socialize_text_ucenter</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
         <item name="text_color_33_66">@color/color_text_tip</item>
@@ -420,6 +446,7 @@
         <item name="color_ec_1c">@color/color_bg_common_dark</item>
         <item name="color_df_21">@color/color_21</item>
         <item name="color_chat_burn">@color/color_burn_bg_dark</item>
+        <item name="color_ff_21">@color/color_212433</item>
         <item name="color_ff_33">@color/text_color_dark</item>
         <item name="color_ff_1c">@color/color_bg_common_dark</item>
         <item name="color_99_b3">@color/color_b3</item>
@@ -438,6 +465,7 @@
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
         <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
         <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>
+        <item name="icon_upgrade">@drawable/icon_upgrade_dark</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic_dark</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic_dark</item>
         <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic_dark</item>
