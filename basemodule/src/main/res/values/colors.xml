@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="record_color_ff3030">#FF3030</color>
+    <color name="cloud_record_button_take_photo_background_color">#a1ffffff</color>
+    <color name="cloud_video_outer_bg">#66ffffff</color>
+</resources>

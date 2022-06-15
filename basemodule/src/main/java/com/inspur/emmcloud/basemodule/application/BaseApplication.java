@@ -90,8 +90,8 @@ public abstract class BaseApplication extends MultiDexApplication {
         if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             init();
             // 短视频licence设置
-            String ugcKey = "484cb4172b8105a4daeb02af3405789b";
-            String ugcLicenceUrl = "https://license.vod2.myqcloud.com/license/v2/1308511895_1/v_cube.license";
+            String ugcKey = "665b5a570a2a36034a82c744120a4273";
+            String ugcLicenceUrl = "https://license.vod2.myqcloud.com/license/v2/1307758824_1/v_cube.license";
             TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
         }
     }

@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,6 +18,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -38,8 +37,6 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil;
-import com.inspur.emmcloud.basemodule.util.systool.PhoneReceiver;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -49,7 +46,6 @@ import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.Update2NewVersionUtils;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.componentservice.application.ApplicationService;
 import com.inspur.emmcloud.componentservice.application.maintab.GetAppMainTabResult;
@@ -71,6 +67,7 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.tencent.rtmp.TXLiveBase;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -113,6 +110,8 @@ public class IndexActivity extends IndexBaseActivity {
         uploadApiRequestRecord();
         //目前隐私协议改为本地判断
 //        getIsAgreed();
+        String sdkVersionStr = TXLiveBase.getSDKVersionStr();
+        LogUtils.debug("---------", sdkVersionStr);
     }
 
     @Override

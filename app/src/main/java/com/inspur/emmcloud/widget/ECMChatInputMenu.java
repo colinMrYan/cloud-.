@@ -55,6 +55,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -959,6 +960,7 @@ public class ECMChatInputMenu extends LinearLayout {
                             String fileName = System.currentTimeMillis() + ".jpg";
                             PreferencesUtils.putString(getContext(), "capturekey", fileName);
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
+                            getContext().startActivity(new Intent(getContext(),MyCameraActivity.class));
                             break;
                         case "file":
                             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.STORAGE, new PermissionRequestCallback() {
