@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -97,6 +98,15 @@ public class MainActivity extends BaseActivity implements IMainActivity {
 
     @Override
     protected int getStatusType() {
+        // 进入app时适配暗黑
+        boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+        if (isFirst) {
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, THEME_DARK);
+            }
+
+        }
         return STATUS_WHITE;
     }
 

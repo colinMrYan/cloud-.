@@ -271,12 +271,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         // 第一次打开app,splash页面不适配深色模式
-        Boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+        boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
         if (isFirst) {
             return;
         }
         // 是否跟随系统改变主题模式
-        Boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
+        boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
         if (!followSystem) {
             return;
         }

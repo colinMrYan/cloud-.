@@ -78,6 +78,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -194,6 +197,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -310,6 +316,9 @@
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
+        <item name="color_ff_3e">@color/color_3e</item>
+        <item name="color_b2_cc">@color/color_icon_foot_bar</item>
+        <item name="color_b2_59">@color/color_icon_foot_bar</item>
         <item name="text_ll_color_sel">@color/button_color_sel</item>
         <item name="text_color">@color/text_color</item>
         <item name="text_color_33_66">@color/text_color</item>
@@ -425,6 +434,9 @@
         <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="dialog_common_bg_40">@color/color_40</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>
+        <item name="color_ff_3e">@color/white</item>
+        <item name="color_b2_cc">@color/color_cc</item>
+        <item name="color_b2_59">@color/umeng_socialize_text_ucenter</item>
         <item name="text_ll_color_sel">@color/button_color_sel_dark</item>
         <item name="text_color">@color/text_color_dark</item>
         <item name="text_color_33_66">@color/color_text_tip</item>

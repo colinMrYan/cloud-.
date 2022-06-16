@@ -24,6 +24,9 @@
     <attr name="color_ff_21" format="reference|color" />
     <attr name="color_00_ff" format="reference|color" />
     <attr name="color_66_cc" format="reference|color" />
+    <attr name="color_ff_3e" format="reference|color" />
+    <attr name="color_b2_cc" format="reference|color" />
+    <attr name="color_b2_59" format="reference|color" />
 
     <attr name="header_text_blue_white_color" format="reference|color" />
     <attr name="footer_bg_color" format="reference|color" />
