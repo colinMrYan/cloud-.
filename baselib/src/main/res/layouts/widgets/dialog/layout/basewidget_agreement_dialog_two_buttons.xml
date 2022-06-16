@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="20dp"
-    android:background="@drawable/shape_upgrade_dialog"
+    android:background="@drawable/shape_agreement_dialog"
     android:orientation="vertical">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
         android:text="@string/privacy_title"
-        android:textColor="#3E4A59"
+        android:textColor="?attr/color_ff_3e"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
         android:lineSpacingExtra="2dp"
         android:lineSpacingMultiplier="1.2"
         android:maxLines="16"
-        android:textColor="#000000"
+        android:textColor="?attr/color_00_ff"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -49,11 +49,11 @@
             android:onClick="onClick"
             android:text="@string/privacy_reject"
             android:textAllCaps="false"
-            android:textColor="#B2B7BA"
+            android:textColor="?attr/color_b2_cc"
             android:textSize="15sp"
             app:cus_backgroundColor="?attr/dialog_common_bg_40"
-            app:cus_borderColor="#B2B7BA"
-            app:cus_borderWidth="1dp"
+            app:cus_borderColor="?attr/color_b2_59"
+            app:cus_borderWidth="1px"
             app:cus_isRadiusAdjustBounds="true" />
 
 

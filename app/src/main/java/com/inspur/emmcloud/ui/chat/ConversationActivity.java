@@ -194,7 +194,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
-        initOrientedHelper();
     }
 
     private void handleMessage() {

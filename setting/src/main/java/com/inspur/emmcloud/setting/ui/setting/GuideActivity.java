@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -19,7 +18,6 @@ import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
@@ -46,7 +44,6 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).navigationBarColor(android.R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         deleteReactNativeResource();
         initView();
     }
@@ -57,7 +54,7 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
     }
 
     protected int getStatusType() {
-        return STATUS_NO_SET;
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**
@@ -81,12 +78,10 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
         boolean darkTheme = DarkUtil.isDarkTheme();
         //刚安装App初次进入
         if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
-            splashResIdList.add(R.drawable.guide_page_1);
-            splashResIdList.add(R.drawable.guide_page_2);
-            splashResIdList.add(R.drawable.guide_page_3);
-            splashResIdList.add(R.drawable.guide_page_4);
-            splashResIdList.add(R.drawable.guide_page_5);
-            splashResIdList.add(R.drawable.guide_page_6);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_1 : R.drawable.guide_page_first_light_1);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_2 : R.drawable.guide_page_first_light_2);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_3 : R.drawable.guide_page_first_light_3);
+            splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_4 : R.drawable.guide_page_first_light_4);
         } else {//版本升级进入
             splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_1 : R.drawable.guide_page_light_1);
             splashResIdList.add(darkTheme ? R.drawable.guide_page_dark_2 : R.drawable.guide_page_light_2);
