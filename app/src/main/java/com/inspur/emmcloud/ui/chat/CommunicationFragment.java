@@ -572,14 +572,17 @@ public class CommunicationFragment extends BaseFragment {
                     }
                 }
                 if (serviceConversation != null && serviceConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
+                    List<Conversation> allServiceConversations = ConversationCacheUtils.getServiceConversationList(BaseApplication.getInstance());
                     int unreadServiceNum = 0;
                     long lastReadTime = 0L;
-                    for (Conversation conversation : ConversationCacheUtils.getConversationList(BaseApplication.getInstance())) {
-                        UIConversation uiConversation = new UIConversation(conversation);
-                        if (uiConversation.getConversation().isServiceConversationType()) {
-                            unreadServiceNum += uiConversation.getUnReadCount();
-                            if (uiConversation.getLastUpdate() > lastReadTime) {
-                                lastReadTime = uiConversation.getLastUpdate();
+                    if (allServiceConversations.size() > 0) {
+                        for (Conversation conversation : allServiceConversations) {
+                            UIConversation uiConversation = new UIConversation(conversation);
+                            if (uiConversation.getConversation().isServiceConversationType()) {
+                                unreadServiceNum += uiConversation.getUnReadCount();
+                                if (uiConversation.getLastUpdate() > lastReadTime) {
+                                    lastReadTime = uiConversation.getLastUpdate();
+                                }
                             }
                         }
                     }

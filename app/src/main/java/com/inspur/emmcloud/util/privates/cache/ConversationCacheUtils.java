@@ -288,6 +288,26 @@ public class ConversationCacheUtils {
         return conversationList;
     }
 
+    /**
+     * 获取所有会话列表
+     *
+     * @param context
+     * @return
+     */
+    public static List<Conversation> getServiceConversationList(Context context) {
+        List<Conversation> conversationList = null;
+        try {
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("serviceId", "!=", "").findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<Conversation>();
+        }
+        return conversationList;
+    }
+
 
     /**
      * 获取缓存中的频道
