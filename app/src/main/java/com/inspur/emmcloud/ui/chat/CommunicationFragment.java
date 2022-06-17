@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.MenuPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -569,6 +570,7 @@ public class CommunicationFragment extends BaseFragment {
                 for (UIConversation uiConversation : uiConversationList) {
                     if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
                         serviceConversation = uiConversation;
+                        break;
                     }
                 }
                 if (serviceConversation != null && serviceConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
@@ -577,8 +579,8 @@ public class CommunicationFragment extends BaseFragment {
                     long lastReadTime = 0L;
                     if (allServiceConversations.size() > 0) {
                         for (Conversation conversation : allServiceConversations) {
-                            UIConversation uiConversation = new UIConversation(conversation);
-                            if (uiConversation.getConversation().isServiceConversationType()) {
+                            if (conversation.isServiceConversationType()) {
+                                UIConversation uiConversation = new UIConversation(conversation);
                                 unreadServiceNum += uiConversation.getUnReadCount();
                                 if (uiConversation.getLastUpdate() > lastReadTime) {
                                     lastReadTime = uiConversation.getLastUpdate();
