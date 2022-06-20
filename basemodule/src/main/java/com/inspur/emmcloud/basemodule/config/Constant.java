@@ -379,4 +379,10 @@ public class Constant {
     public static final int APP_THEME_DARK = 3;
 
     public static final int MULTI_SELECT_COUNT = 9;
+
+    /**
+     * 短视频，拍照等输入目录
+     */
+    public static final String DEFAULT_MEDIA_PACK_FOLDER = "inspurrtmp";
+    public static final String OUTPUT_DIR_NAME = "InspurUGC";
 }

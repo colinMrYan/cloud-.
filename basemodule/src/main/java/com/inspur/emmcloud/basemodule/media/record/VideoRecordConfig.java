@@ -90,6 +90,6 @@ public class VideoRecordConfig {
         mFrontCamera = true;
         mTouchFocus = false;
         mAspectRatio = TXRecordCommon.VIDEO_ASPECT_RATIO_9_16;
-        mRecordMode = RecordModeView.RECORD_MODE_CLICK;
+        mRecordMode = RecordModeView.RECORD_MODE_TAKE_PHOTO;
     }
 }

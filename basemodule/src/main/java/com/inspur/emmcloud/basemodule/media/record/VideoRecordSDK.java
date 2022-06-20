@@ -7,12 +7,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.media.record.utils.BackgroundTasks;
+import com.inspur.emmcloud.basemodule.media.record.utils.VideoPathUtil;
 import com.inspur.emmcloud.basemodule.media.record.view.RecordModeView;
 import com.tencent.liteav.audio.TXCAudioUGCRecorder;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.ugc.TXRecordCommon;
+import com.tencent.ugc.TXUGCPartsManager;
 import com.tencent.ugc.TXUGCRecord;
 
 /**
@@ -37,6 +41,14 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
     private TXUGCRecord mRecordSDK;
     private VideoRecordConfig mVideoRecordConfig; // 录制配置
     private boolean mPreviewFlag; // 预览
+    private OnVideoRecordListener mOnVideoRecordListener;
+    private String mRecordVideoPath;
+    // 美颜类型
+    public int mBeautyStyle = 0;
+    // 美颜
+    public int mBeautyLevel = 4;
+    // 美白
+    public int mWhiteLevel = 2;
 
     private VideoRecordSDK() {
 
@@ -98,6 +110,7 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
 
         if (mRecordSDK != null) {
             // 设置基础美颜
+            mRecordSDK.getBeautyManager().setBeautyStyle(0);
             mRecordSDK.getBeautyManager().setBeautyLevel(4);
             mRecordSDK.getBeautyManager().setWhitenessLevel(1);
 
@@ -145,18 +158,165 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
         }
     }
 
-    @Override
-    public void onRecordEvent(int i, Bundle bundle) {
+    // 分段
+    public TXUGCPartsManager getPartManager() {
+        if (mRecordSDK != null) {
+            return mRecordSDK.getPartsManager();
+        }
+        return null;
+    }
 
+    // 录制参数config
+    public void setConfig(VideoRecordConfig config) {
+        mVideoRecordConfig = config;
+    }
+
+    /**
+     * 开始录制
+     */
+    public int startRecord() {
+        Log.d(TAG, "startRecord mCurrentState" + mCurrentState);
+        if (mCurrentState == STATE_STOP) {
+            String customVideoPath = VideoPathUtil.getCustomVideoOutputPath();
+            String customCoverPath = customVideoPath.replace(".mp4", ".jpg");
+
+            int retCode = 0;
+
+            if (mRecordSDK != null) {
+                retCode = mRecordSDK.startRecord(customVideoPath, customCoverPath);
+            }
+            Log.d(TAG, "startRecord retCode:" + retCode);
+            if (retCode != TXRecordCommon.START_RECORD_OK) {
+                return START_RECORD_FAIL;
+            }
+        }
+        mCurrentState = STATE_START;
+        return START_RECORD_SUCC;
+    }
+
+    /**
+     * 暂停录制
+     * FIXBUG:被打断时调用，暂停录制，修改状态，跳转到音乐界面也会被调用
+     */
+    public void pauseRecord() {
+        Log.d(TAG, "pauseRecord");
+        if (mCurrentState == STATE_START || mCurrentState == STATE_RESUME) {
+            if (mRecordSDK != null) {
+                mRecordSDK.pauseRecord();
+            }
+            mCurrentState = STATE_PAUSE;
+        }
+        mPreviewFlag = false;
+
+        AudioFocusManager.getInstance().abandonAudioFocus();
+    }
+
+    /**
+     * 停止录制
+     */
+    public void stopRecord() {
+        Log.d(TAG, "stopRecord");
+        int size = 0;
+        if (mRecordSDK != null) {
+            size = mRecordSDK.getPartsManager().getPartsPathList().size();
+        }
+        if (mCurrentState == STATE_STOP && size == 0) {
+            //如果录制未开始，且录制片段个数为0，则不需要停止录制
+            return;
+        }
+        if (mRecordSDK != null) {
+            mRecordSDK.stopBGM();
+            mRecordSDK.stopRecord();
+        }
+        AudioFocusManager.getInstance().abandonAudioFocus();
+
+        mCurrentState = STATE_STOP;
+    }
+
+    /**
+     * 释放Record SDK资源
+     */
+    public void releaseRecord() {
+        Log.d(TAG, "releaseRecord");
+        if (mRecordSDK != null) {
+            mRecordSDK.stopBGM();
+            mRecordSDK.stopCameraPreview();
+            mRecordSDK.setVideoRecordListener(null);
+            mRecordSDK.getPartsManager().deleteAllParts();
+            mRecordSDK.release();
+            mRecordSDK = null;
+            mPreviewFlag = false;
+        }
+        AudioFocusManager.getInstance().abandonAudioFocus();
+    }
+
+    public void setVideoRecordListener(OnVideoRecordListener listener) {
+        mOnVideoRecordListener = listener;
     }
 
     @Override
-    public void onRecordProgress(long l) {
-
+    public void onRecordEvent(int event, Bundle bundle) {
+        if (event == TXRecordCommon.EVT_ID_PAUSE) {
+            if (mOnVideoRecordListener != null) {
+                mOnVideoRecordListener.onRecordEvent(event);
+            }
+        } else if (event == TXRecordCommon.EVT_CAMERA_CANNOT_USE) {
+            ToastUtils.show(BaseApplication.getInstance().getResources().getString(R.string.video_record_event_evt_camera_cannot_use));
+        } else if (event == TXRecordCommon.EVT_MIC_CANNOT_USE) {
+            ToastUtils.show(BaseApplication.getInstance().getResources().getString(R.string.video_record_event_evt_mic_cannot_use));
+        }
     }
 
     @Override
-    public void onRecordComplete(TXRecordCommon.TXRecordResult txRecordResult) {
+    public void onRecordProgress(long milliSecond) {
+        if (mOnVideoRecordListener != null) {
+            mOnVideoRecordListener.onRecordProgress(milliSecond);
+        }
+    }
 
+    @Override
+    public void onRecordComplete(TXRecordCommon.TXRecordResult result) {
+        Log.d(TAG, "onRecordComplete");
+        mCurrentState = STATE_STOP;
+        if (result.retCode < 0) {
+            ToastUtils.show(BaseApplication.getInstance().getResources().getString(R.string.video_record_complete_fail_tip) + result.descMsg);
+        } else {
+            pauseRecord();
+            mRecordVideoPath = result.videoPath;
+            if (mOnVideoRecordListener != null) {
+                mOnVideoRecordListener.onRecordComplete(result);
+            }
+        }
+    }
+
+    public String getRecordVideoPath() {
+        return mRecordVideoPath;
+    }
+
+    public void switchCamera(boolean isFront) {
+        TXUGCRecord record = getRecorder();
+        if (record != null) {
+            record.switchCamera(isFront);
+        }
+        if (mVideoRecordConfig != null) {
+            mVideoRecordConfig.mFrontCamera = isFront;
+        }
+    }
+
+    // 设置基础美颜
+    public void setBeautyParams() {
+        if (mRecordSDK != null) {
+            mRecordSDK.getBeautyManager().setBeautyStyle(mBeautyStyle);
+            mRecordSDK.getBeautyManager().setBeautyLevel(mBeautyLevel);
+            mRecordSDK.getBeautyManager().setWhitenessLevel(mWhiteLevel);
+        }
+    }
+
+    public interface OnVideoRecordListener {
+        void onRecordProgress(long milliSecond);
+
+        void onRecordEvent(int event);
+
+        void onRecordComplete(TXRecordCommon.TXRecordResult result);
     }
 }

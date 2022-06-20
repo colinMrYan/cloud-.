@@ -2,4 +2,8 @@
 <resources>
     <string name="video_record_take_photo">Photograph</string>
     <string name="video_record_take_video">Video Record</string>
+    <string name="video_record_event_evt_mic_cannot_use">Unable to access Microphone. Please check the permissions.</string>
+    <string name="video_record_event_evt_camera_cannot_use">Unable to access Camera. Please check the permissions.</string>
+    <string name="video_record_complete_fail_tip">Unable to record. Cause:&#160;</string>
+
 </resources>

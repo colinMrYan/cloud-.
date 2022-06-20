@@ -3,6 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- 视频预览界面 -->
+    <com.tencent.rtmp.ui.TXCloudVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
     <com.inspur.emmcloud.basemodule.media.record.view.RecordModeView
         android:id="@+id/record_mode_view"
         android:layout_width="210dp"

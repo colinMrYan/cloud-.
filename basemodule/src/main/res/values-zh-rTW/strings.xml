@@ -2,4 +2,8 @@
 <resources>
     <string name="video_record_take_photo">拍照</string>
     <string name="video_record_take_video">錄像</string>
+    <string name="video_record_event_evt_mic_cannot_use">麥克風打開失敗，請檢查權限</string>
+    <string name="video_record_event_evt_camera_cannot_use">攝像頭打開失敗，請檢查權限</string>
+    <string name="video_record_complete_fail_tip">錄製失敗，原因：</string>
+
 </resources>

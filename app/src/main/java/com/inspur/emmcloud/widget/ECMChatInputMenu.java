@@ -960,7 +960,6 @@ public class ECMChatInputMenu extends LinearLayout {
                             String fileName = System.currentTimeMillis() + ".jpg";
                             PreferencesUtils.putString(getContext(), "capturekey", fileName);
                             AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
-                            getContext().startActivity(new Intent(getContext(),MyCameraActivity.class));
                             break;
                         case "file":
                             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.STORAGE, new PermissionRequestCallback() {
