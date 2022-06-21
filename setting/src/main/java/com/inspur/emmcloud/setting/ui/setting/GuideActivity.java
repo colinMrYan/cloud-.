@@ -54,7 +54,7 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE_DARK_FONT;
+        return STATUS_FULL_SCREEN;
     }
 
     /**
