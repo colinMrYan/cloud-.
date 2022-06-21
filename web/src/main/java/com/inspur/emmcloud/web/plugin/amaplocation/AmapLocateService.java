@@ -12,6 +12,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -88,6 +89,8 @@ public class AmapLocateService extends ImpPlugin implements
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (AppUtils.isLocationEnabled(getActivity())) {
                     startLocation();
+                    PVCollectModelCacheUtils.saveCollectModel("AmapLocateService: getInfo", "startLocation");
+
                 } else {
                     new CustomDialog.MessageDialogBuilder(getActivity())
                             .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
@@ -148,6 +151,7 @@ public class AmapLocateService extends ImpPlugin implements
         super.onActivityResume();
         if (openLocationStatus == 1 && AppUtils.isLocationEnabled(getFragmentContext())) {
             startLocation();
+            PVCollectModelCacheUtils.saveCollectModel("AmapLocateService: onActivityResume", "startLocation");
             openLocationStatus = 2;
         }
     }
@@ -156,6 +160,7 @@ public class AmapLocateService extends ImpPlugin implements
     public void onDestroy() {
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
+            PVCollectModelCacheUtils.saveCollectModel("AmapLocateService: onDestroy", "stopLocation");
             mlocationClient.onDestroy();
             mlocationClient = null;
         }
@@ -174,6 +179,7 @@ public class AmapLocateService extends ImpPlugin implements
         }
         if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
             mlocationClient.stopLocation();
+            PVCollectModelCacheUtils.saveCollectModel("AmapLocateService: onLocationChanged", "stopLocation");
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
                 amapLocation = Collections.min(aMapLocationList, new ComparatorValues());

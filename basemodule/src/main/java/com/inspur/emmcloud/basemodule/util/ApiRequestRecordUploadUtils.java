@@ -64,6 +64,7 @@ public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance 
         // 设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         mLocationClient.startLocation();
+        PVCollectModelCacheUtils.saveCollectModel("ApiRequestRecordUploadUtils: start", "startLocation");
     }
 
     @Override
@@ -76,6 +77,7 @@ public class ApiRequestRecordUploadUtils extends BaseModuleAPIInterfaceInstance 
         }
         if (mLocationClient != null) {
             mLocationClient.stopLocation();
+            PVCollectModelCacheUtils.saveCollectModel("ApiRequestRecordUploadUtils: onLocationChanged", "stopLocation");
             mLocationClient.onDestroy();
             mLocationClient = null;
         }

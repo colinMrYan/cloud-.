@@ -18,6 +18,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -73,10 +74,13 @@ public class LocationService extends Service implements AMapLocationListener {
 
                     } else {
                         continueLocation();
+                        PVCollectModelCacheUtils.saveCollectModel("LocationService: onStartCommand", "continueLocation");
                     }
                 }
             };
             handler.postDelayed(runnable, 0);// 开启Service的时候即执行一次
+            PVCollectModelCacheUtils.saveCollectModel("LocationService: onStartCommand", "startLocation");
+
         }
 
         return START_STICKY;
@@ -129,6 +133,7 @@ public class LocationService extends Service implements AMapLocationListener {
         }
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
+            PVCollectModelCacheUtils.saveCollectModel("LocationService: onDestroy", "stopLocation");
             mlocationClient.onDestroy();
             mlocationClient = null;
         }
@@ -150,6 +155,8 @@ public class LocationService extends Service implements AMapLocationListener {
 
         } else {
             continueLocation();
+            PVCollectModelCacheUtils.saveCollectModel("LocationService: onLocationChanged : else", "continueLocation");
+
         }
     }
 
@@ -168,6 +175,8 @@ public class LocationService extends Service implements AMapLocationListener {
             LogUtils.jasonDebug("locationObjJson=" + locationObjJson);
         } else {
             continueLocation();
+            PVCollectModelCacheUtils.saveCollectModel("LocationService: uploadPosition: else", "continueLocation");
+
         }
     }
 
@@ -175,6 +184,8 @@ public class LocationService extends Service implements AMapLocationListener {
         @Override
         public void returnUploadPositionSuccess() {
             continueLocation();
+            PVCollectModelCacheUtils.saveCollectModel("LocationService: returnUploadPositionSuccess", "continueLocation");
+
         }
     }
 }
