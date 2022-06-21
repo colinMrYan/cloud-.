@@ -2,15 +2,21 @@ package com.inspur.emmcloud.web.plugin.photo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.view.View;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
@@ -21,13 +27,23 @@ import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okio.ByteString;
 
 public class PhotoService extends ImpPlugin {
 
@@ -51,7 +67,9 @@ public class PhotoService extends ImpPlugin {
             takePhotoAndUpload();
         } else if ("viewImage".equals(action)) {
             viewImage();
-        } else {
+        } else if ("savePhoto".equals(action)) {
+            savePhotoToGallery(paramsObject);
+        }else {
             showCallIMPMethodErrorDlg();
         }
         loadingDlg = new LoadingDialog(getActivity());
@@ -92,6 +110,116 @@ public class PhotoService extends ImpPlugin {
         intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_THUMB_URLS, imageThumbnailUrlList);
         intent.putExtra(ImageGalleryActivity.EXTRA_IMAGE_INDEX, imageIndex);
         getActivity().startActivity(intent);
+    }
+
+    private void savePhotoToGallery(JSONObject paramsObject) {
+        String base64Url, imageUrl, fileName;
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        try {
+            final JSONObject optionsObj = paramsObject.getJSONObject("options");
+            fileName = optionsObj.optString("fileName", "default");
+            base64Url = optionsObj.optString("base64Content");
+            imageUrl = optionsObj.optString("imageUrl");
+            if (!StringUtils.isEmpty(base64Url)) {
+                saveBitmapFile(decodeBase64ToBitmap(base64Url), fileName);
+                return;
+            }
+            if (!StringUtils.isEmpty(imageUrl)) {
+                saveImageFromUrl(imageUrl, fileName);
+                return;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Bitmap decodeBase64ToBitmap(String base64Str) {
+        try {
+            byte[] input = ByteString.decodeBase64(base64Str).toByteArray();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig= Bitmap.Config.RGB_565;
+            options.inSampleSize=2;
+            return BitmapFactory.decodeByteArray(input, 0, input.length, options);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void saveBitmapFile(Bitmap bitmap, String name) {
+        String saveImageFolder = "IMP-Cloud/cache/save/";
+        File temp = new File(Environment.getExternalStorageDirectory() + "/" + saveImageFolder);// 要保存文件先创建文件夹
+        if (!temp.exists()) {
+            temp.mkdir();
+        }
+        String savedImagePath = temp.getPath() +  System.currentTimeMillis() + (name + ".jpg");
+        File file = new File(savedImagePath);
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    new FileOutputStream(file));
+            if (bitmap != null) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            }
+            bos.flush();
+            bos.close();
+            AppUtils.refreshMedia(getActivity(), savedImagePath);
+            operateCallback(true, savedImagePath);
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_success));
+        } catch (IOException e) {
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
+            operateCallback(false, e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void operateCallback(boolean success, String info) {
+        try {
+            if (success) {
+                JSONObject json = new JSONObject();
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                result.put("path", info);
+                json.put("result", result);
+                jsCallback(successCb, json);
+            } else {
+                jsCallback(failCb, info);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveImageFromUrl(String imageUrl,final String name) {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoader.getInstance().loadImage(imageUrl, options,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view,
+                                                FailReason failReason) {
+                        if (getActivity() != null) {
+                            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(com.inspur.baselib.R.string.save_fail));
+                        }
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view,
+                                                  Bitmap loadedImage) {
+                        if (getActivity() != null) {
+                            saveBitmapFile(loadedImage, name);
+                        }
+                    }
+                });
     }
 
     private void selectAndUpload() {

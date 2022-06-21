@@ -22,6 +22,7 @@ import java.io.File;
 public class MapService extends ImpPlugin {
     private final String MAP_BAIDU_APPID = "com.baidu.BaiduMap";
     private final String MAP_AUTONAVI_APPID = "com.autonavi.minimap";
+    private final String MAP_TENCENT_APPID = "com.tencent.map";
     // 当前地址描述
     public String addressInfo;
     // 经度
@@ -94,9 +95,35 @@ public class MapService extends ImpPlugin {
         return array.toString();
     }
 
-    public void navigationByAutonavi(JSONObject jsonObject) {
-        successCb = JSONUtils.getString(jsonObject, "success", "");
-        failCb = JSONUtils.getString(jsonObject, "fail", "");
+    private void navigationByAutonavi(JSONObject jsonObject) {
+        try {
+            if (!jsonObject.isNull("success"))
+                successCb = jsonObject.getString("success");
+            if (!jsonObject.isNull("fail"))
+                failCb = jsonObject.getString("fail");
+            final JSONObject optionsObj = jsonObject.getJSONObject("options");
+            int mapType = 0;
+            if (optionsObj.has("mapType")) {
+                mapType = optionsObj.getInt("mapType");
+            }
+            switch (mapType) {
+                case 1:
+                    navigationByBaiduAutonavi(jsonObject);
+                    break;
+                case 2:
+                    navigationByTencentAutonavi(jsonObject);
+                    break;
+                case 0:
+                default:
+                    navigationByGaodeAutonavi(jsonObject);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void navigationByGaodeAutonavi(JSONObject jsonObject) {
         if (!isAppInstall(MAP_AUTONAVI_APPID)) {
             callbackFail("未安装此地图");
             return;
@@ -156,6 +183,123 @@ public class MapService extends ImpPlugin {
 
     }
 
+    public void navigationByBaiduAutonavi(JSONObject jsonObject) {
+        if (!isAppInstall(MAP_BAIDU_APPID)) {
+            callbackFail("未安装此地图");
+            return;
+        }
+        try {
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            String fromName = JSONUtils.getString(optionsObj, "sName", "");
+            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            if (coordType.equals("BD09")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            } else if (coordType.equals("WGS84")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            }
+            StringBuilder builder = new StringBuilder("baidumap://map/direction");
+            builder.append("?region=").append(" ");
+            builder.append("&coord_type=gcj02");
+            if (fromLatitude != null && fromLatitude != null) {
+                builder.append("&origin=").append(fromLatitude).append(",").append(fromLongitude);
+            }
+            builder.append("&destination=").append(toLatitude).append(",").append(toLongitude);
+            builder.append("&mode=walking");
+            builder.append("&src=").append(getFragmentContext().getPackageName());
+            Intent intent = getFragmentContext().getPackageManager()
+                    .getLaunchIntentForPackage(MAP_BAIDU_APPID);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(builder.toString()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+
+    }
+
+    public void navigationByTencentAutonavi(JSONObject jsonObject) {
+        if (!isAppInstall(MAP_TENCENT_APPID)) {
+            callbackFail("未安装此地图");
+            return;
+        }
+        try {
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            String fromName = JSONUtils.getString(optionsObj, "sName", "");
+            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            if (coordType.equals("WGS84")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            } else if (coordType.equals("BD09")) {
+                if (fromLatitude != null && fromLatitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            }
+            StringBuilder builder = new StringBuilder("qqmap://map/routeplan");
+            builder.append("?type=walk");
+            if (!StringUtils.isBlank(fromName)) {
+                builder.append("&from=").append(fromName);
+            }
+            if (fromLatitude != null && fromLatitude != null) {
+                builder.append("&fromcoord=").append(fromLatitude).append(",").append(fromLongitude);
+            }
+            if (!StringUtils.isBlank(toName)) {
+                builder.append("&to=").append(toName);
+            }
+            builder.append("&tocoord=").append(toLatitude).append(",").append(toLongitude);
+            //注册开发者账号，获取key
+            builder.append("&referer=").append("EQRBZ-VABWX-LPI4J-TH5ZF-HMDGQ-AYFN2");
+            Intent intent = getFragmentContext().getPackageManager()
+                    .getLaunchIntentForPackage(MAP_TENCENT_APPID);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(builder.toString()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+
+    }
+
     private void callbackSuccess() {
         if (!StringUtils.isBlank(successCb)) {
             this.jsCallback(successCb, "");
@@ -176,7 +320,6 @@ public class MapService extends ImpPlugin {
     }
 
     public void navigationToDestination(JSONObject jsonObject) {
-
         try {
             String destination = "";
             String mapId = "";
