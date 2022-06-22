@@ -240,6 +240,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                     .setAccessToken(accessToken);
             ((BaseApplication) activity.getApplicationContext())
                     .setRefreshToken(refreshToken);
+            PreferencesUtils.putString(activity, "accessToken", accessToken);
             boolean refreshTokenSuc = PreferencesUtils.putString(activity, "refreshToken", refreshToken);
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
             PreferencesUtils.putString(activity, "tokenType", tokenType);
