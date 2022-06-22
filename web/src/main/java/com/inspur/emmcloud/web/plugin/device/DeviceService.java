@@ -16,22 +16,17 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
-import com.inspur.emmcloud.web.ui.ImpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.TimeZone;
-
-import butterknife.ButterKnife;
 
 /**
  * 设备信息
@@ -120,7 +115,9 @@ public class DeviceService extends ImpPlugin {
             openWebRevolve();
         } else if (action.equals("closeWebRevolve")) {
             closeWebRevolve();
-        } else {
+        } else if (action.equals("clearWebCache")) {
+            clearWebCache();
+        }else {
             showCallIMPMethodErrorDlg();
         }
 
@@ -394,6 +391,24 @@ public class DeviceService extends ImpPlugin {
             SettingService service = router.getService(SettingService.class);
             if (service.closeWebRotate()) {
                 jsCallback(successCb, "");
+            } else {
+                jsCallback(failCb, "network error!!");
+            }
+        }
+    }
+
+    private void clearWebCache() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class) != null) {
+            SettingService service = router.getService(SettingService.class);
+            if (service.clearWebCache()) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCb, json);
             } else {
                 jsCallback(failCb, "network error!!");
             }

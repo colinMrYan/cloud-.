@@ -15,6 +15,8 @@ import com.inspur.emmcloud.setting.ui.MoreFragment;
 import com.inspur.emmcloud.setting.ui.setting.CreateGestureActivity;
 import com.inspur.emmcloud.setting.ui.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.setting.ui.setting.GestureLoginActivity;
+import com.inspur.emmcloud.setting.ui.setting.SettingActivity;
+import com.inspur.emmcloud.setting.widget.DataCleanManager;
 
 /**
  * Created by libaochao on 2019/12/25.
@@ -41,6 +43,13 @@ public class SettingServiceImpl extends SettingAPIInterfaceImpl implements Setti
     @Override
     public boolean closeWebRotate() {
         return saveWebAutoRotateConfig(false);
+    }
+
+    @Override
+    public boolean clearWebCache() {
+        DataCleanManager.cleanWebViewCache(BaseApplication.getInstance());
+        BaseApplication.getInstance().removeAllSessionCookie();
+        return true;
     }
 
     @Override
