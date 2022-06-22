@@ -6,6 +6,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.R;
@@ -88,13 +89,21 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
             String tokenType = getLoginResult.getTokenType();
             int expiresIn = getLoginResult.getExpiresIn();
             PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", accessToken);
-            PreferencesUtils.putString(BaseApplication.getInstance(), "refreshToken", refreshToken);
+            boolean refreshTokenSuc = PreferencesUtils.putString(BaseApplication.getInstance(), "refreshToken", refreshToken);
             PreferencesUtils.putInt(BaseApplication.getInstance(), "keepAlive", keepAlive);
             PreferencesUtils.putString(BaseApplication.getInstance(), "tokenType", tokenType);
             PreferencesUtils.putInt(BaseApplication.getInstance(), "expiresIn", expiresIn);
             PreferencesUtils.putLong(BaseApplication.getInstance(), "token_get_time", System.currentTimeMillis());
             BaseApplication.getInstance().setAccessToken(accessToken);
             BaseApplication.getInstance().setRefreshToken(refreshToken);
+            // 郑总token刷新失败分析日志
+            if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                if (refreshTokenSuc) {
+                    PVCollectModelCacheUtils.saveCollectModel("returnRefreshTokenSuccess-saveSuc", "---at---" + accessToken + "---rt---" + refreshToken);
+                } else {
+                    PVCollectModelCacheUtils.saveCollectModel("returnRefreshTokenSuccess-saveFail", "---at---" + accessToken + "---rt---" + refreshToken);
+                }
+            }
             Router router = Router.getInstance();
             if (router.getService(CommunicationService.class) != null) {
                 CommunicationService service = router.getService(CommunicationService.class);

@@ -33,6 +33,7 @@ import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -144,6 +145,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         uid = PreferencesUtils.getString(getInstance(), "userID");
         accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+        if ("11487".equals(uid)) {
+            // 郑总token刷新失败分析日志
+            PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + refreshToken);
+        }
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         //置为0，调起解锁界面 (强杀进程后)
