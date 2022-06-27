@@ -954,6 +954,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case REQUEST_CAMERA:
+
                     String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
                     combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     break;

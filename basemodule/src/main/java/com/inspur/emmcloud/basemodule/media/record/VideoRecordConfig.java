@@ -87,8 +87,8 @@ public class VideoRecordConfig {
         mHomeOrientation = TXLiveConstants.VIDEO_ANGLE_HOME_DOWN;
         mRenderRotation = TXLiveConstants.RENDER_ROTATION_PORTRAIT;
         mRecordSpeed = TXRecordCommon.RECORD_SPEED_NORMAL;
-        mFrontCamera = true;
-        mTouchFocus = false;
+        mFrontCamera = false;
+        mTouchFocus = true;
         mAspectRatio = TXRecordCommon.VIDEO_ASPECT_RATIO_9_16;
         mRecordMode = RecordModeView.RECORD_MODE_TAKE_PHOTO;
     }

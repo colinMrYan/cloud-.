@@ -3,6 +3,7 @@ package com.inspur.emmcloud.basemodule.media.record.view;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -48,6 +49,8 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
 
     private void initViews() {
         mActivity = (Activity) getContext();
+        // 初始化SDK:TXUGCRecord
+        VideoRecordSDK.getInstance().initSDK();
         inflate(mActivity, R.layout.cloud_video_record_view, this);
         mButtonRecord = findViewById(R.id.record_button);
         mVideoView = findViewById(R.id.video_view);
@@ -94,14 +97,17 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
         // 停止录制
         VideoRecordSDK.getInstance().releaseRecord();
         VideoRecordConfig.getInstance().clear();
-        // 录制TXUGCRecord是单例，需要释放时还原配置
         AudioFocusManager.getInstance().setAudioFocusListener(null);
         VideoRecordSDK.getInstance().setVideoRecordListener(null);
     }
 
     @Override
     public void screenOrientationChange() {
+        VideoRecordSDK.getInstance().stopCameraPreview();
 
+        VideoRecordSDK.getInstance().pauseRecord();
+
+        VideoRecordSDK.getInstance().startCameraPreview(mVideoView);
     }
 
     @Override
