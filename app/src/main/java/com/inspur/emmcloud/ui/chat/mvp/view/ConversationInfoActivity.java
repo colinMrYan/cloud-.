@@ -67,6 +67,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     private static final int QEQUEST_FILE_TRANSFER = 4;
+    private static final int QEQUEST_GROUP_TRANSFER = 5;
     @BindView(R.id.rv_conversation_members_head)
     NoScrollGridView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
@@ -91,6 +92,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout conversationNameLayout;
     @BindView(R.id.rl_conversation_quit)
     RelativeLayout conversationQuitLayout;
+    @BindView(R.id.rl_group_transfer)
+    RelativeLayout groupTransferLayout;
+    @BindView(R.id.tv_group_transfer)
+    TextView groupTransferTv;
     @BindView(R.id.rl_conversation_search_record)
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
@@ -145,6 +150,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
             mPresenter.updateSearchMoreState();
+            groupTransferLayout.setVisibility(isOwner ? View.VISIBLE : View.GONE);
             quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT) || uiConversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             isOwner = false;
@@ -155,6 +161,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             conversationQRLayout.setVisibility(View.GONE);
             conversationNameLayout.setVisibility(View.GONE);
             conversationQuitLayout.setVisibility(View.GONE);
+            groupTransferLayout.setVisibility(View.GONE);
             searchRecordLayout.setVisibility(View.GONE);
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
             muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
@@ -226,9 +233,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.ibt_back:
-                if (conversationNameChanged){
+                if (conversationNameChanged) {
                     Intent intent = new Intent();
-                    intent.putExtra("operate",0);
+                    intent.putExtra("operate", 0);
                     setResult(RESULT_OK, intent);
                 }
                 finish();
@@ -292,6 +299,14 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     showQuitGroupWarningDlg();
                 }
                 break;
+            case R.id.rl_group_transfer:
+                Intent intent = new Intent();
+                intent.setClass(this, MembersActivity.class);
+                intent.putExtra("title", getString(R.string.voice_communication_choice_members));
+                intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.GROUP_TRANSFER);
+                intent.putExtra("cid", uiConversation.getId());
+                startActivityForResult(intent, QEQUEST_GROUP_TRANSFER);
+                break;
             case R.id.rl_more_members:
                 if (uiConversation == null) {
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
@@ -334,7 +349,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         }
         super.onBackPressed();
     }
-
 
 
     @Override
@@ -424,7 +438,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
-        intent.putExtra("operate",1);
+        intent.putExtra("operate", 1);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -434,7 +448,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
-        intent.putExtra("operate",1);
+        intent.putExtra("operate", 1);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -533,6 +547,13 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void updateGroupNameSuccess() {
         conversationNameChanged = true;
         conversationNameTextView.setText(uiConversation.getName());
+    }
+
+    @Override
+    public void updateGroupTransferSuccess(String owner) {
+        groupTransferLayout.setVisibility(View.GONE);
+        channelMembersHeadAdapter.setOwner(owner);
+        channelMembersHeadAdapter.notifyDataSetChanged();
     }
 
     @Override

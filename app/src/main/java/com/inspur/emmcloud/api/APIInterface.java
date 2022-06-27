@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
+import com.inspur.emmcloud.bean.chat.TransferGroupBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
@@ -355,4 +356,7 @@ public interface APIInterface {
 
     void returnFollowConversationServiceSuccess(ServiceChannelInfo conversations);
     void returnFollowConversationServiceFail(String error, int errorCode);
+
+    void returnTransferGroupFail(String error, int errorCode);
+    void returnTransferGroupSuccess(TransferGroupBean bean);
 }
