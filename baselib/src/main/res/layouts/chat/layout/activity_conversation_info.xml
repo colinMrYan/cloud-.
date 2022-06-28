@@ -484,7 +484,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="?attr/text_ll_color_nor"
-                android:onClick="onClick">
+                android:onClick="onClick"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_group_transfer"

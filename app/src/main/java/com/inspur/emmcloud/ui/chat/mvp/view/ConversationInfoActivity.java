@@ -553,7 +553,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     public void updateGroupTransferSuccess(String owner) {
         groupTransferLayout.setVisibility(View.GONE);
         channelMembersHeadAdapter.setOwner(owner);
+        isOwner = false;
+        quitTextView.setText(getString(R.string.quit_group));
+        uiUidList.remove("deleteUser");
         channelMembersHeadAdapter.notifyDataSetChanged();
+
     }
 
     @Override

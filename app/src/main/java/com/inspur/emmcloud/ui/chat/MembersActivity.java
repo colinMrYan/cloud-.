@@ -420,10 +420,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                         break;
 
                     case GROUP_TRANSFER:
-                        PersonDto selectPerson = (filterList.size() != 0) ? filterList.get(position) : personDtoList.get(position);
-                        if (selectPerson.getUid().equals(BaseApplication.getInstance().getUid())) {
-                            return;
-                        }
                         String uId = "";
                         String uName = "";
                         if (searchInputEv.getText().toString().length() > 0 || editText.getText().toString().length() > 0) {
