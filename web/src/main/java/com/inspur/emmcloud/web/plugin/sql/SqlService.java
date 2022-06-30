@@ -167,7 +167,7 @@ public class SqlService extends ImpPlugin {
             if (-1 != database.insert(SQL_TABLE_NAME, null, values)) {
                 sendEmptySuccessInfo();
             } else {
-                callbackDatabaseFail(0, "database delete failed");
+                callbackDatabaseFail(0, "data already exist");
             }
         } else {
             callbackDatabaseFail(0, "database not found");
