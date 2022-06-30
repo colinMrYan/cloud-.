@@ -164,7 +164,7 @@ public class SqlService extends ImpPlugin {
             ContentValues values = new ContentValues();
             values.put(COLUMN_NAME_KEY, key);
             values.put(COLUMN_NAME_VALUE, value);
-            if (-1 != database.insert(SQL_TABLE_NAME, null, values)) {
+            if (-1 != database.replace(SQL_TABLE_NAME, null, values)) {
                 sendEmptySuccessInfo();
             } else {
                 callbackDatabaseFail(0, "data already exist");
