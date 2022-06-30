@@ -293,7 +293,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
                     return;
                 }
-                if (uiConversation.getOwner().equals(MyApplication.getInstance().getUid())) {
+                if (isOwner) {
                     showDelGroupWarningDlg();
                 } else {
                     showQuitGroupWarningDlg();
