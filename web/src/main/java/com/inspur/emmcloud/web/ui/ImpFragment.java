@@ -440,6 +440,10 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
 
     }
 
+    public void displayOrHideTitle(boolean show) {
+        headerLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
 
     private void initImpCallBackInterface() {
         impCallBackInterface = new ImpCallBackInterface() {

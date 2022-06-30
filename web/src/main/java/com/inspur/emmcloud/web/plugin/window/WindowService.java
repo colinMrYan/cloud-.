@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.web.plugin.window;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.web.ui.ImpActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -52,6 +54,9 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 break;
             case "openSettings":
                 openSettingActivity(paramsObject);
+                break;
+            case "displayTitle":
+                displayOrHideTitle(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -125,6 +130,28 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 getImpCallBackInterface().setOnKeyDownListener(null);
             } else {
                 getImpCallBackInterface().setOnKeyDownListener(WindowService.this);
+            }
+        }
+    }
+
+    private void displayOrHideTitle(JSONObject paramsObject) {
+        String successCall = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject optionObj = paramsObject.optJSONObject("options");
+        boolean display = optionObj.optBoolean("action",true);
+        Activity activity = getActivity();
+        if (activity instanceof ImpActivity) {
+            ImpFragment impFragment = ((ImpActivity) activity).getFragment();
+            if (impFragment != null){
+                impFragment.displayOrHideTitle(display);
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                    JSONObject result = new JSONObject();
+                    json.put("result", result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCall, json);
             }
         }
     }
