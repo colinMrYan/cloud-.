@@ -119,7 +119,7 @@ public class AlbumListPopWindow extends PopupWindow {
             public void onAnimationEnd(Animator animation) {
                 AlbumListPopWindow.super.dismiss();
 //                isDismiss = false;
-                if (windowStatusListener != null) {
+                if (curFolder != null && windowStatusListener != null) {
                     windowStatusListener.onDismissPopupWindow(curFolder);
                 }
                 onGoingDismiss = false;
@@ -253,6 +253,7 @@ public class AlbumListPopWindow extends PopupWindow {
 //            }
 //        });
         windMask.setAlpha(0F);
+        windowStatusListener.onDismissPopupWindow(null);
         exitAnimator(null);
     }
 
