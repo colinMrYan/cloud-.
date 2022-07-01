@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
@@ -37,21 +39,23 @@ import java.util.List;
 public class AlbumListPopWindow extends PopupWindow {
     private static final int ALBUM_MAX_COUNT = 8;
     private final Context mContext;
-    private View windMask;
+    private View windMask, marginX;
     private RecyclerView mRecyclerView;
     private boolean isDismiss = false;
     private int windowMaxHeight;
     private PictureAlbumAdapter mAdapter;
     private int marginPx;
     private boolean firstTimeLoad = true;
+    private boolean onGoingDismiss = false;
 
     public AlbumListPopWindow(Context context) {
         this.mContext = context;
         setContentView(LayoutInflater.from(context).inflate(R.layout.ps_window_folder, null));
         setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
-        setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        setHeight(RelativeLayout.LayoutParams.MATCH_PARENT);
 //        setAnimationStyle(R.style.PictureThemePickerDialogWindowStyle);
         setAnimationStyle(0);
+        setBackgroundDrawable(new ColorDrawable(0));
         setFocusable(true);
         setOutsideTouchable(true);
         update();
@@ -59,12 +63,19 @@ public class AlbumListPopWindow extends PopupWindow {
     }
 
     private void initViews() {
-        windowMaxHeight = (int) (DensityUtil.getScreenHeight(mContext) * 0.6);
+        windowMaxHeight = (int) (DensityUtil.getScreenHeight(mContext) * 0.8);
         mRecyclerView = getContentView().findViewById(R.id.folder_list);
         windMask = getContentView().findViewById(R.id.rootViewBg);
+        marginX = getContentView().findViewById(R.id.margin);
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(mContext));
         mAdapter = new PictureAlbumAdapter();
         mRecyclerView.setAdapter(mAdapter);
+        marginX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         windMask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,7 +102,7 @@ public class AlbumListPopWindow extends PopupWindow {
         set.start();
     }
 
-    private void exitAnimator() {
+    private void exitAnimator(final LocalMediaFolder curFolder) {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(windMask, "alpha", 1, 0);
         ObjectAnimator translationY = ObjectAnimator.ofFloat(mRecyclerView, "translationY",  0, -mRecyclerView.getHeight());
         AnimatorSet set = new AnimatorSet();
@@ -108,10 +119,15 @@ public class AlbumListPopWindow extends PopupWindow {
             public void onAnimationEnd(Animator animation) {
                 AlbumListPopWindow.super.dismiss();
 //                isDismiss = false;
+                if (windowStatusListener != null) {
+                    windowStatusListener.onDismissPopupWindow(curFolder);
+                }
+                onGoingDismiss = false;
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                onGoingDismiss = false;
             }
 
             @Override
@@ -181,20 +197,20 @@ public class AlbumListPopWindow extends PopupWindow {
             public void onGlobalLayout() {
                 rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 if (firstTimeLoad) {
-                    int maxHeight = rootView.getHeight() * 5 / 8;
+                    int maxHeight = rootView.getHeight() * 4 / 5;
                     int realHeight = mRecyclerView.getHeight();
                     ViewGroup.LayoutParams listParams = mRecyclerView.getLayoutParams();
                     listParams.height = realHeight > maxHeight ? maxHeight : realHeight;
                     mRecyclerView.setLayoutParams(listParams);
-                    RelativeLayout.LayoutParams marginParams = (RelativeLayout.LayoutParams) windMask.getLayoutParams();
+                    LinearLayout.LayoutParams marginParams = (LinearLayout.LayoutParams) marginX.getLayoutParams();
                     marginParams.height = marginPx;
-                    windMask.setLayoutParams(marginParams);
+                    marginX.setLayoutParams(marginParams);
                     firstTimeLoad = false;
                 }
                 enterAnimator();
             }
         });
-        windMask.animate().alpha(1).setDuration(250).setStartDelay(250).start();
+        windMask.animate().alpha(1).setDuration(200).setStartDelay(200).start();
         changeSelectedAlbumStyle();
     }
 
@@ -229,10 +245,6 @@ public class AlbumListPopWindow extends PopupWindow {
 //        if (isDismiss) {
 //            return;
 //        }
-//        windMask.setAlpha(0F);
-        if (windowStatusListener != null) {
-            windowStatusListener.onDismissPopupWindow();
-        }
 //        isDismiss = true;
 //        windMask.post(new Runnable() {
 //            @Override
@@ -240,7 +252,18 @@ public class AlbumListPopWindow extends PopupWindow {
 //                AlbumListPopWindow.super.dismiss();
 //            }
 //        });
-        exitAnimator();
+        windMask.setAlpha(0F);
+        if (windowStatusListener != null) {
+            windowStatusListener.onDismissPopupWindow(null);
+        }
+        exitAnimator(null);
+    }
+
+    public void dismissWithCallback(LocalMediaFolder curFolder){
+        if (onGoingDismiss) return;
+        onGoingDismiss = true;
+        windMask.setAlpha(0F);
+        exitAnimator(curFolder);
     }
 
 
@@ -259,6 +282,6 @@ public class AlbumListPopWindow extends PopupWindow {
 
         void onShowPopupWindow();
 
-        void onDismissPopupWindow();
+        void onDismissPopupWindow(LocalMediaFolder curFolder);
     }
 }

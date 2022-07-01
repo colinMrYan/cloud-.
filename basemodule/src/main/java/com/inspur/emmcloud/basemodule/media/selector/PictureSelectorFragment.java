@@ -383,19 +383,79 @@ public class PictureSelectorFragment extends PictureCommonFragment
             @Override
             public void onShowPopupWindow() {
                 if (!config.isOnlySandboxDir) {
+                    // 设置固定高度 titleBar.getHeight()
+                    albumListPopWindow.setMarginPx(DensityUtil.dip2px(getActivity(), 48));
                     AnimUtils.rotateArrow(titleBar.getImageArrow(), true);
                 }
             }
 
             @Override
-            public void onDismissPopupWindow() {
+            public void onDismissPopupWindow(LocalMediaFolder curFolder) {
                 if (!config.isOnlySandboxDir) {
                     AnimUtils.rotateArrow(titleBar.getImageArrow(), false);
                 }
+                if (curFolder != null) {
+                    doClickEvent(curFolder);
+                }
+
             }
         });
         albumListPopWindow.setMarginPx(titleBar.getHeight());
         addAlbumPopWindowAction();
+    }
+
+    private void doClickEvent(LocalMediaFolder curFolder){
+        isDisplayCamera = config.isDisplayCamera && curFolder.getBucketId() == PictureConfig.ALL;
+        mAdapter.setDisplayCamera(isDisplayCamera);
+        titleBar.setTitle(curFolder.getFolderName());
+        LocalMediaFolder lastFolder = SelectedManager.getCurrentLocalMediaFolder();
+        long lastBucketId = lastFolder.getBucketId();
+        if (config.isPageStrategy) {
+            if (curFolder.getBucketId() != lastBucketId) {
+                // 1、记录一下上一次相册数据加载到哪了，到时候切回来的时候要续上
+                lastFolder.setData(mAdapter.getData());
+                lastFolder.setCurrentDataPage(mPage);
+                lastFolder.setHasMore(mRecycler.isEnabledLoadMore());
+
+                // 2、判断当前相册是否请求过，如果请求过则不从MediaStore去拉取了
+                if (curFolder.getData().size() > 0 && !curFolder.isHasMore()) {
+                    setAdapterData(curFolder.getData());
+                    mPage = curFolder.getCurrentDataPage();
+                    mRecycler.setEnabledLoadMore(curFolder.isHasMore());
+                    mRecycler.smoothScrollToPosition(0);
+                } else {
+                    // 3、从MediaStore拉取数据
+                    mPage = 1;
+                    if (PictureSelectionConfig.loaderDataEngine != null) {
+                        PictureSelectionConfig.loaderDataEngine.loadFirstPageMediaData(getContext(),
+                                curFolder.getBucketId(), mPage, config.pageSize,
+                                new OnQueryDataResultListener<LocalMedia>() {
+                                    public void onComplete(ArrayList<LocalMedia> result, boolean isHasMore) {
+                                        handleSwitchAlbum(result, isHasMore);
+                                    }
+                                });
+                    } else {
+                        mLoader.loadPageMediaData(curFolder.getBucketId(), mPage, config.pageSize,
+                                new OnQueryDataResultListener<LocalMedia>() {
+                                    @Override
+                                    public void onComplete(ArrayList<LocalMedia> result, boolean isHasMore) {
+                                        handleSwitchAlbum(result, isHasMore);
+                                    }
+                                });
+                    }
+                }
+            }
+        } else {
+            // 非分页模式直接导入该相册下的所有资源
+            if (curFolder.getBucketId() != lastBucketId) {
+                setAdapterData(curFolder.getData());
+                mRecycler.smoothScrollToPosition(0);
+            }
+        }
+        SelectedManager.setCurrentLocalMediaFolder(curFolder);
+        if (mDragSelectTouchListener != null && config.isFastSlidingSelect) {
+            mDragSelectTouchListener.setRecyclerViewHeaderCount(mAdapter.isDisplayCamera() ? 1 : 0);
+        }
     }
 
     private void recoverSaveInstanceData(){
@@ -535,58 +595,7 @@ public class PictureSelectorFragment extends PictureCommonFragment
 
             @Override
             public void onItemClick(int position, LocalMediaFolder curFolder) {
-                isDisplayCamera = config.isDisplayCamera && curFolder.getBucketId() == PictureConfig.ALL;
-                mAdapter.setDisplayCamera(isDisplayCamera);
-                titleBar.setTitle(curFolder.getFolderName());
-                LocalMediaFolder lastFolder = SelectedManager.getCurrentLocalMediaFolder();
-                long lastBucketId = lastFolder.getBucketId();
-                if (config.isPageStrategy) {
-                    if (curFolder.getBucketId() != lastBucketId) {
-                        // 1、记录一下上一次相册数据加载到哪了，到时候切回来的时候要续上
-                        lastFolder.setData(mAdapter.getData());
-                        lastFolder.setCurrentDataPage(mPage);
-                        lastFolder.setHasMore(mRecycler.isEnabledLoadMore());
-
-                        // 2、判断当前相册是否请求过，如果请求过则不从MediaStore去拉取了
-                        if (curFolder.getData().size() > 0 && !curFolder.isHasMore()) {
-                            setAdapterData(curFolder.getData());
-                            mPage = curFolder.getCurrentDataPage();
-                            mRecycler.setEnabledLoadMore(curFolder.isHasMore());
-                            mRecycler.smoothScrollToPosition(0);
-                        } else {
-                            // 3、从MediaStore拉取数据
-                            mPage = 1;
-                            if (PictureSelectionConfig.loaderDataEngine != null) {
-                                PictureSelectionConfig.loaderDataEngine.loadFirstPageMediaData(getContext(),
-                                        curFolder.getBucketId(), mPage, config.pageSize,
-                                        new OnQueryDataResultListener<LocalMedia>() {
-                                            public void onComplete(ArrayList<LocalMedia> result, boolean isHasMore) {
-                                                handleSwitchAlbum(result, isHasMore);
-                                            }
-                                        });
-                            } else {
-                                mLoader.loadPageMediaData(curFolder.getBucketId(), mPage, config.pageSize,
-                                        new OnQueryDataResultListener<LocalMedia>() {
-                                            @Override
-                                            public void onComplete(ArrayList<LocalMedia> result, boolean isHasMore) {
-                                                handleSwitchAlbum(result, isHasMore);
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                } else {
-                    // 非分页模式直接导入该相册下的所有资源
-                    if (curFolder.getBucketId() != lastBucketId) {
-                        setAdapterData(curFolder.getData());
-                        mRecycler.smoothScrollToPosition(0);
-                    }
-                }
-                SelectedManager.setCurrentLocalMediaFolder(curFolder);
                 albumListPopWindow.dismiss();
-                if (mDragSelectTouchListener != null && config.isFastSlidingSelect) {
-                    mDragSelectTouchListener.setRecyclerViewHeaderCount(mAdapter.isDisplayCamera() ? 1 : 0);
-                }
             }
         });
     }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/margin"
@@ -11,30 +13,33 @@
         android:layout_height="0dp"
         android:background="#0000" />
 
-    <View
-        android:id="@+id/rootViewBg"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="3000dp"
-        android:alpha="0"
-        android:background="@color/ps_color_80" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout
-        android:id="@+id/round_group"
-        android:layout_below="@+id/margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/ps_color_grey"
-        app:wangzhenCorners="10dp"
-        app:wangzhentopNormal="true">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/folder_list"
+        <View
+            android:id="@+id/rootViewBg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:scrollbars="none" />
+            android:alpha="0"
+            android:background="@color/ps_color_80" />
 
-    </com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout>
+        <com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout
+            android:id="@+id/round_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:wangzhenCorners="10dp"
+            app:wangzhentopNormal="true">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/folder_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
 
-</RelativeLayout>
+        </com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

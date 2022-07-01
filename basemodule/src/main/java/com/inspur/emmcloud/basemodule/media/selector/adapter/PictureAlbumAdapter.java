@@ -69,7 +69,7 @@ public class PictureAlbumAdapter extends RecyclerView.Adapter<PictureAlbumAdapte
                         imagePath, holder.ivFirstImage);
             }
         }
-        Context context = holder.itemView.getContext();
+//        Context context = holder.itemView.getContext();
 //        holder.tvFolderName.setText(context.getString(R.string.ps_camera_roll_num, name, imageNum));
         holder.tvFolderName.setText(name);
         holder.tvNumber.setText(" (" + imageNum + ")");
