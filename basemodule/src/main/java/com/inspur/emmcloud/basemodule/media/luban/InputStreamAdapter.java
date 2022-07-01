@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.basemodule.media.luban;
 
+import com.inspur.emmcloud.basemodule.media.luban.io.ArrayPoolProvide;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import top.zibin.luban.io.ArrayPoolProvide;
 
 /**
  * Automatically close the previous InputStream when opening a new InputStream,

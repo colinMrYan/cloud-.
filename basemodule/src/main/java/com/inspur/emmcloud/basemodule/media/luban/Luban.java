@@ -16,8 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import top.zibin.luban.io.ArrayPoolProvide;
+import com.inspur.emmcloud.basemodule.media.luban.io.ArrayPoolProvide;
 
 @SuppressWarnings("unused")
 public class Luban implements Handler.Callback {
@@ -272,8 +271,8 @@ public class Luban implements Handler.Callback {
             this.mStreamProviders = new ArrayList<>();
         }
 
-        private top.zibin.luban.Luban build() {
-            return new top.zibin.luban.Luban(this);
+        private Luban build() {
+            return new Luban(this);
         }
 
         public Builder load(InputStreamProvider inputStreamProvider) {
