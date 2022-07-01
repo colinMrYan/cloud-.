@@ -96,7 +96,7 @@ public class AlbumListPopWindow extends PopupWindow {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(windMask, "alpha", 0, 1);
         ObjectAnimator translationY = ObjectAnimator.ofFloat(mRecyclerView, "translationY",  -mRecyclerView.getHeight(), 0);
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(400);
+        set.setDuration(300);
         set.playTogether(alpha, translationY);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.start();
@@ -253,9 +253,6 @@ public class AlbumListPopWindow extends PopupWindow {
 //            }
 //        });
         windMask.setAlpha(0F);
-        if (windowStatusListener != null) {
-            windowStatusListener.onDismissPopupWindow(null);
-        }
         exitAnimator(null);
     }
 
