@@ -594,8 +594,8 @@ public class PictureSelectorFragment extends PictureCommonFragment
         albumListPopWindow.setOnIBridgeAlbumWidget(new OnAlbumItemClickListener() {
 
             @Override
-            public void onItemClick(int position, LocalMediaFolder curFolder) {
-                albumListPopWindow.dismiss();
+            public void onItemClick(int position,final LocalMediaFolder curFolder) {
+                albumListPopWindow.dismissWithCallback(curFolder);
             }
         });
     }
