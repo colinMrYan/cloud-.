@@ -1066,11 +1066,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                         default:
                             break;
                     }
-                case PictureConfig.CHOOSE_REQUEST:
+//                case PictureConfig.CHOOSE_REQUEST:
+                case REQUEST_GELLARY:
                     ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(data);
                     for (LocalMedia media : mediaResult) {
                         Boolean originalPicture = media.isOriginal();
-                        String mediaPath = media.getPath();
+                        String mediaPath = media.getRealPath();
                         Compressor.ResolutionRatio resolutionRatio = null;
                         Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
                         if (originalPicture) {
