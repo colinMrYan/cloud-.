@@ -27,9 +27,9 @@ public class MediumBoldTextView extends AppCompatTextView {
 
     public MediumBoldTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PictureMediumBoldTextView, defStyleAttr, 0);
+//        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PictureMediumBoldTextView, defStyleAttr, 0);
 //        mStrokeWidth = a.getFloat(R.styleable.PictureMediumBoldTextView_stroke_Width, mStrokeWidth);
-        a.recycle();
+//        a.recycle();
     }
 
     @Override

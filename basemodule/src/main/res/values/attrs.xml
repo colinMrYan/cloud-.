@@ -15,23 +15,23 @@ limitations under the License.
 -->
 <resources>
 
-    <declare-styleable name="PictureLongScaleImageView">
-        <attr name="src" format="reference" />
-        <attr name="assetName" format="string" />
-        <attr name="panEnabled" format="boolean" />
-        <attr name="zoomEnabled" format="boolean" />
-        <attr name="quickScaleEnabled" format="boolean" />
-        <attr name="tileBackgroundColor" format="color" />
-    </declare-styleable>
+<!--    <declare-styleable name="PictureLongScaleImageView">-->
+<!--        <attr name="src" format="reference" />-->
+<!--        <attr name="assetName" format="string" />-->
+<!--        <attr name="panEnabled" format="boolean" />-->
+<!--        <attr name="zoomEnabled" format="boolean" />-->
+<!--        <attr name="quickScaleEnabled" format="boolean" />-->
+<!--        <attr name="tileBackgroundColor" format="color" />-->
+<!--    </declare-styleable>-->
 
-    <declare-styleable name="PictureMediumBoldTextView">
-        <attr name="stroke_Width" format="float" />
-    </declare-styleable>
+<!--    <declare-styleable name="PictureMediumBoldTextView">-->
+<!--        <attr name="stroke_Width" format="float" />-->
+<!--    </declare-styleable>-->
 
-    <declare-styleable name="PictureRoundCornerRelativeLayout">
-        <attr name="corners" format="dimension" />
-        <attr name="topNormal" format="boolean" />
-        <attr name="bottomNormal" format="boolean" />
+    <declare-styleable name="WangzhenPictureRoundCornerRelativeLayout">
+        <attr name="wangzhenCorners" format="dimension" />
+        <attr name="wangzhentopNormal" format="boolean" />
+        <attr name="wangzhenbottomNormal" format="boolean" />
     </declare-styleable>
 
 </resources>
