@@ -54,6 +54,9 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
+import com.inspur.emmcloud.basemodule.media.selector.config.PictureConfig;
+import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
@@ -1063,6 +1066,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                         default:
                             break;
                     }
+                case PictureConfig.CHOOSE_REQUEST:
+                    ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(data);
+                    for (LocalMedia media : mediaResult) {
+                        Boolean originalPicture = media.isOriginal();
+                        String mediaPath = media.getPath();
+                        Compressor.ResolutionRatio resolutionRatio = null;
+                        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+                        if (originalPicture) {
+                            resolutionRatio = compressor.getResolutionRation(new File(mediaPath));
+                        } else {
+                            try {
+                                File file = compressor.compressToFile(new File(mediaPath));
+                                mediaPath = file.getAbsolutePath();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
+                    }
+                    break;
                     //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {
