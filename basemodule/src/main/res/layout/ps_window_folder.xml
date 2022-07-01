@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/margin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#0000" />
+
+    <View
+        android:id="@+id/rootViewBg"
+        android:layout_width="match_parent"
+        android:layout_height="3000dp"
+        android:alpha="0"
+        android:background="@color/ps_color_80" />
+
+    <com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout
+        android:id="@+id/round_group"
+        android:layout_below="@+id/margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ps_color_grey"
+        app:corners="10dp"
+        app:topNormal="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/folder_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+    </com.inspur.emmcloud.basemodule.media.selector.widget.RoundCornerRelativeLayout>
+
+
+</RelativeLayout>
