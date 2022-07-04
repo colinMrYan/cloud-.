@@ -1176,7 +1176,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 .setSelectionMode(SelectModeConfig.MULTIPLE)
                 .setLanguage(LanguageConfig.SYSTEM_LANGUAGE)
                 // 显示顺序，默认即可
-                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
+//                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
                 // 时间轴
                 .isDisplayTimeAxis(true)
                 // 查询指定目录
@@ -1215,7 +1215,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 // 图片，视频最多选择个数
                 .setMaxSelectNum(5)
                 .setMaxVideoSelectNum(5)
-                // 相册加载动画
+                // 图片列表加载动画
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 // 是否显示gif，默认不显示
                 .isGif(false)

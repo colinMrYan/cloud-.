@@ -76,7 +76,6 @@
     <string name="ps_select_audio_min_second">选择音频小于%1$d秒</string>
     <string name="ps_select_no_support">不支持的选择类型</string>
 
-    <string name="app_name">PictureSelector</string>
     <string name="app_drag_delete">拖动到此处删除</string>
     <string name="app_let_go_drag_delete">松手即可删除</string>
     <string name="app_wechat_send">发送</string>

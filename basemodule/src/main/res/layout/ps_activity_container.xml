@@ -3,6 +3,7 @@
     android:id="@+id/support_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ps_color_4e4d4e"
     android:fitsSystemWindows="true">
 
     <FrameLayout
