@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -24,6 +25,8 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.selector.FileSelectorService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.ImpFragment;
@@ -69,7 +72,9 @@ public class PhotoService extends ImpPlugin {
             viewImage();
         } else if ("savePhoto".equals(action)) {
             savePhotoToGallery(paramsObject);
-        }else {
+        } else if ("selectPicsFromAlbum".equals(action)) {
+            selectImageFromAlbum(paramsObject);
+        } else {
             showCallIMPMethodErrorDlg();
         }
         loadingDlg = new LoadingDialog(getActivity());
@@ -139,8 +144,8 @@ public class PhotoService extends ImpPlugin {
         try {
             byte[] input = ByteString.decodeBase64(base64Str).toByteArray();
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig= Bitmap.Config.RGB_565;
-            options.inSampleSize=2;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inSampleSize = 2;
             return BitmapFactory.decodeByteArray(input, 0, input.length, options);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -154,7 +159,7 @@ public class PhotoService extends ImpPlugin {
         if (!temp.exists()) {
             temp.mkdir();
         }
-        String savedImagePath = temp.getPath() +  System.currentTimeMillis() + (name + ".jpg");
+        String savedImagePath = temp.getPath() + System.currentTimeMillis() + (name + ".jpg");
         File file = new File(savedImagePath);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(
@@ -191,7 +196,7 @@ public class PhotoService extends ImpPlugin {
         }
     }
 
-    public void saveImageFromUrl(String imageUrl,final String name) {
+    public void saveImageFromUrl(String imageUrl, final String name) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
@@ -474,6 +479,22 @@ public class PhotoService extends ImpPlugin {
             } else {
                 this.failPicture(Res.getString("cancel_select"));
             }
+        }
+    }
+
+    private void selectImageFromAlbum(JSONObject paramsObject) {
+        try {
+            if (!paramsObject.isNull("success"))
+                successCb = paramsObject.getString("success");
+            if (!paramsObject.isNull("fail"))
+                failCb = paramsObject.getString("fail");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Router router = Router.getInstance();
+        if (router.getService(FileSelectorService.class) != null) {
+            FileSelectorService service = router.getService(FileSelectorService.class);
+            service.selectImagesFromAlbum(getActivity());
         }
     }
 

@@ -112,6 +112,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public static final int REQUEST_CODE_RECORD_AUDIO = 13;
     public  static final int REQUEST_CONNECT_DEVICE_SECURE = 14;
     public static final int REQUEST_CONNECT_DEVICE_INSECURE = 15;
+//    public  static final int GELLARY_RESULT = 2;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
