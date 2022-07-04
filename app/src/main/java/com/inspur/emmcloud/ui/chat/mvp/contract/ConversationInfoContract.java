@@ -42,6 +42,8 @@ public interface ConversationInfoContract {
 
         void updateGroupNameSuccess();
 
+        void updateGroupTransferSuccess(String owner);
+
     }
 
     interface Presenter {

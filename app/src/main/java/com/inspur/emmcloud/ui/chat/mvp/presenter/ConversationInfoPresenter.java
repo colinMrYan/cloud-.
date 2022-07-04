@@ -51,6 +51,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     private static final int QEQUEST_FILE_TRANSFER = 4;
+    private static final int REQUEST_GROUP_TRANSFER = 5;
 
     Conversation mConversation = new Conversation();
 
@@ -546,6 +547,9 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                     break;
                 case QEQUEST_FILE_TRANSFER:
                     mView.activityFinish();
+                case REQUEST_GROUP_TRANSFER:
+                    String selectOwner = data.getStringExtra("selectOwner");
+                    mView.updateGroupTransferSuccess(selectOwner);
                     break;
                 default:
                     break;

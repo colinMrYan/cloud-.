@@ -433,6 +433,19 @@
             android:resizeableActivity="true"
             android:theme="@style/dialog_activity" />
 
+        <activity
+            android:name=".media.selector.basic.PictureSelectorSupporterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Base.Theme.NoActionBar">
+
+        </activity>
+
+        <activity
+            android:name=".media.selector.basic.PictureSelectorTransparentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Picture.Theme.Translucent">
+
+        </activity>
         <!--S3-->
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"

@@ -332,6 +332,14 @@ public class APIUri {
     }
 
     /**
+     * 群主转让
+     *
+     */
+    public static String getTransferGroupUrl() {
+        return getECMChatUrl() + "/rest/channel/group/owner/transfer";
+    }
+
+    /**
      * 消息免打扰
      *
      * @return

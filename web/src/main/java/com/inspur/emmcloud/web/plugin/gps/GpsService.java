@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -143,6 +144,7 @@ public class GpsService extends ImpPlugin implements
         super.onActivityResume();
         if (openLocationStatus == 1 && AppUtils.isLocationEnabled(getFragmentContext())) {
             startLocation();
+            PVCollectModelCacheUtils.saveCollectModel("GpsService: onActivityResume", "startLocation");
             openLocationStatus = 2;
         }
     }
@@ -288,6 +290,7 @@ public class GpsService extends ImpPlugin implements
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (AppUtils.isLocationEnabled(getActivity())) {
                     startLocation();
+                    PVCollectModelCacheUtils.saveCollectModel("GpsService: getInfo", "startLocation");
                 } else {
                     new CustomDialog.MessageDialogBuilder(getActivity())
                             .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
@@ -455,6 +458,7 @@ public class GpsService extends ImpPlugin implements
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
             mlocationClient.onDestroy();
+            PVCollectModelCacheUtils.saveCollectModel("GpsService: onDestroy", "stopLocation");
             mlocationClient = null;
         }
         if (aMapLocationList != null) {
@@ -492,6 +496,7 @@ public class GpsService extends ImpPlugin implements
             if (!uploadTrace) {
                 mlocationClient.stopLocation();
             }
+            PVCollectModelCacheUtils.saveCollectModel("GpsService: onLocationChanged", "stopLocation");
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
                 amapLocation = Collections.min(aMapLocationList, new ComparatorValues());

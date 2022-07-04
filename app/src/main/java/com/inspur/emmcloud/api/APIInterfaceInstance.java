@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
+import com.inspur.emmcloud.bean.chat.TransferGroupBean;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetMultiContactResult;
@@ -836,6 +837,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnFollowConversationServiceFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnTransferGroupFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnTransferGroupSuccess(TransferGroupBean bean) {
 
     }
 }

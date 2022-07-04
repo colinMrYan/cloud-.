@@ -18,6 +18,7 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
@@ -201,6 +202,9 @@ public class LoginAPIService {
     public void refreshToken() {
         String completeUrl = LoginAPIUri.getOauthSigninUrl();
         String refreshToken = BaseApplication.getInstance().getRefreshToken();
+        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+            PVCollectModelCacheUtils.saveCollectModel("refreshToken",  "---rt---" + refreshToken);
+        }
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setConnectTimeout(3000);
         params.addParameter("client_id", "com.inspur.ecm.client.android");

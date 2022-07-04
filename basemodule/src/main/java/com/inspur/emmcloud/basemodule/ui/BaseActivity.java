@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final int STATUS_WHITE_DARK_FONT = 3;
     protected final int STATUS_TRANSPARENT = 4;
     protected final int STATUS_NO_SET = 5;
+    protected final int STATUS_FULL_SCREEN = 6;
     public static final int THEME_DARK = 3;
     private int statusType;
 
@@ -224,6 +225,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             case STATUS_TRANSPARENT:
                 ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
                 break;
+            case STATUS_FULL_SCREEN:
+                ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
+                break;
             default:
                 break;
         }
@@ -271,12 +275,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         // 第一次打开app,splash页面不适配深色模式
-        Boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+        boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
         if (isFirst) {
             return;
         }
         // 是否跟随系统改变主题模式
-        Boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
+        boolean followSystem = PreferencesUtils.getBoolean(this, Constant.PREF_FOLLOW_SYSTEM_THEME, true);
         if (!followSystem) {
             return;
         }

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -240,11 +241,20 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             ((BaseApplication) activity.getApplicationContext())
                     .setRefreshToken(refreshToken);
             PreferencesUtils.putString(activity, "accessToken", accessToken);
-            PreferencesUtils.putString(activity, "refreshToken", refreshToken);
+            boolean refreshTokenSuc = PreferencesUtils.putString(activity, "refreshToken", refreshToken);
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
             PreferencesUtils.putString(activity, "tokenType", tokenType);
             PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
             PreferencesUtils.putLong(activity, "token_get_time", System.currentTimeMillis());
+            // 郑总token刷新失败分析日志
+            if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                if (refreshTokenSuc) {
+                    PVCollectModelCacheUtils.saveCollectModel("savePreferenceLoginInfo success", "---at---" + accessToken + "---rt---" + refreshToken);
+                } else {
+                    PVCollectModelCacheUtils.saveCollectModel("savePreferenceLoginInfo fail", "---at---" + accessToken + "---rt---" + refreshToken);
+                }
+            }
+
         }
     }
 
@@ -308,6 +318,10 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             handler.sendEmptyMessage(LOGIN_SUCCESS);
         } else {
             getMyInfo();
+        }
+        // 郑总token刷新失败分析日志
+        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+            PVCollectModelCacheUtils.saveCollectModel("returnOauthSignInSuccess", "---at---" + accessToken + "---rt---" + refreshToken);
         }
     }
 

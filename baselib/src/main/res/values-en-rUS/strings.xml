@@ -370,6 +370,8 @@
     <string name="chat_search_group_chats">Group Chats</string>
     <string name="chat_more_content">More Chat Histories</string>
     <string name="quit_dismiss_group">Delete and Leave</string>
+    <string name="transfer_group">Group owner transfer</string>
+    <string name="transfer_group_tip">Whether to transfer the group leader to %1$s?</string>
     <string name="chat_search_mention_all">All</string>
     <string name="chat_contact_more_select">More</string>
     <string name="chat_contact_single_select">Single</string>

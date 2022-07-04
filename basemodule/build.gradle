@@ -64,6 +64,11 @@ dependencies {
     api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.butterknife.butterknife
+//    api deps.support.constraint
+//    api deps.Glide
+//    api deps.support.v7.appcompat
+//    api deps.support.v7.recyclerView
+//    api deps.support.annotations
     annotationProcessor deps.butterknife.butterknife_compiler
 
 }

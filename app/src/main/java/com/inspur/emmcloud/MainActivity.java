@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -33,7 +34,6 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
@@ -97,6 +97,15 @@ public class MainActivity extends BaseActivity implements IMainActivity {
 
     @Override
     protected int getStatusType() {
+        // 进入app时适配暗黑
+        boolean isFirst = PreferencesUtils.getBoolean(this, "isFirst", true);
+        if (isFirst) {
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                PreferencesUtils.putInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, THEME_DARK);
+            }
+
+        }
         return STATUS_WHITE;
     }
 
