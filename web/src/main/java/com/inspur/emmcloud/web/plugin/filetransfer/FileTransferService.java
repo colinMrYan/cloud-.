@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.Base64Utils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -42,8 +43,10 @@ import org.xutils.x;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -75,7 +78,7 @@ public class FileTransferService extends ImpPlugin {
     private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
             absoluteFilePath = "", reallyPath = ""; //reallyPath 文件的整体路径
     // 下载回调
-    private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack;
+    private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack, blockImageCallBack;
     // 上传文件参数
     private String uploadUrl = "", uploadName = "";
     // 上传回调
@@ -223,6 +226,7 @@ public class FileTransferService extends ImpPlugin {
     private long fileSize;
     private String fileId; // 文件ID
     private String createTime; // 文件创建时间
+    private boolean isUploadingFile = false;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -257,6 +261,10 @@ public class FileTransferService extends ImpPlugin {
             case "listFile":
                 //列出在指定目录下的文件名
                 listFile(paramsObject);
+                break;
+            case "getBlockLocalImg":
+                //分段上传图片
+                getBlockLocalImg(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -318,6 +326,102 @@ public class FileTransferService extends ImpPlugin {
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 列出文件夹中所有文件
+     *
+     * @param paramsObject
+     */
+    private void getBlockLocalImg(JSONObject paramsObject) {
+        if (isUploadingFile) return;
+        isUploadingFile = true;
+        blockImageCallBack = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 0);
+        int persistentStorage = JSONUtils.getInt(optionsJsonObject, "blockSize", 0);
+        String filePath = JSONUtils.getString(optionsJsonObject, "filePath", "");
+        uploadFileInBlock(filePath, blockSize);
+    }
+
+    /**
+     * @param offset 偏移量
+     * @param file  分块文件
+     * @param blockSize 每块的大小
+     * @return  这一片的数据
+     */
+    private byte[] getBlock(long offset, File file, int blockSize) {
+        byte[] result = new byte[blockSize];
+        try (RandomAccessFile accessFile = new RandomAccessFile(file, "r")) {
+            accessFile.seek(offset);
+            int readSize = accessFile.read(result);
+            if (readSize == -1) {
+                return null;
+            } else if (readSize == blockSize) {
+                return result;
+            } else {
+                byte[] byteArray = new byte[readSize];
+                System.arraycopy(result, 0, byteArray, 0, readSize);
+                return byteArray;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void uploadFileInBlock(String filePath, int blockSize) {
+        // imp方法接受文件名称，
+        File file = new File(filePath);
+        if (file.exists()) {
+            //计算文件分片的总块数
+            long totalBlock = file.length() / blockSize + (file.length() % blockSize > 0 ? 1 : 0);
+            //包含上传可能是0长度但有内容的文件
+            uploadFileInBlock(filePath, file.getName(), Math.max(totalBlock, 1), 1, blockSize);
+            isUploadingFile = false;
+        } else {
+            //不存在则回调错误方法
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 0);
+                jsCallback(blockImageCallBack, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            isUploadingFile = false;
+        }
+    }
+
+    private void uploadFileInBlock(String filePath, String fileName, long totalBlock, int currentBlock, int PART_SIZE) {
+        File file = new File(filePath);
+        byte[] fileStream = getBlock((currentBlock - 1) * PART_SIZE, file, PART_SIZE);
+        if (fileStream == null) {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 0);
+                jsCallback(blockImageCallBack, json);
+            } catch (JSONException e) {
+                isUploadingFile = false;
+                e.printStackTrace();
+            }
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject();
+            json.put("status", 1);
+            JSONObject result = new JSONObject();
+            result.put("data", Base64Utils.getBase64(new String(fileStream)));
+            result.put("fileName", fileName);
+            result.put("totalBlock", totalBlock);
+            result.put("currentBlock", currentBlock);
+            json.put("result", result);
+            jsCallback(blockImageCallBack, json);
+            if (currentBlock == totalBlock) return;
+            uploadFileInBlock(filePath, fileName, totalBlock, currentBlock + 1, PART_SIZE);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            isUploadingFile = false;
         }
     }
 
