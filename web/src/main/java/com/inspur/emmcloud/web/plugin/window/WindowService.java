@@ -55,8 +55,8 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             case "openSettings":
                 openSettingActivity(paramsObject);
                 break;
-            case "setNavigationBar":
-                displayOrHideNaviBar(paramsObject);
+            case "displayTitle":
+                displayOrHideTitle(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -134,7 +134,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
         }
     }
 
-    private void displayOrHideNaviBar(JSONObject paramsObject) {
+    private void displayOrHideTitle(JSONObject paramsObject) {
         String successCall = JSONUtils.getString(paramsObject, "success", "");
         JSONObject optionObj = paramsObject.optJSONObject("options");
         boolean display = optionObj.optBoolean("action",true);
