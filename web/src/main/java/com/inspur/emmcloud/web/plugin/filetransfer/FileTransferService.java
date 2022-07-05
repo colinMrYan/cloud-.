@@ -411,10 +411,10 @@ public class FileTransferService extends ImpPlugin {
             JSONObject json = new JSONObject();
             json.put("status", 1);
             JSONObject result = new JSONObject();
-            result.put("data", Base64Utils.getBase64(new String(fileStream)));
+            result.put("currentContent", Base64Utils.getBase64(new String(fileStream)));
             result.put("fileName", fileName);
-            result.put("totalBlock", totalBlock);
-            result.put("currentBlock", currentBlock);
+            result.put("allBlockSize", totalBlock);
+            result.put("currentBlockNum", currentBlock);
             json.put("result", result);
             jsCallback(blockImageCallBack, json);
             if (currentBlock == totalBlock) return;
