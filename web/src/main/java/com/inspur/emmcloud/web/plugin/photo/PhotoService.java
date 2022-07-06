@@ -1,10 +1,11 @@
 package com.inspur.emmcloud.web.plugin.photo;
 
+import static com.inspur.emmcloud.web.ui.ImpFragment.SELECTOR_SERVICE_GALLERY_REQUEST;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 
@@ -16,6 +17,8 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
+import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -25,10 +28,10 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
-import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.selector.FileSelectorService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.ui.ImpActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,7 +53,7 @@ import okio.ByteString;
 
 public class PhotoService extends ImpPlugin {
 
-    private String successCb, failCb;
+    private String successCb, failCb, selectAlbumCb;
     private JSONObject paramsObject;
     private int parm_resolution = MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE;
     private int encodingType = 0;
@@ -479,22 +482,65 @@ public class PhotoService extends ImpPlugin {
             } else {
                 this.failPicture(Res.getString("cancel_select"));
             }
+        } else if (requestCode == SELECTOR_SERVICE_GALLERY_REQUEST) {
+            ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(intent);
+            ArrayList<String> mediaPaths = new ArrayList<>();
+            for (LocalMedia media : mediaResult) {
+                String mediaPath = media.getRealPath();
+                mediaPaths.add(mediaPath);
+            }
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                result.put("data", JSONUtils.toJSONArray(mediaPaths));
+                json.put("result", result);
+                jsCallback(selectAlbumCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void selectImageFromAlbum(JSONObject paramsObject) {
+        int maxNum = 9;
+        // 0:图片，1：视频;
+        int defaultType = 0;
         try {
-            if (!paramsObject.isNull("success"))
-                successCb = paramsObject.getString("success");
-            if (!paramsObject.isNull("fail"))
-                failCb = paramsObject.getString("fail");
+            if (!paramsObject.isNull("success")) {
+                selectAlbumCb = paramsObject.getString("success");
+            } else {
+                selectAlbumCb = null;
+            }
+            if (!paramsObject.isNull("options")) {
+                JSONObject optionsObj = paramsObject.getJSONObject("options");
+                if (!optionsObj.isNull("maxNum")) {
+                    maxNum = optionsObj.getInt("maxNum");
+                }
+                if (!optionsObj.isNull("mType")) {
+                    defaultType = optionsObj.getInt("mType");
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        if (maxNum > 9 || maxNum < 0 || defaultType > 1 || defaultType < 0) {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 0);
+                JSONObject result = new JSONObject();
+                result.put("data", "parameter invalid!!");
+                json.put("result", result);
+                jsCallback(selectAlbumCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return;
         }
         Router router = Router.getInstance();
         if (router.getService(FileSelectorService.class) != null) {
             FileSelectorService service = router.getService(FileSelectorService.class);
-            service.selectImagesFromAlbum(getActivity());
+            service.selectImagesFromAlbum(((ImpActivity)getActivity()).getFragment(), maxNum, defaultType, SELECTOR_SERVICE_GALLERY_REQUEST);
         }
     }
 
