@@ -54,7 +54,7 @@ public class PictureSelectorUtils {
         selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
         selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
         selectorStyle.setTitleBarStyle(getTitleBarStyle());
-        PictureSelectionModel selectionModel = getSelectionModel(context, SelectModeConfig.MULTIPLE, true, true, false, 5, 5);
+        PictureSelectionModel selectionModel = getSelectionModel(context, SelectModeConfig.MULTIPLE, 5, 5);
         selectionModel.setSelectorUIStyle(selectorStyle);
         selectionModel.forResult(GELLARY_RESULT);
     }
@@ -67,6 +67,30 @@ public class PictureSelectorUtils {
         PictureSelectionModel selectionModel = getSelectionModel(context, chooseMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
         selectionModel.setSelectorUIStyle(selectorStyle);
         selectionModel.forResult(GELLARY_RESULT);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context) {
+        return getSelectionModel(context, SelectModeConfig.MULTIPLE, true, true, false, 9, 9);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context, int chooseMode) {
+        return getSelectionModel(context, chooseMode, true, true, false, 9, 9);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context, int chooseMode, int maxVideoNumber) {
+        return getSelectionModel(context, chooseMode, true, true, false, 9, maxVideoNumber);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context, int chooseMode, int maxImageNumber, int maxVideoNumber) {
+        return getSelectionModel(context, chooseMode, true, true, false, maxImageNumber, maxVideoNumber);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
+        return getSelectionModel(context, chooseMode, true, true, displayCamera, maxImageNumber, maxVideoNumber);
+    }
+
+    private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
+        return getSelectionModel(context, chooseMode, true, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
     }
 
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
@@ -189,29 +213,64 @@ public class PictureSelectorUtils {
         return numberSelectMainStyle;
     }
 
+    // 头部TitleBar 风格
     public TitleBarStyle getTitleBarStyle() {
-        // 头部TitleBar 风格
+        return getTitleBarStyle(true, true, R.drawable.ps_album_bg, 16, R.drawable.ps_ic_grey_arrow, R.drawable.ps_ic_normal_back);
+    }
+
+    // 头部TitleBar 风格
+    public TitleBarStyle getTitleBarStyle(boolean hideCancelButton) {
+        return getTitleBarStyle(hideCancelButton, true, R.drawable.ps_album_bg, 16, R.drawable.ps_ic_grey_arrow, R.drawable.ps_ic_normal_back);
+    }
+
+    // 头部TitleBar 风格
+    public TitleBarStyle getTitleBarStyle(boolean hideCancelButton, int titleDrawableRightResource, int previewTitleLeftBackResource) {
+        return getTitleBarStyle(hideCancelButton, true, R.drawable.ps_album_bg, 16, titleDrawableRightResource, previewTitleLeftBackResource);
+    }
+
+    // 头部TitleBar 风格
+    public TitleBarStyle getTitleBarStyle(boolean hideCancelButton, boolean albumTitleRelativeLeft, int titleAlbumBackgroundResource,int titleTextSize, int titleDrawableRightResource, int previewTitleLeftBackResource) {
         TitleBarStyle numberTitleBarStyle = new TitleBarStyle();
-        numberTitleBarStyle.setHideCancelButton(true);
-        numberTitleBarStyle.setAlbumTitleRelativeLeft(true);
-        numberTitleBarStyle.setTitleAlbumBackgroundResource(R.drawable.ps_album_bg);
-        numberTitleBarStyle.setTitleTextSize(16);
-        numberTitleBarStyle.setTitleDrawableRightResource(R.drawable.ps_ic_grey_arrow);
-        numberTitleBarStyle.setPreviewTitleLeftBackResource(R.drawable.ps_ic_normal_back);
+        numberTitleBarStyle.setHideCancelButton(hideCancelButton);
+        numberTitleBarStyle.setAlbumTitleRelativeLeft(albumTitleRelativeLeft);
+        numberTitleBarStyle.setTitleAlbumBackgroundResource(titleAlbumBackgroundResource);
+        numberTitleBarStyle.setTitleTextSize(titleTextSize);
+        numberTitleBarStyle.setTitleDrawableRightResource(titleDrawableRightResource);
+        numberTitleBarStyle.setPreviewTitleLeftBackResource(previewTitleLeftBackResource);
         return numberTitleBarStyle;
     }
 
+    // 底部NavBar 风格
     public BottomNavBarStyle getBottomNavBarStyle(Context context) {
-        // 底部NavBar 风格
+        return getBottomNavBarStyle(context, R.color.ps_color_half_grey, R.string.ps_preview, R.color.ps_color_9b, 16, false, R.string.ps_preview_num, R.color.ps_color_white, 16);
+    }
+
+    // 底部NavBar 风格
+    public BottomNavBarStyle getBottomNavBarStyle(Context context, int bottomPreviewNarBarBackgroundColor) {
+        return getBottomNavBarStyle(context, bottomPreviewNarBarBackgroundColor, R.string.ps_preview, R.color.ps_color_9b, 16, false, R.string.ps_preview_num, R.color.ps_color_white, 16);
+    }
+
+    // 底部NavBar 风格
+    public BottomNavBarStyle getBottomNavBarStyle(Context context, int bottomPreviewNarBarBackgroundColor,int bottomPreviewNormalText) {
+        return getBottomNavBarStyle(context, bottomPreviewNarBarBackgroundColor, bottomPreviewNormalText, R.color.ps_color_9b, 16, false, R.string.ps_preview_num, R.color.ps_color_white, 16);
+    }
+
+    // 底部NavBar 风格
+    public BottomNavBarStyle getBottomNavBarStyle(Context context, int bottomPreviewNarBarBackgroundColor,int bottomPreviewNormalText,int bottomPreviewNormalTextColor) {
+        return getBottomNavBarStyle(context, bottomPreviewNarBarBackgroundColor, bottomPreviewNormalText, bottomPreviewNormalTextColor, 16, false, R.string.ps_preview_num, R.color.ps_color_white, 16);
+    }
+
+    // 底部NavBar 风格
+    public BottomNavBarStyle getBottomNavBarStyle(Context context,int bottomPreviewNarBarBackgroundColor, int bottomPreviewNormalText, int bottomPreviewNormalTextColor,int bottomPreviewNormalTextSize,boolean completeCountTips,int bottomPreviewSelectText, int bottomPreviewSelectTextColor,int bottomOriginalTextSize) {
         BottomNavBarStyle numberBottomNavBarStyle = new BottomNavBarStyle();
-        numberBottomNavBarStyle.setBottomPreviewNarBarBackgroundColor(ContextCompat.getColor(context, R.color.ps_color_half_grey));
-        numberBottomNavBarStyle.setBottomPreviewNormalText(context.getResources().getString(R.string.ps_preview));
-        numberBottomNavBarStyle.setBottomPreviewNormalTextColor(ContextCompat.getColor(context, R.color.ps_color_9b));
-        numberBottomNavBarStyle.setBottomPreviewNormalTextSize(16);
-        numberBottomNavBarStyle.setCompleteCountTips(false);
-        numberBottomNavBarStyle.setBottomPreviewSelectText(context.getResources().getString(R.string.ps_preview_num));
-        numberBottomNavBarStyle.setBottomPreviewSelectTextColor(ContextCompat.getColor(context, R.color.ps_color_white));
-        numberBottomNavBarStyle.setBottomOriginalTextSize(16);
+        numberBottomNavBarStyle.setBottomPreviewNarBarBackgroundColor(ContextCompat.getColor(context, bottomPreviewNarBarBackgroundColor));
+        numberBottomNavBarStyle.setBottomPreviewNormalText(context.getResources().getString(bottomPreviewNormalText));
+        numberBottomNavBarStyle.setBottomPreviewNormalTextColor(ContextCompat.getColor(context, bottomPreviewNormalTextColor));
+        numberBottomNavBarStyle.setBottomPreviewNormalTextSize(bottomPreviewNormalTextSize);
+        numberBottomNavBarStyle.setCompleteCountTips(completeCountTips);
+        numberBottomNavBarStyle.setBottomPreviewSelectText(context.getResources().getString(bottomPreviewSelectText));
+        numberBottomNavBarStyle.setBottomPreviewSelectTextColor(ContextCompat.getColor(context, bottomPreviewSelectTextColor));
+        numberBottomNavBarStyle.setBottomOriginalTextSize(bottomOriginalTextSize);
         return numberBottomNavBarStyle;
     }
 
