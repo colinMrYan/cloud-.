@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelectionModel
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureSelectionConfig;
 import com.inspur.emmcloud.basemodule.media.selector.config.SelectLimitType;
+import com.inspur.emmcloud.basemodule.media.selector.config.SelectMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.config.SelectModeConfig;
 import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
 import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
@@ -36,7 +37,8 @@ import java.util.ArrayList;
 public class PictureSelectorUtils {
     private static PictureSelectorUtils mInstance;
     private static final int GALLERY_RESULT = 2;
-
+    private static final int DEFAULT_IMAGE_NUMBER = 5;
+    private static final int DEFAULT_VIDEO_NUMBER = 5;
     public static PictureSelectorUtils getInstance() {
         if (mInstance == null) {
             synchronized (PictureSelectorUtils.class) {
@@ -49,22 +51,26 @@ public class PictureSelectorUtils {
     }
 
 
-    public void openGalleryInDefault(Context context) {
-        openGallery(context, SelectModeConfig.MULTIPLE, true, true, false, 5, 5);
+    public void openGallery(Context context) {
+        openGallery(context, SelectMimeType.ofImage(),  DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
     }
 
-    public void openGallery(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
+    public void openGallery(Context context, int selectionMode, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
+        openGallery(context, selectionMode, true,true,false, maxImageNumber,maxVideoNumber, galleryCallbackNum);
+    }
+
+    public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int GalleryCallbackNum) {
         PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
         selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
         selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
         selectorStyle.setTitleBarStyle(getTitleBarStyle());
-        PictureSelectionModel selectionModel = getSelectionModel(context, chooseMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
+        PictureSelectionModel selectionModel = getSelectionModel(context, selectionMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
         selectionModel.setSelectorUIStyle(selectorStyle);
-        selectionModel.forResult(GALLERY_RESULT);
+        selectionModel.forResult(GalleryCallbackNum);
     }
 
     private PictureSelectionModel getSelectionModel(Context context) {
-        return getSelectionModel(context, SelectModeConfig.MULTIPLE, true, true, false, 9, 9);
+        return getSelectionModel(context, SelectMimeType.ofAll(), true, true, false, 9, 9);
     }
 
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode) {
@@ -90,7 +96,7 @@ public class PictureSelectorUtils {
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         PictureSelectionModel selectionModel = PictureSelector.create(context)
                 // 目前只支持图片，后续完善视频
-                .openGallery(1)
+                .openGallery(chooseMode)
                 // 微信样式
 //                .setSelectorUIStyle(selectorStyle)
                 .setImageEngine(GlideEngine.createGlideEngine())
