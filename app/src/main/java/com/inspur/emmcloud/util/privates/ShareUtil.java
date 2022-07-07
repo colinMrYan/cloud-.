@@ -15,17 +15,21 @@ import com.inspur.emmcloud.basemodule.util.dialog.ShareDialog;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.ShareFilesActivity;
+import com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 
 import java.io.Serializable;
 import java.util.List;
 
+import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
+
 public class ShareUtil {
     public static void share(Context context, final SearchModel searchModel, String shareContent) {
-        share(context, searchModel, shareContent, false);
+        share(context, searchModel, shareContent, false, MultiMessageTransmitUtil.TYPE_SINGLE);
     }
 
-    public static void share(Context context, final SearchModel searchModel, String shareContent, final boolean isWebShare) {
+    public static void share(Context context, final SearchModel searchModel, String shareContent, final boolean isWebShare, final int multiMessageType) {
         final BaseActivity activity = (BaseActivity) context;
         int defaultIcon = CommunicationUtils.getDefaultHeadUrl(searchModel);
         String headUrl = CommunicationUtils.getHeadUrl(searchModel);
@@ -47,6 +51,7 @@ public class ShareUtil {
                     } else {
                         Intent intent = new Intent();
                         intent.putExtra("searchModel", searchModel);
+                        intent.putExtra(EXTRA_MULTI_MESSAGE_TYPE, multiMessageType);
                         activity.setResult(activity.RESULT_OK, intent);
                         dialog.dismiss();
                         activity.finish();
@@ -72,8 +77,8 @@ public class ShareUtil {
         context.startActivity(intent);
     }
 
-    // 消息转发多人时调用
-    public static void shareMulti(Context context, final List<MessageForwardMultiBean> searchModelList, String shareContent) {
+    // 消息转发消息时调用
+    public static void shareMultiMessage(Context context, final List<MessageForwardMultiBean> searchModelList, String shareContent, int Con) {
         final BaseActivity activity = (BaseActivity) context;
         ShareMultiDialog.Builder builder = new ShareMultiDialog.Builder(context);
         builder.setConversationList(searchModelList);
@@ -84,6 +89,32 @@ public class ShareUtil {
             public void onConfirm(View view) {
                 Intent intent = new Intent();
                 intent.putExtra("selectList", (Serializable) searchModelList);
+                activity.setResult(Activity.RESULT_OK, intent);
+                dialog.dismiss();
+                activity.finish();
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    // 消息转发多人时调用
+    public static void shareMultiMembers(Context context, final List<MessageForwardMultiBean> searchModelList, String shareContent, final int multiMessageType) {
+        final BaseActivity activity = (BaseActivity) context;
+        ShareMultiDialog.Builder builder = new ShareMultiDialog.Builder(context);
+        builder.setConversationList(searchModelList);
+        builder.setContent(shareContent);
+        final ShareMultiDialog dialog = builder.build();
+        dialog.setCallBack(new ShareMultiDialog.CallBack() {
+            @Override
+            public void onConfirm(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("selectList", (Serializable) searchModelList);
+                intent.putExtra(EXTRA_MULTI_MESSAGE_TYPE, multiMessageType);
                 activity.setResult(Activity.RESULT_OK, intent);
                 dialog.dismiss();
                 activity.finish();

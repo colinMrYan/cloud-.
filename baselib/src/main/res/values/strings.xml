@@ -19,6 +19,10 @@
     <string name="ok_number">确定(%d)</string>
     <string name="send_more_select_limit_warning">最多选择9人/群聊</string>
     <string name="cancel">取消</string>
+    <string name="multi_transfer_single">逐条转发</string>
+    <string name="multi_transfer_all">合并转发</string>
+    <string name="messages_count">] 共%1$d条会话消息</string>
+
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
     <string name="retry">重试</string>
     <string name="re_login">重新登录</string>
@@ -290,6 +294,7 @@
     <string name="send_a_link">[链接]</string>
     <string name="send_a_voice">[语音]</string>
     <string name="send_action_message">[活动消息]</string>
+    <string name="send_complex_message">[合并消息]</string>
     <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
@@ -360,6 +365,7 @@
     <string name="chat_conversation_unread_count">%1$d条新消息</string>
     <string name="chat_group_message_search">查找聊天记录</string>
     <string name="chat_long_click_copy">复制</string>
+    <string name="chat_long_click_multiple">多选</string>
     <string name="chat_long_click_transmit">转发</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
@@ -367,7 +373,7 @@
     <string name="recall_message_fail">消息撤回失败</string>
     <string name="message_has_been_recalled">此消息已撤回</string>
     <string name="message_get_fail">消息获取失败</string>
-    <string name="chat_long_click_schedule">添加到日程</string>
+    <string name="chat_long_click_schedule">添加日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
     <string name="chat_long_click_reply">回复</string>
     <string name="chat_full_image">查看原图</string>
@@ -1068,7 +1074,7 @@
     <string name="voice_word_tran">正在语音转文字</string>
     <string name="voice_word_setting">语音自动识别</string>
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
-    <string name="voice_to_word">转换为文字（仅普通话）</string>
+    <string name="voice_to_word">转文字</string>
     <!--语音输入改造-->
     <string name="voice_input_language_mandarin">普通话</string>
     <string name="voice_input_language_cantonese">粤语</string>

@@ -14,6 +14,10 @@
     <string name="ok">OK</string>
     <string name="ok_number">OK(%d)</string>
     <string name="send_more_select_limit_warning">Select up to 9 people/groups</string>
+    <string name="multi_transfer_single">Item by item forwarding</string>
+    <string name="multi_transfer_all">Merge forwarding</string>
+    <string name="messages_count">] %1$d messages</string>
+
     <string name="cancel">Cancel</string>
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
@@ -287,6 +291,7 @@
     <string name="send_a_burn">[Burn after reading]</string>
     <string name="send_a_whispers">[Whisper]</string>
     <string name="send_action_message">[Activity]</string>
+    <string name="send_complex_message">[Complex Message]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>
     <string name="send_a_message_of_unknown_type">[Unknown]</string>
     <string name="direct_no_message">No new messages</string>
@@ -348,6 +353,7 @@
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
+    <string name="chat_long_click_multiple">Multiple selection</string>
     <string name="chat_long_click_transmit">Forward</string>
     <string name="chat_long_click_recall">Recall</string>
     <string name="chat_info_message_status_recall">%1$s recalled a message</string>
