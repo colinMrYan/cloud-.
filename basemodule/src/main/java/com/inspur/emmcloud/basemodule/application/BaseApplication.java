@@ -90,10 +90,6 @@ public abstract class BaseApplication extends MultiDexApplication {
         initWithoutUserInfo();
         if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             init();
-            // 短视频licence设置
-            String ugcKey = "28db2b484abaeef442fd8ce79929466d";
-            String ugcLicenceUrl = "https://license.vod2.myqcloud.com/license/v2/1310194503_1/v_cube.license";
-            TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
         }
     }
 
@@ -158,6 +154,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+        // 短视频licence设置
+        String ugcKey = "28db2b484abaeef442fd8ce79929466d";
+        String ugcLicenceUrl = "https://license.vod2.myqcloud.com/license/v2/1310194503_1/v_cube.license";
+        TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
     }
 
     /**************************************登出逻辑相关********************************************************/

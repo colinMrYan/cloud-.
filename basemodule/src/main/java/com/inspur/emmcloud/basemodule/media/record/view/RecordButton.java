@@ -103,7 +103,7 @@ public class RecordButton extends RelativeLayout implements View.OnTouchListener
      */
     private void toggleRecordAnim() {
         if (mIsRecording) {
-            pauseRecordAnim();
+            pauseRecordAnim(true);
         } else {
             startRecordAnim();
         }
@@ -117,13 +117,13 @@ public class RecordButton extends RelativeLayout implements View.OnTouchListener
     }
 
     /**
-     * 暂停录制操作执行的动画
+     * 录制操作执行的动画
      */
-    public void pauseRecordAnim() {
+    public void pauseRecordAnim(boolean byClick) {
         if (!mIsRecording) {
             return;
         }
-        pauseRecordAnimByClick();
+        pauseRecordAnimByClick(byClick);
     }
 
     /**
@@ -254,7 +254,7 @@ public class RecordButton extends RelativeLayout implements View.OnTouchListener
     /**
      * 拍摄模式为"单击"录制下。暂停录制操作执行的动画
      */
-    private void pauseRecordAnimByClick() {
+    private void pauseRecordAnimByClick(final boolean byClick) {
         ObjectAnimator btnBkgZoomInXAn = ObjectAnimator.ofFloat(mViewTapModeOutter, "scaleX", 1f);
         ObjectAnimator btnBkgZoomIntYAn = ObjectAnimator.ofFloat(mViewTapModeOutter, "scaleY", 1f);
 
@@ -269,7 +269,7 @@ public class RecordButton extends RelativeLayout implements View.OnTouchListener
             @Override
             public void onAnimationStart(Animator animation) {
                 if (mOnRecordButtonListener != null) {
-                    mOnRecordButtonListener.onRecordFinish();
+                    mOnRecordButtonListener.onRecordFinish(byClick);
                     mViewTapModeOutter.stopDraw();
                     mIsRecording = false;
                 }

@@ -56,7 +56,8 @@ public class RecordProgressView extends View {
     }
 
     public void setProgress(long milliSecond) {
-        progress = (float) milliSecond * 360 / 120000;
+        progress = (float) milliSecond * 360 / 10000;
+//        progress = (float) milliSecond * 360 / 60000;
         invalidate();
     }
 
@@ -65,7 +66,8 @@ public class RecordProgressView extends View {
     }
 
     public void stopDraw() {
-        processRect = new RectF();
+//        processRect = new RectF(0, 0, 0, 0);
+        processRect = null;
         invalidate();
     }
 }

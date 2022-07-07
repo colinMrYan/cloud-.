@@ -2,14 +2,17 @@ package com.inspur.emmcloud.basemodule.media.record.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Environment;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.gyf.barlibrary.BarHide;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordConfig;
+import com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK;
 import com.inspur.emmcloud.basemodule.media.record.basic.VideoKitResult;
 import com.inspur.emmcloud.basemodule.media.record.interfaces.IVideoRecordKit;
 import com.inspur.emmcloud.basemodule.media.record.view.VideoRecordView;
@@ -19,6 +22,9 @@ import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.tencent.rtmp.TXPlayerAuthBuilder;
+import com.tencent.rtmp.downloader.TXVodDownloadManager;
+import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.List;
 
@@ -55,7 +61,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
             public void onPermissionRequestSuccess(List<String> permissions) {
                 granted = true;
                 setContentView(R.layout.activity_communication_record);
-                setWindows();
+//                setWindows();
                 initView();
             }
 
@@ -88,8 +94,8 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
 
             @Override
             public void onRecordCompleted(VideoKitResult result) {
-                if (result.errorCode == 0) {
-//                    startEditActivity(result);
+                if (result.errorCode >= 0) {
+                    startPreviewActivity(result);
                 } else {
                     ToastUtils.show("record video failed. error code:" + result.errorCode + ",desc msg:" + result.descMsg);
                 }
@@ -97,14 +103,25 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
         });
     }
 
+    // 预览视频，暂时不做任何操作
+    private void startPreviewActivity(VideoKitResult ugcKitResult) {
+//        Intent intent = new Intent(this, TCVideoEditerActivity.class);
+//        intent.putExtra(UGCKitConstants.VIDEO_PATH, ugcKitResult.outputPath);
+//        startActivity(intent);
+//        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
     // 设置全屏
     private void setWindows() {
-        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).fullScreen(true).transparentNavigationBar().init();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR).fullScreen(true).init();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setWindows();
         mVideoRecordLayout.start();
     }
 
@@ -144,7 +161,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
                 setResult(RESULT_OK, intent);
                 finish();
             }
-        }else if (requestCode == REQUEST_CODE_VIDEO_EDIT){
+        } else if (requestCode == REQUEST_CODE_VIDEO_EDIT) {
             // 视频
             if (resultCode == RESULT_OK) {
 

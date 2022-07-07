@@ -21,7 +21,7 @@ public interface IRecordButton {
         /**
          * 录制点击结束
          */
-        void onRecordFinish();
+        void onRecordFinish(boolean byClick);
 
         /**
          * 拍照

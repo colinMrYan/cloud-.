@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -141,6 +142,6 @@ public class RecordModeView extends RelativeLayout implements View.OnClickListen
 
     // 拍照，测试精简版到底支持不支持
     public interface OnSnapListener {
-        void onSnap(Bitmap bitmap);
+        void onSnap(Bitmap bitmap, String path , Uri uri);
     }
 }

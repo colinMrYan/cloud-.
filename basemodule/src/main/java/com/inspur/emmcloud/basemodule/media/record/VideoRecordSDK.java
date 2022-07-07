@@ -1,12 +1,17 @@
 package com.inspur.emmcloud.basemodule.media.record;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -49,6 +54,10 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
     public int mBeautyLevel = 4;
     // 美白
     public int mWhiteLevel = 2;
+    private String photoName;
+    private String insertImage;
+    private Uri photoUri;
+    private String photoPath;
 
     private VideoRecordSDK() {
 
@@ -142,14 +151,33 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
             mRecordSDK.snapshot(new TXRecordCommon.ITXSnapshotListener() {
                 @Override
                 public void onSnapshot(final Bitmap bitmap) {
-                    String fileName = System.currentTimeMillis() + ".jpg";
-                    MediaStore.Images.Media.insertImage(BaseApplication.getInstance().getContentResolver(), bitmap, fileName, null);
-
+                    // 删除图片逻辑暂时注掉
+//                    if (!TextUtils.isEmpty(insertImage)) {
+//                        if (photoPath.contains(photoName)) {
+//                            try {
+//                            // 删除图片
+//                                BaseApplication.getInstance().getContentResolver().delete(photoUri, null, null);
+//                            } catch (Exception e) {
+//                                // 防止崩溃，不同版本可能有问题
+//                            }
+//                        }
+//                    }
+                    ContentResolver cr = BaseApplication.getInstance().getContentResolver();
+                    insertImage = MediaStore.Images.Media.insertImage(cr, bitmap, photoName, null);
+                    photoUri = Uri.parse(insertImage);
+                    String[] projection = new String[]{MediaStore.Audio.Media.DATA};
+                    Cursor cursor = cr.query(photoUri, projection, null, null, null);
+                    if (cursor == null || !cursor.moveToFirst()) {
+                        return;
+                    }
+                    int index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                    photoPath = cursor.getString(index);
+                    cursor.close();
                     BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (listener != null) {
-                                listener.onSnap(bitmap);
+                                listener.onSnap(bitmap, photoPath, photoUri);
                             }
                         }
                     });
@@ -164,6 +192,12 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
             return mRecordSDK.getPartsManager();
         }
         return null;
+    }
+
+    // 拍照文件路径
+    public void initPhotoName() {
+        photoName = System.currentTimeMillis() + ".jpg";
+
     }
 
     // 录制参数config
@@ -198,18 +232,18 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
      * 暂停录制
      * FIXBUG:被打断时调用，暂停录制，修改状态，跳转到音乐界面也会被调用
      */
-    public void pauseRecord() {
-        Log.d(TAG, "pauseRecord");
-        if (mCurrentState == STATE_START || mCurrentState == STATE_RESUME) {
-            if (mRecordSDK != null) {
-                mRecordSDK.pauseRecord();
-            }
-            mCurrentState = STATE_PAUSE;
-        }
-        mPreviewFlag = false;
-
-        AudioFocusManager.getInstance().abandonAudioFocus();
-    }
+//    public void pauseRecord() {
+//        Log.d(TAG, "pauseRecord");
+//        if (mCurrentState == STATE_START || mCurrentState == STATE_RESUME) {
+//            if (mRecordSDK != null) {
+//                mRecordSDK.pauseRecord();
+//            }
+//            mCurrentState = STATE_PAUSE;
+//        }
+//        mPreviewFlag = false;
+//
+//        AudioFocusManager.getInstance().abandonAudioFocus();
+//    }
 
     /**
      * 停止录制
@@ -217,16 +251,16 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
     public void stopRecord() {
         Log.d(TAG, "stopRecord");
         int size = 0;
+//        if (mRecordSDK != null) {
+//            size = mRecordSDK.getPartsManager().getPartsPathList().size();
+//        }
+//        if (mCurrentState == STATE_STOP && size == 0) {
+//            //如果录制未开始，且录制片段个数为0，则不需要停止录制
+//            return;
+//        }
         if (mRecordSDK != null) {
-            size = mRecordSDK.getPartsManager().getPartsPathList().size();
-        }
-        if (mCurrentState == STATE_STOP && size == 0) {
-            //如果录制未开始，且录制片段个数为0，则不需要停止录制
-            return;
-        }
-        if (mRecordSDK != null) {
-            mRecordSDK.stopBGM();
-            mRecordSDK.stopRecord();
+//            mRecordSDK.getPartsManager().deleteAllParts();
+            int stopRecord = mRecordSDK.stopRecord();
         }
         AudioFocusManager.getInstance().abandonAudioFocus();
 
@@ -279,9 +313,12 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
         Log.d(TAG, "onRecordComplete");
         mCurrentState = STATE_STOP;
         if (result.retCode < 0) {
+            LogUtils.debug("onRecordComplete", "----------" + result.retCode);
             ToastUtils.show(BaseApplication.getInstance().getResources().getString(R.string.video_record_complete_fail_tip) + result.descMsg);
         } else {
-            pauseRecord();
+//            pauseRecord();
+//            stopRecord();
+            mRecordSDK.getPartsManager().deleteAllParts();
             mRecordVideoPath = result.videoPath;
             if (mOnVideoRecordListener != null) {
                 mOnVideoRecordListener.onRecordComplete(result);
