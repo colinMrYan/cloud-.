@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.NetworkInfo;
@@ -11,9 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.MenuPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,14 +33,11 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -83,6 +77,7 @@ import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannel
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversationListener;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -119,8 +114,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Socket;
-
-import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
 
 /**
@@ -363,7 +356,7 @@ public class CommunicationFragment extends BaseFragment {
         mPopupWindowList.show();
         mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                 } else {
@@ -390,7 +383,7 @@ public class CommunicationFragment extends BaseFragment {
                         if (!mainTabProperty.isCanCreate()) {
                             headerFunctionOptionImg.setVisibility(View.GONE);
                         }
-                        if (!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) {
+                        if ((!mainTabProperty.isCanContact() || !AppRoleUtils.isShowContact()) && contactImg != null) {
                             contactImg.setVisibility(View.GONE);
                         }
                     }

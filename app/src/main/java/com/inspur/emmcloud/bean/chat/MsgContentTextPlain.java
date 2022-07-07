@@ -87,11 +87,11 @@ public class MsgContentTextPlain {
                 JSONObject mentionObj = JSONUtils.map2Json(mentionsMap);
                 obj.put("mentions", mentionObj);
             }
-            if (whisperUsers.size() > 0){
+            if (whisperUsers.size() > 0) {
                 JSONArray whisperObj = JSONUtils.toJSONArray(whisperUsers);
                 obj.put("whispers", whisperObj);
             }
-            if (!TextUtils.isEmpty(msgType)){
+            if (!TextUtils.isEmpty(msgType)) {
                 obj.put("messageType", msgType);
             }
         } catch (Exception e) {

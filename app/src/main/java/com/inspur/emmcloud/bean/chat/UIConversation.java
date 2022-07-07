@@ -150,6 +150,9 @@ public class UIConversation implements Serializable {
                     case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
                         content = MyApplication.getInstance().getString(R.string.send_action_message);
                         break;
+                    case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
+                        content = MyApplication.getInstance().getString(R.string.send_complex_message);
+                        break;
                     default:
                         content = MyApplication.getInstance()
                                 .getString(R.string.send_a_message_of_unknown_type);

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil;
 import com.inspur.emmcloud.ui.chat.SearchActivity;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ChatRecentAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
@@ -106,7 +107,7 @@ public class ConversationSearchActivity extends BaseMvpActivity<ConversationSear
                 searchModel = conversation.conversation2SearchModel();
                 // web应用内分享
                 if (isWebShare) {
-                    ShareUtil.share(ConversationSearchActivity.this, searchModel, title, true);
+                    ShareUtil.share(ConversationSearchActivity.this, searchModel, title, true, MultiMessageTransmitUtil.TYPE_SINGLE);
                 } else {
                     ShareUtil.share(ConversationSearchActivity.this, searchModel, shareContent);
                 }

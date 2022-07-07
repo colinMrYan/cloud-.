@@ -38,14 +38,26 @@
             android:src="?attr/ic_config" />
 
         <TextView
+            android:id="@+id/cancel_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="10dp"
+            android:onClick="onClick"
+            android:text="@string/cancel"
+            android:textColor="?attr/header_text_color_e1"
+            android:textSize="17sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/header_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_toLeftOf="@id/iv_config"
-            android:layout_toRightOf="@id/ibt_back"
+            android:layout_marginLeft="55dp"
+            android:layout_marginRight="55dp"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
@@ -152,8 +164,8 @@
             android:layout_toLeftOf="@+id/close_icon"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="14sp"
-            android:textColor="?attr/color_ff_33" />
+            android:textColor="?attr/color_ff_33"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/close_icon"
@@ -161,10 +173,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_normal_close"
-            android:scaleType="centerInside"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_normal_close" />
 
     </RelativeLayout>
 
@@ -173,5 +185,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/text_ll_color_nor" />
+
+<!--    后续单独封装通用布局-->
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        android:background="?attr/text_ll_color_nor">
+
+        <LinearLayout
+            android:id="@+id/multi_transfer_single_ll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:onClick="onClick"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:layout_marginTop="7.5dp"
+                android:layout_gravity="center_horizontal"
+                android:src="?attr/multi_transfer_single_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="?attr/text_color"
+                android:text="@string/multi_transfer_single"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:background="#e6e6e6"/>
+
+
+        <LinearLayout
+            android:id="@+id/multi_transfer_all_ll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:onClick="onClick"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_height="20dp"
+                android:layout_width="20dp"
+                android:layout_marginTop="7.5dp"
+                android:layout_gravity="center_horizontal"
+                android:src="?attr/multi_transfer_all_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="?attr/text_color"
+                android:text="@string/multi_transfer_all"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

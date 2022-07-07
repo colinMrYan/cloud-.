@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
@@ -38,6 +40,8 @@ import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -45,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -171,6 +176,30 @@ public class CommunicationUtils {
         return message;
     }
 
+
+    public static Message combineLocalMultiMessage(@NonNull JSONArray messages, String cid, Map<String, String> mentionsMap) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_COMPLEX_MESSAGE);
+        MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+        msgContentTextPlain.setMsgType(Message.MESSAGE_TYPE_COMPLEX_MESSAGE);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentTextPlain.setMentionsMap(mentionsMap);
+        }
+        String showContent = ChatMsgContentUtils.mentionsAndUrl2Span(msgContentTextPlain.getText(), msgContentTextPlain.getMentionsMap()).toString();
+        message.setShowContent(showContent);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("messageList", messages);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        message.setContent(jsonObject.toString());
+        return message;
+    }
 
     public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid, String text, Map<String, String> mentionsMap) {
         String tracer = getTracer();

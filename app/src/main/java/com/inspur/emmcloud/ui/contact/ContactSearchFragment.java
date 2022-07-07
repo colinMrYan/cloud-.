@@ -209,6 +209,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private boolean isCreateGroupFromDirect = false;// 来自单聊详情页，创建群聊
     private String fromDirectUid;// 单聊时对方的uid
     private JSONObject searchResultObj;
+    private int mMultiMessageType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

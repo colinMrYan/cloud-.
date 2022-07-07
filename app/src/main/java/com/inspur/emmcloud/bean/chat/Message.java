@@ -14,6 +14,8 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "Message", onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
@@ -23,6 +25,7 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_TEXT_PLAIN = "text/plain";
     public static final String MESSAGE_TYPE_TEXT_WHISPER = "text/whisper";
     public static final String MESSAGE_TYPE_TEXT_BURN = "text/burn";
+    public static final String MESSAGE_TYPE_COMPLEX_MESSAGE = "extended/complex-message";
     public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
     public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
@@ -75,6 +78,7 @@ public class Message implements Serializable {
     @Column(name = "states")
     private String states = "";//已读未读状态json
     private String tmpId = "";
+    private JSONObject dataObj;
 
     public Message() {
 
@@ -84,7 +88,7 @@ public class Message implements Serializable {
         id = msg.getMid();
         JSONObject extraObj = JSONUtils.getJSONObject(msg.getBody(), "extras", new JSONObject());
         JSONObject propsObj = JSONUtils.getJSONObject(extraObj, "props", new JSONObject());
-        JSONObject dataObj = JSONUtils.getJSONObject(JSONUtils.getString(propsObj, "data", ""));
+        dataObj = JSONUtils.getJSONObject(JSONUtils.getString(propsObj, "data", ""));
         message = JSONUtils.getString(dataObj, "message", "");
         from = JSONUtils.getString(dataObj, "from", "");
         type = JSONUtils.getString(dataObj, "type", "");
@@ -337,6 +341,10 @@ public class Message implements Serializable {
         return "";
     }
 
+    public JSONObject getDataObj() {
+        return dataObj;
+    }
+
     public int getLifeCycleState() {
         return lifeCycleState;
     }
@@ -389,7 +397,6 @@ public class Message implements Serializable {
 
         return bodyObj.toString();
     }
-
 
 }
 

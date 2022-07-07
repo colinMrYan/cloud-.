@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.chat.mvp.view;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,11 +27,10 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil;
 import com.inspur.emmcloud.ui.chat.SearchActivity;
 import com.inspur.emmcloud.ui.chat.SearchSendMultiActivity;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationMembersHeadAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiAdapter;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiDialogAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiHeadAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
 import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationSearchPresenter;
@@ -41,15 +39,17 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
 
 import org.json.JSONObject;
-import org.jsoup.Connection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
 
 @Route(path = Constant.AROUTER_CLASS_CONVERSATION_SEND_MORE)
 public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationSearchPresenter> implements ConversionSearchContract.View {
@@ -78,6 +78,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     private boolean isWebShare;
     private boolean isShowHeader = true; // 默认为true
     private SearchModel searchModel;
+    private int mMultiMessageType;
 
     // 多选相关参数
     private boolean isSelectMore = false; // 默认单选
@@ -102,6 +103,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     private void init() {
         setTitleText(R.string.baselib_share_to);
         shareContent = getIntent().getStringExtra(Constant.SHARE_CONTENT);
+        mMultiMessageType = getIntent().getIntExtra(EXTRA_MULTI_MESSAGE_TYPE, MultiMessageTransmitUtil.TYPE_SINGLE);
         // web应用内分享到聊天，转发多人未用到，暂时留着，也可删掉web相关代码
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -140,12 +142,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
                 // 单选
                 if (!isSelectMore) {
                     searchModel = conversation.conversation2SearchModel();
-                    // web应用内分享
-                    if (isWebShare) {
-                        ShareUtil.share(ConversationSendMultiActivity.this, searchModel, title, true);
-                    } else {
-                        ShareUtil.share(ConversationSendMultiActivity.this, searchModel, shareContent);
-                    }
+                    ShareUtil.share(ConversationSendMultiActivity.this, searchModel, shareContent, isWebShare, mMultiMessageType);
                 } else {
                     SearchModel searchModel = conversation.conversation2SearchModel();
                     // 转换成统一bean：已选list可能包含会话，也可能包含联系人
@@ -243,7 +240,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
 
     // 多选时消息转发
     private void sendMoreMessage() {
-        ShareUtil.shareMulti(this, selectList, shareContent);
+        ShareUtil.shareMultiMembers(this, selectList, shareContent, mMultiMessageType);
     }
 
     // 多选，单选按钮点击事件
@@ -280,6 +277,9 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
                 searchModel = (SearchModel) data.getSerializableExtra("searchModel");
                 handleShareResult();
             } else {
+                if (data != null) {
+                    data.putExtra(EXTRA_MULTI_MESSAGE_TYPE, mMultiMessageType);
+                }
                 setResult(RESULT_OK, data);
                 finish();
             }

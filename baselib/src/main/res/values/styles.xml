@@ -114,7 +114,6 @@
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
         <item name="schedule_event_share_ic">@drawable/schedule_event_share_ic</item>
-
         <item name="color_bg_40_ff">@color/button_color_nor</item>
         <item name="color_stroke_46_ca">@color/color_ca</item>
         <item name="color_bg_46_bb">@color/color_bb</item>
@@ -166,7 +165,8 @@
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
-
+        <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
+        <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
     </style>
 
     <style name="AppTheme_1" parent="AppTheme">
@@ -285,7 +285,8 @@
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
-
+        <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
+        <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
     </style>
 
     <style name="AppTheme_2" parent="AppTheme">
@@ -403,7 +404,8 @@
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
-
+        <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
+        <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
     </style>
 
     <style name="AppTheme_3" parent="AppTheme">
@@ -521,6 +523,8 @@
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_dark</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_dark</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_dark</item>
+        <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_dark</item>
+        <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_dark</item>
 
     </style>
 

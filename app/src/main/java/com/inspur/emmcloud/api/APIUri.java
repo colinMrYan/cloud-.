@@ -607,6 +607,13 @@ public class APIUri {
         return getECMChatUrl() + "/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
     }
 
+    /**
+     * 获取转发转发消息接口
+     */
+    public static String getMultiMessageTransmitUrl() {
+        return getECMChatUrl() + "/rest/packet/message/batch/dispatch";
+    }
+
 
     /**************************************************应用和应用中心********************************************************************/
 

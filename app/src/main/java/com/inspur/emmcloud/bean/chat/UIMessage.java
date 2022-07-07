@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -49,6 +51,9 @@ public class UIMessage implements Serializable {
 
     private void dealStates(String states) {
         try {
+            if (TextUtils.isEmpty(states)) {
+                return;
+            }
             JSONObject statesJson = new JSONObject(states);
             if (statesJson.has(SENT)) {
                 JSONArray sentArray = statesJson.optJSONArray(SENT);
@@ -141,11 +146,11 @@ public class UIMessage implements Serializable {
         this.message = message;
     }
 
-    public Map<String, Set<String>> getStatesMap(){
+    public Map<String, Set<String>> getStatesMap() {
         return statesMap;
     }
 
-    public void setStatesMap(Map<String, Set<String>> statesMap){
+    public void setStatesMap(Map<String, Set<String>> statesMap) {
         this.statesMap = statesMap;
     }
 
