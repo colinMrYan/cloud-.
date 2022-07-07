@@ -262,8 +262,9 @@ public class FileTransferService extends ImpPlugin {
                 //列出在指定目录下的文件名
                 listFile(paramsObject);
                 break;
+            //分段上传文件
             case "getBlockLocalImg":
-                //分段上传图片
+            case "getBlockLocalVideo":
                 getBlockLocalImg(paramsObject);
                 break;
             default:

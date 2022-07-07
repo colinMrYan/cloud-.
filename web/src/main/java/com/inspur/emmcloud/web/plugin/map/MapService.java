@@ -103,8 +103,8 @@ public class MapService extends ImpPlugin {
                 failCb = jsonObject.getString("fail");
             final JSONObject optionsObj = jsonObject.getJSONObject("options");
             int mapType = 0;
-            if (optionsObj.has("mapType")) {
-                mapType = optionsObj.getInt("mapType");
+            if (optionsObj.has("openType")) {
+                mapType = optionsObj.getInt("openType");
             }
             switch (mapType) {
                 case 1:
@@ -168,7 +168,7 @@ public class MapService extends ImpPlugin {
             if (!StringUtils.isBlank(toName)) {
                 builder.append("&dname=").append(toName);
             }
-            builder.append("&dev=0&t=0");
+            builder.append("&dev=0&t=1");
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -223,7 +223,7 @@ public class MapService extends ImpPlugin {
                 builder.append("&origin=").append(fromLatitude).append(",").append(fromLongitude);
             }
             builder.append("&destination=").append(toLatitude).append(",").append(toLongitude);
-            builder.append("&mode=walking");
+            builder.append("&mode=transit");
             builder.append("&src=").append(getFragmentContext().getPackageName());
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage(MAP_BAIDU_APPID);
@@ -273,7 +273,7 @@ public class MapService extends ImpPlugin {
                 toLatitude = toLocation[1];
             }
             StringBuilder builder = new StringBuilder("qqmap://map/routeplan");
-            builder.append("?type=walk");
+            builder.append("?type=bus");
             if (!StringUtils.isBlank(fromName)) {
                 builder.append("&from=").append(fromName);
             }
@@ -286,6 +286,7 @@ public class MapService extends ImpPlugin {
             builder.append("&tocoord=").append(toLatitude).append(",").append(toLongitude);
             //注册开发者账号，获取key
             builder.append("&referer=").append("EQRBZ-VABWX-LPI4J-TH5ZF-HMDGQ-AYFN2");
+            String str = builder.toString();
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage(MAP_TENCENT_APPID);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
