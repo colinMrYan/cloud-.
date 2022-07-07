@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
@@ -378,9 +379,19 @@ public class DeviceService extends ImpPlugin {
         if (router.getService(SettingService.class) != null) {
             SettingService service = router.getService(SettingService.class);
             if (service.openWebRotate()) {
-                jsCallback(successCb, "");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (!StringUtils.isEmpty(successCb)){
+                    jsCallback(successCb, json);
+                }
             } else {
-                jsCallback(failCb, "network error!!");
+                if (!StringUtils.isEmpty(failCb)){
+                    jsCallback(failCb, "openWebRotate fail!!");
+                }
             }
         }
     }
@@ -390,9 +401,19 @@ public class DeviceService extends ImpPlugin {
         if (router.getService(SettingService.class) != null) {
             SettingService service = router.getService(SettingService.class);
             if (service.closeWebRotate()) {
-                jsCallback(successCb, "");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (!StringUtils.isEmpty(successCb)){
+                    jsCallback(successCb, json);
+                }
             } else {
-                jsCallback(failCb, "network error!!");
+                if (!StringUtils.isEmpty(failCb)){
+                    jsCallback(failCb, "closeWebRevolve fail!!");
+                }
             }
         }
     }
@@ -408,9 +429,13 @@ public class DeviceService extends ImpPlugin {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                jsCallback(successCb, json);
+                if (!StringUtils.isEmpty(successCb)){
+                    jsCallback(successCb, json);
+                }
             } else {
-                jsCallback(failCb, "network error!!");
+                if (!StringUtils.isEmpty(failCb)){
+                    jsCallback(failCb, "clearWebCache fail!!");
+                }
             }
         }
     }

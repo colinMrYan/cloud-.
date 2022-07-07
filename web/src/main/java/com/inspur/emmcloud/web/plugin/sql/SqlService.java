@@ -112,7 +112,7 @@ public class SqlService extends ImpPlugin {
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (database != null) {
             database.close();
-            jsCallback(successCb, "");
+            sendEmptySuccessInfo();
         } else {
             callbackDatabaseFail(0, "database not find");
         }
@@ -137,7 +137,7 @@ public class SqlService extends ImpPlugin {
             database.close();
             File dbFile = new File(database.getPath());
             if (SQLiteDatabase.deleteDatabase(dbFile)) {
-                jsCallback(successCb, "");
+                sendEmptySuccessInfo();
             } else {
                 callbackDatabaseFail(0, "database delete failed");
             }
@@ -256,7 +256,9 @@ public class SqlService extends ImpPlugin {
             json.put("status", 1);
             JSONObject result = new JSONObject();
             json.put("result", result);
-            jsCallback(successCb, json);
+            if (!StringUtils.isEmpty(successCb)) {
+                jsCallback(successCb, json);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             callbackDatabaseFail(0, e.getMessage());
@@ -293,7 +295,9 @@ public class SqlService extends ImpPlugin {
                 JSONObject result = new JSONObject();
                 result.put("data", JSONUtils.map2Json(requestResult));
                 json.put("result", result);
-                jsCallback(successCb, json);
+                if (!StringUtils.isEmpty(successCb)){
+                    jsCallback(successCb, json);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 callbackDatabaseFail(0, e.getMessage());
@@ -414,7 +418,9 @@ public class SqlService extends ImpPlugin {
             }
             database.setTransactionSuccessful();
         } catch (Exception e) {
-            jsCallback(failCb, getErrorJson(e.getMessage()));
+            if (!StringUtils.isEmpty(failCb)){
+                jsCallback(failCb, getErrorJson(e.getMessage()));
+            }
             e.printStackTrace();
             if (myCursor != null) {
                 myCursor.close();
@@ -460,7 +466,7 @@ public class SqlService extends ImpPlugin {
                 } else {
                     this.database.execSQL(singleSql);
                     // 将查询结果传回前台
-                    if (i == sqls.length - 1 && !showSelectedDate) jsCallback(successCb, "");
+                    if (i == sqls.length - 1 && !showSelectedDate && !StringUtils.isEmpty(successCb)) jsCallback(successCb, "");
                 }
             }
         } catch (Exception e) {
@@ -545,7 +551,9 @@ public class SqlService extends ImpPlugin {
             e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, resultJsonObject);
+        if (!StringUtils.isEmpty(successCb)) {
+            jsCallback(successCb, resultJsonObject);
+        }
     }
 
     @Override
