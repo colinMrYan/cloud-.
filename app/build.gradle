@@ -58,7 +58,7 @@ android {
         versionCode 166
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
 //        versionName "4.8.19"
-        versionName "5.0.1-beta.7"
+        versionName "5.0.1-beta.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
