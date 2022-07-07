@@ -49,6 +49,9 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             case "onBackKeyDown":
                 onBackKeyDown(paramsObject);
                 break;
+            case "cancelBackKeyDown":
+                cancelBackKeyDown();
+                break;
             case "onTitleBackKeyDown":
                 onTitleBackKeyDown(paramsObject);
                 break;
@@ -130,6 +133,15 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 getImpCallBackInterface().setOnKeyDownListener(null);
             } else {
                 getImpCallBackInterface().setOnKeyDownListener(WindowService.this);
+            }
+        }
+    }
+
+    private void cancelBackKeyDown() {
+        onBackKeyDownCallback = null;
+        if (getImpCallBackInterface() != null) {
+            if (TextUtils.isEmpty(onBackKeyDownCallback)) {
+                getImpCallBackInterface().setOnKeyDownListener(null);
             }
         }
     }
