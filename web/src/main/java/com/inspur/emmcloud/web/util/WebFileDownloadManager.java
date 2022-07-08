@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.web.util;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -10,6 +12,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.web.api.WebProgressCallback;
 import com.inspur.emmcloud.web.bean.WebFileDownloadBean;
 
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -19,6 +22,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -149,6 +153,20 @@ public class WebFileDownloadManager {
                 return params;
             }
         });
+        if (!StringUtils.isEmpty(webFileDownloadBean.getHeader())) {
+            JSONObject headerObj = JSONUtils.getJSONObject(webFileDownloadBean.getHeader());
+            if (headerObj != null) {
+                Iterator<String> keys = headerObj.keys();
+                while (keys.hasNext()) {
+                    try {
+                        String key = keys.next();
+                        params.addHeader(key, headerObj.getString(key));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         WebFileDownloadBean downloadInfo = getManagerDownloadInfo(webFileDownloadBean);
         if (downloadInfo != null && downloadInfo.getCancelable() == null) {
             Callback.Cancelable cancelable = x.http().get(params, callBack);

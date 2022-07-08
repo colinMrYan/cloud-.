@@ -47,6 +47,8 @@ public class WebFileDownloadBean implements Serializable {
     private Long completed = 0L;
     @Column(name = "progress")
     private int progress = -1;
+    @Column(name = "header")
+    private String header;
     /**
      * 业务的callback
      */
@@ -56,12 +58,13 @@ public class WebFileDownloadBean implements Serializable {
     public WebFileDownloadBean() {
     }
 
-    public WebFileDownloadBean(String fileId, long fileSize, String createTime, String downloadUrl, String fileName) {
+    public WebFileDownloadBean(String fileId, long fileSize, String createTime, String downloadUrl, String fileName, String headerInfo) {
         this.fileId = fileId;
         this.fileSize = fileSize;
         this.createTime = createTime;
         this.downloadUrl = downloadUrl;
         this.fileName = fileName;
+        this.header = headerInfo;
     }
 
     public int getProgress() {
@@ -174,5 +177,9 @@ public class WebFileDownloadBean implements Serializable {
 
     public void setCompleted(Long completed) {
         this.completed = completed;
+    }
+
+    public String getHeader() {
+        return header;
     }
 }

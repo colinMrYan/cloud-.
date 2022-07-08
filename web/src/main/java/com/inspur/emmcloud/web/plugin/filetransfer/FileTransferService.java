@@ -89,6 +89,8 @@ public class FileTransferService extends ImpPlugin {
     private String result;
     // 判断是否是下载文件
     private boolean flag;
+
+    private String headerObj;
     // 通知
     private Notification notification;
     // 通知栏ID
@@ -555,6 +557,10 @@ public class FileTransferService extends ImpPlugin {
             if (!jsonObject.isNull("errorCallback")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
+            if (!jsonObject.isNull("headers")) {
+                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
+                headerObj = headerJsonObject.toString();
+            }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
         } catch (JSONException e) {
@@ -590,7 +596,7 @@ public class FileTransferService extends ImpPlugin {
             showDownloadStatus();
         } else {
             Intent intent = new Intent(getFragmentContext(), WebFileDownloadActivity.class);
-            WebFileDownloadBean webFileDownloadBean = new WebFileDownloadBean(fileId, fileSize, createTime, downloadUrl, fileName);
+            WebFileDownloadBean webFileDownloadBean = new WebFileDownloadBean(fileId, fileSize, createTime, downloadUrl, fileName, headerObj);
             intent.putExtra("webFileDownload", webFileDownloadBean);
             getFragmentContext().startActivity(intent);
         }
