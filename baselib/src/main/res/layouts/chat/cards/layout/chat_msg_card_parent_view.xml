@@ -120,6 +120,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/chat_msg_send_content"
+        android:layout_alignLeft="@+id/chat_msg_send_content"
+        android:layout_alignRight="@+id/chat_msg_send_content"
         android:layout_marginLeft="63dp"
         android:layout_marginRight="63dp">
 
