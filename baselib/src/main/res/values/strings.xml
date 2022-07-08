@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appname "云+">
+    <!ENTITY appname "JSAPI">
     <!ENTITY author "MrGreen">
     ]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
