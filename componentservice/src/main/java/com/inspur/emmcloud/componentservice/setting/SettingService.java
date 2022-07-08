@@ -26,4 +26,8 @@ public interface SettingService extends CoreService {
 
     boolean clearWebCache();// 清除web缓存
 
+    boolean openNativeRotate(Context context);// 打开原生旋转
+
+    boolean closeNativeRotate(Context context);// 关闭原生旋转
+
 }

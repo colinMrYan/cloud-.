@@ -52,6 +52,7 @@ public class DeviceService extends ImpPlugin {
     private CameraManager manager;
     private int mBackCameraId = 0;
     private int mFrontCameraId = 1;
+    private Vibrator vibrator;
 
     @Override
     public String executeAndReturn(String action, JSONObject paramsObject) {
@@ -118,7 +119,11 @@ public class DeviceService extends ImpPlugin {
             closeWebRevolve();
         } else if (action.equals("clearWebCache")) {
             clearWebCache();
-        }else {
+//        } else if (action.equals("openNativeRevolve")) {
+//            openNativeRevolve();
+//        } else if (action.equals("closeNativeRevolve")) {
+//            closeNativeRevolve();
+        } else {
             showCallIMPMethodErrorDlg();
         }
 
@@ -236,14 +241,26 @@ public class DeviceService extends ImpPlugin {
                 repeat = optionObj.getBoolean("repeat");
             }
         } catch (JSONException e) {
-            jsCallback(failCb, e.getMessage());
+            if (!StringUtils.isEmpty(failCb)) {
+                jsCallback(failCb);
+            }
         }
         if (time == 0L)
             time = 500L;
-        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator == null){
+            vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        }
         long[] patter = {time, 1000L, time, 1000L};
         vibrator.vibrate(patter, repeat ? 0 : -1);
-        jsCallback(successCb);
+        if (!StringUtils.isEmpty(successCb)) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                jsCallback(successCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -253,9 +270,21 @@ public class DeviceService extends ImpPlugin {
      */
     @SuppressLint("MissingPermission")
     private void closeVibrator() {
-        Vibrator vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.cancel();
-        jsCallback(successCb);
+        if (vibrator == null) {
+            vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+        if (!StringUtils.isEmpty(successCb)) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                jsCallback(successCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -378,18 +407,18 @@ public class DeviceService extends ImpPlugin {
         Router router = Router.getInstance();
         if (router.getService(SettingService.class) != null) {
             SettingService service = router.getService(SettingService.class);
-            if (service.openWebRotate()) {
+            if (service.openWebRotate() && service.openNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("status", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (!StringUtils.isEmpty(successCb)){
+                if (!StringUtils.isEmpty(successCb)) {
                     jsCallback(successCb, json);
                 }
             } else {
-                if (!StringUtils.isEmpty(failCb)){
+                if (!StringUtils.isEmpty(failCb)) {
                     jsCallback(failCb, "openWebRotate fail!!");
                 }
             }
@@ -400,19 +429,63 @@ public class DeviceService extends ImpPlugin {
         Router router = Router.getInstance();
         if (router.getService(SettingService.class) != null) {
             SettingService service = router.getService(SettingService.class);
-            if (service.closeWebRotate()) {
+            if (service.closeWebRotate() && service.closeNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("status", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (!StringUtils.isEmpty(successCb)){
+                if (!StringUtils.isEmpty(successCb)) {
                     jsCallback(successCb, json);
                 }
             } else {
-                if (!StringUtils.isEmpty(failCb)){
+                if (!StringUtils.isEmpty(failCb)) {
                     jsCallback(failCb, "closeWebRevolve fail!!");
+                }
+            }
+        }
+    }
+
+    private void openNativeRevolve() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class) != null) {
+            SettingService service = router.getService(SettingService.class);
+            if (service.openNativeRotate(getActivity())) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (!StringUtils.isEmpty(successCb)) {
+                    jsCallback(successCb, json);
+                }
+            } else {
+                if (!StringUtils.isEmpty(failCb)) {
+                    jsCallback(failCb, "openWebRotate fail!!");
+                }
+            }
+        }
+    }
+
+    private void closeNativeRevolve() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class) != null) {
+            SettingService service = router.getService(SettingService.class);
+            if (service.closeNativeRotate(getActivity())) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (!StringUtils.isEmpty(successCb)) {
+                    jsCallback(successCb, json);
+                }
+            } else {
+                if (!StringUtils.isEmpty(failCb)) {
+                    jsCallback(failCb, "openWebRotate fail!!");
                 }
             }
         }
@@ -429,17 +502,18 @@ public class DeviceService extends ImpPlugin {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (!StringUtils.isEmpty(successCb)){
+                if (!StringUtils.isEmpty(successCb)) {
                     jsCallback(successCb, json);
                 }
             } else {
-                if (!StringUtils.isEmpty(failCb)){
+                if (!StringUtils.isEmpty(failCb)) {
                     jsCallback(failCb, "clearWebCache fail!!");
                 }
             }
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onDestroy() {
         if (m_Camera != null) {
@@ -447,6 +521,10 @@ public class DeviceService extends ImpPlugin {
             m_Camera.stopPreview();
             m_Camera.release();
             m_Camera = null;
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+            vibrator = null;
         }
     }
 

@@ -1,8 +1,11 @@
 package com.inspur.emmcloud.setting.serviceimpl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppConfig;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -50,6 +53,18 @@ public class SettingServiceImpl extends SettingAPIInterfaceImpl implements Setti
         DataCleanManager.cleanWebViewCache(BaseApplication.getInstance());
         BaseApplication.getInstance().removeAllSessionCookie();
         return true;
+    }
+
+    @Override
+    public boolean openNativeRotate(Context context) {
+        ((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        return PreferencesUtils.putBoolean(context, Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, true);
+    }
+
+    @Override
+    public boolean closeNativeRotate(Context context) {
+        ((Activity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        return PreferencesUtils.putBoolean(context, Constant.PREF_APP_OPEN_NATIVE_ROTATE_SWITCH, false);
     }
 
     @Override

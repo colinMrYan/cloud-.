@@ -933,11 +933,12 @@ public class FileTransferService extends ImpPlugin {
             uploadPathList.add(filePath);
         }
         JSONObject dataObj = JSONUtils.getJSONObject(optionsObj, "data", null);
-        showFileUploadDlg(uploadPathList, isShowProgress, dataObj);
+        JSONObject headerObj = JSONUtils.getJSONObject(optionsObj, "header", null);
+        showFileUploadDlg(uploadPathList, isShowProgress, dataObj, headerObj);
 
     }
 
-    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj) {
+    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj, JSONObject headerObj) {
         RequestParams params = new RequestParams(uploadUrl);
         params.setConnectTimeout(30000);
         params.setMultipart(true);
@@ -951,6 +952,17 @@ public class FileTransferService extends ImpPlugin {
                     e.printStackTrace();
                 }
 
+            }
+        }
+        if (headerObj != null) {
+            Iterator<String> keys = headerObj.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    params.addHeader(key, headerObj.getString(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         for (int i = 0; i < uploadPathList.size(); i++) {
