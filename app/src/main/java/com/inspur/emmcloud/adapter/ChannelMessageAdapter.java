@@ -211,26 +211,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         }
         holder.cardParentLayout.setLayoutParams(params);
         holder.checkbox.setVisibility(mMultipleSelect ? View.VISIBLE : View.GONE);
-        if (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || message.getType().equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
-                || message.getType().equals(Message.MESSAGE_TYPE_TEXT_PLAIN) || message.getType().equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+        if (supportMultiSelect(uiMessage)) {
             holder.checkbox.setImageResource(mSelectedMessages.contains(uiMessage) ? R.drawable.ic_select_yes :
                     (DarkUtil.isDarkTheme() ? R.drawable.ic_select_no_dark : R.drawable.ic_select_no));
-//            holder.checkbox.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (mSelectedMessages.contains(uiMessage)) {
-//                        holder.checkbox.setImageResource(R.drawable.ic_select_no);
-//                        mSelectedMessages.remove(uiMessage);
-//                    } else {
-//                        holder.checkbox.setImageResource(R.drawable.ic_select_yes);
-//                        mSelectedMessages.add(uiMessage);
-//                    }
-//                }
-//            });
         } else {
-//            holder.checkbox.setOnClickListener(null);
             holder.checkbox.setImageResource(DarkUtil.isDarkTheme() ? R.drawable.ic_not_select_dark : R.drawable.ic_not_select);
-
         }
 
         holder.cardLayout.removeAllViewsInLayout();
@@ -299,7 +284,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             cardContentView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!dealMultiClick(holder.checkbox, uiMessage)) {
+                    if (!dealMultiClick(holder.checkbox, uiMessage)) {
                         if (mItemClickListener != null) {
                             mItemClickListener.onCardItemClick(view, uiMessage);
                         }
@@ -461,7 +446,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      */
     private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
-        // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
         if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
@@ -533,10 +517,31 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
     public void toggleMultipleSelect(boolean b) {
+        if (b && !mMultipleSelect) {
+            mSelectedMessages.clear();
+        }
         mMultipleSelect = b;
-        mSelectedMessages.clear();
-//        notifyDataSetChanged();
         notifyItemRangeChanged(0, getItemCount());
+    }
+
+    private boolean supportMultiSelect(UIMessage uiMessage) {
+        Message message = uiMessage.getMessage();
+        String type = message.getType();
+        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            return false;
+        }
+        if (type.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || type.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+                || type.equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+            return true;
+        }
+        if (type.equals(Message.MESSAGE_TYPE_TEXT_PLAIN)) {
+            String textMsgType = message.getMsgContentTextPlain().getMsgType();
+            if (Message.MESSAGE_TYPE_TEXT_BURN.equals(textMsgType)) {
+                return false;
+            }
+            return message.getMsgContentTextPlain().getWhisperUsers().isEmpty();
+        }
+        return false;
     }
 
     /**
@@ -610,7 +615,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
-            if(!dealMultiClick((ImageView) v.findViewById(R.id.chat_msg_checkbox), UIMessageList.get(getAdapterPosition()))) {
+            if (!dealMultiClick((ImageView) v.findViewById(R.id.chat_msg_checkbox), UIMessageList.get(getAdapterPosition()))) {
                 int position = getAdapterPosition();
                 if (mItemClickListener != null && position != -1) {
                     mItemClickListener.onCardItemLayoutClick(v, UIMessageList.get(getAdapterPosition()));
@@ -631,11 +636,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
 
-    private boolean dealMultiClick(ImageView checkbox, UIMessage uiMessage){
+    private boolean dealMultiClick(ImageView checkbox, UIMessage uiMessage) {
         if (mMultipleSelect) {
-            Message message = uiMessage.getMessage();
-            if (message.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || message.getType().equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
-                    || message.getType().equals(Message.MESSAGE_TYPE_TEXT_PLAIN) || message.getType().equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+            if (supportMultiSelect(uiMessage)) {
                 if (mSelectedMessages.contains(uiMessage)) {
                     checkbox.setImageResource(R.drawable.ic_select_no);
                     mSelectedMessages.remove(uiMessage);

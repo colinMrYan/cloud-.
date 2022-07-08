@@ -2300,7 +2300,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
     }
 
-    private void changeViewByMultipleSelect(boolean selecting) {
+    public void changeViewByMultipleSelect(boolean selecting) {
         final int firstItem = linearLayoutManager.findFirstVisibleItemPosition();
         View firstItemView = linearLayoutManager.findViewByPosition(firstItem);
         final float topOffset = firstItemView == null ? 0 : firstItemView.getTop();
