@@ -34,7 +34,6 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;

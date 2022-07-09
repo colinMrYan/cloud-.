@@ -479,6 +479,33 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_group_transfer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="?attr/text_ll_color_nor"
+                android:onClick="onClick"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_group_transfer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/transfer_group"
+                    android:textColor="?attr/text_color_e1"
+                    android:textSize="16sp" />
+
+                <View
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_group_transfer"
+                    android:layout_marginLeft="16dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rl_conversation_quit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

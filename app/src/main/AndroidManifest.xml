@@ -364,6 +364,10 @@
             android:name=".ui.chat.UnReadDetailActivity"
             android:screenOrientation="behind" />
         <activity
+            android:name=".ui.chat.MultiMessageActivity"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".ui.chat.mvp.view.ConversationInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"

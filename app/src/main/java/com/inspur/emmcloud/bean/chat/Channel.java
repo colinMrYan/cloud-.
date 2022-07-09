@@ -321,6 +321,9 @@ public class Channel implements Serializable {
                 case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
                     newMsgContent = MyApplication.getInstance().getString(R.string.send_action_message);
                     break;
+                case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
+                    newMsgContent = fromUserName + MyApplication.getInstance().getString(R.string.send_complex_message);
+                    break;
                 default:
                     newMsgContent = fromUserName + context
                             .getString(R.string.send_a_message_of_unknown_type);

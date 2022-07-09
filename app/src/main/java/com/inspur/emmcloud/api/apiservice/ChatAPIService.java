@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
@@ -18,12 +19,14 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.ChatFileUploadInfo;
+import com.inspur.emmcloud.bean.MultiMessageItem;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetConversationListResult;
@@ -38,6 +41,8 @@ import com.inspur.emmcloud.bean.chat.GetServiceChannelInfoListResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
+import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.bean.chat.TransferGroupBean;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -47,6 +52,8 @@ import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
+import com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +63,7 @@ import org.xutils.http.RequestParams;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -661,6 +669,47 @@ public class ChatAPIService {
         });
     }
 
+    public void transferGroupOwner(final String channelId, final String ownerId) {
+        final String completeUrl = APIUri.getTransferGroupUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("channelId", channelId);
+        params.addParameter("newOwnerId", ownerId);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        transferGroupOwner(channelId, ownerId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnTransferGroupSuccess(new TransferGroupBean(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnTransferGroupFail(error, responseCode);
+
+            }
+        });
+    }
+
     /**
      * 添加群组成员
      *
@@ -990,7 +1039,6 @@ public class ChatAPIService {
             }
         });
     }
-
 
 
     /**
@@ -1392,7 +1440,8 @@ public class ChatAPIService {
 
     /**
      * 获取频道列表
-     * @param conversationType  频道类型 private (企业内频道)或者public（全局频道） 默认为Private
+     *
+     * @param conversationType 频道类型 private (企业内频道)或者public（全局频道） 默认为Private
      */
     public void getConversationList(final JSONArray conversationType) {
         final String completeUrl = APIUri.getConversationListUrl();
@@ -1476,6 +1525,7 @@ public class ChatAPIService {
 
     /**
      * 隐藏会话
+     *
      * @param id
      * @param isHide
      */
@@ -1778,17 +1828,82 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 apiInterface.returnTransmitPictureSuccess(toCid, object.toString(), message);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnTransmitPictureError(error, responseCode);
             }
         });
+    }
+
+
+    public void transmitMultiMessageItemByItem(final String cid, final Set<UIMessage> messages) {
+        final String completeUrl = APIUri.getMultiMessageTransmitUrl();
+        final RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        MultiMessageTransmitUtil.getJSONArrayFromUiMessage(cid, true, messages, new MultiMessageTransmitUtil.WrapperMultiItemListener() {
+            @Override
+            public void onWrapperMultiItemFinished(JSONArray jsonArray) {
+                try {
+                    JSONObject paramObj = new JSONObject();
+                    paramObj.put("channel", cid);
+                    paramObj.put("enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+                    String uid = BaseApplication.getInstance().getUid();
+                    paramObj.put("fromUserId", uid);
+                    paramObj.put("fromUserName", ContactUserCacheUtils.getUserName(uid));
+                    JSONArray finalJsonArray = new JSONArray();
+                    ArrayList<MultiMessageItem> multiMessageItems = MultiMessageTransmitUtil.getListFromJsonArray(jsonArray);
+                    for (MultiMessageItem item : multiMessageItems) {
+                        finalJsonArray.put(item.transferItemByItemMessageData());
+                    }
+                    paramObj.put("messageList", finalJsonArray);
+                    paramObj.put("to", new JSONArray());
+                    params.setBodyContent(paramObj.toString());
+                    params.setAsJsonContent(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
+
+                    @Override
+                    public void callbackTokenExpire(long requestTime) {
+                        OauthCallBack oauthCallBack = new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                transmitMultiMessageItemByItem(cid, messages);
+                            }
+
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        };
+                        refreshToken(
+                                oauthCallBack, requestTime);
+                    }
+
+                    @Override
+                    public void callbackSuccess(byte[] arg0) {
+                        ToastUtils.show(R.string.chat_message_send_success);
+                    }
+
+                    @Override
+                    public void callbackFail(String error, int responseCode) {
+                        ToastUtils.show(R.string.chat_message_send_fail);
+                    }
+                });
+            }
+
+            @Override
+            public void onWrapperMultiItemFailed() {
+
+            }
+        });
+
+
     }
 
     public void shareFileToFriendsFromVolume(final String volume, final String channel, final String path, final VolumeFile volumeFile) {
@@ -1909,7 +2024,6 @@ public class ChatAPIService {
 
     /**
      * 全部服务号列表
-     *
      */
     public void getConversationServiceAllList() {
         String url = APIUri.getConversationServiceListAllUrl();
@@ -1946,6 +2060,7 @@ public class ChatAPIService {
 
     /**
      * 请求关注、取消关注 服务号
+     *
      * @param serviceId
      */
     public void requestFollowOrRemoveConversationService(final String serviceId, final boolean followServiceAlready) {
@@ -1953,7 +2068,7 @@ public class ChatAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("serviceId", serviceId);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, followServiceAlready ?  CloudHttpMethod.DELETE : CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
+        HttpUtils.request(context, followServiceAlready ? CloudHttpMethod.DELETE : CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnFollowConversationServiceSuccess(new ServiceChannelInfo(JSONUtils.getJSONObject(new String(arg0))));
@@ -1985,7 +2100,6 @@ public class ChatAPIService {
 
     /**
      * 请求搜索服务号
-     *
      */
     public void requestSearchConversationService(final String serviceName) {
         String url = APIUri.getSearchConversationServiceUrl(serviceName);

@@ -323,6 +323,10 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         } else {
             getMyInfo();
         }
+        // 郑总token刷新失败分析日志
+        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+            PVCollectModelCacheUtils.saveCollectModel("returnOauthSignInSuccess", "---at---" + accessToken + "---rt---" + refreshToken);
+        }
     }
 
     @Override

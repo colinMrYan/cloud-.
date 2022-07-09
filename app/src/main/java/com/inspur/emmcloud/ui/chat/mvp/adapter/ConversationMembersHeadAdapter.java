@@ -38,6 +38,10 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         uidList = uiIidList;
     }
 
+    public void setOwner(String owner) {
+        this.mOwnerUid = owner;
+    }
+
     @Override
     public int getCount() {
         return uidList.size();

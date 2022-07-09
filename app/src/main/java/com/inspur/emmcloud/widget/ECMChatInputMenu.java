@@ -66,12 +66,12 @@ import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.IndexBaseActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
+import com.inspur.emmcloud.util.privates.PictureSelectorUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
@@ -956,7 +956,8 @@ public class ECMChatInputMenu extends LinearLayout {
                     InputTypeBean inputTypeBean = inputTypeBeanList.get(position);
                     switch (inputTypeBean.getAction()) {
                         case "gallery":
-                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT, true);
+//                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT, true);
+                            PictureSelectorUtils.getInstance().openGallery(getContext());
                             break;
                         case "camera":
 //                            String fileName = System.currentTimeMillis() + ".jpg";
@@ -1530,7 +1531,7 @@ public class ECMChatInputMenu extends LinearLayout {
         } else if (addMenuLayout.isShown()) {
             hideAddMenuLayout();
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
-            emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(),R.attr.ic_chat_button_emotion));
+            emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.ic_chat_button_emotion));
         }
 
     }
@@ -1544,7 +1545,7 @@ public class ECMChatInputMenu extends LinearLayout {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0, 0);
         addMenuLayout.setLayoutParams(params);
         addMenuLayout.setVisibility(View.GONE);
-        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(),R.attr.ic_chat_button_emotion));
+        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.ic_chat_button_emotion));
     }
 
     public void hideVoiceInputLayout() {

@@ -332,6 +332,14 @@ public class APIUri {
     }
 
     /**
+     * 群主转让
+     *
+     */
+    public static String getTransferGroupUrl() {
+        return getECMChatUrl() + "/rest/channel/group/owner/transfer";
+    }
+
+    /**
      * 消息免打扰
      *
      * @return
@@ -597,6 +605,13 @@ public class APIUri {
      */
     public static String getTransmitFileUrl(String channelId, String fileType) {
         return getECMChatUrl() + "/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
+    }
+
+    /**
+     * 获取转发转发消息接口
+     */
+    public static String getMultiMessageTransmitUrl() {
+        return getECMChatUrl() + "/rest/packet/message/batch/dispatch";
     }
 
 

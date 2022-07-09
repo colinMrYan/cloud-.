@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
@@ -23,6 +24,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
 import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -30,13 +33,17 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.bean.chat.TransferGroupBean;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -67,6 +74,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final int SELECT_STATE = 1;//选择人员
     public static final int MENTIONS_STATE = 2;//@人员选择
     public static final int CHECK_STATE = 3;//查看人员
+    public static final int GROUP_TRANSFER = 4;// 群主转让
     private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
     @BindView(R.id.sidrbar_channel_member_select)
     SideBar lettersSideBar;
@@ -174,6 +182,16 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     personDtoAdd.setUtype("");
                     personDtoAdd.setSortLetters("#");
                     personDtoList.add(0, personDtoAdd);
+                    Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
+                    while (personDtoIterator.hasNext()) {
+                        PersonDto personDto = personDtoIterator.next();
+                        if (personDto.getUid().equals(MyApplication.getInstance().getUid())) {
+                            personDtoIterator.remove();
+                            break;
+                        }
+                    }
+                }
+                if (state == GROUP_TRANSFER) {
                     Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
                     while (personDtoIterator.hasNext()) {
                         PersonDto personDto = personDtoIterator.next();
@@ -400,6 +418,19 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                         }
                         startActivity(intent);
                         break;
+
+                    case GROUP_TRANSFER:
+                        String uId = "";
+                        String uName = "";
+                        if (searchInputEv.getText().toString().length() > 0 || editText.getText().toString().length() > 0) {
+                            uId = filterList.get(position).getUid();
+                            uName = filterList.get(position).getName();
+                        } else {
+                            uId = personDtoList.get(position).getUid();
+                            uName = personDtoList.get(position).getName();
+                        }
+                        showTransferConfirmDialog(uId, uName);
+                        break;
                     default:
                         break;
                 }
@@ -420,6 +451,28 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                 }
             }
         });
+    }
+
+    // 群主转让确认dialog
+    private void showTransferConfirmDialog(final String uId, String uName) {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.transfer_group_tip, uName))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        loadingDlg.show();
+                        ChatAPIService apiService = new ChatAPIService(MembersActivity.this);
+                        apiService.setAPIInterface(new WebService());
+                        apiService.transferGroupOwner(channelId, uId);
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     /**
@@ -596,6 +649,22 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnTransferGroupSuccess(TransferGroupBean bean) {
+            loadingDlg.dismiss();
+            Intent intent = new Intent();
+            intent.putExtra("selectOwner", bean.getNewOwnerId());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+        @Override
+        public void returnTransferGroupFail(String error, int errorCode) {
+            loadingDlg.dismiss();
+        }
     }
 
     public class PinyinComparator implements Comparator<PersonDto> {
