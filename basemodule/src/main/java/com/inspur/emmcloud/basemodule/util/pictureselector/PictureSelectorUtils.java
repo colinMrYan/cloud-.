@@ -1,10 +1,10 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util.pictureselector;
 
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.media.luban.Luban;
@@ -50,15 +50,17 @@ public class PictureSelectorUtils {
         return mInstance;
     }
 
-
+    //打开相册画廊，默认打开方式
     public void openGallery(Context context) {
         openGallery(context, SelectMimeType.ofImage(),  DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
     }
 
+    //打开相册画廊
     public void openGallery(Context context, int selectionMode, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
         openGallery(context, selectionMode, true,true,false, maxImageNumber,maxVideoNumber, galleryCallbackNum);
     }
 
+    //打开相册画廊
     public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int GalleryCallbackNum) {
         PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
         selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
@@ -69,30 +71,37 @@ public class PictureSelectorUtils {
         selectionModel.forResult(GalleryCallbackNum);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context) {
         return getSelectionModel(context, SelectMimeType.ofAll(), true, true, false, 9, 9);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode) {
         return getSelectionModel(context, chooseMode, true, true, false, 9, 9);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, int maxVideoNumber) {
         return getSelectionModel(context, chooseMode, true, true, false, 9, maxVideoNumber);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, int maxImageNumber, int maxVideoNumber) {
         return getSelectionModel(context, chooseMode, true, true, false, maxImageNumber, maxVideoNumber);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         return getSelectionModel(context, chooseMode, true, true, displayCamera, maxImageNumber, maxVideoNumber);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         return getSelectionModel(context, chooseMode, true, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
     }
 
+    // 设置图片选择框架参数类
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         PictureSelectionModel selectionModel = PictureSelector.create(context)
                 // 目前只支持图片，后续完善视频
