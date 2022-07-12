@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.selector.adapter.PicturePreviewAdapter;
 import com.inspur.emmcloud.basemodule.media.selector.adapter.PicturePreviewSupportAdapter;
@@ -77,6 +78,9 @@ import com.inspur.emmcloud.basemodule.media.selector.widget.CompleteSelectView;
 import com.inspur.emmcloud.basemodule.media.selector.widget.PreviewBottomNavBar;
 import com.inspur.emmcloud.basemodule.media.selector.widget.PreviewTitleBar;
 import com.inspur.emmcloud.basemodule.media.selector.widget.TitleBar;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
+import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1026,7 +1030,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                     LocalMedia media = mData.get(viewPager.getCurrentItem());
                     PictureSelectionConfig.onEditMediaEventListener
                             .onStartMediaEdit(PictureSelectorPreviewFragment.this, media,
-                                    Crop.REQUEST_EDIT_CROP);
+                                    PictureSelectorUtils.REQ_IMAGE_EDIT);
                 }
             }
 
@@ -1481,9 +1485,10 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
     @Override
     public void onEditMedia(Intent data) {
         if (mData.size() > viewPager.getCurrentItem()) {
+            String filePath = AppUtils.refreshMediaInSystemStorage(getContext(), data.getStringExtra(IMGEditActivity.OUT_FILE_PATH));
             LocalMedia currentMedia = mData.get(viewPager.getCurrentItem());
-            Uri output = Crop.getOutput(data);
-            currentMedia.setCutPath(output != null ? output.getPath() : "");
+//            Uri output = Crop.getOutput(data);
+            currentMedia.setCutPath(StringUtils.isEmpty(filePath) ? "" : filePath);
             currentMedia.setCropImageWidth(Crop.getOutputImageWidth(data));
             currentMedia.setCropImageHeight(Crop.getOutputImageHeight(data));
             currentMedia.setCropOffsetX(Crop.getOutputImageOffsetX(data));
@@ -1531,4 +1536,4 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         }
         super.onDestroy();
     }
-}
+    }

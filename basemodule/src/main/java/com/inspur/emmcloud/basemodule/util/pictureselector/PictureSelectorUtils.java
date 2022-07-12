@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.basemodule.util.pictureselector;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 import com.inspur.emmcloud.basemodule.R;
@@ -20,7 +22,9 @@ import com.inspur.emmcloud.basemodule.media.selector.config.SelectModeConfig;
 import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
 import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
 import com.inspur.emmcloud.basemodule.media.selector.engine.UriToFileTransformEngine;
+import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnKeyValueResultCallbackListener;
+import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnMediaEditInterceptListener;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnSelectLimitTipsListener;
 import com.inspur.emmcloud.basemodule.media.selector.language.LanguageConfig;
 import com.inspur.emmcloud.basemodule.media.selector.style.BottomNavBarStyle;
@@ -29,6 +33,7 @@ import com.inspur.emmcloud.basemodule.media.selector.style.SelectMainStyle;
 import com.inspur.emmcloud.basemodule.media.selector.style.TitleBarStyle;
 import com.inspur.emmcloud.basemodule.media.selector.utils.DateUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SandboxTransformUtils;
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 
 
 import java.io.File;
@@ -39,6 +44,7 @@ public class PictureSelectorUtils {
     private static final int GALLERY_RESULT = 2;
     private static final int DEFAULT_IMAGE_NUMBER = 5;
     private static final int DEFAULT_VIDEO_NUMBER = 5;
+    public static final int REQ_IMAGE_EDIT = 10;
     public static PictureSelectorUtils getInstance() {
         if (mInstance == null) {
             synchronized (PictureSelectorUtils.class) {
@@ -119,8 +125,8 @@ public class PictureSelectorUtils {
                 // 录音相关 暂时不用
 //                                .setRecordAudioInterceptListener(new MeOnRecordAudioInterceptListener())
                 .setSelectLimitTipsListener(new MeOnSelectLimitTipsListener())
-                // 编辑 暂时不用
-//                                .setEditMediaInterceptListener(getCustomEditMediaEvent())
+                // 编辑图片
+                .setEditMediaInterceptListener(getCustomEditMediaEvent())
 //                .setPermissionDescriptionListener(getPermissionDescriptionListener())
                 // 自定义预览，不用
 //                .setPreviewInterceptListener(getPreviewInterceptListener())
@@ -345,6 +351,36 @@ public class PictureSelectorUtils {
                 return true;
             }
             return false;
+        }
+    }
+
+    /**
+     * 自定义编辑事件
+     *
+     * @return
+     */
+    private OnMediaEditInterceptListener getCustomEditMediaEvent() {
+        return new MeOnMediaEditInterceptListener();
+    }
+
+
+    /**
+     * 自定义编辑
+     */
+    private static class MeOnMediaEditInterceptListener implements OnMediaEditInterceptListener {
+
+        public MeOnMediaEditInterceptListener() {
+        }
+
+        @Override
+        public void onStartMediaEdit(Fragment fragment, LocalMedia currentLocalMedia, int requestCode) {
+            String currentEditPath = currentLocalMedia.getRealPath();
+            fragment.startActivityForResult(
+                    new Intent(fragment.getActivity(), IMGEditActivity.class)
+                            .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, currentEditPath)
+                            .putExtra(IMGEditActivity.OUT_FILE_PATH_IN_PICTURE, true)
+                            .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, 0), requestCode
+            );
         }
     }
 }

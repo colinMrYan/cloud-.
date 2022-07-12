@@ -30,6 +30,7 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     public static final int OP_CLIP = 1;
     public static final int OP_SUB_DOODLE = 0;
     public static final int OP_SUB_MOSAIC = 1;
+    public static final String OUT_FILE_PATH_IN_PICTURE = "OUT_FILE_PATH_IN_PICTURE";
     protected IMGView mImgView;
     private RadioGroup mModeGroup;
     private IMGColorGroup mColorGroup;
@@ -87,7 +88,12 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
         } else if (vid == R.id.btn_undo) {
             onUndoClick();
         } else if (vid == R.id.bt_done) {
-            onDoneClick();
+            boolean useSystemStorage = getIntent().getBooleanExtra(OUT_FILE_PATH_IN_PICTURE, false);
+            if (useSystemStorage) {
+                onDoneClickInSystemStorage();
+            } else {
+                onDoneClick();
+            }
         } else if (vid == R.id.ibt_back) {
             onCancelClick();
         } else if (vid == R.id.ib_clip_cancel) {
@@ -170,6 +176,8 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     public abstract void onCancelClick();
 
     public abstract void onDoneClick();
+
+    public abstract void onDoneClickInSystemStorage();
 
     public abstract void onCancelClipClick();
 

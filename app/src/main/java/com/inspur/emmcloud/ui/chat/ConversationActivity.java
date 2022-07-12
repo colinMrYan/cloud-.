@@ -1096,6 +1096,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                     for (LocalMedia media : mediaResult) {
                         Boolean originalPicture = media.isOriginal();
                         String mediaPath = media.getRealPath();
+                        if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+                            mediaPath = media.getCutPath();
+                        }
                         Compressor.ResolutionRatio resolutionRatio = null;
                         Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
                         if (originalPicture) {

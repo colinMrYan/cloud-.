@@ -73,6 +73,7 @@ import com.inspur.emmcloud.basemodule.media.selector.utils.SdkVersionUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SpUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.ToastUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.ValueOf;
+import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -1066,7 +1067,7 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PictureConfig.REQUEST_CAMERA) {
                 dispatchHandleCamera(data);
-            } else if (requestCode == Crop.REQUEST_EDIT_CROP) {
+            } else if (requestCode == PictureSelectorUtils.REQ_IMAGE_EDIT) {
                 onEditMedia(data);
             } else if (requestCode == Crop.REQUEST_CROP) {
                 List<LocalMedia> selectedResult = SelectedManager.getSelectedResult();
