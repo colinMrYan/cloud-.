@@ -42,7 +42,7 @@ import java.util.ArrayList;
 public class PictureSelectorUtils {
     private static PictureSelectorUtils mInstance;
     private static final int GALLERY_RESULT = 2;
-    private static final int DEFAULT_IMAGE_NUMBER = 5;
+    private static final int DEFAULT_IMAGE_NUMBER = 9;
     private static final int DEFAULT_VIDEO_NUMBER = 5;
     public static final int REQ_IMAGE_EDIT = 10;
     public static PictureSelectorUtils getInstance() {
@@ -155,15 +155,15 @@ public class PictureSelectorUtils {
                 // 显示顺序，默认即可
 //                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
                 // 时间轴
-                .isDisplayTimeAxis(true)
+                .isDisplayTimeAxis(isDisplayTimeAxis)
                 // 查询指定目录
                 .isOnlyObtainSandboxDir(false)
                 // 分页模式
                 .isPageStrategy(false)
                 // 原图功能
-                .isOriginalControl(true)
+                .isOriginalControl(useOriginalControl)
                 // 显示相机
-                .isDisplayCamera(false)
+                .isDisplayCamera(displayCamera)
                 // 开启点击声音
                 .isOpenClickSound(false)
                 // 剪裁默认不支持gif，webp
@@ -190,8 +190,8 @@ public class PictureSelectorUtils {
                 // 单选模式直接返回
 //                .isDirectReturnSingle()
                 // 图片，视频最多选择个数
-                .setMaxSelectNum(5)
-                .setMaxVideoSelectNum(5)
+                .setMaxSelectNum(maxImageNumber)
+                .setMaxVideoSelectNum(maxVideoNumber)
                 // 图片列表加载动画
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 // 是否显示gif，默认不显示
