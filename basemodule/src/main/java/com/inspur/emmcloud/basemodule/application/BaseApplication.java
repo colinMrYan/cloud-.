@@ -1,10 +1,12 @@
 package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -143,7 +145,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         if ("11487".equals(uid)) {
             // 郑总token刷新失败分析日志
-            PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + refreshToken);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                String processName = getProcessName();
+                PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + refreshToken + "---processName---" + processName);
+            }
         }
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
