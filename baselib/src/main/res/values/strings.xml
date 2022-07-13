@@ -1058,6 +1058,7 @@
     <string name="read_disappear">阅后即焚</string>
     <string name="voice_whisper">悄悄话</string>
     <string name="click_to_burn">点击查看</string>
+    <string name="multi_select_max_tip">聊天记录多选不能超过%1$s条</string>
     <string name="video_communication_turn_to_voice_call">切到语音通话</string>
     <string name="video_communication_switch_camera">切换摄像头</string>
     <string name="video_communication_waiting_answer">连接中...</string>

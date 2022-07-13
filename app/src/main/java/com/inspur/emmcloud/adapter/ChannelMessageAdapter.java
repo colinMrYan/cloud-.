@@ -22,6 +22,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
+import com.inspur.emmcloud.basemodule.media.selector.dialog.RemindDialog;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -59,6 +60,8 @@ import java.util.Set;
  */
 
 public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAdapter.ViewHolder> {
+
+    private static final Integer MAX_MULTI_SELECT_COUNT = 100;
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
@@ -311,7 +314,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     holder.bottomInfoTypeRight.setCompoundDrawables(iconDrawable, null, null, null);
                     holder.bottomInfoTypeRight.setBackgroundResource(bgDrawableId);
                     holder.bottomInfoTypeRight.setTextColor(context.getResources().getColor(textColor));
-                    holder.bottomInfoTypeRight.setText(whispers.isEmpty() ? context.getString(R.string.read_disappear) : context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+                    holder.bottomInfoTypeRight.setText(whispers.isEmpty() ? context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "") : context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
                 } else {
                     holder.bottomInfoTypeRight.setVisibility(View.GONE);
                     holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
@@ -647,6 +650,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     checkbox.setImageResource(R.drawable.ic_select_no);
                     mSelectedMessages.remove(uiMessage);
                 } else {
+                    if (mSelectedMessages.size() >= MAX_MULTI_SELECT_COUNT) {
+                        RemindDialog.buildDialog(context, context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "")).show();
+                        return true;
+                    }
                     checkbox.setImageResource(R.drawable.ic_select_yes);
                     mSelectedMessages.add(uiMessage);
                 }
