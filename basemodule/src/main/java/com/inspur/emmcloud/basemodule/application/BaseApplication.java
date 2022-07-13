@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
@@ -138,11 +140,16 @@ public abstract class BaseApplication extends MultiDexApplication {
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 Constant.PREF_IS_CONTACT_READY, false);
         uid = PreferencesUtils.getString(getInstance(), "userID");
-        accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
-        refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+//        accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
+//        refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+        accessToken = PreferencesProvider.getString(getInstance(), "accessToken", "");
+        refreshToken = PreferencesProvider.getString(getInstance(), "refreshToken", "");
         if ("11487".equals(uid)) {
             // 郑总token刷新失败分析日志
-            PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + refreshToken);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                String processName = getProcessName();
+                PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + this.refreshToken + "---processName---" + processName);
+            }
         }
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
@@ -363,8 +370,10 @@ public abstract class BaseApplication extends MultiDexApplication {
                 tanent = currentEnterprise.getCode();
             } else {
                 PreferencesUtils.putString(getInstance(), "myInfo", "");
-                PreferencesUtils.putString(getInstance(), "accessToken", "");
-                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+//                PreferencesUtils.putString(getInstance(), "accessToken", "");
+//                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+                PreferencesProvider.save(getInstance(),"accessToken","");
+                PreferencesProvider.save(getInstance(),"refreshToken","");
                 PreferencesUtils.putInt(getInstance(), "keepAlive", 0);
                 PreferencesUtils.putString(getInstance(), "tokenType", "");
                 PreferencesUtils.putInt(getInstance(), "expiresIn", 0);

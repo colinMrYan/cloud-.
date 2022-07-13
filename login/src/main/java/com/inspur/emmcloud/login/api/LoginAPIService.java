@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -599,7 +600,8 @@ public class LoginAPIService {
         final String completeUrl = LoginAPIUri.getUploadMDMInfoUrl();
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("udid", AppUtils.getMyUUID(context));
-        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+//        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+        String refreshToken = PreferencesProvider.getString(context, "refreshToken", "");
         params.addParameter("refresh_token", refreshToken);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override

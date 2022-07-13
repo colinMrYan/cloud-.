@@ -10,6 +10,7 @@ import android.os.Handler;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -32,8 +33,10 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
     public void logout(Context context) {
         OauthUtils.getInstance().cancelToken();
         PreferencesUtils.putString(context, "myInfo", "");
-        PreferencesUtils.putString(context, "accessToken", "");
-        PreferencesUtils.putString(context, "refreshToken", "");
+//        PreferencesUtils.putString(context, "accessToken", "");
+//        PreferencesUtils.putString(context, "refreshToken", "");
+        PreferencesProvider.save(context, "accessToken", "");
+        PreferencesProvider.save(context, "refreshToken", "");
         PreferencesUtils.putString(context, "userRealName", "");
         PreferencesUtils.putString(context, "userID", "");
         BaseApplication.getInstance().setAccessToken("");

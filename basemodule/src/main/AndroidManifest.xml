@@ -180,6 +180,11 @@
                 android:resource="@xml/video_provider_paths"></meta-data>
         </provider>
 
+        <provider
+            android:name=".provider.PreferencesProvider"
+            android:authorities="com.inspur.emmcloud.fileprovider"
+            android:exported="false" />
+
         <!-- Required SDK核心功能-->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
