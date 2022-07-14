@@ -8,11 +8,10 @@
 
     <ImageView
         android:id="@+id/chat_msg_checkbox"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="5dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="4dp"
-        android:padding="3dp"
         android:scaleType="fitXY"
         android:layout_alignTop="@+id/chat_msg_send_content"
         android:src="@drawable/ic_select_yes"
