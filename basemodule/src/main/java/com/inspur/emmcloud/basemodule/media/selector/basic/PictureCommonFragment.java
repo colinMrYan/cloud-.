@@ -1459,41 +1459,43 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
 
     @Override
     public void onCompress(final ArrayList<LocalMedia> result) {
+        // 文件压缩放到聊天界面处理
         showLoading();
-        final ConcurrentHashMap<String, LocalMedia> queue = new ConcurrentHashMap<>();
-        ArrayList<Uri> source = new ArrayList<>();
-        for (int i = 0; i < result.size(); i++) {
-            LocalMedia media = result.get(i);
-            if (PictureMimeType.isHasImage(media.getMimeType())) {
-                String availablePath = media.getAvailablePath();
-                Uri uri = PictureMimeType.isContent(availablePath) ? Uri.parse(availablePath) : Uri.fromFile(new File(availablePath));
-                source.add(uri);
-                queue.put(availablePath, media);
-            }
-        }
-        if (queue.size() == 0) {
-            onResultEvent(result);
-        } else {
-            PictureSelectionConfig.compressFileEngine.onStartCompress(getContext(), source, new OnKeyValueResultCallbackListener() {
-                @Override
-                public void onCallback(String srcPath, String compressPath) {
-                    if (TextUtils.isEmpty(srcPath)) {
-                        onResultEvent(result);
-                    } else {
-                        LocalMedia media = queue.get(srcPath);
-                        if (media != null) {
-                            media.setCompressPath(compressPath);
-                            media.setCompressed(!TextUtils.isEmpty(compressPath));
-                            media.setSandboxPath(SdkVersionUtils.isQ() ? media.getCompressPath() : null);
-                            queue.remove(srcPath);
-                        }
-                        if (queue.size() == 0) {
-                            onResultEvent(result);
-                        }
-                    }
-                }
-            });
-        }
+        onResultEvent(result);
+//        final ConcurrentHashMap<String, LocalMedia> queue = new ConcurrentHashMap<>();
+//        ArrayList<Uri> source = new ArrayList<>();
+//        for (int i = 0; i < result.size(); i++) {
+//            LocalMedia media = result.get(i);
+//            if (PictureMimeType.isHasImage(media.getMimeType())) {
+//                String availablePath = media.getAvailablePath();
+//                Uri uri = PictureMimeType.isContent(availablePath) ? Uri.parse(availablePath) : Uri.fromFile(new File(availablePath));
+//                source.add(uri);
+//                queue.put(availablePath, media);
+//            }
+//        }
+//        if (queue.size() == 0) {
+//            onResultEvent(result);
+//        } else {
+//            PictureSelectionConfig.compressFileEngine.onStartCompress(getContext(), source, new OnKeyValueResultCallbackListener() {
+//                @Override
+//                public void onCallback(String srcPath, String compressPath) {
+//                    if (TextUtils.isEmpty(srcPath)) {
+//                        onResultEvent(result);
+//                    } else {
+//                        LocalMedia media = queue.get(srcPath);
+//                        if (media != null) {
+//                            media.setCompressPath(compressPath);
+//                            media.setCompressed(!TextUtils.isEmpty(compressPath));
+//                            media.setSandboxPath(SdkVersionUtils.isQ() ? media.getCompressPath() : null);
+//                            queue.remove(srcPath);
+//                        }
+//                        if (queue.size() == 0) {
+//                            onResultEvent(result);
+//                        }
+//                    }
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -1740,7 +1742,7 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
             queue.put(media.getPath(), media);
         }
         if (queue.size() == 0) {
-            dispatchUriToFileTransformResult(result);
+        dispatchUriToFileTransformResult(result);
         } else {
             PictureThreadUtils.executeByIo(new PictureThreadUtils.SimpleTask<ArrayList<LocalMedia>>() {
 

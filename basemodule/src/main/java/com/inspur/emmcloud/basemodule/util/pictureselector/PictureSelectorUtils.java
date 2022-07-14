@@ -293,7 +293,7 @@ public class PictureSelectorUtils {
     /**
      * 自定义压缩
      */
-    private static class ImageFileCompressEngine implements CompressFileEngine {
+    public static class ImageFileCompressEngine implements CompressFileEngine {
 
         @Override
         public void onStartCompress(Context context, ArrayList<Uri> source, final OnKeyValueResultCallbackListener call) {

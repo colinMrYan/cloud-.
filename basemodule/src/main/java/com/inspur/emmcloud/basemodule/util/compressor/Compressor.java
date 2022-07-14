@@ -107,6 +107,14 @@ public class Compressor {
         return resolutionRatio;
     }
 
+    // 创建已知宽高的ResolutionRatio对象
+    public ResolutionRatio getResolutionRation(int width, int height) {
+        ResolutionRatio resolutionRatio = new ResolutionRatio();
+        resolutionRatio.setHigh(height);
+        resolutionRatio.setWidth(width);
+        return resolutionRatio;
+    }
+
     public class ResolutionRatio {
         private int high = 0;
         private int width = 0;

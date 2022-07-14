@@ -56,8 +56,11 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
-import com.inspur.emmcloud.basemodule.media.selector.config.PictureConfig;
+import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
+import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
+import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnKeyValueResultCallbackListener;
+import com.inspur.emmcloud.basemodule.media.selector.utils.SdkVersionUtils;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
@@ -75,6 +78,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -135,6 +139,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 
@@ -205,6 +210,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     private UIMessage backUiMessage = null;
     private UserOrientedConversationHelper userOrientedConversationHelper;
+    private CompressFileEngine compressFileEngine = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1090,31 +1096,96 @@ public class ConversationActivity extends ConversationBaseActivity {
                         default:
                             break;
                     }
+                    break;
 //                case PictureConfig.CHOOSE_REQUEST:
                 case REQUEST_GELLARY:
-                    ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(data);
-                    for (LocalMedia media : mediaResult) {
-                        Boolean originalPicture = media.isOriginal();
-                        String mediaPath = media.getRealPath();
-                        if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
-                            mediaPath = media.getCutPath();
-                        }
-                        Compressor.ResolutionRatio resolutionRatio = null;
-                        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
-                        if (originalPicture) {
-                            resolutionRatio = compressor.getResolutionRation(new File(mediaPath));
-                        } else {
-                            try {
-                                File file = compressor.compressToFile(new File(mediaPath));
-                                mediaPath = file.getAbsolutePath();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+//                    ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(data);
+//                    for (LocalMedia media : mediaResult) {
+//                        Boolean originalPicture = media.isOriginal();
+//                        String mediaPath = media.getRealPath();
+//                        if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+//                            mediaPath = media.getCutPath();
+//                        }
+//                        Compressor.ResolutionRatio resolutionRatio = null;
+//                        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+//                        if (originalPicture) {
+//                            resolutionRatio = compressor.getResolutionRation(new File(mediaPath));
+//                        } else {
+//                            try {
+//                                File file = compressor.compressToFile(new File(mediaPath));
+//                                mediaPath = file.getAbsolutePath();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
+//                    }
+                    // 图片、视频的上传、压缩过程耗时，使用子线程做耗时操作
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(data);
+                            if (mediaResult.isEmpty()) {
+                                return;
+                            }
+                            // 判断是否发送原始图片，原始图片不做压缩
+                            boolean isOriginImg = mediaResult.get(0).isOriginal();
+                            if (isOriginImg) {
+                                for (LocalMedia media : mediaResult) {
+                                    Compressor.ResolutionRatio resolutionRatio = null;
+                                    Compressor compressor = new Compressor(ConversationActivity.this);
+                                    compressor.getResolutionRation(media.getWidth(), media.getHeight());
+                                    String mediaPath = media.getRealPath();
+                                    if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+                                        mediaPath = media.getCutPath();
+                                    }
+                                    combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
+                                }
+                            } else {
+                                ArrayList<Uri> source = new ArrayList<>();
+                                final ConcurrentHashMap<String, LocalMedia> queue = new ConcurrentHashMap<>();
+                                for (int i = 0; i < mediaResult.size(); i++) {
+                                    LocalMedia media = mediaResult.get(i);
+                                    if (PictureMimeType.isHasImage(media.getMimeType())) {
+                                        String availablePath = media.getAvailablePath();
+                                        Uri uri = PictureMimeType.isContent(availablePath) ? Uri.parse(availablePath) : Uri.fromFile(new File(availablePath));
+                                        source.add(uri);
+                                        queue.put(availablePath, media);
+                                    }
+                                }
+                                if (queue.size() == 0) {
+                                    return;
+                                }
+                                createCompressEngine();
+                                //使用鲁班压缩压缩图片
+                                compressFileEngine.onStartCompress(ConversationActivity.this, source, new OnKeyValueResultCallbackListener() {
+                                    @Override
+                                    public void onCallback(String srcPath, String compressPath) {
+                                        if (TextUtils.isEmpty(srcPath)) {
+                                        } else {
+                                            LocalMedia media = queue.get(srcPath);
+                                            if (media != null) {
+                                                media.setCompressPath(compressPath);
+                                                media.setCompressed(!TextUtils.isEmpty(compressPath));
+                                                media.setSandboxPath(SdkVersionUtils.isQ() ? media.getCompressPath() : null);
+                                                String mediaPath = media.getRealPath();
+                                                if (media.isCompressed()) {
+                                                    mediaPath = media.getCompressPath();
+                                                }
+                                                if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+                                                    mediaPath = media.getCutPath();
+                                                }
+                                                combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                                                queue.remove(srcPath);
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
-                        combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
-                    }
+                    }).start();
                     break;
-                    //去掉主动弹出窗口
+                //去掉主动弹出窗口
 //                case REQUEST_WINDOW_PERMISSION:
 //                    if (Build.VERSION.SDK_INT >= 23 ) {
 //                        if(!Settings.canDrawOverlays(this)){
@@ -1157,7 +1228,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 e.printStackTrace();
                             }
                         }
-
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
                     }
                 }
@@ -1182,6 +1252,12 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                    showRequestBackGroundDialog();
 //                }
 //            }
+        }
+    }
+
+    private void createCompressEngine() {
+        if (compressFileEngine == null) {
+            compressFileEngine = new PictureSelectorUtils.ImageFileCompressEngine();
         }
     }
 
@@ -1243,7 +1319,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             ToastUtils.show(MyApplication.getInstance(), R.string.baselib_file_not_exist);
             return;
         }
-        Message fakeMessage = null;
+        final Message fakeMessage;
         switch (messageType) {
             case MESSAGE_TYPE_FILE_REGULAR_FILE:
                 fakeMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
@@ -1254,10 +1330,18 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
                 break;
+            default:
+                fakeMessage = null;
         }
+        // 创建消息需要测量图片、视频尺寸，获取宽高数据，将此类耗时操作放到子线程处理
         if (fakeMessage != null) {
-            addLocalMessage(fakeMessage, 0);
-            MessageSendManager.getInstance().sendMessage(fakeMessage);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addLocalMessage(fakeMessage, 0);
+                    MessageSendManager.getInstance().sendMessage(fakeMessage);
+                }
+            });
         }
     }
 
