@@ -2,18 +2,21 @@ package com.inspur.emmcloud.basemodule.media.selector.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 
 /**
  * @author：luck
  * @date：2021/11/19 5:11 下午
- * @describe：RemindDialog
+ * @describe：RemindDialog 公用提示dialog
  */
 public class RemindDialog extends Dialog implements View.OnClickListener {
     private final TextView btnOk;
@@ -21,10 +24,17 @@ public class RemindDialog extends Dialog implements View.OnClickListener {
 
     public RemindDialog(Context context, String tips) {
         super(context, R.style.Picture_Theme_Dialog);
-        setContentView(R.layout.ps_remind_dialog);
+        setContentView(R.layout.common_remind_dialog);
+        LinearLayout rootLl = findViewById(R.id.ll_root);
         btnOk = findViewById(R.id.btnOk);
         tvContent = findViewById(R.id.tv_content);
+        View lineBottom = findViewById(R.id.bottom_line);
         tvContent.setText(tips);
+        rootLl.setBackground(DarkUtil.isDarkTheme() ? context.getDrawable(R.drawable.ps_dialog_shadow_dark) :
+                context.getDrawable(R.drawable.ps_dialog_shadow));
+        lineBottom.setBackgroundColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#383838" : "#dddddd"));
+        btnOk.setTextColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#FFFFFF" : "#333333"));
+        tvContent.setTextColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#FFFFFF" : "#333333"));
         btnOk.setOnClickListener(this);
         setDialogSize();
     }

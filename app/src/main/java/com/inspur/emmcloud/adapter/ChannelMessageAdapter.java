@@ -13,20 +13,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amazonaws.mobile.auth.core.signin.ui.DisplayUtils;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
+import com.inspur.emmcloud.basemodule.media.selector.dialog.RemindDialog;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
@@ -35,6 +36,7 @@ import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
+import com.inspur.emmcloud.ui.chat.DisplayMultiMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
@@ -46,7 +48,6 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.umeng.socialize.utils.UmengText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,6 +60,8 @@ import java.util.Set;
  */
 
 public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAdapter.ViewHolder> {
+
+    private static final Integer MAX_MULTI_SELECT_COUNT = 100;
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
@@ -67,6 +70,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private ArrayList<String> mExceptSelfMemberList = new ArrayList<>();
     private String uid = BaseApplication.getInstance().getUid();
     private boolean serviceConversation = false;
+    private boolean mMultipleSelect;
+
+    private Set<UIMessage> mSelectedMessages = new HashSet<>();
+
 
     public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList, boolean isServiceCoversation) {
         this.context = context;
@@ -173,7 +180,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 holder.sendingLoadingView.setVisibility(View.GONE);
             } else {
                 boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-                holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
+                holder.sendStatusLayout.setVisibility(isMyMsg ? (mMultipleSelect ? View.GONE : View.INVISIBLE) : View.GONE);
+                RelativeLayout.LayoutParams cardLayoutParams = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
+                cardLayoutParams.leftMargin = DensityUtil.dip2px(mMultipleSelect ? 15 : 5);
+                holder.cardLayout.setLayoutParams(cardLayoutParams);
             }
             holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -192,8 +202,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      *
      * @param holder
      */
-    private void showCardLayout(ViewHolder holder, final UIMessage uiMessage) {
-        // TODO Auto-generated method stub
+    private void showCardLayout(final ViewHolder holder, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
@@ -208,6 +217,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         }
         holder.cardParentLayout.setLayoutParams(params);
+        holder.checkbox.setVisibility(mMultipleSelect ? View.VISIBLE : View.GONE);
+        if (supportMultiSelect(uiMessage)) {
+            holder.checkbox.setImageResource(mSelectedMessages.contains(uiMessage) ? R.drawable.ic_select_yes :
+                    (DarkUtil.isDarkTheme() ? R.drawable.ic_select_no_dark : R.drawable.ic_select_no));
+        } else {
+            holder.checkbox.setImageResource(DarkUtil.isDarkTheme() ? R.drawable.ic_not_select_dark : R.drawable.ic_not_select);
+        }
+
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         View cardContentView = null;
@@ -255,6 +272,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
                     break;
+                case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
+                    cardContentView = DisplayMultiMsg.getView(context, uiMessage);
+                    break;
                 default:
                     cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                     break;
@@ -271,8 +291,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             cardContentView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onCardItemClick(view, uiMessage);
+                    if (!dealMultiClick(holder.checkbox, uiMessage)) {
+                        if (mItemClickListener != null) {
+                            mItemClickListener.onCardItemClick(view, uiMessage);
+                        }
                     }
                 }
             });
@@ -378,7 +400,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param position
      */
     private void showMsgSendTime(ViewHolder holder, UIMessage UIMessage, int position) {
-        // TODO Auto-generated method stub
         long lastMessageCreationDate = 0;
         if (position != 0) {
             lastMessageCreationDate = UIMessageList.get(position - 1).getCreationDate();
@@ -432,11 +453,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      */
     private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
-        // TODO Auto-generated method stub
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
         if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
-            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : (mMultipleSelect ? View.GONE : View.INVISIBLE));
             holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
         } else {
             holder.senderPhotoImgRight.setVisibility(View.GONE);
@@ -503,6 +523,34 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         }
     }
 
+    public void toggleMultipleSelect(boolean b) {
+        if (b && !mMultipleSelect) {
+            mSelectedMessages.clear();
+        }
+        mMultipleSelect = b;
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
+    private boolean supportMultiSelect(UIMessage uiMessage) {
+        Message message = uiMessage.getMessage();
+        String type = message.getType();
+        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+            return false;
+        }
+        if (type.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || type.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
+                || type.equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+            return true;
+        }
+        if (type.equals(Message.MESSAGE_TYPE_TEXT_PLAIN)) {
+            String textMsgType = message.getMsgContentTextPlain().getMsgType();
+            if (Message.MESSAGE_TYPE_TEXT_BURN.equals(textMsgType)) {
+                return false;
+            }
+            return message.getMsgContentTextPlain().getWhisperUsers().isEmpty();
+        }
+        return false;
+    }
+
     /**
      * 创建一个回调接口
      */
@@ -532,6 +580,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public TextView bottomInfoTypeLeft;
         public TextView bottomInfoTypeRight;
         public RelativeLayout cardParentLayout;
+        public ImageView checkbox;
         private MyItemClickListener mListener;
         public TextView unreadText;
 
@@ -561,6 +610,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             unreadText = (TextView) view
                     .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+            checkbox = view.findViewById(R.id.chat_msg_checkbox);
             itemView.setOnClickListener(this);
 
         }
@@ -572,11 +622,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            if (mItemClickListener != null && position != -1) {
-                mItemClickListener.onCardItemLayoutClick(v, UIMessageList.get(getAdapterPosition()));
+            if (!dealMultiClick((ImageView) v.findViewById(R.id.chat_msg_checkbox), UIMessageList.get(getAdapterPosition()))) {
+                int position = getAdapterPosition();
+                if (mItemClickListener != null && position != -1) {
+                    mItemClickListener.onCardItemLayoutClick(v, UIMessageList.get(getAdapterPosition()));
+                }
             }
-
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {
@@ -585,5 +636,30 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             }
 
         }
+    }
+
+    public Set<UIMessage> getSelectedMessages() {
+        return mSelectedMessages;
+    }
+
+
+    private boolean dealMultiClick(ImageView checkbox, UIMessage uiMessage) {
+        if (mMultipleSelect) {
+            if (supportMultiSelect(uiMessage)) {
+                if (mSelectedMessages.contains(uiMessage)) {
+                    checkbox.setImageResource(R.drawable.ic_select_no);
+                    mSelectedMessages.remove(uiMessage);
+                } else {
+                    if (mSelectedMessages.size() >= MAX_MULTI_SELECT_COUNT) {
+                        RemindDialog.buildDialog(context, context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "")).show();
+                        return true;
+                    }
+                    checkbox.setImageResource(R.drawable.ic_select_yes);
+                    mSelectedMessages.add(uiMessage);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

@@ -163,7 +163,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         List<DownloadInfo> downloadInfoList = ChatFileDownloadManager.getInstance().getAllChatFileDownloadList();
         if (NetUtils.isNetworkConnected(this)) {
             for (DownloadInfo item : downloadInfoList) {
-                if (item.getFileId().equals(downloadInfo.getFileId())) {
+                if (downloadInfo.getFileId().equals(item.getFileId())) {
                     ChatFileDownloadManager.getInstance().reDownloadFile(downloadInfo);
                     setProgressListener(downloadInfo);
                     return;

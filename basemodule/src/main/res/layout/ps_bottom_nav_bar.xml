@@ -30,7 +30,7 @@
         android:paddingBottom="10dp"
         android:text="@string/ps_editor"
         android:textColor="@color/ps_color_white"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:visibility="gone" />
 
     <CheckBox

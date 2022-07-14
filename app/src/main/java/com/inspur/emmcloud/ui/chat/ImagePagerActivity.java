@@ -69,6 +69,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String PHOTO_SELECT_Y_TAG = "PHOTO_SELECT_Y_TAG";
     public static final String PHOTO_SELECT_W_TAG = "PHOTO_SELECT_W_TAG";
     public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
+    public static final String EXTRA_NEED_SHOW_COMMENT = "EXTRA_NEED_SHOW_COMMENT";
     private static final int RESULT_MENTIONS = 5;
     private static final int CHECK_IMG_COMMENT = 1;
     public static final String EXTRA_CHANNEL_ID = "channelId";
@@ -143,13 +144,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
-            (findViewById(R.id.comment_count_text)).setVisibility(View.VISIBLE);
-            (findViewById(R.id.enter_channel_imgs_img)).setVisibility(View.VISIBLE);
-            (findViewById(R.id.write_comment_layout)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.comment_count_text)).setVisibility(getIntent().getBooleanExtra(EXTRA_NEED_SHOW_COMMENT, true) ? View.VISIBLE : View.GONE);
+            (findViewById(R.id.enter_channel_imgs_img)).setVisibility(getIntent().getBooleanExtra(EXTRA_NEED_SHOW_COMMENT, true) ? View.VISIBLE : View.GONE);
+            (findViewById(R.id.write_comment_layout)).setVisibility(getIntent().getBooleanExtra(EXTRA_NEED_SHOW_COMMENT, true) ? View.VISIBLE : View.GONE);
             cid = imgTypeMessageList.get(0).getChannel();
             commentCountText = (TextView) findViewById(R.id.comment_count_text);
-            commentCountll =  findViewById(R.id.comment_count_text_ll);
-            commentCountll.setVisibility(View.VISIBLE);
+            commentCountll = findViewById(R.id.comment_count_text_ll);
+            commentCountll.setVisibility(getIntent().getBooleanExtra(EXTRA_NEED_SHOW_COMMENT, true) ? View.VISIBLE : View.GONE);
         }
 
         initEcmChatInputMenu();

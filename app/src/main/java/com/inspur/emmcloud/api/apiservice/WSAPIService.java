@@ -14,6 +14,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by chenmch on 2018/4/28.
@@ -73,6 +75,9 @@ public class WSAPIService {
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 sendChatMediaImageMsg(fakeMessage);
                 break;
+            case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
+                sendChatMultiMsg(fakeMessage);
+                break;
         }
 
     }
@@ -106,6 +111,37 @@ public class WSAPIService {
             e.printStackTrace();
         }
     }
+
+    private void sendChatMultiMsg(Message fakeMessage) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", fakeMessage.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
+            bodyObj.put("type", Message.MESSAGE_TYPE_COMPLEX_MESSAGE);
+            JSONObject jsonObject = new JSONObject(fakeMessage.getContent());
+            bodyObj.put("messageList", jsonObject.optJSONArray("messageList"));
+            Map<String, String> mentionsMap = msgContentTextPlain.getMentionsMap();
+            if (mentionsMap != null && mentionsMap.size() > 0) {
+                JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
+                bodyObj.put("mentions", mentionsObj);
+            }
+            bodyObj.put("tmpId", fakeMessage.getId());
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendChatTextWhisperMsg(Message fakeMessage) {
         try {

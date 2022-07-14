@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.location.LocationManager;
+import android.media.MediaScannerConnection;
 import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Binder;
@@ -1185,6 +1186,31 @@ public class AppUtils {
         }
 
 
+    }
+
+    /**
+     * 通知图库更新图片
+     *
+     * @param context
+     * @param fileCursorPath
+     */
+    public static String refreshMediaInSystemStorage(Context context, final String fileCursorPath) {
+        if (StringUtils.isEmpty(fileCursorPath)) return null;
+        ContentResolver cr = context.getContentResolver();
+        Uri photoUri = Uri.parse(fileCursorPath);
+        String[] projection = new String[]{MediaStore.Audio.Media.DATA};
+        Cursor cursor = cr.query(photoUri, projection, null, null, null);
+        if (cursor == null || !cursor.moveToFirst()) {
+            return null;
+        }
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        String photoPath = cursor.getString(index);
+        cursor.close();
+        if (!StringUtils.isEmpty(photoPath)) {
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri));
+            MediaScannerConnection.scanFile(context, new String[]{photoPath}, null, null);
+        }
+        return photoPath;
     }
 
     /**
