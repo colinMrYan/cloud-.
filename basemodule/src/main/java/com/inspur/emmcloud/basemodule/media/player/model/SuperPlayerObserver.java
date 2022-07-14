@@ -47,29 +47,8 @@ public abstract class SuperPlayerObserver {
     public void onPlayProgress(long current, long duration) {
     }
 
-    public void onSeek(int position) {
-    }
-
-//    public void onSwitchStreamStart(boolean success, SuperPlayerDef.PlayerType playerType, VideoQuality quality) {
-//    }
-
-//    public void onSwitchStreamEnd(boolean success, SuperPlayerDef.PlayerType playerType, VideoQuality quality) {
-//    }
-
     public void onError(int code, String message) {
     }
-
-    public void onPlayerTypeChange(SuperPlayerDef.PlayerType playType) {
-    }
-
-    public void onPlayTimeShiftLive(TXLivePlayer player, String url) {
-    }
-
-//    public void onVideoQualityListChange(List<VideoQuality> videoQualities, VideoQuality defaultVideoQuality) {
-//    }
-
-//    public void onVideoImageSpriteAndKeyFrameChanged(PlayImageSpriteInfo info, List<PlayKeyFrameDescInfo> list) {
-//    }
 
     public void onRcvFirstIframe() {
 

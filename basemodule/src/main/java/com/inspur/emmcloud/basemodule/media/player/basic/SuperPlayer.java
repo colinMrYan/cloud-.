@@ -95,7 +95,7 @@ public interface SuperPlayer {
      * {@link SuperPlayerDef.PlayerType#LIVE_SHIFT  }       直播时移
      * {@link SuperPlayerDef.PlayerType#VOD  }              点播
      */
-    SuperPlayerDef.PlayerType getPlayerType();
+//    SuperPlayerDef.PlayerType getPlayerType();
 
     /**
      * 设置播放器状态回调
