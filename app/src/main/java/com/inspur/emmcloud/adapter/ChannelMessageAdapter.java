@@ -314,7 +314,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     holder.bottomInfoTypeRight.setCompoundDrawables(iconDrawable, null, null, null);
                     holder.bottomInfoTypeRight.setBackgroundResource(bgDrawableId);
                     holder.bottomInfoTypeRight.setTextColor(context.getResources().getColor(textColor));
-                    holder.bottomInfoTypeRight.setText(whispers.isEmpty() ? context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "") : context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
+                    holder.bottomInfoTypeRight.setText(whispers.isEmpty() ? context.getString(R.string.read_disappear) : context.getString(R.string.chat_whisper, createChannelGroupName(whispers)));
                 } else {
                     holder.bottomInfoTypeRight.setVisibility(View.GONE);
                     holder.bottomInfoTypeLeft.setVisibility(View.VISIBLE);
