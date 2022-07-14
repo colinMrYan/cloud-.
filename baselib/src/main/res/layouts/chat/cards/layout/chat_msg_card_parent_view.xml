@@ -11,7 +11,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="9dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="9dp"
         android:scaleType="fitXY"
         android:layout_alignTop="@+id/chat_msg_send_content"
         android:src="@drawable/ic_select_yes"
