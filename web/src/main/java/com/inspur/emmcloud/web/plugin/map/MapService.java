@@ -137,6 +137,7 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sName", "");
             String toName = JSONUtils.getString(optionsObj, "dName", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -168,7 +169,7 @@ public class MapService extends ImpPlugin {
             if (!StringUtils.isBlank(toName)) {
                 builder.append("&dname=").append(toName);
             }
-            builder.append("&dev=0&t=1");
+            builder.append("&dev=0&t=").append(transportation);
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -197,6 +198,7 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sName", "");
             String toName = JSONUtils.getString(optionsObj, "dName", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
             if (coordType.equals("BD09")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
@@ -223,7 +225,7 @@ public class MapService extends ImpPlugin {
                 builder.append("&origin=").append(fromLatitude).append(",").append(fromLongitude);
             }
             builder.append("&destination=").append(toLatitude).append(",").append(toLongitude);
-            builder.append("&mode=transit");
+            builder.append("&mode=").append(transportation == 0 ? "driving" : transportation == 2? "walking" : "transit");
             builder.append("&src=").append(getFragmentContext().getPackageName());
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage(MAP_BAIDU_APPID);
@@ -253,6 +255,7 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sName", "");
             String toName = JSONUtils.getString(optionsObj, "dName", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLatitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -273,7 +276,7 @@ public class MapService extends ImpPlugin {
                 toLatitude = toLocation[1];
             }
             StringBuilder builder = new StringBuilder("qqmap://map/routeplan");
-            builder.append("?type=bus");
+            builder.append("?type=").append(transportation == 0 ? "drive" : transportation == 2? "walk" : "bus");
             if (!StringUtils.isBlank(fromName)) {
                 builder.append("&from=").append(fromName);
             }
