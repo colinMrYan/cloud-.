@@ -69,7 +69,6 @@ import com.inspur.emmcloud.ui.chat.emotion.EmotionAdapter;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionRecentManager;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
-import com.inspur.emmcloud.util.privates.PictureSelectorUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.VoiceCommunicationManager;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
