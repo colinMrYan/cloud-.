@@ -261,7 +261,7 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
         isNeedResume = false;
         if (mVodPlayer != null) {
             mVodPlayer.setVodListener(null);
-            mVodPlayer.stopPlay(false);
+            mVodPlayer.stopPlay(true);
         }
     }
 
