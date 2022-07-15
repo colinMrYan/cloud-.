@@ -43,16 +43,15 @@ import org.xutils.x;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -343,45 +342,34 @@ public class FileTransferService extends ImpPlugin {
         blockImageCallBack = JSONUtils.getString(paramsObject, "success", "");
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 0);
-        int persistentStorage = JSONUtils.getInt(optionsJsonObject, "blockSize", 0);
+        // 绝对路径、相对路径
+        int persistentStorage = JSONUtils.getInt(optionsJsonObject, "persistentStorage", 0);
         String filePath = JSONUtils.getString(optionsJsonObject, "filePath", "");
         uploadFileInBlock(filePath, blockSize);
     }
 
     /**
-     * @param offset 偏移量
-     * @param file  分块文件
+     * @param offset    偏移量
      * @param blockSize 每块的大小
-     * @return  这一片的数据
+     * @return 这一片的数据
      */
-    private byte[] getBlock(long offset, File file, int blockSize) {
-        byte[] result = new byte[blockSize];
-        try (RandomAccessFile accessFile = new RandomAccessFile(file, "r")) {
-            accessFile.seek(offset);
-            int readSize = accessFile.read(result);
-            if (readSize == -1) {
-                return null;
-            } else if (readSize == blockSize) {
-                return result;
-            } else {
-                byte[] byteArray = new byte[readSize];
-                System.arraycopy(result, 0, byteArray, 0, readSize);
-                return byteArray;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private String getBlock(int offset, int blockSize, String base64Str) {
+        return base64Str.substring(offset, blockSize);
     }
 
     private void uploadFileInBlock(String filePath, int blockSize) {
         // imp方法接受文件名称，
-        File file = new File(filePath);
-        if (file.exists()) {
+        String base64Stream = null;
+        try {
+            base64Stream = Base64Utils.encodeBase64File(filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!StringUtils.isEmpty(base64Stream)) {
             //计算文件分片的总块数
-            long totalBlock = file.length() / blockSize + (file.length() % blockSize > 0 ? 1 : 0);
+            long totalBlock = base64Stream.length() / blockSize + (base64Stream.length() % blockSize > 0 ? 1 : 0);
             //包含上传可能是0长度但有内容的文件
-            uploadFileInBlock(filePath, file.getName(), Math.max(totalBlock, 1), 1, blockSize);
+            uploadFileInBlock(base64Stream, Math.max(totalBlock, 1), 1, blockSize);
             isUploadingFile = false;
         } else {
             //不存在则回调错误方法
@@ -396,10 +384,14 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-    private void uploadFileInBlock(String filePath, String fileName, long totalBlock, int currentBlock, int PART_SIZE) {
-        File file = new File(filePath);
-        byte[] fileStream = getBlock((currentBlock - 1) * PART_SIZE, file, PART_SIZE);
-        if (fileStream == null) {
+    private void uploadFileInBlock(String base64Stream, long totalBlock, int currentBlock, int PART_SIZE) {
+        String uploadStream = base64Stream;
+        if (currentBlock == totalBlock) {
+            uploadStream = uploadStream.substring((currentBlock - 1) * PART_SIZE, base64Stream.length());
+        } else {
+            uploadStream = uploadStream.substring((currentBlock - 1) * PART_SIZE, currentBlock * PART_SIZE);
+        }
+        if (StringUtils.isEmpty(uploadStream) && currentBlock != totalBlock) {
             try {
                 JSONObject json = new JSONObject();
                 json.put("status", 0);
@@ -414,14 +406,13 @@ public class FileTransferService extends ImpPlugin {
             JSONObject json = new JSONObject();
             json.put("status", 1);
             JSONObject result = new JSONObject();
-            result.put("currentContent", Base64Utils.getBase64(new String(fileStream)));
-            result.put("fileName", fileName);
+            result.put("currentContent", uploadStream);
             result.put("allBlockSize", totalBlock);
             result.put("currentBlockNum", currentBlock);
             json.put("result", result);
             jsCallback(blockImageCallBack, json);
             if (currentBlock == totalBlock) return;
-            uploadFileInBlock(filePath, fileName, totalBlock, currentBlock + 1, PART_SIZE);
+            uploadFileInBlock(base64Stream, totalBlock, currentBlock + 1, PART_SIZE);
         } catch (Exception e1) {
             e1.printStackTrace();
             isUploadingFile = false;
