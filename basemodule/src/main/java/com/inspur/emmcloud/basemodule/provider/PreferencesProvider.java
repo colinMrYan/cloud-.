@@ -19,7 +19,7 @@ import java.util.Iterator;
  * Description Provider + SP 尝试解决多进程导致SP数据不一致问题
  */
 public class PreferencesProvider extends ContentProvider {
-    public static final Uri AUTHORITY_URI = Uri.parse("content://com.inspur.emmcloud.fileprovider");
+    public static final Uri AUTHORITY_URI = Uri.parse("content://com.inspur.emmcloud.spprovider");
     public static final Uri CONTENT_URI = AUTHORITY_URI;
 
     public static final String PARAM_KEY = "key";
