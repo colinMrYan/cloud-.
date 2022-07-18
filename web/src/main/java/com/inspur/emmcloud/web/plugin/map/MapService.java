@@ -137,7 +137,8 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sname", "");
             String toName = JSONUtils.getString(optionsObj, "dname", "");
-            int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -169,7 +170,7 @@ public class MapService extends ImpPlugin {
             if (!StringUtils.isBlank(toName)) {
                 builder.append("&dname=").append(toName);
             }
-            builder.append("&dev=0&t=").append(transportation == 1 ? 0 : transportation == 2 ? 2 : 1);
+            builder.append("&dev=0&t=").append(transportation -1);
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -198,7 +199,8 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sname", "");
             String toName = JSONUtils.getString(optionsObj, "dname", "");
-            int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
             if (coordType.equals("BD09")) {
                 if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
@@ -235,7 +237,7 @@ public class MapService extends ImpPlugin {
             if (toLatitude != null && toLongitude != null) {
                 builder.append("|latlng:").append(toLatitude).append(",").append(toLongitude);
             }
-            builder.append("&mode=").append(transportation == 1 ? "driving" : transportation == 2? "walking" : "transit");
+            builder.append("&mode=").append(transportation == 1 ? "driving" : transportation == 2? "transit" : "walking");
             builder.append("&src=").append(getFragmentContext().getPackageName());
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage(MAP_BAIDU_APPID);
@@ -265,7 +267,8 @@ public class MapService extends ImpPlugin {
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
             String fromName = JSONUtils.getString(optionsObj, "sname", "");
             String toName = JSONUtils.getString(optionsObj, "dname", "");
-            int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
             if (coordType.equals("WGS84")) {
                 if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
@@ -286,7 +289,7 @@ public class MapService extends ImpPlugin {
                 toLatitude = toLocation[1];
             }
             StringBuilder builder = new StringBuilder("qqmap://map/routeplan");
-            builder.append("?type=").append(transportation == 1 ? "drive" : transportation == 2? "walk" : "bus");
+            builder.append("?type=").append(transportation == 1 ? "drive" : transportation == 2? "bus" : "walk");
             if (!StringUtils.isBlank(fromName)) {
                 builder.append("&from=").append(fromName);
             }
