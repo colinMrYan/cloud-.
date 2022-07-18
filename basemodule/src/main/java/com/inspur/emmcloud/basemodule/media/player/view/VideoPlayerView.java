@@ -61,7 +61,7 @@ public class VideoPlayerView extends RelativeLayout {
 
     // 初始化view
     private void initView() {
-        mRootView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.video_player_view, null);
+        mRootView = (ViewGroup) inflate(getContext(), R.layout.video_player_view, this);
         mTXCloudVideoView = (TXCloudVideoView) mRootView.findViewById(R.id.video_view);
         controlView = (VideoControlView) mRootView.findViewById(R.id.control_view);
         controlView.setCallback(mControllerCallback);
@@ -71,6 +71,7 @@ public class VideoPlayerView extends RelativeLayout {
     private void initPlayer() {
         mVideoPlayer = new VideoPlayerImpl(mContext, mTXCloudVideoView);
         mVideoPlayer.setObserver(new PlayerObserver());
+        mVideoPlayer.setLoop(true);
         controlView.hide();
     }
 
@@ -318,4 +319,11 @@ public class VideoPlayerView extends RelativeLayout {
         mVideoPlayer.setNeedToPause(value);
     }
 
+    public void setLoop(boolean b) {
+        mVideoPlayer.setLoop(b);
+    }
+
+    public void setIsAutoPlay(boolean b) {
+        mVideoPlayer.setAutoPlay(b);
+    }
 }

@@ -5,12 +5,14 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Environment;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.BarHide;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordConfig;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK;
 import com.inspur.emmcloud.basemodule.media.record.basic.VideoKitResult;
@@ -36,6 +38,7 @@ import java.util.List;
 public class CommunicationRecordActivity extends BaseFragmentActivity implements NotSupportLand {
     public static final int REQUEST_CODE_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_VIDEO_EDIT = 1002;
+    public static final String VIDEO_PATH = "VIDEO_PATH";
     public static final String FILE_PATH = "FILE_PATH";
     public static final String FILE_TYPE = "FILE_TYPE"; // 1标识图片，2表示视频
     private boolean granted; // 是否获取权限
@@ -109,6 +112,10 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
 //        intent.putExtra(UGCKitConstants.VIDEO_PATH, ugcKitResult.outputPath);
 //        startActivity(intent);
 //        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        Intent intent = new Intent(this, VideoPlayerActivity.class);
+        intent.putExtra(VIDEO_PATH, ugcKitResult.outputPath);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     // 设置全屏
@@ -164,7 +171,8 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
         } else if (requestCode == REQUEST_CODE_VIDEO_EDIT) {
             // 视频
             if (resultCode == RESULT_OK) {
-
+//                Intent intent = new Intent(CommunicationRecordActivity.this, VideoPlayerActivity.class);
+//                startActivity(intent);
             }
         }
     }

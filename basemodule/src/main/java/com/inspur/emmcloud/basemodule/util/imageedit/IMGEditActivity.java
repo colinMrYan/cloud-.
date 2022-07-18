@@ -171,4 +171,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     public void onColorChanged(int checkedColor) {
         mImgView.setPenColor(checkedColor);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
 }
