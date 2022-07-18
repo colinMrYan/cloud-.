@@ -135,11 +135,11 @@ public class MapService extends ImpPlugin {
             Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
             Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
-            String fromName = JSONUtils.getString(optionsObj, "sName", "");
-            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
             int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
             if (coordType.equals("WGS84")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -148,7 +148,7 @@ public class MapService extends ImpPlugin {
                 toLongitude = toLocation[0];
                 toLatitude = toLocation[1];
             } else if (coordType.equals("BD09")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -159,7 +159,7 @@ public class MapService extends ImpPlugin {
             }
             StringBuilder builder = new StringBuilder("amapuri://route/plan?sourceApplication=");
             builder.append(getFragmentContext().getPackageName());
-            if (fromLatitude != null && fromLatitude != null) {
+            if (fromLatitude != null && fromLongitude != null) {
                 builder.append("&slat=").append(fromLatitude).append("&slon=").append(fromLongitude);
             }
             if (!StringUtils.isBlank(fromName)) {
@@ -193,14 +193,14 @@ public class MapService extends ImpPlugin {
             JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
             Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
             Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
-            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
-            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", null);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", null);
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
-            String fromName = JSONUtils.getString(optionsObj, "sName", "");
-            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
             int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
             if (coordType.equals("BD09")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -209,7 +209,7 @@ public class MapService extends ImpPlugin {
                 toLongitude = toLocation[0];
                 toLatitude = toLocation[1];
             } else if (coordType.equals("WGS84")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -221,10 +221,20 @@ public class MapService extends ImpPlugin {
             StringBuilder builder = new StringBuilder("baidumap://map/direction");
             builder.append("?region=").append(" ");
             builder.append("&coord_type=gcj02");
-            if (fromLatitude != null && fromLatitude != null) {
-                builder.append("&origin=").append(fromLatitude).append(",").append(fromLongitude);
+            builder.append("&origin=");
+            if (!StringUtils.isEmpty(fromName)){
+                builder.append("name:").append(fromName);
             }
-            builder.append("&destination=").append(toLatitude).append(",").append(toLongitude);
+            if (fromLatitude != null && fromLongitude != null) {
+                builder.append("|latlng:").append(fromLatitude).append(",").append(fromLongitude);
+            }
+            builder.append("&destination=");
+            if (!StringUtils.isEmpty(toName)) {
+                builder.append("name:").append(toName);
+            }
+            if (toLatitude != null && toLongitude != null) {
+                builder.append("|latlng:").append(toLatitude).append(",").append(toLongitude);
+            }
             builder.append("&mode=").append(transportation == 1 ? "driving" : transportation == 2? "walking" : "transit");
             builder.append("&src=").append(getFragmentContext().getPackageName());
             Intent intent = getFragmentContext().getPackageManager()
@@ -253,11 +263,11 @@ public class MapService extends ImpPlugin {
             Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
             Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
-            String fromName = JSONUtils.getString(optionsObj, "sName", "");
-            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
             int transportation = JSONUtils.getInt(optionsObj, "mode", 0);
             if (coordType.equals("WGS84")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -266,7 +276,7 @@ public class MapService extends ImpPlugin {
                 toLongitude = toLocation[0];
                 toLatitude = toLocation[1];
             } else if (coordType.equals("BD09")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -280,7 +290,7 @@ public class MapService extends ImpPlugin {
             if (!StringUtils.isBlank(fromName)) {
                 builder.append("&from=").append(fromName);
             }
-            if (fromLatitude != null && fromLatitude != null) {
+            if (fromLatitude != null && fromLongitude != null) {
                 builder.append("&fromcoord=").append(fromLatitude).append(",").append(fromLongitude);
             }
             if (!StringUtils.isBlank(toName)) {
