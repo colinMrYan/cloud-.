@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okio.ByteString;
@@ -484,16 +485,20 @@ public class PhotoService extends ImpPlugin {
             }
         } else if (requestCode == SELECTOR_SERVICE_GALLERY_REQUEST) {
             ArrayList<LocalMedia> mediaResult = PictureSelector.obtainSelectorList(intent);
-            ArrayList<String> mediaPaths = new ArrayList<>();
+            ArrayList<String> uploadInfos = new ArrayList<>();
+            HashMap<String, String> mediaMap = new HashMap<>();
             for (LocalMedia media : mediaResult) {
                 String mediaPath = media.getRealPath();
-                mediaPaths.add(mediaPath);
+                mediaMap.put("mediaPath",mediaPath);
+                mediaMap.put("mimeType", media.getMimeType());
+                mediaMap.put("fileName", media.getFileName());
+                uploadInfos.add(mediaMap.toString());
             }
             try {
                 JSONObject json = new JSONObject();
                 json.put("status", 1);
                 JSONObject result = new JSONObject();
-                result.put("data", JSONUtils.toJSONArray(mediaPaths));
+                result.put("data", JSONUtils.toJSONArray(uploadInfos));
                 json.put("result", result);
                 jsCallback(selectAlbumCb, json);
             } catch (JSONException e) {

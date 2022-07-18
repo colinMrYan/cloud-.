@@ -341,7 +341,7 @@ public class FileTransferService extends ImpPlugin {
         isUploadingFile = true;
         blockImageCallBack = JSONUtils.getString(paramsObject, "success", "");
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 0);
+        int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 4096);
         // 绝对路径、相对路径
         int persistentStorage = JSONUtils.getInt(optionsJsonObject, "persistentStorage", 0);
         String filePath = JSONUtils.getString(optionsJsonObject, "filePath", "");
