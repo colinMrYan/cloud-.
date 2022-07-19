@@ -187,7 +187,7 @@
 
         <provider
             android:name=".provider.PreferencesProvider"
-            android:authorities="com.inspur.emmcloud.fileprovider"
+            android:authorities="com.inspur.emmcloud.spprovider"
             android:exported="false" />
 
         <!-- Required SDK核心功能-->

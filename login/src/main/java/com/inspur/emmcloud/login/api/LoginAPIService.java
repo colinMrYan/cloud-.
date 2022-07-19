@@ -28,6 +28,7 @@ import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
 import com.inspur.emmcloud.login.util.OauthUtils;
+import com.tencent.mmkv.MMKV;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -601,7 +602,10 @@ public class LoginAPIService {
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("udid", AppUtils.getMyUUID(context));
 //        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
-        String refreshToken = PreferencesProvider.getString(context, "refreshToken", "");
+//        String refreshToken = PreferencesProvider.getString(context, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String refreshToken = kv.decodeString("refreshToken", "");
         params.addParameter("refresh_token", refreshToken);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override

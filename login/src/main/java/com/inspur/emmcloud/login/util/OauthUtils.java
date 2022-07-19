@@ -17,6 +17,7 @@ import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.ui.LoginActivity;
+import com.tencent.mmkv.MMKV;
 
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -94,8 +95,12 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
         int expiresIn = getLoginResult.getExpiresIn();
 //            PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", accessToken);
 //            boolean refreshTokenSuc = PreferencesUtils.putString(BaseApplication.getInstance(), "refreshToken", refreshToken);
-        PreferencesProvider.save(BaseApplication.getInstance(), "accessToken", accessToken);
-        PreferencesProvider.save(BaseApplication.getInstance(), "refreshToken", refreshToken);
+//        PreferencesProvider.save(BaseApplication.getInstance(), "accessToken", accessToken);
+//        PreferencesProvider.save(BaseApplication.getInstance(), "refreshToken", refreshToken);
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        kv.encode("accessToken", accessToken);
+        kv.encode("refreshToken", refreshToken);
         PreferencesUtils.putInt(BaseApplication.getInstance(), "keepAlive", keepAlive);
         PreferencesUtils.putString(BaseApplication.getInstance(), "tokenType", tokenType);
         PreferencesUtils.putInt(BaseApplication.getInstance(), "expiresIn", expiresIn);

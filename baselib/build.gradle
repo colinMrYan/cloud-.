@@ -162,4 +162,5 @@ dependencies {
     api 'org.xutils:xutils:3.9.0'
     api deps.support.constraint
     api deps.Glide
+    api deps.mmkv
 }

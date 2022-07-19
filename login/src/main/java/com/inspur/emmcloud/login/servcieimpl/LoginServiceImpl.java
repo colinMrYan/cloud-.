@@ -23,6 +23,7 @@ import com.inspur.emmcloud.login.ui.LoginActivity;
 import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.emmcloud.login.util.OauthUtils;
+import com.tencent.mmkv.MMKV;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -35,8 +36,12 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
         PreferencesUtils.putString(context, "myInfo", "");
 //        PreferencesUtils.putString(context, "accessToken", "");
 //        PreferencesUtils.putString(context, "refreshToken", "");
-        PreferencesProvider.save(context, "accessToken", "");
-        PreferencesProvider.save(context, "refreshToken", "");
+//        PreferencesProvider.save(context, "accessToken", "");
+//        PreferencesProvider.save(context, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        kv.encode("accessToken", "");
+        kv.encode("refreshToken", "");
         PreferencesUtils.putString(context, "userRealName", "");
         PreferencesUtils.putString(context, "userID", "");
         BaseApplication.getInstance().setAccessToken("");

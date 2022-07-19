@@ -37,6 +37,7 @@ import com.inspur.emmcloud.login.ui.LoginBySmsActivity;
 import com.inspur.emmcloud.login.ui.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.emmcloud.login.util.MDM.MDMListener;
+import com.tencent.mmkv.MMKV;
 
 import java.util.List;
 
@@ -224,8 +225,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         PreferencesUtils.putString(activity, "myInfo", "");
 //        PreferencesUtils.putString(activity, "accessToken", "");
 //        PreferencesUtils.putString(activity, "refreshToken", "");
-        PreferencesProvider.save(activity, "accessToken", "");
-        PreferencesProvider.save(activity, "refreshToken", "");
+//        PreferencesProvider.save(activity, "accessToken", "");
+//        PreferencesProvider.save(activity, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        kv.encode("accessToken", "");
+        kv.encode("refreshToken", "");
         PreferencesUtils.putInt(activity, "keepAlive", 0);
         PreferencesUtils.putString(activity, "tokenType", "");
         PreferencesUtils.putInt(activity, "expiresIn", 0);
@@ -246,8 +251,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                     .setRefreshToken(refreshToken);
 //            PreferencesUtils.putString(activity, "accessToken", accessToken);
 //            PreferencesUtils.putString(activity, "refreshToken", refreshToken);
-            PreferencesProvider.save(activity, "accessToken", accessToken);
-            PreferencesProvider.save(activity, "refreshToken", refreshToken);
+//            PreferencesProvider.save(activity, "accessToken", accessToken);
+//            PreferencesProvider.save(activity, "refreshToken", refreshToken);
+            // MMKV 替换 SharedPreferences
+            MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+            kv.encode("accessToken", accessToken);
+            kv.encode("refreshToken", refreshToken);
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
             PreferencesUtils.putString(activity, "tokenType", tokenType);
             PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
