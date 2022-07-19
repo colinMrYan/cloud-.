@@ -357,6 +357,11 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
     }
 
     @Override
+    public void setRenderMode(int mode) {
+        mVodPlayer.setRenderMode(mode);
+    }
+
+    @Override
     public String getPlayURL() {
         return mCurrentPlayVideoURL;
     }

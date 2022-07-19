@@ -2,19 +2,16 @@ package com.inspur.emmcloud.basemodule.media.record.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Environment;
-import android.view.View;
-import android.view.ViewParent;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.BarHide;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
-import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
+import com.inspur.emmcloud.basemodule.media.player.VideoPreviewActivity;
+import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordConfig;
-import com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK;
 import com.inspur.emmcloud.basemodule.media.record.basic.VideoKitResult;
 import com.inspur.emmcloud.basemodule.media.record.interfaces.IVideoRecordKit;
 import com.inspur.emmcloud.basemodule.media.record.view.VideoRecordView;
@@ -24,9 +21,7 @@ import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.tencent.rtmp.TXPlayerAuthBuilder;
-import com.tencent.rtmp.downloader.TXVodDownloadManager;
-import com.tencent.rtmp.ui.TXCloudVideoView;
+import com.tencent.rtmp.TXLiveConstants;
 
 import java.util.List;
 
@@ -112,7 +107,9 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
 //        intent.putExtra(UGCKitConstants.VIDEO_PATH, ugcKitResult.outputPath);
 //        startActivity(intent);
 //        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        Intent intent = new Intent(this, VideoPlayerActivity.class);
+        PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
+        config.renderMode = TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN;
+        Intent intent = new Intent(this, VideoPreviewActivity.class);
         intent.putExtra(VIDEO_PATH, ugcKitResult.outputPath);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

@@ -40,6 +40,7 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     private boolean isDestroy = false; // Activity 是否被销毁
     private GestureDetector mGestureDetector;
     private boolean mIsChangingSeekBarProgress; // 进度条是否正在拖动，避免SeekBar由于视频播放的update而跳动
+    private boolean canUseControlView = true; // controlView 是否可用，默认可用
 
     public VideoControlView(Context context) {
         super(context);
@@ -205,6 +206,9 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
      * 切换自身的可见性
      */
     private void toggle() {
+        if (!canUseControlView) {
+            return;
+        }
         if (isShowing) {
             hide();
         } else {
@@ -289,5 +293,10 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     @Override
     public void release() {
         isDestroy = true;
+    }
+
+    // 控制整个控件可见性
+    public void canUseControlView(boolean visible) {
+        this.canUseControlView = visible;
     }
 }

@@ -29,7 +29,7 @@ public class PlayerGlobalConfig {
     /**
      * 播放器最大缓存个数 （ 默认缓存 5 ）
      */
-    public int maxCacheItem = 5;
+    public int maxCacheItem = 10;
 
     /**
      * 是否启用悬浮窗 （ 不用到 ）

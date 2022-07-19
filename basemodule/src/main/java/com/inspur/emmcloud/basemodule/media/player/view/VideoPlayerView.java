@@ -326,4 +326,8 @@ public class VideoPlayerView extends RelativeLayout {
     public void setIsAutoPlay(boolean b) {
         mVideoPlayer.setAutoPlay(b);
     }
+
+    public void setControlCanShow(boolean b) {
+        controlView.canUseControlView(b);
+    }
 }

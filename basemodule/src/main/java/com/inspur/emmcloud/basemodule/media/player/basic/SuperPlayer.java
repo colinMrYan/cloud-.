@@ -61,6 +61,7 @@ public interface SuperPlayer {
 
     // 播放速率
     void setRate(float speedLevel);
+    void setRenderMode(int mode);
 
     // 镜像
 //    void setMirror(boolean isMirror);

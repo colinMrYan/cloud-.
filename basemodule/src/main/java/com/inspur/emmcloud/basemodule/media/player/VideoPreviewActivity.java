@@ -1,10 +1,6 @@
 package com.inspur.emmcloud.basemodule.media.player;
 
-import android.os.Build;
-import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
 import com.gyf.barlibrary.BarHide;
 import com.gyf.barlibrary.ImmersionBar;
@@ -20,11 +16,11 @@ import com.tencent.rtmp.TXLiveConstants;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
 
 /**
- * Date：2022/7/15
+ * Date：2022/7/19
  * Author：wang zhen
- * Description 视频播放activity，单个视频播放
+ * Description 录制视频时预览
  */
-public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupportLand, VideoPlayerView.OnSuperPlayerViewCallback {
+public class VideoPreviewActivity extends BaseFragmentActivity implements NotSupportLand, VideoPlayerView.OnSuperPlayerViewCallback {
     private VideoPlayerView videoPlayerView; // 播放器核心view
     private boolean mIsManualPause = false; // 手动暂停
 
@@ -45,13 +41,12 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
 //        model.url = "http://vfx.mtime.cn/Video/2021/07/10/mp4/210710171112971120.mp4";
         model.url = recordUrl;
         model.placeholderImage = "http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg";
-//        PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
-//        config.renderMode = TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN;
         videoPlayerView.playWithModel(model);
     }
 
     private void initView() {
         videoPlayerView = (VideoPlayerView) findViewById(R.id.video_player_view);
+        videoPlayerView.setControlCanShow(false);
         videoPlayerView.setPlayerViewCallback(this);
     }
 
