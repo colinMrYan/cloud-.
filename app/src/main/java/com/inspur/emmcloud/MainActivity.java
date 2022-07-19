@@ -40,6 +40,7 @@ import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.RootCheckUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tencent.mmkv.MMKV;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -294,8 +295,10 @@ public class MainActivity extends BaseActivity implements IMainActivity {
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_GUIDE).navigation(MainActivity.this);
                 finish();
             } else {
-                String accessToken = PreferencesUtils.getString(MainActivity.this,
-                        "accessToken", "");
+//                String accessToken = PreferencesUtils.getString(MainActivity.this,
+//                        "accessToken", "");
+                MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+                String accessToken = kv.decodeString("accessToken", "");
                 MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 if (StringUtils.isBlank(accessToken)) {
                     ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();

@@ -70,7 +70,9 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     public void autoLogin() {
-        String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
+//        String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String accessToken = kv.decodeString("accessToken", "");
         String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
         String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         boolean isMDMStatusPass = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
@@ -92,6 +94,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             }
         }
     }
+
     /**
      *
      */
@@ -180,13 +183,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     /**
-     *
-     * @param userName 用户名/手机号
-     * @param password 密码/验证码
+     * @param userName   用户名/手机号
+     * @param password   密码/验证码
      * @param isSMSLogin 是否短信登录
-     * @param mode 登录/找回密码 修复之前bug. mode = MODE_LOGIN登录 mode = MODE_FORGET_PASSWORD忘记密码
+     * @param mode       登录/找回密码 修复之前bug. mode = MODE_LOGIN登录 mode = MODE_FORGET_PASSWORD忘记密码
      */
-    public void login(String userName, String password, boolean isSMSLogin,int mode) {
+    public void login(String userName, String password, boolean isSMSLogin, int mode) {
         this.isSMSLogin = isSMSLogin;
         this.mode = mode;
         login(userName, password);
@@ -211,7 +213,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      * 获取语音
      */
     public void getServerSupportLanguage() {
-       LanguageManager.getInstance().getServerSupportLanguage(this);
+        LanguageManager.getInstance().getServerSupportLanguage(this);
     }
 
     @Override
@@ -340,33 +342,33 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     @Override
-    public void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter) {
+    public void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter) {
         // TODO Auto-generated method stub
         try {
             if (errorCode == 400) {
-                    String code = JSONUtils.getString(error,"code","");
-                    if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
-                        int limitRemaining = Integer.parseInt(headerLimitRemaining);
-                        ToastUtils.show(activity, activity.getString(isSMSLogin ?
-                                R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
-                    }else if(code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)){
-                        int retryAfter = Integer.parseInt(headerRetryAfter);
-                        if (retryAfter == 0){
-                            retryAfter++;
-                        }
-                        if (retryAfter>59){
-                            retryAfter = new Double(Math.ceil(retryAfter*1.0/60)).intValue();
-                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_min,retryAfter));
-                        }else {
-                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second,retryAfter));
-                        }
-                    } else {
-                        ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
+                String code = JSONUtils.getString(error, "code", "");
+                if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)) {
+                    int limitRemaining = Integer.parseInt(headerLimitRemaining);
+                    ToastUtils.show(activity, activity.getString(isSMSLogin ?
+                            R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
+                } else if (code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)) {
+                    int retryAfter = Integer.parseInt(headerRetryAfter);
+                    if (retryAfter == 0) {
+                        retryAfter++;
                     }
+                    if (retryAfter > 59) {
+                        retryAfter = new Double(Math.ceil(retryAfter * 1.0 / 60)).intValue();
+                        ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_min, retryAfter));
+                    } else {
+                        ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second, retryAfter));
+                    }
+                } else {
+                    ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
+                }
             } else {
                 WebServiceMiddleUtils.hand(activity, error, errorCode);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             WebServiceMiddleUtils.hand(activity, error, errorCode);
         }

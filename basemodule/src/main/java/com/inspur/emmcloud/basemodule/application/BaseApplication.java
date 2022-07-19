@@ -469,8 +469,10 @@ public abstract class BaseApplication extends MultiDexApplication {
      * @return
      */
     public boolean isHaveLogin() {
-        String accessToken = PreferencesUtils.getString(this,
-                "accessToken", "");
+//        String accessToken = PreferencesUtils.getString(this,
+//                "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        accessToken = kv.decodeString("accessToken", "");
         String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
         boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
