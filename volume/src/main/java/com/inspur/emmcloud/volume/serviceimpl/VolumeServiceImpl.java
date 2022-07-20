@@ -2,6 +2,7 @@ package com.inspur.emmcloud.volume.serviceimpl;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileListListener;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeListListener;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
@@ -42,6 +43,11 @@ public class VolumeServiceImpl implements VolumeService {
         this.fileFilterType = fileType;
         this.getVolumeFileListListener = getVolumeFileListListener;
         apiService.getVolumeFileList(volumeId, path);
+    }
+
+    @Override
+    public void uploadFile(VolumeFile file, String localPath, ProgressCallback callback) {
+        VolumeFileUploadManager.getInstance().uploadFile(file, localPath,"/", callback);
     }
 
     private class WebService extends VolumeAPIInterfaceInstance {

@@ -27,6 +27,10 @@
     <!--用于申请获取蓝牙信息进行室内定位-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
@@ -85,6 +89,7 @@
 
     <!-- 插件：二维码扫描 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <!-- 插件：拍照 -->
     <uses-feature android:name="android.hardware.camera" />
@@ -179,6 +184,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/video_provider_paths"></meta-data>
         </provider>
+
+        <provider
+            android:name=".provider.PreferencesProvider"
+            android:authorities="com.inspur.emmcloud.spprovider"
+            android:exported="false" />
 
         <!-- Required SDK核心功能-->
         <activity

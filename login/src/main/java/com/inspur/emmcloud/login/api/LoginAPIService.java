@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
 import com.inspur.emmcloud.login.util.OauthUtils;
+import com.tencent.mmkv.MMKV;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -599,7 +601,11 @@ public class LoginAPIService {
         final String completeUrl = LoginAPIUri.getUploadMDMInfoUrl();
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("udid", AppUtils.getMyUUID(context));
-        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+//        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+//        String refreshToken = PreferencesProvider.getString(context, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String refreshToken = kv.decodeString("refreshToken", "");
         params.addParameter("refresh_token", refreshToken);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override

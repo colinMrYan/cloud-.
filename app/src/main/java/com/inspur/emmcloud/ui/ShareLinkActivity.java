@@ -71,7 +71,6 @@ public class ShareLinkActivity extends BaseActivity {
         ButterKnife.bind(this);
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         initView();
-
     }
 
 

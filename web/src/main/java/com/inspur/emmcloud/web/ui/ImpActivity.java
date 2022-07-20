@@ -71,4 +71,9 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onRestart();
     }
+
+    public ImpFragment getFragment() {
+        if (fragment != null) return fragment;
+        return null;
+    }
 }

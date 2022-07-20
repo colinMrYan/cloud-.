@@ -1,15 +1,13 @@
 package com.inspur.emmcloud.web.plugin.sql;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.inspur.emmcloud.baselib.util.FileUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.util.StrUtil;
@@ -20,7 +18,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,6 +38,12 @@ public class SqlService extends ImpPlugin {
     private String successCb = "";
     // 失败回调
     private String failCb = "";
+    private static final String COLUMN_NAME_KEY = "title";
+    private static final String COLUMN_NAME_VALUE = "value";
+    private static final String SQL_TABLE_NAME = "EntryTable";
+    private static final String SQL_CREATE_ENTRIES = "create table if not exists EntryTable(title text primary key, value text);";
+
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS EntryTable;";
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -49,6 +55,16 @@ public class SqlService extends ImpPlugin {
             transactionDataBase(paramsObject);
         } else if (action.equals("delete")) {
             deleteDataBase(paramsObject);
+        } else if (action.equals("putItem")) {
+            putItem(paramsObject);
+        } else if (action.equals("getItem")) {
+            getItem(paramsObject);
+        } else if (action.equals("delItem")) {
+            deleteItem(paramsObject);
+        } else if (action.equals("getAllItems")) {
+            getAllItem(paramsObject);
+        } else if (action.equals("delAllItems")) {
+            delAllItem(paramsObject);
         } else {
             showCallIMPMethodErrorDlg();
         }
@@ -96,7 +112,7 @@ public class SqlService extends ImpPlugin {
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (database != null) {
             database.close();
-            jsCallback(successCb, "");
+            sendEmptySuccessInfo();
         } else {
             callbackDatabaseFail(0, "database not find");
         }
@@ -121,10 +137,190 @@ public class SqlService extends ImpPlugin {
             database.close();
             File dbFile = new File(database.getPath());
             if (SQLiteDatabase.deleteDatabase(dbFile)) {
-                jsCallback(successCb, "");
+                sendEmptySuccessInfo();
             } else {
                 callbackDatabaseFail(0, "database delete failed");
             }
+        } else {
+            callbackDatabaseFail(0, "database not found");
+        }
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param paramsObject
+     */
+    private void putItem(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "default");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        String key = JSONUtils.getString(options, "key", "");
+        String value = JSONUtils.getString(options, "value", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null && !StringUtils.isEmpty(key)) {
+            database.execSQL(SQL_CREATE_ENTRIES);
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_NAME_KEY, key);
+            values.put(COLUMN_NAME_VALUE, value);
+            if (-1 != database.replace(SQL_TABLE_NAME, null, values)) {
+                sendEmptySuccessInfo();
+            } else {
+                callbackDatabaseFail(0, "data already exist");
+            }
+        } else {
+            callbackDatabaseFail(0, "database not found");
+        }
+    }
+
+    /**
+     * 获取参数
+     *
+     * @param paramsObject
+     */
+    private void getItem(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "default");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        String key = JSONUtils.getString(options, "key", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null && !StringUtils.isEmpty(key)) {
+            String[] projection = {COLUMN_NAME_VALUE};
+            // Filter results WHERE "title" = 'My Title'
+            String selection = COLUMN_NAME_KEY + " = ?";
+            String[] selectionArgs = {key};
+            Cursor cursor = database.query(
+                    SQL_TABLE_NAME,         // The table to query
+                    projection,             // The array of columns to return (pass null to get all)
+                    selection,              // The columns for the WHERE clause
+                    selectionArgs,          // The values for the WHERE clause
+                    null,           // don't group the rows
+                    null,            // don't filter by row groups
+                    null            // The sort order
+            );
+            List<String> itemIds = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                String itemValue = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_VALUE));
+                itemIds.add(itemValue);
+            }
+            cursor.close();
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                result.put("data", JSONUtils.toJSONArray(itemIds));
+                json.put("result", result);
+                jsCallback(successCb, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                callbackDatabaseFail(0, e.getMessage());
+            }
+        } else {
+            callbackDatabaseFail(0, "database not found");
+        }
+    }
+
+    /**
+     * 删除参数
+     *
+     * @param paramsObject
+     */
+    private void deleteItem(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "default");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        String key = JSONUtils.getString(options, "key", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null && !StringUtils.isEmpty(key)) {
+            String selection = COLUMN_NAME_KEY + " = ?";
+            // Specify arguments in placeholder order.
+            String[] selectionArgs = {key};
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_NAME_KEY, key);
+            if (-1 != database.delete(SQL_TABLE_NAME, selection, selectionArgs)) {
+                sendEmptySuccessInfo();
+            } else {
+                callbackDatabaseFail(0, "database delete item failed");
+            }
+        } else {
+            callbackDatabaseFail(0, "database not found");
+        }
+    }
+
+    private void sendEmptySuccessInfo() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("status", 1);
+            JSONObject result = new JSONObject();
+            json.put("result", result);
+            if (!StringUtils.isEmpty(successCb)) {
+                jsCallback(successCb, json);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            callbackDatabaseFail(0, e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有参数
+     *
+     * @param paramsObject
+     */
+    private void getAllItem(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "default");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null) {
+            Map<String, String> requestResult = new HashMap<>();
+            Cursor c = database.rawQuery("select * from EntryTable", null);
+            if (c != null) {
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    String key = c.getString(c.getColumnIndex(COLUMN_NAME_KEY));
+                    String value = c.getString(c.getColumnIndex(COLUMN_NAME_VALUE));
+                    requestResult.put(key, value);
+                    c.moveToNext();
+                }
+                c.close();
+            }
+            JSONObject json = new JSONObject();
+            try {
+                json.put("status", 1);
+                JSONObject result = new JSONObject();
+                result.put("data", JSONUtils.map2Json(requestResult));
+                json.put("result", result);
+                if (!StringUtils.isEmpty(successCb)){
+                    jsCallback(successCb, json);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                callbackDatabaseFail(0, e.getMessage());
+            }
+        } else {
+            callbackDatabaseFail(0, "database not found");
+        }
+    }
+
+    /**
+     * 删除所有参数
+     *
+     * @param paramsObject
+     */
+    private void delAllItem(JSONObject paramsObject) {
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        String dbName = JSONUtils.getString(options, "dbName", "default");
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
+        this.database = getSQLiteDatabase(dbName);
+        if (database != null) {
+            database.delete(SQL_TABLE_NAME, null, null);
+            sendEmptySuccessInfo();
         } else {
             callbackDatabaseFail(0, "database not found");
         }
@@ -204,7 +400,7 @@ public class SqlService extends ImpPlugin {
         try {
             database.beginTransaction();
             boolean showSelectedDate = false;
-            for (int i = 0 ; i < sqlList.size() ; i++){
+            for (int i = 0; i < sqlList.size(); i++) {
                 String singleSql = sqlList.get(i);
                 singleSql += ";";
                 if (isSelectSql(singleSql)) {
@@ -217,12 +413,14 @@ public class SqlService extends ImpPlugin {
                 } else {
                     this.database.execSQL(singleSql);
                     // 将查询结果传回前台
-                    if ((i == sqlList.size()-1) && !showSelectedDate) jsCallback(successCb, "");
+                    if ((i == sqlList.size() - 1) && !showSelectedDate) jsCallback(successCb, "");
                 }
             }
             database.setTransactionSuccessful();
         } catch (Exception e) {
-            jsCallback(failCb, getErrorJson(e.getMessage()));
+            if (!StringUtils.isEmpty(failCb)){
+                jsCallback(failCb, getErrorJson(e.getMessage()));
+            }
             e.printStackTrace();
             if (myCursor != null) {
                 myCursor.close();
@@ -255,7 +453,7 @@ public class SqlService extends ImpPlugin {
         try {
             boolean showSelectedDate = false;
             String[] sqls = sql.split(";");
-            for (int i = 0 ; i < sqls.length; i++){
+            for (int i = 0; i < sqls.length; i++) {
                 String singleSql = sqls[i];
                 singleSql += ";";
                 if (isSelectSql(singleSql)) {
@@ -268,7 +466,7 @@ public class SqlService extends ImpPlugin {
                 } else {
                     this.database.execSQL(singleSql);
                     // 将查询结果传回前台
-                    if (i == sqls.length-1 && !showSelectedDate) jsCallback(successCb, "");
+                    if (i == sqls.length - 1 && !showSelectedDate && !StringUtils.isEmpty(successCb)) jsCallback(successCb, "");
                 }
             }
         } catch (Exception e) {
@@ -353,7 +551,9 @@ public class SqlService extends ImpPlugin {
             e.printStackTrace();
         }
         // 将查询结果传回前台
-        jsCallback(successCb, resultJsonObject);
+        if (!StringUtils.isEmpty(successCb)) {
+            jsCallback(successCb, resultJsonObject);
+        }
     }
 
     @Override

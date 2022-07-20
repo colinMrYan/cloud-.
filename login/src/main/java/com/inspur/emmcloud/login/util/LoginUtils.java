@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.login.util;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.SwitchCompat;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -35,6 +37,7 @@ import com.inspur.emmcloud.login.ui.LoginBySmsActivity;
 import com.inspur.emmcloud.login.ui.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.emmcloud.login.util.MDM.MDMListener;
+import com.tencent.mmkv.MMKV;
 
 import java.util.List;
 
@@ -67,7 +70,9 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     public void autoLogin() {
-        String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
+//        String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String accessToken = kv.decodeString("accessToken", "");
         String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
         String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         boolean isMDMStatusPass = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
@@ -89,6 +94,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             }
         }
     }
+
     /**
      *
      */
@@ -177,13 +183,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     /**
-     *
-     * @param userName 用户名/手机号
-     * @param password 密码/验证码
+     * @param userName   用户名/手机号
+     * @param password   密码/验证码
      * @param isSMSLogin 是否短信登录
-     * @param mode 登录/找回密码 修复之前bug. mode = MODE_LOGIN登录 mode = MODE_FORGET_PASSWORD忘记密码
+     * @param mode       登录/找回密码 修复之前bug. mode = MODE_LOGIN登录 mode = MODE_FORGET_PASSWORD忘记密码
      */
-    public void login(String userName, String password, boolean isSMSLogin,int mode) {
+    public void login(String userName, String password, boolean isSMSLogin, int mode) {
         this.isSMSLogin = isSMSLogin;
         this.mode = mode;
         login(userName, password);
@@ -208,7 +213,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      * 获取语音
      */
     public void getServerSupportLanguage() {
-       LanguageManager.getInstance().getServerSupportLanguage(this);
+        LanguageManager.getInstance().getServerSupportLanguage(this);
     }
 
     @Override
@@ -220,8 +225,14 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      */
     private void clearLoginInfo() {
         PreferencesUtils.putString(activity, "myInfo", "");
-        PreferencesUtils.putString(activity, "accessToken", "");
-        PreferencesUtils.putString(activity, "refreshToken", "");
+//        PreferencesUtils.putString(activity, "accessToken", "");
+//        PreferencesUtils.putString(activity, "refreshToken", "");
+//        PreferencesProvider.save(activity, "accessToken", "");
+//        PreferencesProvider.save(activity, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        kv.encode("accessToken", "");
+        kv.encode("refreshToken", "");
         PreferencesUtils.putInt(activity, "keepAlive", 0);
         PreferencesUtils.putString(activity, "tokenType", "");
         PreferencesUtils.putInt(activity, "expiresIn", 0);
@@ -240,18 +251,23 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                     .setAccessToken(accessToken);
             ((BaseApplication) activity.getApplicationContext())
                     .setRefreshToken(refreshToken);
-            PreferencesUtils.putString(activity, "accessToken", accessToken);
-            boolean refreshTokenSuc = PreferencesUtils.putString(activity, "refreshToken", refreshToken);
+//            PreferencesUtils.putString(activity, "accessToken", accessToken);
+//            PreferencesUtils.putString(activity, "refreshToken", refreshToken);
+//            PreferencesProvider.save(activity, "accessToken", accessToken);
+//            PreferencesProvider.save(activity, "refreshToken", refreshToken);
+            // MMKV 替换 SharedPreferences
+            MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+            kv.encode("accessToken", accessToken);
+            kv.encode("refreshToken", refreshToken);
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
             PreferencesUtils.putString(activity, "tokenType", tokenType);
             PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
             PreferencesUtils.putLong(activity, "token_get_time", System.currentTimeMillis());
             // 郑总token刷新失败分析日志
             if ("11487".equals(BaseApplication.getInstance().getUid())) {
-                if (refreshTokenSuc) {
-                    PVCollectModelCacheUtils.saveCollectModel("savePreferenceLoginInfo success", "---at---" + accessToken + "---rt---" + refreshToken);
-                } else {
-                    PVCollectModelCacheUtils.saveCollectModel("savePreferenceLoginInfo fail", "---at---" + accessToken + "---rt---" + refreshToken);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    String processName = BaseApplication.getProcessName();
+                    PVCollectModelCacheUtils.saveCollectModel("savePreferenceLoginInfo success", "---at---" + accessToken + "---rt---" + refreshToken + "---processName---" + processName);
                 }
             }
 
@@ -330,33 +346,33 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
     }
 
     @Override
-    public void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter) {
+    public void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter) {
         // TODO Auto-generated method stub
         try {
             if (errorCode == 400) {
-                    String code = JSONUtils.getString(error,"code","");
-                    if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
-                        int limitRemaining = Integer.parseInt(headerLimitRemaining);
-                        ToastUtils.show(activity, activity.getString(isSMSLogin ?
-                                R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
-                    }else if(code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)){
-                        int retryAfter = Integer.parseInt(headerRetryAfter);
-                        if (retryAfter == 0){
-                            retryAfter++;
-                        }
-                        if (retryAfter>59){
-                            retryAfter = new Double(Math.ceil(retryAfter*1.0/60)).intValue();
-                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_min,retryAfter));
-                        }else {
-                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second,retryAfter));
-                        }
-                    } else {
-                        ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
+                String code = JSONUtils.getString(error, "code", "");
+                if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)) {
+                    int limitRemaining = Integer.parseInt(headerLimitRemaining);
+                    ToastUtils.show(activity, activity.getString(isSMSLogin ?
+                            R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
+                } else if (code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)) {
+                    int retryAfter = Integer.parseInt(headerRetryAfter);
+                    if (retryAfter == 0) {
+                        retryAfter++;
                     }
+                    if (retryAfter > 59) {
+                        retryAfter = new Double(Math.ceil(retryAfter * 1.0 / 60)).intValue();
+                        ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_min, retryAfter));
+                    } else {
+                        ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second, retryAfter));
+                    }
+                } else {
+                    ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
+                }
             } else {
                 WebServiceMiddleUtils.hand(activity, error, errorCode);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             WebServiceMiddleUtils.hand(activity, error, errorCode);
         }

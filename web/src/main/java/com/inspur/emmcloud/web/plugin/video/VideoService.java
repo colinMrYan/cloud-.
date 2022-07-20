@@ -6,11 +6,15 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -19,11 +23,12 @@ import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpFragment;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +39,7 @@ public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
     private String recordVideoFilePath;
+    private boolean returnBase64;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -92,6 +98,7 @@ public class VideoService extends ImpPlugin {
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, optionsObj.optInt("quality",1));
                                 String fileName = optionsObj.optString("id");
+                                returnBase64 = optionsObj.optBoolean("isReturnBase64", true);
                                 try {
                                     File file = createMediaFile(fileName);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -105,18 +112,10 @@ public class VideoService extends ImpPlugin {
                                     }
 
                                 } catch (IOException e) {
-                                    try {
-                                        JSONObject json = new JSONObject();
-                                        json.put("errorMessage", "文件操作异常");
-                                        jsCallback(failCb, json);
-                                    } catch (JSONException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                    e.printStackTrace();
+                                    jsCallback(failCb, e.getMessage());
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, optionsObj.optInt("duration",600));
-
+                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : Integer.parseInt(optionsObj.optString("time")));
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }
@@ -142,14 +141,7 @@ public class VideoService extends ImpPlugin {
                 File mediaStorageDir = new File(path);
                 if (!mediaStorageDir.exists()) {
                     if (!mediaStorageDir.mkdirs()) {
-                        Log.e("TAG", "文件夹创建失败");
-                        try {
-                            JSONObject json = new JSONObject();
-                            json.put("errorMessage", "文件夹创建失败");
-                            jsCallback(failCb, json);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        jsCallback(failCb, "文件夹创建失败");
                         return null;
                     }
                 }
@@ -166,13 +158,7 @@ public class VideoService extends ImpPlugin {
                 return mediaFile;
             }
         }
-        try {
-            JSONObject json = new JSONObject();
-            json.put("errorMessage", "文件操作失败");
-            jsCallback(failCb, json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        jsCallback(failCb, "文件操作失败");
         return null;
     }
 
@@ -187,27 +173,72 @@ public class VideoService extends ImpPlugin {
 
     }
 
+    private void uploadShortVideo(String localSource) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("status", 1);
+            JSONObject result = new JSONObject();
+            decodeVideoToBase64(localSource, result);
+            json.put("result", result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        jsCallback(successCb, json);
+    }
+
+    private void decodeVideoToBase64(String localPath, JSONObject result) {
+        try {
+            File file = new File(FilePathUtils.getRealPath(localPath));
+            FileInputStream inputFile = new FileInputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = inputFile.read(buffer)) >= 0) {
+                baos.write(buffer, 0, count);//读取输入流并写入输出字节流中
+            }
+            inputFile.close();//关闭文件输入流
+            result.put("base64", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+            result.put("value", localPath);
+            result.put("duration",15);
+            result.put("type","mp4");
+            result.put("fileSize",count);
+            result.put("name",file.getName());
+        } catch (Exception e) {
+            jsCallback(failCb, e.getMessage());
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
             if (data != null && data.getData() != null) {
                 try {
-                    JSONObject json = new JSONObject();
-                    json.put("path", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
-                    jsCallback(successCb, json);
+                    if (returnBase64) {
+                        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                            }
+
+                            @Override
+                            public void onPermissionRequestFail(List<String> permissions) {
+                                ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                            }
+                        });
+                    } else {
+                        JSONObject json = new JSONObject();
+                        json.put("status", 1);
+                        JSONObject result = new JSONObject();
+                        result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                        json.put("result", result);
+                        jsCallback(successCb, json);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else {
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put("errorMessage", getFragmentContext().getString(R.string.web_video_record_fail));
-                    jsCallback(failCb, json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                jsCallback(failCb, getFragmentContext().getString(R.string.web_video_record_fail));
             }
         }
     }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.util.Base64Utils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -50,6 +51,7 @@ import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +77,7 @@ public class FileTransferService extends ImpPlugin {
     private String downloadUrl = "", filepath = "", fileName = "", fileType = "",
             absoluteFilePath = "", reallyPath = ""; //reallyPath 文件的整体路径
     // 下载回调
-    private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack;
+    private String downloadSucCB, downloadFailCB, fileInfo, saveFileCallBack, blockImageCallBack;
     // 上传文件参数
     private String uploadUrl = "", uploadName = "";
     // 上传回调
@@ -86,6 +88,8 @@ public class FileTransferService extends ImpPlugin {
     private String result;
     // 判断是否是下载文件
     private boolean flag;
+
+    private String headerObj;
     // 通知
     private Notification notification;
     // 通知栏ID
@@ -126,6 +130,18 @@ public class FileTransferService extends ImpPlugin {
                                 + setFormat(downloadSize) + "/"
                                 + setFormat(totalSize);
                         ratioText.setText(text);
+                        if (saveFileCallBack != null) {
+                            try {
+                                JSONObject json = new JSONObject();
+                                json.put("status", 1);
+                                JSONObject result = new JSONObject();
+                                result.put("progress", progress);
+                                json.put("result", result);
+                                jsCallback(saveFileCallBack, json);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                     break;
                 // 下载失败
@@ -211,6 +227,7 @@ public class FileTransferService extends ImpPlugin {
     private long fileSize;
     private String fileId; // 文件ID
     private String createTime; // 文件创建时间
+    private boolean isUploadingFile = false;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -245,6 +262,11 @@ public class FileTransferService extends ImpPlugin {
             case "listFile":
                 //列出在指定目录下的文件名
                 listFile(paramsObject);
+                break;
+            //分段上传文件
+            case "getBlockLocalImg":
+            case "getBlockLocalVideo":
+                getBlockLocalImg(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -306,6 +328,94 @@ public class FileTransferService extends ImpPlugin {
         } catch (Exception e) {
             jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 列出文件夹中所有文件
+     *
+     * @param paramsObject
+     */
+    private void getBlockLocalImg(JSONObject paramsObject) {
+        if (isUploadingFile) return;
+        isUploadingFile = true;
+        blockImageCallBack = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 4096);
+        // 绝对路径、相对路径
+        int persistentStorage = JSONUtils.getInt(optionsJsonObject, "persistentStorage", 0);
+        String filePath = JSONUtils.getString(optionsJsonObject, "filePath", "");
+        uploadFileInBlock(filePath, blockSize);
+    }
+
+    /**
+     * @param offset    偏移量
+     * @param blockSize 每块的大小
+     * @return 这一片的数据
+     */
+    private String getBlock(int offset, int blockSize, String base64Str) {
+        return base64Str.substring(offset, blockSize);
+    }
+
+    private void uploadFileInBlock(String filePath, int blockSize) {
+        // imp方法接受文件名称，
+        String base64Stream = null;
+        try {
+            base64Stream = Base64Utils.encodeBase64File(filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!StringUtils.isEmpty(base64Stream)) {
+            //计算文件分片的总块数
+            long totalBlock = base64Stream.length() / blockSize + (base64Stream.length() % blockSize > 0 ? 1 : 0);
+            //包含上传可能是0长度但有内容的文件
+            uploadFileInBlock(base64Stream, Math.max(totalBlock, 1), 1, blockSize);
+            isUploadingFile = false;
+        } else {
+            //不存在则回调错误方法
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 0);
+                jsCallback(blockImageCallBack, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            isUploadingFile = false;
+        }
+    }
+
+    private void uploadFileInBlock(String base64Stream, long totalBlock, int currentBlock, int PART_SIZE) {
+        String uploadStream = base64Stream;
+        if (currentBlock == totalBlock) {
+            uploadStream = uploadStream.substring((currentBlock - 1) * PART_SIZE, base64Stream.length());
+        } else {
+            uploadStream = uploadStream.substring((currentBlock - 1) * PART_SIZE, currentBlock * PART_SIZE);
+        }
+        if (StringUtils.isEmpty(uploadStream) && currentBlock != totalBlock) {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("status", 0);
+                jsCallback(blockImageCallBack, json);
+            } catch (JSONException e) {
+                isUploadingFile = false;
+                e.printStackTrace();
+            }
+            return;
+        }
+        try {
+            JSONObject json = new JSONObject();
+            json.put("status", 1);
+            JSONObject result = new JSONObject();
+            result.put("currentContent", uploadStream);
+            result.put("allBlockSize", totalBlock);
+            result.put("currentBlockNum", currentBlock);
+            json.put("result", result);
+            jsCallback(blockImageCallBack, json);
+            if (currentBlock == totalBlock) return;
+            uploadFileInBlock(base64Stream, totalBlock, currentBlock + 1, PART_SIZE);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            isUploadingFile = false;
         }
     }
 
@@ -438,6 +548,10 @@ public class FileTransferService extends ImpPlugin {
             if (!jsonObject.isNull("errorCallback")) {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
+            if (!jsonObject.isNull("headers")) {
+                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
+                headerObj = headerJsonObject.toString();
+            }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
         } catch (JSONException e) {
@@ -473,7 +587,7 @@ public class FileTransferService extends ImpPlugin {
             showDownloadStatus();
         } else {
             Intent intent = new Intent(getFragmentContext(), WebFileDownloadActivity.class);
-            WebFileDownloadBean webFileDownloadBean = new WebFileDownloadBean(fileId, fileSize, createTime, downloadUrl, fileName);
+            WebFileDownloadBean webFileDownloadBean = new WebFileDownloadBean(fileId, fileSize, createTime, downloadUrl, fileName, headerObj);
             intent.putExtra("webFileDownload", webFileDownloadBean);
             getFragmentContext().startActivity(intent);
         }
@@ -516,7 +630,7 @@ public class FileTransferService extends ImpPlugin {
                 result = FileUtils.encodeBase64File(filePath);
                 callbackSuccess(result);
             } catch (Exception e) {
-                callbackFail(result);
+                callbackFail(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -816,11 +930,12 @@ public class FileTransferService extends ImpPlugin {
             uploadPathList.add(filePath);
         }
         JSONObject dataObj = JSONUtils.getJSONObject(optionsObj, "data", null);
-        showFileUploadDlg(uploadPathList, isShowProgress, dataObj);
+        JSONObject headerObj = JSONUtils.getJSONObject(optionsObj, "header", null);
+        showFileUploadDlg(uploadPathList, isShowProgress, dataObj, headerObj);
 
     }
 
-    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj) {
+    private void showFileUploadDlg(List<String> uploadPathList, final boolean isShowProgress, JSONObject dataObj, JSONObject headerObj) {
         RequestParams params = new RequestParams(uploadUrl);
         params.setConnectTimeout(30000);
         params.setMultipart(true);
@@ -834,6 +949,17 @@ public class FileTransferService extends ImpPlugin {
                     e.printStackTrace();
                 }
 
+            }
+        }
+        if (headerObj != null) {
+            Iterator<String> keys = headerObj.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    params.addHeader(key, headerObj.getString(key));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         for (int i = 0; i < uploadPathList.size(); i++) {

@@ -15,12 +15,14 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
+import com.inspur.emmcloud.basemodule.media.selector.dialog.RemindDialog;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -58,6 +60,8 @@ import java.util.Set;
  */
 
 public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAdapter.ViewHolder> {
+
+    private static final Integer MAX_MULTI_SELECT_COUNT = 100;
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
@@ -176,7 +180,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 holder.sendingLoadingView.setVisibility(View.GONE);
             } else {
                 boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-                holder.sendStatusLayout.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
+                holder.sendStatusLayout.setVisibility(isMyMsg ? (mMultipleSelect ? View.GONE : View.INVISIBLE) : View.GONE);
+                RelativeLayout.LayoutParams cardLayoutParams = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
+                cardLayoutParams.leftMargin = DensityUtil.dip2px(mMultipleSelect ? 15 : 5);
+                holder.cardLayout.setLayoutParams(cardLayoutParams);
             }
             holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -449,7 +456,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
         if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
-            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : View.INVISIBLE);
+            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : (mMultipleSelect ? View.GONE : View.INVISIBLE));
             holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
         } else {
             holder.senderPhotoImgRight.setVisibility(View.GONE);
@@ -643,6 +650,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     checkbox.setImageResource(R.drawable.ic_select_no);
                     mSelectedMessages.remove(uiMessage);
                 } else {
+                    if (mSelectedMessages.size() >= MAX_MULTI_SELECT_COUNT) {
+                        RemindDialog.buildDialog(context, context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "")).show();
+                        return true;
+                    }
                     checkbox.setImageResource(R.drawable.ic_select_yes);
                     mSelectedMessages.add(uiMessage);
                 }

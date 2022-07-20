@@ -991,6 +991,7 @@
     <string name="read_disappear">Burn after reading</string>
     <string name="voice_whisper">whisper</string>
     <string name="click_to_burn">Click to view</string>
+    <string name="multi_select_max_tip">You can not select more than %1$s chat records</string>
     <string name="video_communication_turn_to_voice_call">Switch to voice call</string>
     <string name="video_communication_switch_camera">Switch cameras</string>
     <string name="video_communication_waiting_answer">Connection...</string>

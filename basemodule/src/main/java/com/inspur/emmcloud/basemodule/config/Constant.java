@@ -339,6 +339,14 @@ public class Constant {
     public static final String AROUTER_CLASS_SETTING_FACEVERIFY = "/setting/FaceVerify";
     public static final String AROUTER_CLASS_SETTING_SERVICE_TERM = "/setting/serviceTerm";
 
+    //蓝牙
+    public static final int BLUETOOTH_MESSAGE_STATE_CHANGE = 1;
+    public static final int BLUETOOTH_MESSAGE_READ = 2;
+    public static final int BLUETOOTH_MESSAGE_WRITE = 3;
+    public static final int BLUETOOTH_MESSAGE_DEVICE_NAME = 4;
+    public static final int BLUETOOTH_MESSAGE_TOAST = 5;
+    public static final String BLUETOOTH_DEVICE_NAME = "device_name";
+    public static final String BLUETOOTH_TOAST = "toast";
 
     //参会状态
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;

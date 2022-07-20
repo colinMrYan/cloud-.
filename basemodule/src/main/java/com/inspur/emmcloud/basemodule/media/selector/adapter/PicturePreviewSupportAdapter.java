@@ -233,4 +233,10 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
             }
         }
     }
+
+    // 修复编辑图片完成刷新失败问题
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
 }

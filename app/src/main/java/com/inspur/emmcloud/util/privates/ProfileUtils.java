@@ -27,6 +27,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.tencent.mmkv.MMKV;
 
 import java.util.List;
 
@@ -114,8 +115,10 @@ public class ProfileUtils {
      * @return
      */
     private boolean isForceUpdateProfile() {
-        String accessToken = PreferencesUtils.getString(
-                activity, "accessToken", "");
+//        String accessToken = PreferencesUtils.getString(
+//                activity, "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String accessToken = kv.decodeString("accessToken", "");
         //2.6.0以下版本使用消息V0的路由，2.6.0或以上使用消息V1的路由
         return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
     }

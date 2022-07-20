@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.multidex.MultiDexApplication;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -26,6 +27,7 @@ import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
@@ -41,6 +43,7 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.tencent.mmkv.MMKV;
 import com.tencent.ugc.TXUGCBase;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
@@ -127,6 +130,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         x.Ext.setDebug(true);
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
 
+        // 微信 MMKV 替代SharedPreference
+        String rootDir = MMKV.initialize(this);
+        LogUtils.debug("mmkv root: ", rootDir);
+
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
@@ -141,13 +148,31 @@ public abstract class BaseApplication extends MultiDexApplication {
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 Constant.PREF_IS_CONTACT_READY, false);
         uid = PreferencesUtils.getString(getInstance(), "userID");
-        accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
-        refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+//        accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
+//        refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+//        accessToken = PreferencesProvider.getString(getInstance(), "accessToken", "");
+//        refreshToken = PreferencesProvider.getString(getInstance(), "refreshToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        accessToken = kv.decodeString("accessToken", "");
+        refreshToken = kv.decodeString("refreshToken", "");
+        // 先从MMKV里取token，如果是空，则从SP取，防止首次取到位空
+        if (TextUtils.isEmpty(accessToken)) {
+            accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
+            refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
+            if (!TextUtils.isEmpty(accessToken)) {
+                // MMKV替换原有 SP数据
+                kv.encode("accessToken", accessToken);
+                kv.encode("refreshToken", refreshToken);
+                // 将 sp置为空
+                PreferencesUtils.putString(getInstance(), "accessToken", "");
+                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+            }
+        }
         if ("11487".equals(uid)) {
             // 郑总token刷新失败分析日志
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 String processName = getProcessName();
-                PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + accessToken + "---rt---" + refreshToken + "---processName---" + processName);
+                PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + this.accessToken + "---rt---" + this.refreshToken + "---processName---" + processName);
             }
         }
         //科大讯飞语音SDK初始化
@@ -373,8 +398,14 @@ public abstract class BaseApplication extends MultiDexApplication {
                 tanent = currentEnterprise.getCode();
             } else {
                 PreferencesUtils.putString(getInstance(), "myInfo", "");
-                PreferencesUtils.putString(getInstance(), "accessToken", "");
-                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+//                PreferencesUtils.putString(getInstance(), "accessToken", "");
+//                PreferencesUtils.putString(getInstance(), "refreshToken", "");
+//                PreferencesProvider.save(getInstance(), "accessToken", "");
+//                PreferencesProvider.save(getInstance(), "refreshToken", "");
+                // MMKV 替换 SharedPreferences
+                MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+                kv.encode("accessToken", "");
+                kv.encode("refreshToken", "");
                 PreferencesUtils.putInt(getInstance(), "keepAlive", 0);
                 PreferencesUtils.putString(getInstance(), "tokenType", "");
                 PreferencesUtils.putInt(getInstance(), "expiresIn", 0);
@@ -444,8 +475,10 @@ public abstract class BaseApplication extends MultiDexApplication {
      * @return
      */
     public boolean isHaveLogin() {
-        String accessToken = PreferencesUtils.getString(this,
-                "accessToken", "");
+//        String accessToken = PreferencesUtils.getString(this,
+//                "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        accessToken = kv.decodeString("accessToken", "");
         String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
         boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);

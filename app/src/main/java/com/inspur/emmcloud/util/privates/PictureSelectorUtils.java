@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
 import com.inspur.emmcloud.R;
@@ -39,6 +40,7 @@ public class PictureSelectorUtils {
     private static final int GALLERY_RESULT = 2;
     private static final int DEFAULT_IMAGE_NUMBER = 5;
     private static final int DEFAULT_VIDEO_NUMBER = 5;
+
     public static PictureSelectorUtils getInstance() {
         if (mInstance == null) {
             synchronized (PictureSelectorUtils.class) {
@@ -50,24 +52,40 @@ public class PictureSelectorUtils {
         return mInstance;
     }
 
-
     public void openGallery(Context context) {
-        openGallery(context, SelectMimeType.ofImage(),  DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
+        openGallery(context, SelectMimeType.ofImage(), DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
     }
 
     public void openGallery(Context context, int selectionMode, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
-        openGallery(context, selectionMode, true,true,false, maxImageNumber,maxVideoNumber, galleryCallbackNum);
+        openGallery(context, selectionMode, true, true, false, maxImageNumber, maxVideoNumber, galleryCallbackNum);
     }
 
-    public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int GalleryCallbackNum) {
+    public void openGallery(Fragment fragment, int selectionMode, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
+        openGallery(fragment, selectionMode, true, true, false, maxImageNumber, maxVideoNumber, galleryCallbackNum);
+    }
+
+    public void openGallery( Fragment fragment,int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
+        Context context = fragment.getContext();
+        PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
+        selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
+        selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
+        selectorStyle.setTitleBarStyle(getTitleBarStyle());
+        PictureSelectionModel selectionModel = getSelectionModel(fragment, selectionMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
+        selectionModel.setSelectorUIStyle(selectorStyle);
+        selectionModel.forResult(galleryCallbackNum);
+    }
+
+    public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
         PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
         selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
         selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
         selectorStyle.setTitleBarStyle(getTitleBarStyle());
         PictureSelectionModel selectionModel = getSelectionModel(context, selectionMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
         selectionModel.setSelectorUIStyle(selectorStyle);
-        selectionModel.forResult(GalleryCallbackNum);
+        selectionModel.forResult(galleryCallbackNum);
     }
+
+
 
     private PictureSelectionModel getSelectionModel(Context context) {
         return getSelectionModel(context, SelectMimeType.ofAll(), true, true, false, 9, 9);
@@ -91,6 +109,98 @@ public class PictureSelectorUtils {
 
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         return getSelectionModel(context, chooseMode, true, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
+    }
+
+    private PictureSelectionModel getSelectionModel(Fragment fragment, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
+        PictureSelectionModel selectionModel = PictureSelector.create(fragment)
+                // 目前只支持图片，后续完善视频
+                .openGallery(chooseMode)
+                // 微信样式
+//                .setSelectorUIStyle(selectorStyle)
+                .setImageEngine(GlideEngine.createGlideEngine())
+                // 剪裁引擎 暂时不用
+//              .setCropEngine(getCropFileEngine())
+
+                .setCompressEngine(new ImageFileCompressEngine())
+                .setSandboxFileEngine(new MeSandboxFileEngine())
+                // 相机相关 暂时不用
+//                                .setCameraInterceptListener(getCustomCameraEvent())
+                // 录音相关 暂时不用
+//                                .setRecordAudioInterceptListener(new MeOnRecordAudioInterceptListener())
+                .setSelectLimitTipsListener(new MeOnSelectLimitTipsListener())
+                // 编辑 暂时不用
+//                                .setEditMediaInterceptListener(getCustomEditMediaEvent())
+//                .setPermissionDescriptionListener(getPermissionDescriptionListener())
+                // 自定义预览，不用
+//                .setPreviewInterceptListener(getPreviewInterceptListener())
+//                                .setPermissionDeniedListener(getPermissionDeniedListener())
+                // 添加水印，暂时不用
+//                .setAddBitmapWatermarkListener(getAddBitmapWatermarkListener())
+                // 视频缩略图，暂时不用
+//                .setVideoThumbnailListener(getVideoThumbnailEventListener())
+                // 视频自动播放，不需要
+//                .isAutoVideoPlay(cb_auto_video.isChecked())
+                // 视频循环播放，不需要
+//                .isLoopAutoVideoPlay(cb_auto_video.isChecked())
+                // 过滤文件类型
+//                              .setQueryFilterListener(new OnQueryFilterListener() {
+//                                    @Override
+//                                    public boolean onFilter(String absolutePath) {
+//                                        return PictureMimeType.isUrlHasVideo(absolutePath);
+//                                    }
+//                                })
+                // 自定义加载器
+//                                .setExtendLoaderEngine(getExtendLoaderEngine())
+                // 自定义布局，不需要
+                .setInjectLayoutResourceListener(null)
+                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                .setLanguage(LanguageConfig.SYSTEM_LANGUAGE)
+                // 显示顺序，默认即可
+//                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
+                // 时间轴
+                .isDisplayTimeAxis(isDisplayTimeAxis)
+                // 查询指定目录
+                .isOnlyObtainSandboxDir(false)
+                // 分页模式
+                .isPageStrategy(false)
+                // 原图功能
+                .isOriginalControl(useOriginalControl)
+                // 显示相机
+                .isDisplayCamera(displayCamera)
+                // 开启点击声音
+                .isOpenClickSound(false)
+                // 剪裁默认不支持gif，webp
+                .setSkipCropMimeType((String) null)
+                // 滑动选择，长按选择，可保留，微信没有
+                .isFastSlidingSelect(true)
+                //.setOutputCameraImageFileName("luck.jpeg")
+                //.setOutputCameraVideoFileName("luck.mp4")
+                // 视频图片同选
+                .isWithSelectVideoImage(true)
+                // 全屏预览，与微信相同
+                .isPreviewFullScreenMode(true)
+                // 预览缩放效果
+                .isPreviewZoomEffect(true)
+                // 点击预览 与微信相同
+                .isPreviewImage(true)
+                // 预览视频，与微信相同
+                .isPreviewVideo(true)
+                // 音频不需要
+                .isPreviewAudio(false)
+                //.setQueryOnlyMimeType(PictureMimeType.ofGIF())
+                // 是否显示蒙层 false 与微信保持一致
+                .isMaxSelectEnabledMask(false)
+                // 单选模式直接返回
+//                .isDirectReturnSingle()
+                // 图片，视频最多选择个数
+                .setMaxSelectNum(maxImageNumber)
+                .setMaxVideoSelectNum(maxVideoNumber)
+                // 图片列表加载动画
+                .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
+                // 是否显示gif，默认不显示
+                .isGif(false)
+                .setSelectedData(null);
+        return selectionModel;
     }
 
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
@@ -140,15 +250,15 @@ public class PictureSelectorUtils {
                 // 显示顺序，默认即可
 //                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
                 // 时间轴
-                .isDisplayTimeAxis(true)
+                .isDisplayTimeAxis(isDisplayTimeAxis)
                 // 查询指定目录
                 .isOnlyObtainSandboxDir(false)
                 // 分页模式
                 .isPageStrategy(false)
                 // 原图功能
-                .isOriginalControl(true)
+                .isOriginalControl(useOriginalControl)
                 // 显示相机
-                .isDisplayCamera(false)
+                .isDisplayCamera(displayCamera)
                 // 开启点击声音
                 .isOpenClickSound(false)
                 // 剪裁默认不支持gif，webp
@@ -175,8 +285,8 @@ public class PictureSelectorUtils {
                 // 单选模式直接返回
 //                .isDirectReturnSingle()
                 // 图片，视频最多选择个数
-                .setMaxSelectNum(5)
-                .setMaxVideoSelectNum(5)
+                .setMaxSelectNum(maxImageNumber)
+                .setMaxVideoSelectNum(maxVideoNumber)
                 // 图片列表加载动画
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 // 是否显示gif，默认不显示

@@ -60,7 +60,9 @@ import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.R2;
 import com.inspur.emmcloud.web.plugin.IPlugin;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
+import com.inspur.emmcloud.web.plugin.audio.IMPAudioService;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
+import com.inspur.emmcloud.web.plugin.bluetooth.BlueToothService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.invoice.InvoiceService;
@@ -107,6 +109,11 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private static final int REQUEST_EDIT_SCREENSHOT_IMG = 11;
     public static final int SHARE_WEB_URL_REQUEST = 12;
+    public static final int REQUEST_CODE_RECORD_AUDIO = 13;
+    public  static final int REQUEST_CONNECT_DEVICE_SECURE = 14;
+    public static final int REQUEST_CONNECT_DEVICE_INSECURE = 15;
+    public static final int SELECTOR_SERVICE_GALLERY_REQUEST = 16;
+//    public  static final int GELLARY_RESULT = 2;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";
     private static String EXTRA_OUTSIDE_URL_REQUEST_RESULT = "extra_outside_url_request_result";
@@ -433,6 +440,10 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
             }
         }
 
+    }
+
+    public void displayOrHideTitle(boolean show) {
+        headerLayout.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
 
@@ -884,6 +895,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                         break;
                     case PHOTO_SERVICE_CAMERA_REQUEST:
                     case PHOTO_SERVICE_GALLERY_REQUEST:
+                    case SELECTOR_SERVICE_GALLERY_REQUEST:
                         serviceName = PhotoService.class.getCanonicalName().trim();
                         break;
                     case SELECT_STAFF_SERVICE_REQUEST:
@@ -903,6 +915,14 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                         break;
                     case SHARE_WEB_URL_REQUEST:
                         serviceName = WindowService.class.getCanonicalName();
+                        break;
+                    case REQUEST_CODE_RECORD_AUDIO:
+                        serviceName = IMPAudioService.class.getCanonicalName();
+                        break;
+                    case REQUEST_CONNECT_DEVICE_SECURE:
+                    case REQUEST_CONNECT_DEVICE_INSECURE:
+                        serviceName = BlueToothService.class.getCanonicalName();
+                        break;
                     default:
                         break;
                 }

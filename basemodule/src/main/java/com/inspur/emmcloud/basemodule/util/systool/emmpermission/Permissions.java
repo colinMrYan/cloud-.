@@ -14,6 +14,7 @@ public final class Permissions {
     public static final String WRITE_CALENDAR = "android.permission.WRITE_CALENDAR";
 
     public static final String CAMERA = "android.permission.CAMERA";
+    public static final String FLASHLIGHT = "android.permission.FLASHLIGHT";
 
     public static final String READ_CONTACTS = "android.permission.READ_CONTACTS";
     public static final String WRITE_CONTACTS = "android.permission.WRITE_CONTACTS";
@@ -42,6 +43,8 @@ public final class Permissions {
 
     public static final String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
     public static final String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
+
+    public static final String BLUE_TOOTH = "android.permission.BLUETOOTH";
     public static final String[] CONTACTS = new String[]{
             Permissions.READ_CONTACTS,
             Permissions.WRITE_CONTACTS,
@@ -73,6 +76,9 @@ public final class Permissions {
     public static final String[] CALENDAR = new String[]{
             Permissions.READ_CALENDAR, Permissions.WRITE_CALENDAR
     };
+    public static final String[] BLUETOOTH = new String[]{
+            Permissions.ACCESS_FINE_LOCATION,
+            Permissions.ACCESS_COARSE_LOCATION};
 
     /**
      * Turn permissions into text.

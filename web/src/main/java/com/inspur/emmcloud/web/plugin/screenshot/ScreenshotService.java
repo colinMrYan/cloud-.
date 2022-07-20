@@ -2,13 +2,15 @@ package com.inspur.emmcloud.web.plugin.screenshot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.util.BitmapUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -19,15 +21,15 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -37,11 +39,12 @@ import java.util.ArrayList;
 
 public class ScreenshotService extends ImpPlugin {
     private CustomShareListener mShareListener;
-
+    private String successCb, failCb;
+    private boolean shareThirdParty = true;
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
-            screenshot();
+            screenshot(paramsObject);
         } else if(action.equals("enableScreenshot")){
             setWindowSecure(true);
         } else if(action.equals("disableScreenshot")){
@@ -78,10 +81,14 @@ public class ScreenshotService extends ImpPlugin {
         }
     }
 
-    private void screenshot() {
+    private void screenshot(JSONObject paramsObject) {
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().hideScreenshotImg();
         }
+        JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
+        shareThirdParty = JSONUtils.getBoolean(options, "isShare", true);
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = JSONUtils.getString(paramsObject, "fail", "");
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
         AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
@@ -95,7 +102,9 @@ public class ScreenshotService extends ImpPlugin {
         if (resultCode == Activity.RESULT_OK) {
             String screenshotImgPath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
             AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
-            shareScreenshotImg(screenshotImgPath);
+            if (shareThirdParty) {
+                shareScreenshotImg(screenshotImgPath);
+            }
 
         }
     }
@@ -103,18 +112,42 @@ public class ScreenshotService extends ImpPlugin {
     /**
      * 分享到微信 QQ
      **/
-    public void shareScreenshotImg(final String screenshotImgPath) {
-        UMConfigure.init(getActivity(), "59aa1f8f76661373290010d3"
+    private void shareScreenshotImg(final String screenshotImgPath) {
+        UMConfigure.init(getFragmentContext(), "59aa1f8f76661373290010d3"
                 , "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
+        UMConfigure.setLogEnabled(false);
+        mShareListener = new CustomShareListener(getActivity(), new ShareCallback() {
+            @Override
+            public void shareSuccess() {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("status", 1);
+                    JSONObject result = new JSONObject();
+                    json.put("result", result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsCallback(successCb, json);
+            }
+
+            @Override
+            public void shareFailure(String errorMessage) {
+                jsCallback(failCb, errorMessage);
+            }
+
+            @Override
+            public void shareCancel() {
+                jsCallback(failCb, "取消分享");
+            }
+        });
         PlatformConfig.setWeixin(Constant.WECHAT_APPID, "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
-        mShareListener = new CustomShareListener(getActivity());
-
-        ShareAction shareAction = new ShareAction(getActivity());
+        ShareAction shareAction = new ShareAction(getActivity())
+                .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ)
+                .setCallback(mShareListener);
         shareAction.setShareboardclickCallback(new ShareBoardlistener() {
             @Override
             public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-
                 switch (snsPlatform.mKeyword) {
                     case "CLOUDPLUSE":
                         ArrayList<String> urlList = new ArrayList<>();
@@ -123,32 +156,24 @@ public class ScreenshotService extends ImpPlugin {
                         bundle.putStringArrayList(Constant.SHARE_FILE_URI_LIST, urlList);
                         ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_SHARE_FILE).with(bundle).navigation();
                         break;
-                    case "wechat":
-                        new ShareAction(getActivity()).withMedia(new UMImage(getActivity(), new File(screenshotImgPath)))
-                                .setPlatform(SHARE_MEDIA.WEIXIN)
-                                .setCallback(mShareListener)
-                                .share();
-                        break;
-                    case "qq":
-                        new ShareAction(getActivity()).withMedia(new UMImage(getActivity(), new File(screenshotImgPath)))
-                                .setPlatform(SHARE_MEDIA.QQ)
-                                .setCallback(mShareListener)
-                                .share();
+                    default:
+                        try {
+                            Bitmap bitmap = BitmapUtils.revitionImageSize(screenshotImgPath);
+                            UMImage image = new UMImage(getActivity(), bitmap);
+                            image.compressStyle = UMImage.CompressStyle.SCALE;
+                            new ShareAction(getActivity()).withMedia(image)
+                                    .setPlatform(share_media)
+                                    .setCallback(mShareListener)
+                                    .share();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         break;
                 }
             }
         });
-
-
-        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), "com.tencent.mm")) {
-            shareAction.addButton(PlatformName.WEIXIN, "wechat", "umeng_socialize_wechat", "umeng_socialize_wechat");
-        }
-        if (AppUtils.isAppInstalled(BaseApplication.getInstance(), "com.tencent.mobileqq")) {
-            shareAction.addButton(PlatformName.QQ, "qq", "umeng_socialize_qq", "umeng_socialize_qq");
-        }
-        shareAction.addButton(getFragmentContext().getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
+        shareAction.addButton(getActivity().getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
         shareAction.open();
-
     }
 
 
@@ -157,12 +182,21 @@ public class ScreenshotService extends ImpPlugin {
 
     }
 
+    private interface ShareCallback {
+        void shareSuccess();
+        void shareFailure(String errorMessage);
+        void shareCancel();
+    }
+
     private static class CustomShareListener implements UMShareListener {
 
         private WeakReference<BaseActivity> mActivity;
+        private ShareCallback shareCallback;
+        private String failure;
 
-        private CustomShareListener(Activity activity) {
+        private CustomShareListener(Activity activity, ShareCallback callback) {
             mActivity = new WeakReference(activity);
+            shareCallback = callback;
         }
 
         @Override
@@ -173,6 +207,7 @@ public class ScreenshotService extends ImpPlugin {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             ToastUtils.show(mActivity.get(), R.string.baselib_share_success);
+            shareCallback.shareSuccess();
         }
 
         @Override
@@ -181,12 +216,12 @@ public class ScreenshotService extends ImpPlugin {
             if (t != null) {
                 LogUtils.jasonDebug("throw:" + t.getMessage());
             }
-
+            shareCallback.shareFailure(t != null ? t.getMessage() : "分享失败！！");
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-
+            shareCallback.shareCancel();
         }
     }
 }

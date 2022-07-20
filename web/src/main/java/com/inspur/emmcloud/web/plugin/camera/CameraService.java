@@ -527,13 +527,13 @@ public class CameraService extends ImpPlugin {
             byte[] thumbnailFileBytesBase64 = Base64.encode(thumbnailFileBytes, Base64.NO_WRAP);
             String thumbnailOutput = new String(thumbnailFileBytesBase64);
             jsonObject.put("thumbnailUrl", thumbnailImgPath);
-            jsonObject.put("thumbnailData", thumbnailOutput.toString());
+            jsonObject.put("thumbnailData", thumbnailOutput);
 
             byte[] originalFileBytes = FileUtils.file2Bytes(originImgPath);
             byte[] originalFileBytesBase64 = Base64.encode(originalFileBytes, Base64.NO_WRAP);
             String originalOutput = new String(originalFileBytesBase64);
             jsonObject.put("originalUrl", originImgPath);
-            jsonObject.put("originalData", originalOutput.toString());
+            jsonObject.put("originalData", originalOutput);
             this.jsCallback(successCb, jsonObject.toString());
         } catch (Exception e) {
             e.printStackTrace();

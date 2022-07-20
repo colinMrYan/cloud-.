@@ -24,6 +24,7 @@ import com.inspur.emmcloud.componentservice.app.CommonCallBack;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.R2;
 import com.inspur.emmcloud.setting.adapter.SettingMyViewPagerAdapter;
+import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +113,10 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
                             // 将首次进入应用的标志位置为false
                             PreferencesUtils.putBoolean(getApplicationContext(),
                                     "isFirst", false);
-                            String accessToken = PreferencesUtils.getString(
-                                    GuideActivity.this, "accessToken", "");
+//                            String accessToken = PreferencesUtils.getString(
+//                                    GuideActivity.this, "accessToken", "");
+                            MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+                            String accessToken = kv.decodeString("accessToken", "");
                             if (!StringUtils.isBlank(accessToken)) {
                                 if (AppUtils.isAppHasUpgraded(GuideActivity.this) && NetUtils.isNetworkConnected(GuideActivity.this)) {
                                     AppService appService = Router.getInstance().getService(AppService.class);

@@ -134,11 +134,11 @@ public class AppSchemeHandleActivity extends BaseActivity {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
             AppUpdateConfigBean appUpdateConfigBean = new AppUpdateConfigBean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_UPDATE_2_NEWVERSION,""));
-            if(!StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
-                ToastUtils.show("暂时不支持此功能，请您使用云上协同");
-                finish();
-                return;
-            }
+//            if(!StringUtils.isBlank(appUpdateConfigBean.getNewVersionURL())){
+//                ToastUtils.show("暂时不支持此功能，请您使用云上协同");
+//                finish();
+//                return;
+//            }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
                 @Override

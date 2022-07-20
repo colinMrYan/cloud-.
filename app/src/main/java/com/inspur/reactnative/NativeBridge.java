@@ -30,6 +30,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.reactnative.bean.AlertButton;
+import com.tencent.mmkv.MMKV;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,7 +76,9 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      * @return
      */
     public String getToken() {
-        String token = PreferencesUtils.getString(getReactApplicationContext(), "accessToken", "");
+//        String token = PreferencesUtils.getString(getReactApplicationContext(), "accessToken", "");
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        String token = kv.decodeString("accessToken", "");
         if (StringUtils.isBlank(token)) {
             return null;
         }

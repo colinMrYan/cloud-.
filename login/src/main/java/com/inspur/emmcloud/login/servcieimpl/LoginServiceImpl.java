@@ -10,6 +10,7 @@ import android.os.Handler;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.login.ui.LoginActivity;
 import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.emmcloud.login.util.OauthUtils;
+import com.tencent.mmkv.MMKV;
 
 /**
  * Created by chenmch on 2019/6/3.
@@ -32,8 +34,14 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
     public void logout(Context context) {
         OauthUtils.getInstance().cancelToken();
         PreferencesUtils.putString(context, "myInfo", "");
-        PreferencesUtils.putString(context, "accessToken", "");
-        PreferencesUtils.putString(context, "refreshToken", "");
+//        PreferencesUtils.putString(context, "accessToken", "");
+//        PreferencesUtils.putString(context, "refreshToken", "");
+//        PreferencesProvider.save(context, "accessToken", "");
+//        PreferencesProvider.save(context, "refreshToken", "");
+        // MMKV 替换 SharedPreferences
+        MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
+        kv.encode("accessToken", "");
+        kv.encode("refreshToken", "");
         PreferencesUtils.putString(context, "userRealName", "");
         PreferencesUtils.putString(context, "userID", "");
         BaseApplication.getInstance().setAccessToken("");

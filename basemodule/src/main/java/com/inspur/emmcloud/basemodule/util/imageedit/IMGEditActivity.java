@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.basemodule.util.imageedit;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
@@ -136,6 +138,57 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
             } else {
                 setResult(Activity.RESULT_CANCELED);
+            }
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(OUT_FILE_PATH, originFilePath);
+            setResult(Activity.RESULT_OK, intent);
+        }
+        finish();
+    }
+
+    @Override
+    public void onDoneClickInSystemStorage() {
+        if (isHaveEdit) {
+            boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
+            File saveFile = null;
+            Intent intent = new Intent();
+            Bitmap bitmap = mImgView.saveBitmap();
+            if (isCoverOriginImg) {
+                saveFile = new File(originFilePath);
+                if (saveFile.exists()) {
+                    saveFile.delete();
+                }
+                if (bitmap != null) {
+                    FileOutputStream fout = null;
+                    try {
+                        fout = new FileOutputStream(saveFile.getAbsolutePath());
+                        bitmap.compress((encodingType == 0) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG, 100, fout);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (fout != null) {
+                            try {
+                                fout.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    intent.putExtra(OUT_FILE_PATH, saveFile.getAbsolutePath());
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    setResult(Activity.RESULT_CANCELED);
+                }
+            } else {
+                if (bitmap != null) {
+                    ContentResolver cr = getContentResolver();
+                    String insertImage = MediaStore.Images.Media.insertImage(cr, bitmap, System.currentTimeMillis() + ".png", null);
+                    intent.putExtra(OUT_FILE_PATH, insertImage);
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    setResult(Activity.RESULT_CANCELED);
+                }
             }
         } else {
             Intent intent = new Intent();

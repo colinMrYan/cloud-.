@@ -22,6 +22,7 @@ import java.io.File;
 public class MapService extends ImpPlugin {
     private final String MAP_BAIDU_APPID = "com.baidu.BaiduMap";
     private final String MAP_AUTONAVI_APPID = "com.autonavi.minimap";
+    private final String MAP_TENCENT_APPID = "com.tencent.map";
     // 当前地址描述
     public String addressInfo;
     // 经度
@@ -94,9 +95,35 @@ public class MapService extends ImpPlugin {
         return array.toString();
     }
 
-    public void navigationByAutonavi(JSONObject jsonObject) {
-        successCb = JSONUtils.getString(jsonObject, "success", "");
-        failCb = JSONUtils.getString(jsonObject, "fail", "");
+    private void navigationByAutonavi(JSONObject jsonObject) {
+        try {
+            if (!jsonObject.isNull("success"))
+                successCb = jsonObject.getString("success");
+            if (!jsonObject.isNull("fail"))
+                failCb = jsonObject.getString("fail");
+            final JSONObject optionsObj = jsonObject.getJSONObject("options");
+            int mapType = 0;
+            if (optionsObj.has("openType")) {
+                mapType = optionsObj.getInt("openType");
+            }
+            switch (mapType) {
+                case 1:
+                    navigationByBaiduAutonavi(jsonObject);
+                    break;
+                case 2:
+                    navigationByTencentAutonavi(jsonObject);
+                    break;
+                case 0:
+                default:
+                    navigationByGaodeAutonavi(jsonObject);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void navigationByGaodeAutonavi(JSONObject jsonObject) {
         if (!isAppInstall(MAP_AUTONAVI_APPID)) {
             callbackFail("未安装此地图");
             return;
@@ -108,10 +135,12 @@ public class MapService extends ImpPlugin {
             Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
             Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
             String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
-            String fromName = JSONUtils.getString(optionsObj, "sName", "");
-            String toName = JSONUtils.getString(optionsObj, "dName", "");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
             if (coordType.equals("WGS84")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -120,7 +149,7 @@ public class MapService extends ImpPlugin {
                 toLongitude = toLocation[0];
                 toLatitude = toLocation[1];
             } else if (coordType.equals("BD09")) {
-                if (fromLatitude != null && fromLatitude != null) {
+                if (fromLatitude != null && fromLongitude != null) {
                     double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
                     fromLongitude = fromLocation[0];
                     fromLatitude = fromLocation[1];
@@ -131,7 +160,7 @@ public class MapService extends ImpPlugin {
             }
             StringBuilder builder = new StringBuilder("amapuri://route/plan?sourceApplication=");
             builder.append(getFragmentContext().getPackageName());
-            if (fromLatitude != null && fromLatitude != null) {
+            if (fromLatitude != null && fromLongitude != null) {
                 builder.append("&slat=").append(fromLatitude).append("&slon=").append(fromLongitude);
             }
             if (!StringUtils.isBlank(fromName)) {
@@ -141,9 +170,141 @@ public class MapService extends ImpPlugin {
             if (!StringUtils.isBlank(toName)) {
                 builder.append("&dname=").append(toName);
             }
-            builder.append("&dev=0&t=0");
+            builder.append("&dev=0&t=").append(transportation -1);
             Intent intent = getFragmentContext().getPackageManager()
                     .getLaunchIntentForPackage("com.autonavi.minimap");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(builder.toString()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+
+    }
+
+    public void navigationByBaiduAutonavi(JSONObject jsonObject) {
+        if (!isAppInstall(MAP_BAIDU_APPID)) {
+            callbackFail("未安装此地图");
+            return;
+        }
+        try {
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", null);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", null);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
+            if (coordType.equals("BD09")) {
+                if (fromLatitude != null && fromLongitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            } else if (coordType.equals("WGS84")) {
+                if (fromLatitude != null && fromLongitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            }
+            StringBuilder builder = new StringBuilder("baidumap://map/direction");
+            builder.append("?region=").append(" ");
+            builder.append("&coord_type=gcj02");
+            builder.append("&origin=");
+            if (!StringUtils.isEmpty(fromName)){
+                builder.append("name:").append(fromName);
+            }
+            if (fromLatitude != null && fromLongitude != null) {
+                builder.append("|latlng:").append(fromLatitude).append(",").append(fromLongitude);
+            }
+            builder.append("&destination=");
+            if (!StringUtils.isEmpty(toName)) {
+                builder.append("name:").append(toName);
+            }
+            if (toLatitude != null && toLongitude != null) {
+                builder.append("|latlng:").append(toLatitude).append(",").append(toLongitude);
+            }
+            builder.append("&mode=").append(transportation == 1 ? "driving" : transportation == 2? "transit" : "walking");
+            builder.append("&src=").append(getFragmentContext().getPackageName());
+            Intent intent = getFragmentContext().getPackageManager()
+                    .getLaunchIntentForPackage(MAP_BAIDU_APPID);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(builder.toString()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callbackFail(e.getMessage());
+        }
+
+    }
+
+    public void navigationByTencentAutonavi(JSONObject jsonObject) {
+        if (!isAppInstall(MAP_TENCENT_APPID)) {
+            callbackFail("未安装此地图");
+            return;
+        }
+        try {
+            JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
+            Double fromLongitude = JSONUtils.getDouble(optionsObj, "srclng", null);
+            Double fromLatitude = JSONUtils.getDouble(optionsObj, "srclat", null);
+            Double toLongitude = JSONUtils.getDouble(optionsObj, "dstlng", 0);
+            Double toLatitude = JSONUtils.getDouble(optionsObj, "dstlat", 0);
+            String coordType = JSONUtils.getString(optionsObj, "coordType", "GCJ02");
+            String fromName = JSONUtils.getString(optionsObj, "sname", "");
+            String toName = JSONUtils.getString(optionsObj, "dname", "");
+            int transportation = JSONUtils.getInt(optionsObj, "mode", 1);
+            if (transportation > 3 || transportation < 1) transportation = 1;
+            if (coordType.equals("WGS84")) {
+                if (fromLatitude != null && fromLongitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.wgs84togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.wgs84togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            } else if (coordType.equals("BD09")) {
+                if (fromLatitude != null && fromLongitude != null) {
+                    double[] fromLocation = ECMLoactionTransformUtils.bd09togcj02(fromLongitude, fromLatitude);
+                    fromLongitude = fromLocation[0];
+                    fromLatitude = fromLocation[1];
+                }
+                double[] toLocation = ECMLoactionTransformUtils.bd09togcj02(toLongitude, toLatitude);
+                toLongitude = toLocation[0];
+                toLatitude = toLocation[1];
+            }
+            StringBuilder builder = new StringBuilder("qqmap://map/routeplan");
+            builder.append("?type=").append(transportation == 1 ? "drive" : transportation == 2? "bus" : "walk");
+            if (!StringUtils.isBlank(fromName)) {
+                builder.append("&from=").append(fromName);
+            }
+            if (fromLatitude != null && fromLongitude != null) {
+                builder.append("&fromcoord=").append(fromLatitude).append(",").append(fromLongitude);
+            }
+            if (!StringUtils.isBlank(toName)) {
+                builder.append("&to=").append(toName);
+            }
+            builder.append("&tocoord=").append(toLatitude).append(",").append(toLongitude);
+            //注册开发者账号，获取key
+            builder.append("&referer=").append("EQRBZ-VABWX-LPI4J-TH5ZF-HMDGQ-AYFN2");
+            String str = builder.toString();
+            Intent intent = getFragmentContext().getPackageManager()
+                    .getLaunchIntentForPackage(MAP_TENCENT_APPID);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(builder.toString()));
@@ -176,7 +337,6 @@ public class MapService extends ImpPlugin {
     }
 
     public void navigationToDestination(JSONObject jsonObject) {
-
         try {
             String destination = "";
             String mapId = "";

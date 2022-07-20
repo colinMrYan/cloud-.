@@ -13,10 +13,14 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -37,7 +41,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -48,18 +55,37 @@ import java.util.List;
 public class GpsService extends ImpPlugin implements
         AMapLocationListener {
 
-    public String successCb, failCb;
+    public String successCb, failCb, traceCallBack;
     // 设置回调函数
     private String functName;
     // 声明LocationManager对象
     private LocationManager locationManager;
     private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
     private String coordinateType = "";
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
+    private HashMap<String, String> uploadMapLocationList = new HashMap<>();
     private int locationCount = 0;
-    private AlertDialog dialog;
     private int openLocationStatus = 0;//0代表初始状态，1代表点击了设置,2，代表点了设置之后已经重新定位
+    // 上传地址
+    private String uploadUri;
+    private boolean requestingUri = false;
+    private Timer uploadTimer = new Timer();
+    private boolean uploadTrace = false;
+
+    private TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            if (uploadUri == null) {
+                uploadMapLocationList.clear();
+                if (uploadTimer != null) {
+                    uploadTimer.cancel();
+                    uploadTimer.purge();
+                }
+                return;
+            }
+            requestUploadLocations();
+        }
+    };
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -75,6 +101,9 @@ public class GpsService extends ImpPlugin implements
                 break;
             case "getAddress":
                 getAddress(paramsObject);
+                break;
+            case "uploadTrace":
+                uploadTraceInfo(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -117,6 +146,124 @@ public class GpsService extends ImpPlugin implements
             startLocation();
             PVCollectModelCacheUtils.saveCollectModel("GpsService: onActivityResume", "startLocation");
             openLocationStatus = 2;
+        }
+    }
+
+    private void requestUploadLocations() {
+        if (requestingUri) return;
+        requestingUri = true;
+        RequestParams params = new RequestParams(uploadUri);
+        if (!uploadMapLocationList.containsKey("uid")) {
+            uploadMapLocationList.put("uid", PreferencesUtils.getString(getActivity(), Constant.PREF_LOGIN_USERNAME, ""));
+        }
+        params.addBodyParameter("data", JSONUtils.map2Json(uploadMapLocationList));
+        params.addBodyParameter("code", "0000");
+        params.addBodyParameter("errMsg", "");
+        HttpUtils.request(getActivity(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getActivity(), uploadUri) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                if (traceCallBack != null) {
+                    uploadTraceCallback(true, null);
+                }
+                requestingUri = false;
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                if (traceCallBack != null) {
+                    uploadTraceCallback(false, error);
+                }
+                requestingUri = false;
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                requestingUri = false;
+            }
+
+        });
+    }
+
+    private void uploadTraceCallback(boolean success, String errorInfo) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("status", success ? 1 : 0);
+            JSONObject result = new JSONObject();
+            json.put("result", result);
+            if (!success) {
+                result.put("data", errorInfo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        jsCallback(traceCallBack, json);
+    }
+
+    // 上传位置信息
+    private void uploadTraceInfo(JSONObject jsonObject) {
+        try {
+            if (!jsonObject.isNull("success")) {
+                traceCallBack = jsonObject.getString("success");
+            } else {
+                traceCallBack = null;
+            }
+            final JSONObject optionsObj = jsonObject.getJSONObject("options");
+            if (optionsObj.has("uri")) {
+                uploadUri = optionsObj.getString("uri");
+            } else {
+                uploadUri = null;
+            }
+            if (optionsObj.has("action")) {
+                uploadTrace = optionsObj.getBoolean("action");
+            }
+
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    if (uploadTrace && uploadUri != null) {
+                        open();
+                        startLocation();
+                        if (uploadTimer != null) {
+                            uploadTimer.schedule(timerTask, 0, 4000);
+                        }
+                    } else {
+                        closeUploadPosition();
+                    }
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getFragmentContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getFragmentContext(), permissions));
+                }
+
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+            uploadTraceCallback(false, e.getMessage());
+        }
+    }
+
+    private void closeUploadPosition() {
+        if (traceCallBack != null) {
+            traceCallBack = null;
+        }
+        if (uploadUri != null) {
+            uploadUri = null;
+        }
+        if (timerTask != null) {
+            timerTask.cancel();
+        }
+        if (uploadTimer != null) {
+            uploadTimer.cancel();
+            uploadTimer.purge();
+        }
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+            mlocationClient = null;
+        }
+        if (uploadMapLocationList != null) {
+            uploadMapLocationList = null;
         }
     }
 
@@ -286,7 +433,6 @@ public class GpsService extends ImpPlugin implements
      * 初始化定位
      */
     private void startLocation() {
-
         if (aMapLocationList == null) {
             aMapLocationList = new ArrayList<>();
         }
@@ -318,6 +464,24 @@ public class GpsService extends ImpPlugin implements
         if (aMapLocationList != null) {
             aMapLocationList = null;
         }
+        if (uploadMapLocationList != null) {
+            uploadMapLocationList = null;
+        }
+        if (traceCallBack != null) {
+            traceCallBack = null;
+        }
+        if (uploadUri != null) {
+            uploadUri = null;
+        }
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+        if (uploadTimer != null) {
+            uploadTimer.cancel();
+            uploadTimer.purge();
+            uploadTimer = null;
+        }
         locationCount = 0;
     }
 
@@ -329,7 +493,9 @@ public class GpsService extends ImpPlugin implements
             aMapLocationList.add(amapLocation);
         }
         if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
-            mlocationClient.stopLocation();
+            if (!uploadTrace) {
+                mlocationClient.stopLocation();
+            }
             PVCollectModelCacheUtils.saveCollectModel("GpsService: onLocationChanged", "stopLocation");
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
@@ -359,15 +525,35 @@ public class GpsService extends ImpPlugin implements
                 jsonObject.put("district", amapLocation.getDistrict());
                 jsonObject.put("street", amapLocation.getStreet());
                 jsonObject.put("streetNum", amapLocation.getStreetNum());
+                jsonObject.put("speed", amapLocation.getSpeed());
             } catch (Exception e) {
-                jsCallback(functName, getErrorJson(e.getMessage()));
+                if (uploadTrace) {
+                    uploadTraceCallback(false, e.getMessage());
+                } else {
+                    jsCallback(functName, getErrorJson(e.getMessage()));
+                }
                 e.printStackTrace();
             }
-            jsCallback(functName, jsonObject.toString());
+            if (!uploadTrace) {
+                jsCallback(functName, jsonObject.toString());
+            }
+            ArrayList<String> positionList = new ArrayList<>();
+            if (uploadMapLocationList != null) {
+                String locationList = uploadMapLocationList.get("locations");
+                if (locationList != null) {
+                    positionList = JSONUtils.JSONArray2List(locationList, new ArrayList<String>());
+                    if (!positionList.isEmpty()) {
+                        positionList.add(jsonObject.toString());
+                    }
+                }
+                uploadMapLocationList.put("locations", JSONUtils.toJSONArray(positionList).toString());
+            }
             // 设置回调js页面函数
             LogUtils.debug("yfcLog", "GPSLocation:" + jsonObject.toString());
             // 设置回调js页面函数
-            GpsService.this.onDestroy();
+            if (!uploadTrace) {
+                GpsService.this.onDestroy();
+            }
         }
     }
 

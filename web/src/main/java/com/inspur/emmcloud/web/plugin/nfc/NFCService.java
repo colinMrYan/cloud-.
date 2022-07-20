@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.web.plugin.nfc;
 
+import static com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils.bytesToHexString;
+
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +10,9 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
 import android.os.Parcelable;
 import android.provider.Settings;
 
@@ -33,19 +38,25 @@ public class NFCService extends ImpPlugin {
     private boolean isListenActivityStart = false;
     private PendingIntent mPendingIntent;
     private NfcAdapter NFCAdapter;
+    private String[][] mTechList;
 
-    public static NdefMessage[] getNdefMsg(Intent intent) {
+    public void getNdefMsg(Intent intent) {
         if (intent == null)
-            return null;
-
+            return;
         //nfc卡支持的格式
+        String content = "";
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         String[] temp = tag.getTechList();
+
+        content +="卡片字节数组ID："+tag.getId()+"<br/>";
+        content +="卡片16进制ID："+ bytesToHexString(tag.getId())+"<br/>";
+//        String tagid = reverseTwo(bytesToHexString(tag.getId()).split(","));
+//        content +="卡片16进制翻转ID："+tagid+"<br/>";
+//        content +="卡片10进制卡号："+Integer.parseInt(tagid, 16)+"<br/>";
+
         for (String s : temp) {
             LogUtils.jasonDebug("resolveIntent tag: " + s);
         }
-
-
         String action = intent.getAction();
 
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action) ||
@@ -61,17 +72,40 @@ public class NFCService extends ImpPlugin {
                 for (int i = 0; i < rawMessage.length; i++) {
                     ndefMessages[i] = (NdefMessage) rawMessage[i];
                 }
+                String ndefInfo = "";
+                for (NdefMessage message : ndefMessages){
+                    ndefInfo += message.toString();
+                }
+                callbackSuccess(ndefInfo);
             } else {
                 //未知类型 (公交卡类型)
                 LogUtils.jasonDebug("getNdefMsg: 未知类型");
+                if (StringUtils.isEmpty(content)){
+                    callbackFail("getNdefMsg: 未知类型");
+                } else {
+                    callbackSuccess(content);
+                }
                 //对应的解析操作，在Github上有
             }
-
-
-            return ndefMessages;
         }
+    }
 
-        return null;
+    private static String reverseTwo(String[] str) {
+        String str1 = "";
+        for (int i = 1; i <= str.length; i++) {
+            str1 += str[i - 1];
+            if (i % 2 == 0) {
+                if (i == str.length) {
+                    break;
+                }
+                str1 += ":";
+            }
+        }
+        String str2 = "";
+        for (int i = str1.split(":").length - 1; i >= 0; i--) {
+            str2 += str1.split(":")[i];
+        }
+        return str2;
     }
 
     /*
@@ -113,16 +147,22 @@ public class NFCService extends ImpPlugin {
     }
 
     private void readNfcTag(Intent intent) {
-        Parcelable[] rawArray = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-        NdefMessage mNdefMsg = (NdefMessage) rawArray[0];
-        NdefRecord mNdefRecord = mNdefMsg.getRecords()[0];
-        try {
-            if (mNdefRecord != null) {
-                String readResult = new String(mNdefRecord.getPayload(), "UTF-8");
-                LogUtils.jasonDebug("readResult===" + readResult);
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            Parcelable[] rawArray = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            if (rawArray == null || rawArray.length == 0) return;
+            NdefMessage mNdefMsg = (NdefMessage) rawArray[0];
+            NdefRecord mNdefRecord = mNdefMsg.getRecords()[0];
+            try {
+                if (mNdefRecord != null) {
+                    String readResult = new String(mNdefRecord.getPayload(), "UTF-8");
+//                    LogUtils.jasonDebug("readResult===" + readResult);
+//                    String readResult  = parseTextRecord(mNdefRecord);
+                    callbackSuccess(readResult);
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         }
     }
 
@@ -149,7 +189,7 @@ public class NFCService extends ImpPlugin {
             isListenActivityStart = false;
         } else {
             if (NFCAdapter != null) {
-                NFCAdapter.enableForegroundDispatch(getActivity(), mPendingIntent, mIntentFilter, null);
+                NFCAdapter.enableForegroundDispatch(getActivity(), mPendingIntent, mIntentFilter, mTechList);
             }
         }
     }
@@ -157,11 +197,11 @@ public class NFCService extends ImpPlugin {
     @Override
     public void onActivityNewIntent(Intent intent) {
         super.onActivityNewIntent(intent);
-            if (NFCAdapter != null) { //有nfc功能
-                if (NFCAdapter.isEnabled()) {//nfc功能打开了
-                    readNfcTag(intent);
-                }
+        if (NFCAdapter != null) { //有nfc功能
+            if (NFCAdapter.isEnabled()) {//nfc功能打开了
+                getNdefMsg(intent);
             }
+        }
     }
 
 
@@ -169,7 +209,7 @@ public class NFCService extends ImpPlugin {
         if (!StringUtils.isBlank(successCb)) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("value", result);
+                obj.put("result", result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -187,8 +227,7 @@ public class NFCService extends ImpPlugin {
     private void getNFCInfo(JSONObject paramsObject) {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
-//        checkNFCStatus();
-        callbackSuccess("123456789");
+        checkNFCStatus();
     }
 
     private void checkNFCStatus() {
@@ -219,7 +258,8 @@ public class NFCService extends ImpPlugin {
         }
         //生成intentFilter
         mIntentFilter = new IntentFilter[]{filter, filter2};
-        NFCAdapter.enableForegroundDispatch(getActivity(), mPendingIntent, mIntentFilter, null);
+        mTechList = new String[][]{{MifareClassic.class.getName()}, {NfcA.class.getName()}, {NfcB.class.getName()}};
+        NFCAdapter.enableForegroundDispatch(getActivity(), mPendingIntent, mIntentFilter, mTechList);
     }
 
     private void showToSetNFCDlg() {

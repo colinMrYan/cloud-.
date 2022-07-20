@@ -99,8 +99,16 @@ public class VolumeFileUploadManager extends VolumeAPIInterfaceInstance {
      * @param volumeFileParentPath
      */
     public void uploadFile(VolumeFile mockVolumeFile, String localFilePath, String volumeFileParentPath) {
+        uploadFile(mockVolumeFile, localFilePath, volumeFileParentPath, null);
+    }
+
+
+    public void uploadFile(VolumeFile mockVolumeFile, String localFilePath, String volumeFileParentPath, ProgressCallback callback) {
         File file = new File(localFilePath);
         VolumeFileUpload volumeFileUpload = new VolumeFileUpload(mockVolumeFile, localFilePath, volumeFileParentPath);
+        if (callback != null) {
+            volumeFileUpload.setBusinessProgressCallback(callback);
+        }
         if (FileUtils.isFileExist(volumeFileUpload.getLocalFilePath()) && NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             volumeFileUpload.setStatus(VolumeFile.STATUS_LOADING);
             apiService.getVolumeFileUploadToken(file.getName(), volumeFileUpload, mockVolumeFile);
@@ -110,7 +118,6 @@ public class VolumeFileUploadManager extends VolumeAPIInterfaceInstance {
         volumeFileUploadList.add(0, volumeFileUpload);
         VolumeFileUploadCacheUtils.saveVolumeFileUpload(volumeFileUpload);
     }
-
     /**
      * 重新上传
      *
