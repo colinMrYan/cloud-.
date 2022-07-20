@@ -34,6 +34,8 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
     public static final int REQUEST_CODE_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_VIDEO_EDIT = 1002;
     public static final String VIDEO_PATH = "VIDEO_PATH";
+    public static final String VIDEO_TIME = "VIDEO_TIME";
+    public static final String VIDEO_IMAGE_PATH = "VIDEO_IMAGE_PATH"; // 图片首帧图
     public static final String FILE_PATH = "FILE_PATH";
     public static final String FILE_TYPE = "FILE_TYPE"; // 1标识图片，2表示视频
     private boolean granted; // 是否获取权限
@@ -103,15 +105,13 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
 
     // 预览视频，暂时不做任何操作
     private void startPreviewActivity(VideoKitResult ugcKitResult) {
-//        Intent intent = new Intent(this, TCVideoEditerActivity.class);
-//        intent.putExtra(UGCKitConstants.VIDEO_PATH, ugcKitResult.outputPath);
-//        startActivity(intent);
-//        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        // 设置全屏播放
         PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
         config.renderMode = TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN;
         Intent intent = new Intent(this, VideoPreviewActivity.class);
         intent.putExtra(VIDEO_PATH, ugcKitResult.outputPath);
-        startActivity(intent);
+        intent.putExtra(VIDEO_IMAGE_PATH, ugcKitResult.coverPath);
+        startActivityForResult(intent, REQUEST_CODE_VIDEO_EDIT);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -168,8 +168,17 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
         } else if (requestCode == REQUEST_CODE_VIDEO_EDIT) {
             // 视频
             if (resultCode == RESULT_OK) {
-//                Intent intent = new Intent(CommunicationRecordActivity.this, VideoPlayerActivity.class);
-//                startActivity(intent);
+                String videoPath = data.getStringExtra(VIDEO_PATH);
+                String videoImagePath = data.getStringExtra(VIDEO_IMAGE_PATH);
+                int videoDuration = data.getIntExtra(VIDEO_TIME, 0);
+                Intent intent = new Intent();
+                // TODO: 2022/7/20 是否需要图片宽高
+                intent.putExtra(VIDEO_PATH, videoPath);
+                intent.putExtra(VIDEO_TIME, videoDuration);
+                intent.putExtra(FILE_PATH, videoImagePath);
+                intent.putExtra(FILE_TYPE, 2);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         }
     }

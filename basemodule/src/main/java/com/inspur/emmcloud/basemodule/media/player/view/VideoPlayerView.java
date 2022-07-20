@@ -330,4 +330,8 @@ public class VideoPlayerView extends RelativeLayout {
     public void setControlCanShow(boolean b) {
         controlView.canUseControlView(b);
     }
+
+    public int getVideoDuration() {
+        return mVideoPlayer.getVideoDuration();
+    }
 }

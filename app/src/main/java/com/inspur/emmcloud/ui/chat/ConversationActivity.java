@@ -987,10 +987,20 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case REQUEST_CAMERA:
 
-//                    String imgPath = getCompressorUrl(data.getExtras().getString(MyCameraActivity.OUT_FILE_PATH));
-//                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
-                    String imgPath = getCompressorUrl(data.getExtras().getString(CommunicationRecordActivity.FILE_PATH));
-                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                    // 区分视频和图片，FILE_TYPE 1为图片，2为视频
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        int fileType = extras.getInt(CommunicationRecordActivity.FILE_TYPE, 1);
+                        if (fileType == 1) {
+                            String imgPath = getCompressorUrl(extras.getString(CommunicationRecordActivity.FILE_PATH));
+                            combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                        } else {
+                            String imagePath = extras.getString(CommunicationRecordActivity.FILE_PATH);
+                            String videoPath = extras.getString(CommunicationRecordActivity.VIDEO_PATH);
+                            String videoDuration = extras.getString(CommunicationRecordActivity.VIDEO_TIME);
+
+                        }
+                    }
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -1139,7 +1149,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 for (LocalMedia media : mediaResult) {
                                     Compressor.ResolutionRatio resolutionRatio = null;
                                     Compressor compressor = new Compressor(ConversationActivity.this);
-                                    compressor.getResolutionRation(media.getWidth(), media.getHeight());
+                                    resolutionRatio = compressor.getResolutionRation(media.getWidth(), media.getHeight());
                                     String mediaPath = media.getRealPath();
                                     if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
                                         mediaPath = media.getCutPath();

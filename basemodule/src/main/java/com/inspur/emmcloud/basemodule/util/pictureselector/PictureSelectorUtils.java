@@ -42,8 +42,8 @@ import java.util.ArrayList;
 public class PictureSelectorUtils {
     private static PictureSelectorUtils mInstance;
     private static final int GALLERY_RESULT = 2;
-    private static final int DEFAULT_IMAGE_NUMBER = 5;
-    private static final int DEFAULT_VIDEO_NUMBER = 5;
+    private static final int DEFAULT_IMAGE_NUMBER = 9;
+    private static final int DEFAULT_VIDEO_NUMBER = 9;
     public static final int REQ_IMAGE_EDIT = 10;
 
     public static PictureSelectorUtils getInstance() {
@@ -59,7 +59,7 @@ public class PictureSelectorUtils {
 
     //打开相册画廊，默认打开方式
     public void openGallery(Context context) {
-        openGallery(context, SelectMimeType.ofImage(), DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
+        openGallery(context, SelectMimeType.ofAll(), DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
     }
 
     //打开相册画廊

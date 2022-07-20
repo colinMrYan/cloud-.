@@ -61,6 +61,7 @@ public interface SuperPlayer {
 
     // 播放速率
     void setRate(float speedLevel);
+
     void setRenderMode(int mode);
 
     // 镜像
@@ -107,27 +108,37 @@ public interface SuperPlayer {
 
     /**
      * 设置超级播放器中点播事件和直播事件的回调
+     *
      * @param superPlayerListener
      */
     void setSuperPlayerListener(ISuperPlayerListener superPlayerListener);
 
     /**
      * 设置是否循环
+     *
      * @param isLoop true循环，false不循环
      */
     void setLoop(boolean isLoop);
 
     /**
      * 设置开始时间
+     *
      * @param startPos 开始时间
      */
     void setStartTime(float startPos);
 
     /**
      * 设置是否自动播放
+     *
      * @param isAutoPlay true自动播放，false不自动播放
      */
     void setAutoPlay(boolean isAutoPlay);
 
     void setNeedToPause(boolean value);
+
+    int getVideoWidth();
+
+    int getVideoHeight();
+
+    int getVideoDuration();
 }

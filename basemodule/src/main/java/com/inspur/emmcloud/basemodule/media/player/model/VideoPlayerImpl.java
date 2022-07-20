@@ -48,6 +48,9 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
     private SuperPlayerModel mCurrentModel;  // 当前播放的model
     private String mCurrentPlayVideoURL;    // 当前播放的URL
     private boolean mIsAutoPlay = true;     // 是否自动播放
+    private int videoHeight;
+    private int videoWidth;
+    private int videoDuration;
 
     public VideoPlayerImpl(Context context, TXCloudVideoView videoView) {
         initialize(context, videoView);
@@ -90,6 +93,9 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
         switch (event) {
             case TXLiveConstants.PLAY_EVT_VOD_PLAY_PREPARED://视频播放开始
                 onVodPlayPrepared();
+                videoHeight = txVodPlayer.getHeight();
+                videoWidth = txVodPlayer.getWidth();
+                videoDuration = (int) txVodPlayer.getDuration();
                 break;
             case TXLiveConstants.PLAY_EVT_RCV_FIRST_I_FRAME:
                 Log.i(TAG, "PLAY_EVT_RCV_FIRST_I_FRAME");
@@ -401,5 +407,20 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
     @Override
     public void setNeedToPause(boolean value) {
         mNeedToPause = value;
+    }
+
+    @Override
+    public int getVideoWidth() {
+        return videoWidth;
+    }
+
+    @Override
+    public int getVideoHeight() {
+        return videoHeight;
+    }
+
+    @Override
+    public int getVideoDuration() {
+        return videoDuration;
     }
 }
