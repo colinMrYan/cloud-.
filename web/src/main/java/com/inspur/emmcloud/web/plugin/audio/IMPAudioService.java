@@ -9,6 +9,7 @@ import android.util.Log;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
 import com.inspur.emmcloud.componentservice.web.WebMediaService;
@@ -82,6 +83,9 @@ public class IMPAudioService extends ImpPlugin {
                         if (StringUtils.isBlank(path)) {
                             return;
                         }
+                        if (!absolute) {
+                            path = getRelativeFilePath();
+                        }
                         service.playAudio(path);
                         break;
                     case "stop":
@@ -111,6 +115,10 @@ public class IMPAudioService extends ImpPlugin {
     public void cancel() {
         service.stopAudioRecord(null);
         durationTime = 0;
+    }
+
+    private String getRelativeFilePath() {
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
     }
 
     public void upload() {
