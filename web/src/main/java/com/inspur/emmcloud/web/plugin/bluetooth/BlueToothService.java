@@ -16,6 +16,7 @@ import android.os.Message;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -69,8 +70,9 @@ public class BlueToothService extends ImpPlugin {
                         if (updateCal != null && updateState){
                             try {
                                 JSONObject json = new JSONObject();
-                                json.put("status", 0);
+                                json.put("status", 1);
                                 JSONObject result = new JSONObject();
+                                result.put("data", 0);
                                 json.put("result", result);
                                 jsCallback(updateCal, json);
                             } catch (JSONException e) {
@@ -85,6 +87,7 @@ public class BlueToothService extends ImpPlugin {
                                 JSONObject json = new JSONObject();
                                 json.put("status", 1);
                                 JSONObject result = new JSONObject();
+                                result.put("data", 1);
                                 json.put("result", result);
                                 jsCallback(updateCal, json);
                             } catch (JSONException e) {
@@ -140,7 +143,7 @@ public class BlueToothService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        initBlueToothService(paramsObject);
+        initBlueToothService(paramsObject, action.equals("updateState"));
         switch (action) {
             case "open":
                 openBluetooth();
@@ -175,18 +178,29 @@ public class BlueToothService extends ImpPlugin {
             jsCallback(failCal, "device not support bluetooth");
             return;
         }
-        if (mBluetoothAdapter.isEnabled()) {
-            jsCallback(successCal, "");
-            return;
-        }
-        if (mBluetoothAdapter.enable()) {
-            jsCallback(successCal, "");
+        if (mBluetoothAdapter.isEnabled() || mBluetoothAdapter.enable()) {
+            JSONObject json = new JSONObject();
+            JSONObject result = new JSONObject();
+            try {
+                json.put("status", 1);
+                json.put("result", result);
+                jsCallback(successCal, json);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                jsCallback(failCal, e.getMessage());
+            }
         } else {
             jsCallback(failCal, "open bluetooth fail");
         }
     }
 
-    private void initBlueToothService(JSONObject paramsObject) {
+    private void initBlueToothService(JSONObject paramsObject,boolean needUpdate) {
+        if (needUpdate) {
+            updateCal = JSONUtils.getString(paramsObject, "success", "");
+        } else {
+            successCal = JSONUtils.getString(paramsObject, "success", "");
+        }
+        failCal = JSONUtils.getString(paramsObject, "fail", "");
         if (mChatService == null) mChatService = new BluetoothChatService(getActivity(), mHandler);
         if (mBluetoothAdapter == null) mBluetoothAdapter = mChatService.getBluetoothAdapter();
         // Register for broadcasts when a device is discovered
@@ -196,16 +210,23 @@ public class BlueToothService extends ImpPlugin {
         intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         intent.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         getActivity().registerReceiver(mReceiver, intent);
-        successCal = JSONUtils.getString(paramsObject, "success", "");
-        failCal = JSONUtils.getString(paramsObject, "fail", "");
     }
 
     private void closeBluetooth() {
         if (mBluetoothAdapter != null) {
             if (mBluetoothAdapter.isEnabled()) {
                 mChatService.stop();
-                if (mBluetoothAdapter.disable()) {
-                    jsCallback(successCal, "");
+                if (mBluetoothAdapter.disable() && !StringUtils.isEmpty(successCal)) {
+                    JSONObject json = new JSONObject();
+                    JSONObject result = new JSONObject();
+                    try {
+                        json.put("status", 1);
+                        json.put("result", result);
+                        jsCallback(successCal, json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        jsCallback(failCal, e.getMessage());
+                    }
                 } else {
                     jsCallback(failCal, "blueTooth closed already");
                 }
@@ -216,11 +237,12 @@ public class BlueToothService extends ImpPlugin {
     }
 
     private void getBluetoothState() {
-        if (mBluetoothAdapter != null) {
+        if (mBluetoothAdapter != null && !StringUtils.isEmpty(successCal)) {
             JSONObject json = new JSONObject();
             JSONObject result = new JSONObject();
             try {
-                json.put("status", mBluetoothAdapter.isEnabled() ? 1 : 0);
+                json.put("status", 1);
+                result.put("data",mBluetoothAdapter.isEnabled() ? 1 : 0);
                 json.put("result", result);
                 jsCallback(successCal, json);
             } catch (JSONException e) {
@@ -239,8 +261,6 @@ public class BlueToothService extends ImpPlugin {
     }
 
     private void updateBluetoothState(JSONObject paramsObject) {
-        updateCal = JSONUtils.getString(paramsObject, "success", "");
-        failCal = JSONUtils.getString(paramsObject, "fail", "");
         try {
             final JSONObject optionsObj = paramsObject.getJSONObject("options");
             updateState = optionsObj.optBoolean("value", false);

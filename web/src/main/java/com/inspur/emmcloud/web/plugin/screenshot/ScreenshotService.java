@@ -90,7 +90,6 @@ public class ScreenshotService extends ImpPlugin {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
-        AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().showScreenshotImg(screenshotImgPath);
         }
