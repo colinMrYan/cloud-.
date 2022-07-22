@@ -55,6 +55,9 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
+import com.inspur.emmcloud.basemodule.media.player.VideoPreviewActivity;
+import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
@@ -126,6 +129,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.tencent.rtmp.TXLiveConstants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -997,8 +1001,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                         } else {
                             String imagePath = extras.getString(CommunicationRecordActivity.FILE_PATH);
                             String videoPath = extras.getString(CommunicationRecordActivity.VIDEO_PATH);
-                            String videoDuration = extras.getString(CommunicationRecordActivity.VIDEO_TIME);
-
+                            int videoDuration = extras.getInt(CommunicationRecordActivity.VIDEO_TIME);
+                            int videoWidth = extras.getInt(CommunicationRecordActivity.VIDEO_WIDTH);
+                            int videoHeight = extras.getInt(CommunicationRecordActivity.VIDEO_HEIGHT);
+                            sendMessageWithVideo(videoPath, imagePath, videoDuration, videoWidth, videoHeight);
                         }
                     }
                     break;
@@ -1358,6 +1364,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             });
         }
+    }
+
+    // 发送视频消息
+    private void sendMessageWithVideo(String videoPath, String imagePath, int videoDuration, int videoWidth, int videoHeight) {
+        File file = new File(videoPath);
+        if (!file.exists()) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.baselib_file_not_exist);
+            return;
+        }
+        final Message videoMessage = CommunicationUtils.combineLocalMediaVideoMessage(cid, videoPath, imagePath, videoDuration, videoWidth, videoHeight);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addLocalMessage(videoMessage, 0);
+                MessageSendManager.getInstance().sendMessage(videoMessage);
+            }
+        });
     }
 
     /**
@@ -2203,6 +2226,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                if (uiMessage.getSendStatus() != 1) {
+                    return;
+                }
+                PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
+                config.renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
+                Intent intentVideo = new Intent(this, VideoPlayerActivity.class);
+//                intent.putExtra(VIDEO_PATH, ugcKitResult.outputPath);
+//                intent.putExtra(VIDEO_IMAGE_PATH, ugcKitResult.coverPath);
+                startActivity(intentVideo);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 if (uiMessage.getSendStatus() != 1) {

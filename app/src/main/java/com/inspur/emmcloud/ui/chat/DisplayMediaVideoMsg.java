@@ -40,7 +40,7 @@ public class DisplayMediaVideoMsg {
                                final UIMessage uiMessage) {
         final Message message = uiMessage.getMessage();
         View cardContentView = LayoutInflater.from(context).inflate(
-                R.layout.chat_msg_card_child_res_img_view, null);
+                R.layout.chat_msg_card_child_res_video_view, null);
         final RoundedImageView imageView = (RoundedImageView) cardContentView
                 .findViewById(R.id.content_img);
 //        final CustomLoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);

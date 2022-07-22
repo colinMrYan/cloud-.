@@ -27,7 +27,7 @@ public class PlayerGlobalConfig {
     public int renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
 
     /**
-     * 播放器最大缓存个数 （ 默认缓存 5 ）
+     * 播放器最大缓存个数 （ 默认缓存 10 ）
      */
     public int maxCacheItem = 10;
 

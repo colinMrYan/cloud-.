@@ -174,6 +174,13 @@ public class MessageSendManager {
                     WSAPIService.getInstance().sendMessage(message);
                 }
                 break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                if (message.getMsgContentMediaVideo().getMedia().equals(message.getLocalPath())) {
+                    sendMessageWithFile(message);
+                } else {
+                    WSAPIService.getInstance().sendMessage(message);
+                }
+                break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 CommonCallBack commonCallBack = new CommonCallBack() {
                     @Override

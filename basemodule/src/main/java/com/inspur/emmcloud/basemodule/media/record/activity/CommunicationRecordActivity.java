@@ -35,6 +35,8 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
     public static final int REQUEST_CODE_VIDEO_EDIT = 1002;
     public static final String VIDEO_PATH = "VIDEO_PATH";
     public static final String VIDEO_TIME = "VIDEO_TIME";
+    public static final String VIDEO_WIDTH = "VIDEO_WIDTH";
+    public static final String VIDEO_HEIGHT = "VIDEO_HEIGHT";
     public static final String VIDEO_IMAGE_PATH = "VIDEO_IMAGE_PATH"; // 图片首帧图
     public static final String FILE_PATH = "FILE_PATH";
     public static final String FILE_TYPE = "FILE_TYPE"; // 1标识图片，2表示视频
@@ -171,10 +173,13 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
                 String videoPath = data.getStringExtra(VIDEO_PATH);
                 String videoImagePath = data.getStringExtra(VIDEO_IMAGE_PATH);
                 int videoDuration = data.getIntExtra(VIDEO_TIME, 0);
+                int videoWidth = data.getIntExtra(VIDEO_WIDTH, 0);
+                int videoHeight = data.getIntExtra(VIDEO_HEIGHT, 0);
                 Intent intent = new Intent();
-                // TODO: 2022/7/20 是否需要图片宽高
                 intent.putExtra(VIDEO_PATH, videoPath);
                 intent.putExtra(VIDEO_TIME, videoDuration);
+                intent.putExtra(VIDEO_WIDTH, videoWidth);
+                intent.putExtra(VIDEO_HEIGHT, videoHeight);
                 intent.putExtra(FILE_PATH, videoImagePath);
                 intent.putExtra(FILE_TYPE, 2);
                 setResult(RESULT_OK, intent);

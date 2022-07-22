@@ -162,6 +162,9 @@ public class Message implements Serializable {
         return new MsgContentRegularFile(content);
     }
 
+    public MsgContentMediaVideo getMsgContentMediaVideo() {
+        return new MsgContentMediaVideo(content);
+    }
 
     public MsgContentMediaImage getMsgContentMediaImage() {
         return new MsgContentMediaImage(content);

@@ -17,14 +17,16 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.tencent.rtmp.TXLiveConstants;
 
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_HEIGHT;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_IMAGE_PATH;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_TIME;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_WIDTH;
 
 /**
  * Date：2022/7/19
  * Author：wang zhen
- * Description 本地视频预览页面
+ * Description 视频预览页面：录制预览
  */
 public class VideoPreviewActivity extends BaseFragmentActivity implements NotSupportLand, VideoPlayerView.OnSuperPlayerViewCallback {
     private VideoPlayerView videoPlayerView; // 播放器核心view
@@ -65,6 +67,8 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
                 Intent intent = new Intent();
                 intent.putExtra(VIDEO_PATH, recordUrl);
                 intent.putExtra(VIDEO_TIME, videoPlayerView.getVideoDuration());
+                intent.putExtra(VIDEO_WIDTH, videoPlayerView.getVideoWidth());
+                intent.putExtra(VIDEO_HEIGHT, videoPlayerView.getVideoHeight());
                 intent.putExtra(VIDEO_IMAGE_PATH, recordImageUrl);
                 setResult(Activity.RESULT_OK, intent);
                 finish();

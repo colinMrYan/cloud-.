@@ -26,6 +26,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
@@ -101,7 +102,7 @@ public class CommunicationUtils {
             if (conversation.isServiceConversationType()) title = conversation.getName();
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             title = BaseApplication.getInstance().getString(R.string.chat_file_transfer);
-        }else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+        } else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
             title = TextUtils.isEmpty(title) ? BaseApplication.getInstance().getString(R.string.address_servicenum_text) : title;
         }
         return title;
@@ -316,6 +317,29 @@ public class CommunicationUtils {
         message.setContent(msgContentMediaImage.toString());
         return message;
     }
+
+    // 生成视频消息
+    public static Message combineLocalMediaVideoMessage(String cid, String videoPath, String imagePath, int duration, int width, int height) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_MEDIA_VIDEO);
+        message.setLocalPath(videoPath);
+        File file = new File(videoPath);
+        MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
+        msgContentMediaVideo.setImageHeight(height);
+        msgContentMediaVideo.setImageWidth(width);
+        msgContentMediaVideo.setImagePath(imagePath);
+        msgContentMediaVideo.setMedia(videoPath);
+        msgContentMediaVideo.setName(file.getName());
+        msgContentMediaVideo.setVideoSize(file.length());
+        msgContentMediaVideo.setVideoDuration(duration);
+        message.setContent(msgContentMediaVideo.toString());
+        return message;
+    }
+
 
     public static Message combineTransmitMediaImageMessage(String cid, String filePath, MsgContentMediaImage msgContentMediaImage) {
         String tracer = getTracer();
@@ -605,7 +629,7 @@ public class CommunicationUtils {
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             icon = "drawable://" + R.drawable.ic_file_transfer;
-        }  else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
+        } else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
             icon = "drawable://" + R.drawable.ic_channel_service;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());

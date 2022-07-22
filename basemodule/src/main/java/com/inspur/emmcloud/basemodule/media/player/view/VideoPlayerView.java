@@ -334,4 +334,12 @@ public class VideoPlayerView extends RelativeLayout {
     public int getVideoDuration() {
         return mVideoPlayer.getVideoDuration();
     }
+
+    public int getVideoWidth() {
+        return mVideoPlayer.getVideoWidth();
+    }
+
+    public int getVideoHeight() {
+        return mVideoPlayer.getVideoHeight();
+    }
 }
