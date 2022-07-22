@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;

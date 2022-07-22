@@ -529,18 +529,11 @@ public class PhotoService extends ImpPlugin {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (maxNum > 9 || maxNum < 0 || defaultType > 1 || defaultType < 0) {
-            try {
-                JSONObject json = new JSONObject();
-                json.put("status", 0);
-                JSONObject result = new JSONObject();
-                result.put("data", "parameter invalid!!");
-                json.put("result", result);
-                jsCallback(selectAlbumCb, json);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return;
+        if (maxNum > 9 || maxNum < 0) {
+            maxNum = 9;
+        }
+        if (defaultType > 1 || defaultType < 0) {
+            defaultType = 0;
         }
         Router router = Router.getInstance();
         if (router.getService(FileSelectorService.class) != null) {

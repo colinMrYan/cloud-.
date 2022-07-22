@@ -35,10 +35,8 @@ public class SqlService extends ImpPlugin {
     private static final String SELECT = "select";
     // 数据库对象
     private SQLiteDatabase database = null;
-    // 成功回调
-    private String successCb = "";
-    // 失败回调
-    private String failCb = "";
+    // 回调
+    private String successCb, failCb;
     private static final String COLUMN_NAME_KEY = "title";
     private static final String COLUMN_NAME_VALUE = "value";
     private static final String SQL_TABLE_NAME = "EntryTable";
@@ -48,6 +46,8 @@ public class SqlService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        failCb = null;
         if (action.equals("executeSql")) {
             operateDataBase(paramsObject);
         } else if (action.equals("close")) {
@@ -85,9 +85,8 @@ public class SqlService extends ImpPlugin {
      */
     private void operateDataBase(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
-        String dbName = JSONUtils.getString(options, "dbName", "");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
+        String dbName = JSONUtils.getString(options, "dbName", "");
         if (!StringUtils.isEmpty(dbName) && (dbName.equals("default.db") || (dbName.equals("emm.db")))) {
             callbackDatabaseFail(0, "database name conflict ！！");
             return;
@@ -109,8 +108,6 @@ public class SqlService extends ImpPlugin {
     private void closeDataBase(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         this.database = getSQLiteDatabase(JSONUtils.getString(options, "dbName", ""));
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (database != null) {
             database.close();
             sendEmptySuccessInfo();
@@ -127,8 +124,6 @@ public class SqlService extends ImpPlugin {
     private void deleteDataBase(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (StringUtils.isEmpty(dbName) || dbName.equals("default.db") || (dbName.equals("emm.db"))) {
             callbackDatabaseFail(0, "local database cannot be deleted");
             return;
@@ -155,8 +150,6 @@ public class SqlService extends ImpPlugin {
     private void putItem(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "default");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         String key = JSONUtils.getString(options, "key", "");
         String value = JSONUtils.getString(options, "value", "");
         this.database = getSQLiteDatabase(dbName);
@@ -187,8 +180,6 @@ public class SqlService extends ImpPlugin {
     private void getItem(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "default");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         String key = JSONUtils.getString(options, "key", "");
         this.database = getSQLiteDatabase(dbName);
         if (database == null){
@@ -242,11 +233,9 @@ public class SqlService extends ImpPlugin {
     private void deleteItem(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "default");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         String key = JSONUtils.getString(options, "key", "");
         this.database = getSQLiteDatabase(dbName);
-        if (database == null){
+        if (database == null) {
             callbackDatabaseFail(0, "database not found");
             return;
         }
@@ -290,8 +279,6 @@ public class SqlService extends ImpPlugin {
     private void getAllItem(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "default");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         this.database = getSQLiteDatabase(dbName);
         if (database != null) {
             Map<String, String> requestResult = new HashMap<>();
@@ -332,8 +319,6 @@ public class SqlService extends ImpPlugin {
     private void delAllItem(JSONObject paramsObject) {
         JSONObject options = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         String dbName = JSONUtils.getString(options, "dbName", "default");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         this.database = getSQLiteDatabase(dbName);
         if (database != null) {
             database.delete(SQL_TABLE_NAME, null, null);
@@ -344,7 +329,7 @@ public class SqlService extends ImpPlugin {
     }
 
     private void callbackDatabaseFail(int status, String errorMessage) {
-        if (!StringUtils.isBlank(failCb)) {
+        if (!StringUtils.isEmpty(failCb)) {
             JSONObject obj = new JSONObject();
             try {
                 obj.put("status", status);
@@ -352,7 +337,7 @@ public class SqlService extends ImpPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            this.jsCallback(failCb, obj);
+            jsCallback(failCb, obj);
         } else if (!StringUtils.isEmpty(successCb)) {
             JSONObject obj = new JSONObject();
             try {
@@ -361,7 +346,7 @@ public class SqlService extends ImpPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            this.jsCallback(failCb, obj);
+            jsCallback(successCb, obj);
         }
     }
 
@@ -375,8 +360,6 @@ public class SqlService extends ImpPlugin {
         JSONArray sqlArray = JSONUtils.getJSONArray(JSONUtils.getString(optionsJsonObject, "sqls", ""), new JSONArray());
         ArrayList<String> sqlList = JSONUtils.JSONArray2List(sqlArray, new ArrayList<String>());
         String dbName = JSONUtils.getString(optionsJsonObject, "dbName", "");
-        successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (!StringUtils.isEmpty(dbName) && (dbName.equals("default.db") || (dbName.equals("emm.db")))) {
             callbackDatabaseFail(0, "database name conflict ！！");
             return;
