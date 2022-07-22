@@ -10,6 +10,6 @@ public class FileSelectorServiceImpl implements FileSelectorService {
 
     @Override
     public void selectImagesFromAlbum(Fragment fragment, int selectMaxNum, int fileType, int resultNum) {
-//        PictureSelectorUtils.getInstance().openGallery(fragment, fileType == 0 ? SelectMimeType.ofImage() : SelectMimeType.ofVideo(), selectMaxNum, selectMaxNum, resultNum);
+        PictureSelectorUtils.getInstance().openGallery(fragment, fileType == 0 ? SelectMimeType.ofImage() : SelectMimeType.ofVideo(), selectMaxNum, selectMaxNum, resultNum);
     }
 }
