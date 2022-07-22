@@ -129,7 +129,7 @@ public class IMPAudioService extends ImpPlugin {
             public void onRecordEnd(String resourceLocalPath) throws JSONException {
                 if (saveToLocal) {
                     JSONObject json = new JSONObject();
-                    json.put("status", 1);
+                    json.put("state", 1);
                     JSONObject result = new JSONObject();
                     result.put("path", resourceLocalPath);
                     json.put("result", result);
@@ -143,7 +143,7 @@ public class IMPAudioService extends ImpPlugin {
                                             JSONObject json = new JSONObject();
                                             JSONObject result = new JSONObject();
                                             result.put("path", webPath);
-                                            json.put("status", 1);
+                                            json.put("state", 1);
                                             json.put("result", result);
                                             jsCallback(successCal, json);
                                         } catch (JSONException e) {

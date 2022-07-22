@@ -208,7 +208,7 @@ public class SqlService extends ImpPlugin {
                 }
                 cursor.close();
                 JSONObject json = new JSONObject();
-                json.put("status", 1);
+                json.put("state", 1);
                 JSONObject result = new JSONObject();
                 result.put("data", JSONUtils.toJSONArray(itemIds));
                 json.put("result", result);
@@ -258,7 +258,7 @@ public class SqlService extends ImpPlugin {
     private void sendEmptySuccessInfo() {
         JSONObject json = new JSONObject();
         try {
-            json.put("status", 1);
+            json.put("state", 1);
             JSONObject result = new JSONObject();
             result.put("data","success");
             json.put("result", result);
@@ -295,7 +295,7 @@ public class SqlService extends ImpPlugin {
             }
             JSONObject json = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 JSONObject result = new JSONObject();
                 result.put("data", JSONUtils.map2Json(requestResult));
                 json.put("result", result);
@@ -332,7 +332,7 @@ public class SqlService extends ImpPlugin {
         if (!StringUtils.isEmpty(failCb)) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("status", status);
+                obj.put("state", status);
                 obj.put("errorMessage", errorMessage);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -341,7 +341,7 @@ public class SqlService extends ImpPlugin {
         } else if (!StringUtils.isEmpty(successCb)) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("status", status);
+                obj.put("state", status);
                 obj.put("errorMessage", errorMessage);
             } catch (Exception e) {
                 e.printStackTrace();

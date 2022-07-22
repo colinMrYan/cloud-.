@@ -255,7 +255,7 @@ public class DeviceService extends ImpPlugin {
         if (!StringUtils.isEmpty(successCb)) {
             JSONObject json = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 jsCallback(successCb, json);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -279,7 +279,7 @@ public class DeviceService extends ImpPlugin {
         if (!StringUtils.isEmpty(successCb)) {
             JSONObject json = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 jsCallback(successCb, json);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -410,7 +410,7 @@ public class DeviceService extends ImpPlugin {
             if (service.openWebRotate() && service.openNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -432,7 +432,7 @@ public class DeviceService extends ImpPlugin {
             if (service.closeWebRotate() && service.closeNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -454,7 +454,7 @@ public class DeviceService extends ImpPlugin {
             if (service.openNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -476,7 +476,7 @@ public class DeviceService extends ImpPlugin {
             if (service.closeNativeRotate(getActivity())) {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -498,7 +498,7 @@ public class DeviceService extends ImpPlugin {
             if (service.clearWebCache()) {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -52,7 +52,7 @@ public class BlueToothService extends ImpPlugin {
                 try {
                     JSONObject jsonObject = JSONUtils.map2Json(discoveryDevicesMap);
                     JSONObject json = new JSONObject();
-                    json.put("status", 1);
+                    json.put("state", 1);
                     JSONObject result = new JSONObject();
                     result.put("data", jsonObject);
                     json.put("result", result);
@@ -70,7 +70,7 @@ public class BlueToothService extends ImpPlugin {
                         if (updateCal != null && updateState){
                             try {
                                 JSONObject json = new JSONObject();
-                                json.put("status", 1);
+                                json.put("state", 1);
                                 JSONObject result = new JSONObject();
                                 result.put("data", 0);
                                 json.put("result", result);
@@ -85,7 +85,7 @@ public class BlueToothService extends ImpPlugin {
                         if (updateCal != null && updateState) {
                             try {
                                 JSONObject json = new JSONObject();
-                                json.put("status", 1);
+                                json.put("state", 1);
                                 JSONObject result = new JSONObject();
                                 result.put("data", 1);
                                 json.put("result", result);
@@ -182,7 +182,7 @@ public class BlueToothService extends ImpPlugin {
             JSONObject json = new JSONObject();
             JSONObject result = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 json.put("result", result);
                 jsCallback(successCal, json);
             } catch (JSONException e) {
@@ -220,7 +220,7 @@ public class BlueToothService extends ImpPlugin {
                     JSONObject json = new JSONObject();
                     JSONObject result = new JSONObject();
                     try {
-                        json.put("status", 1);
+                        json.put("state", 1);
                         json.put("result", result);
                         jsCallback(successCal, json);
                     } catch (JSONException e) {
@@ -241,7 +241,7 @@ public class BlueToothService extends ImpPlugin {
             JSONObject json = new JSONObject();
             JSONObject result = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 result.put("data",mBluetoothAdapter.isEnabled() ? 1 : 0);
                 json.put("result", result);
                 jsCallback(successCal, json);
@@ -346,7 +346,7 @@ public class BlueToothService extends ImpPlugin {
             mBluetoothAdapter.cancelDiscovery();
             JSONObject json = new JSONObject();
             try {
-                json.put("status", 1);
+                json.put("state", 1);
                 JSONObject result = new JSONObject();
                 json.put("result", result);
                 jsCallback(successCal, json);

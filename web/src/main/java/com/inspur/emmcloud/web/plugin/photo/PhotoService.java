@@ -187,7 +187,7 @@ public class PhotoService extends ImpPlugin {
         try {
             if (success) {
                 JSONObject json = new JSONObject();
-                json.put("status", 1);
+                json.put("state", 1);
                 JSONObject result = new JSONObject();
                 result.put("path", info);
                 json.put("result", result);
@@ -496,7 +496,7 @@ public class PhotoService extends ImpPlugin {
             }
             try {
                 JSONObject json = new JSONObject();
-                json.put("status", 1);
+                json.put("state", 1);
                 JSONObject result = new JSONObject();
                 result.put("data", JSONUtils.toJSONArray(uploadInfos));
                 json.put("result", result);
