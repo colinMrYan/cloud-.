@@ -240,15 +240,20 @@ public class SqlService extends ImpPlugin {
             return;
         }
         if (!StringUtils.isEmpty(key)) {
-            String selection = COLUMN_NAME_KEY + " = ?";
-            // Specify arguments in placeholder order.
-            String[] selectionArgs = {key};
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_NAME_KEY, key);
-            if (-1 != database.delete(SQL_TABLE_NAME, selection, selectionArgs)) {
-                sendEmptySuccessInfo();
-            } else {
-                callbackDatabaseFail(0, "database delete item failed");
+            try {
+                String selection = COLUMN_NAME_KEY + " = ?";
+                // Specify arguments in placeholder order.
+                String[] selectionArgs = {key};
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_NAME_KEY, key);
+                if (-1 != database.delete(SQL_TABLE_NAME, selection, selectionArgs)) {
+                    sendEmptySuccessInfo();
+                } else {
+                    callbackDatabaseFail(0, "database delete item failed");
+                }
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                callbackDatabaseFail(0, e.getMessage());
             }
         } else {
             callbackDatabaseFail(0, "invalid parameter");
@@ -281,20 +286,20 @@ public class SqlService extends ImpPlugin {
         String dbName = JSONUtils.getString(options, "dbName", "default");
         this.database = getSQLiteDatabase(dbName);
         if (database != null) {
-            Map<String, String> requestResult = new HashMap<>();
-            Cursor c = database.rawQuery("select * from EntryTable", null);
-            if (c != null) {
-                c.moveToFirst();
-                while (!c.isAfterLast()) {
-                    String key = c.getString(c.getColumnIndex(COLUMN_NAME_KEY));
-                    String value = c.getString(c.getColumnIndex(COLUMN_NAME_VALUE));
-                    requestResult.put(key, value);
-                    c.moveToNext();
-                }
-                c.close();
-            }
-            JSONObject json = new JSONObject();
             try {
+                Map<String, String> requestResult = new HashMap<>();
+                Cursor c = database.rawQuery("select * from EntryTable", null);
+                if (c != null) {
+                    c.moveToFirst();
+                    while (!c.isAfterLast()) {
+                        String key = c.getString(c.getColumnIndex(COLUMN_NAME_KEY));
+                        String value = c.getString(c.getColumnIndex(COLUMN_NAME_VALUE));
+                        requestResult.put(key, value);
+                        c.moveToNext();
+                    }
+                    c.close();
+                }
+                JSONObject json = new JSONObject();
                 json.put("state", 1);
                 JSONObject result = new JSONObject();
                 result.put("data", JSONUtils.map2Json(requestResult));
@@ -303,6 +308,9 @@ public class SqlService extends ImpPlugin {
                     jsCallback(successCb, json);
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+                callbackDatabaseFail(0, e.getMessage());
+            } catch (SQLiteException e){
                 e.printStackTrace();
                 callbackDatabaseFail(0, e.getMessage());
             }
@@ -321,8 +329,13 @@ public class SqlService extends ImpPlugin {
         String dbName = JSONUtils.getString(options, "dbName", "default");
         this.database = getSQLiteDatabase(dbName);
         if (database != null) {
-            database.delete(SQL_TABLE_NAME, null, null);
-            sendEmptySuccessInfo();
+            try {
+                database.delete(SQL_TABLE_NAME, null, null);
+                sendEmptySuccessInfo();
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                callbackDatabaseFail(0, e.getMessage());
+            }
         } else {
             callbackDatabaseFail(0, "database not found");
         }
