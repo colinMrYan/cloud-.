@@ -125,7 +125,7 @@ public class VideoPlayerView extends RelativeLayout {
     };
 
 
-    private void handleResume() {
+    public void handleResume() {
         if (mVideoPlayer.getPlayerState() == SuperPlayerDef.PlayerState.LOADING
                 && mPlayAction == PLAY_ACTION_PRELOAD) {
             mVideoPlayer.resume();

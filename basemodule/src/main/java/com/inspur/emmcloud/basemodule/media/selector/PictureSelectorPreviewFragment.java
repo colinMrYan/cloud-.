@@ -171,7 +171,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
 
 
     public static PictureSelectorPreviewFragment newInstance() {
-       PictureSelectorPreviewFragment fragment = new PictureSelectorPreviewFragment();
+        PictureSelectorPreviewFragment fragment = new PictureSelectorPreviewFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -674,6 +674,10 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                     handleExternalPreviewBack();
                 } else {
                     if (!isInternalBottomPreview && config.isPreviewZoomEffect) {
+                        // 返回释放播放器资源
+                        if (previewAdapter != null) {
+                            previewAdapter.pause(viewPager.getCurrentItem());
+                        }
                         magicalView.backToMin();
                     } else {
                         onBackCurrentFragment();
@@ -1072,6 +1076,17 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         return viewPager;
     }
 
+    @Override
+    public void onFragmentResume() {
+        if (previewAdapter != null) previewAdapter.resume(viewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onPause() {
+        if (previewAdapter != null) previewAdapter.pause(viewPager.getCurrentItem());
+        super.onPause();
+    }
+
     private void initViewPagerData(ArrayList<LocalMedia> data) {
         previewAdapter = new PicturePreviewSupportAdapter(getContext(), data);
         previewAdapter.setOnPreviewEventListener(new MyOnPreviewEventListener());
@@ -1097,6 +1112,25 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         viewPager.setCurrentItem(curPosition, false);
         sendChangeSubSelectPositionEvent(false);
         notifySelectNumberStyle(data.get(curPosition));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                // 选择其它item，暂停当前videoPlayer
+                int lastSelectedItem = previewAdapter.getCurrentSelectedItem();
+                if (lastSelectedItem != i) {
+                    previewAdapter.pause(lastSelectedItem);
+                    previewAdapter.setCurrentSelectedItem(i);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
     }
 
     /**
@@ -1347,7 +1381,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                 bottomNarBar.isDisplayEditor(PictureMimeType.isHasVideo(currentMedia.getMimeType())
                         || PictureMimeType.isHasAudio(currentMedia.getMimeType()));
 //                if (!isExternalPreview && !isInternalBottomPreview && !config.isOnlySandboxDir) {
-                    // 不用分页模式
+                // 不用分页模式
 //                    if (config.isPageStrategy) {
 //                        if (isHasMore) {
 //                            if (position == (previewAdapter.getCount() - 1) - PictureConfig.MIN_PAGE_SIZE
@@ -1536,4 +1570,4 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         }
         super.onDestroy();
     }
-    }
+}
