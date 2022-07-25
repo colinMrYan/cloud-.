@@ -795,7 +795,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 //        Message message = uiMessage.getMessage();
         String messageType = uiMessage.getMessage().getType();
         if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && (messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
-                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))) {
+                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))
+                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
             ToastUtils.show(ConversationActivity.this, getString(R.string.resend_file_failed));
             return;
         }
@@ -1719,7 +1720,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
                         //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
+                        //视频消息也不再刷新，防止重新加载
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) ||
+                                receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
                             setMessageSendSuccess(index, receivedWSMessage);
                             adapter.setMessageList(uiMessageList);
                         } else {
@@ -2160,6 +2163,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_multiple);
                     operationIdList.add(R.string.chat_long_click_reply);
                     break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    // TODO: 2022/7/25 视频转发多选
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_multiple);
+                    break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
@@ -2576,6 +2584,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             switch (uiMessage.getMessage().getType()) {
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     result = getString(R.string.baselib_share_image) + " " + jsonObject.getString("name");
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    result = getString(R.string.send_a_video) + " " + jsonObject.getString("name");
                     break;
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     result = getString(R.string.baselib_share_file) + " " + jsonObject.getString("name");

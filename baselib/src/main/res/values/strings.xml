@@ -289,6 +289,7 @@
     <string name="communicate">沟通</string>
     <string name="group_info">浪潮资讯</string>
     <string name="send_a_picture">[图片]</string>
+    <string name="send_a_video">[视频]</string>
     <string name="send_a_comment">[评论]</string>
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[链接]</string>

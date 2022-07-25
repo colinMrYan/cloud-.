@@ -14,7 +14,7 @@ public class MsgContentMediaVideo {
     private String name;
     private String media; // 视频地址
     private int videoDuration; // 秒
-    private String imagePath; // 图片地址
+    private String imagePath; // 图片地址，上传到服务后，当前逻辑会将本地地址替换成服务返的图片地址 "/image/IMG_1658477943643.781006.jpg"
     private int imageWidth;
     private int imageHeight;
     private long videoSize;
@@ -24,8 +24,8 @@ public class MsgContentMediaVideo {
 
     public MsgContentMediaVideo(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
-        JSONObject picInfo = JSONUtils.getJSONObject(object, "pic", new JSONObject());
-        imagePath = JSONUtils.getString(picInfo, "imagePath", "");
+        JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
+        imagePath = JSONUtils.getString(picInfo, "media", "");
         imageWidth = JSONUtils.getInt(picInfo, "width", 0);
         imageHeight = JSONUtils.getInt(picInfo, "height", 0);
         name = JSONUtils.getString(object, "name", "");
@@ -103,10 +103,10 @@ public class MsgContentMediaVideo {
         JSONObject obj = new JSONObject();
         try {
             JSONObject picObj = new JSONObject();
-            picObj.put("imagePath", getImagePath());
+            picObj.put("media", getImagePath());
             picObj.put("width", getImageWidth());
             picObj.put("height", getImageHeight());
-            obj.put("pic", picObj);
+            obj.put("thumbnail", picObj);
             obj.put("name", getName());
             obj.put("size", getVideoSize());
             obj.put("media", getMedia());

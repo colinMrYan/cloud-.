@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.system.VoiceResult;
@@ -175,8 +176,9 @@ public class MessageSendManager {
                 }
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                // 文件是否已经上传到服务
                 if (message.getMsgContentMediaVideo().getMedia().equals(message.getLocalPath())) {
-                    sendMessageWithFile(message);
+                    sendMessageWithVideoStepOne(message);
                 } else {
                     WSAPIService.getInstance().sendMessage(message);
                 }
@@ -223,8 +225,17 @@ public class MessageSendManager {
                 setMessageSendFail(message);
             } else {
                 message.setWaitingSendRetry(true);
-                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
-                messageListInSendRetry.add(message);
+                // 不影响之前的逻辑，只修改上传视频重试逻辑
+//                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                if (!Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(message.getType())) {
+                    MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                    messageListInSendRetry.add(message);
+                } else {
+                    if (!messageListInSendRetry.contains(message)) {
+                        MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                        messageListInSendRetry.add(message);
+                    }
+                }
                 startCheckMessageSendTimeout();
             }
         } else {
@@ -330,6 +341,98 @@ public class MessageSendManager {
             }
         });
         voice2StringMessageUtils.startVoiceListeningByVoiceFile(message.getMsgContentMediaVoice().getDuration(), filePath);
+    }
+
+    /**
+     * 发送视频类型的消息，需要发送2个文件：首帧图和视频，先发送图片再发视频
+     *
+     * @param fakeMessage
+     */
+    private void sendMessageWithVideoStepOne(final Message fakeMessage) {
+        ProgressCallback progressCallback = new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                // 图片发送成功后，发送视频
+//                fakeMessage.getMsgContentMediaVideo().setImagePath(volumeFile.getPath());
+                sendMessageWithVideoStepTwo(fakeMessage, volumeFile.getPath());
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
+            }
+
+            @Override
+            public void onFail() {
+                // recallSendingMessageList 一直都是空的！！！从没有add
+                if (!recallSendingMessageList.contains(fakeMessage)) {
+                    //当网络失败或者发送时间已经超过10分钟时
+                    if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                        addMessageInSendRetry(fakeMessage);
+                    } else {
+                        setMessageSendFail(fakeMessage);
+                    }
+                }
+
+            }
+        };
+
+        if (!recallSendingMessageList.contains(fakeMessage)) {
+            ChatFileUploadManagerUtils.getInstance().uploadVideoImageFile(fakeMessage, progressCallback);
+        } else {
+            recallSendingMessageList.remove(fakeMessage);
+        }
+    }
+
+    /**
+     * 发送视频类型的消息，第二步
+     *
+     * @param fakeMessage
+     */
+    private void sendMessageWithVideoStepTwo(final Message fakeMessage, final String imagePath) {
+        ProgressCallback progressCallback = new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                // 上传成功发送视频消息
+                MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
+                msgContentMediaVideo.setImageHeight(fakeMessage.getMsgContentMediaVideo().getImageHeight());
+                msgContentMediaVideo.setImageWidth(fakeMessage.getMsgContentMediaVideo().getImageWidth());
+                msgContentMediaVideo.setImagePath(imagePath);
+                msgContentMediaVideo.setMedia(volumeFile.getPath());
+                msgContentMediaVideo.setName(volumeFile.getName());
+                msgContentMediaVideo.setVideoSize(volumeFile.getSize());
+                msgContentMediaVideo.setVideoDuration(fakeMessage.getMsgContentMediaVideo().getVideoDuration());
+                fakeMessage.setContent(msgContentMediaVideo.toString());
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), fakeMessage);
+                WSAPIService.getInstance().sendMessage(fakeMessage);
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
+            }
+
+            @Override
+            public void onFail() {
+                if (!recallSendingMessageList.contains(fakeMessage)) {
+                    //当网络失败或者发送时间已经超过10分钟时
+                    if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                        addMessageInSendRetry(fakeMessage);
+                    } else {
+                        setMessageSendFail(fakeMessage);
+                    }
+                } else {
+                    recallSendingMessageList.remove(fakeMessage);
+                }
+
+            }
+        };
+
+        if (!recallSendingMessageList.contains(fakeMessage)) {
+            ChatFileUploadManagerUtils.getInstance().uploadVideoFile(fakeMessage, progressCallback);
+        } else {
+            recallSendingMessageList.remove(fakeMessage);
+        }
     }
 
     /**

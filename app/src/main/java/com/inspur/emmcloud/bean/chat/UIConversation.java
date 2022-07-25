@@ -138,6 +138,9 @@ public class UIConversation implements Serializable {
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                         content = MyApplication.getInstance().getString(R.string.send_a_picture);
                         break;
+                    case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                        content = MyApplication.getInstance().getString(R.string.send_a_video);
+                        break;
                     case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                         content = MyApplication.getInstance().getString(R.string.send_a_link);
                         break;

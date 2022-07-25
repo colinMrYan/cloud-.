@@ -22,8 +22,8 @@ public class VideoRecordConfig {
         return sInstance;
     }
 
-    public int mQuality = TXRecordCommon.VIDEO_QUALITY_HIGH;
-    public int mVideoBitrate = 9600;
+    public int mQuality = TXRecordCommon.VIDEO_QUALITY_MEDIUM;
+//    public int mVideoBitrate = 9600;
     public int mResolution = TXRecordCommon.VIDEO_RESOLUTION_720_1280;
     public int mGOP = 1;
     public int mFPS = 30;
@@ -77,8 +77,8 @@ public class VideoRecordConfig {
      * 清空配置
      */
     public void clear() {
-        mQuality = TXRecordCommon.VIDEO_QUALITY_HIGH;
-        mVideoBitrate = 9600;
+        mQuality = TXRecordCommon.VIDEO_QUALITY_MEDIUM;
+//        mVideoBitrate = 9600;
         mResolution = TXRecordCommon.VIDEO_RESOLUTION_720_1280;
         mGOP = 1;
         mFPS = 30;

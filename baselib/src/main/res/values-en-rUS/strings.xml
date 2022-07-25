@@ -281,6 +281,7 @@
     <string name="communicate">Messages</string>
     <string name="group_info">Inspur Infomation</string>
     <string name="send_a_picture">[Image]</string>
+    <string name="send_a_video">[Video]</string>
     <string name="send_a_comment">[Comment]</string>
     <string name="send_a_file">[File]</string>
     <string name="send_a_link">[Link]</string>

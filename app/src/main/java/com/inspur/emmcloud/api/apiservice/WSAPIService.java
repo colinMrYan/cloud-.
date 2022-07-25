@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import android.text.TextUtils;
+import android.view.ViewGroup;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -17,6 +19,7 @@ import com.inspur.emmcloud.bean.chat.RelatedLink;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
 import org.json.JSONArray;
@@ -74,6 +77,9 @@ public class WSAPIService {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 sendChatMediaImageMsg(fakeMessage);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                sendChatMediaVideoMsg(fakeMessage);
                 break;
             case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
                 sendChatMultiMsg(fakeMessage);
@@ -336,6 +342,49 @@ public class WSAPIService {
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
+            WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 视频消息
+    private void sendChatMediaVideoMsg(Message message) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", message.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+
+            JSONObject imgObj = new JSONObject();
+//            int thumbnailHeight = 0;
+//            int thumbnailWidth = 0;
+//            ViewGroup.LayoutParams layoutParams = DisplayMediaImageMsg.getImgViewSize(MyApplication.getInstance(),
+//                    message.getMsgContentMediaVideo().getImageWidth(), message.getMsgContentMediaVideo().getImageHeight());
+//            if (layoutParams.height != 0 && layoutParams.width != 0) {
+//                thumbnailWidth = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.width) / 2);
+//                thumbnailHeight = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.height) / 2);
+//            }
+//            imgObj.put("width", thumbnailWidth);
+//            imgObj.put("height", thumbnailHeight);
+            imgObj.put("width", message.getMsgContentMediaVideo().getImageWidth());
+            imgObj.put("height", message.getMsgContentMediaVideo().getImageHeight());
+            imgObj.put("media", message.getMsgContentMediaVideo().getImagePath());
+            bodyObj.put("thumbnail", imgObj);
+            bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VIDEO);
+            bodyObj.put("duration", message.getMsgContentMediaVideo().getVideoDuration());
+            bodyObj.put("media", message.getMsgContentMediaVideo().getMedia());
+            bodyObj.put("size", message.getMsgContentMediaVideo().getVideoSize());
+            bodyObj.put("name", message.getMsgContentMediaVideo().getName());
+            bodyObj.put("tmpId", message.getId());
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
         } catch (Exception e) {
             e.printStackTrace();
