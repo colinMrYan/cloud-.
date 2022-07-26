@@ -17,14 +17,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="130dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/record_mask_buttom"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="90dp">
 
             <com.inspur.emmcloud.basemodule.media.record.view.RecordButton
                 android:id="@+id/record_button"
@@ -65,7 +65,7 @@
 
         <com.inspur.emmcloud.basemodule.media.record.view.RecordModeView
             android:id="@+id/record_mode_view"
-            android:layout_width="210dp"
+            android:layout_width="180dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal" />
 

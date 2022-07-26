@@ -1077,6 +1077,7 @@ public class ECMChatInputMenu extends LinearLayout {
 //                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
 //                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, picPath);
                             ((Activity)getContext()).startActivityForResult(intent, CAMERA_RESULT);
+                            ((Activity)getContext()).overridePendingTransition(R.anim.ps_anim_up_in, R.anim.ps_anim_fade_in);
                         }
 
                         @Override

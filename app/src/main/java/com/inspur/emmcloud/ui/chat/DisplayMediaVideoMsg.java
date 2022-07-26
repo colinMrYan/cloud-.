@@ -105,7 +105,7 @@ public class DisplayMediaVideoMsg {
             }
 
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                ToastUtils.show(failReason.toString());
+//                ToastUtils.show(failReason.toString());
             }
         });
         return cardContentView;

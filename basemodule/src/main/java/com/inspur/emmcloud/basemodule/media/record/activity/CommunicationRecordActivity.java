@@ -1,8 +1,11 @@
 package com.inspur.emmcloud.basemodule.media.record.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.BarHide;
@@ -12,6 +15,7 @@ import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.player.VideoPreviewActivity;
 import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordConfig;
+import com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK;
 import com.inspur.emmcloud.basemodule.media.record.basic.VideoKitResult;
 import com.inspur.emmcloud.basemodule.media.record.interfaces.IVideoRecordKit;
 import com.inspur.emmcloud.basemodule.media.record.view.VideoRecordView;
@@ -24,6 +28,8 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import com.tencent.rtmp.TXLiveConstants;
 
 import java.util.List;
+
+import static com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK.STATE_START;
 
 /**
  * Date：2022/6/13
@@ -80,14 +86,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
         mVideoRecordLayout = findViewById(R.id.video_record_layout);
         VideoRecordConfig recordConfig = VideoRecordConfig.getInstance();
         mVideoRecordLayout.setConfig(recordConfig);
-
-//        mVideoRecordLayout.getTitleBar().setOnBackClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-        // 录制监听
+//         录制监听
         mVideoRecordLayout.setOnRecordListener(new IVideoRecordKit.OnRecordListener() {
             @Override
             public void onRecordCanceled() {
@@ -121,7 +120,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
     private void setWindows() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_STATUS_BAR).hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR).fullScreen(true).init();
+        ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_BAR).fullScreen(true).init();
     }
 
     @Override
@@ -151,7 +150,12 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
 
     @Override
     public void onBackPressed() {
-        mVideoRecordLayout.backPressed();
+        if (VideoRecordSDK.getInstance().getRecordState() == STATE_START) {
+            // 录制中不返回，什么都不做
+        } else {
+            super.onBackPressed();
+            overridePendingTransition(0, R.anim.ps_anim_down_out);
+        }
     }
 
     @Override
@@ -166,6 +170,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
                 intent.putExtra(FILE_TYPE, 1);
                 setResult(RESULT_OK, intent);
                 finish();
+                overridePendingTransition(0, R.anim.ps_anim_down_out);
             }
         } else if (requestCode == REQUEST_CODE_VIDEO_EDIT) {
             // 视频
@@ -184,6 +189,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
                 intent.putExtra(FILE_TYPE, 2);
                 setResult(RESULT_OK, intent);
                 finish();
+                overridePendingTransition(0, R.anim.ps_anim_down_out);
             }
         }
     }
