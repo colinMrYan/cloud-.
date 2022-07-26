@@ -131,7 +131,7 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
                 public void onClick(View v) {
                     try {
                         // 播放视频流
-                        getTargetHolder(position).startVideo(media);
+                        (mItemCache.get(position)).startVideo(media);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -277,7 +277,11 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
     // item绑定到adapter
     @Override
     public void attach(int currentPosition) {
-        getTargetHolder(currentPosition).attachVideo();
+        try {
+            (mItemCache.get(currentPosition)).attachVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     // fragment生命周期onResume
@@ -289,18 +293,21 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
     // fragment生命周期onPause
     @Override
     public void pause(int currentPosition) {
-        getTargetHolder(currentPosition).pauseVideo();
+        try {
+            (mItemCache.get(currentPosition)).pauseVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     // item从adapter解绑
     @Override
     public void detach(int currentPosition) {
-        getTargetHolder(currentPosition).detachVideo();
+        try {
+            (mItemCache.get(currentPosition)).detachVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
-
-    private PreviewSupportHolder getTargetHolder(int position) throws NullPointerException {
-        return (mItemCache.get(position));
-    }
-
 
 }
