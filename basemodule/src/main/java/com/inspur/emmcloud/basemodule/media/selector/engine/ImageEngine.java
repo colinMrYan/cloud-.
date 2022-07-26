@@ -53,6 +53,15 @@ public interface ImageEngine {
     void loadGridImage(@NonNull Context context, @NonNull String url, @NonNull ImageView imageView);
 
     /**
+     * load video first frame
+     *
+     * @param context
+     * @param videoPath
+     * @param imageView
+     */
+    void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth, int maxHeight, @NonNull ImageView imageView);
+
+    /**
      * When the recyclerview slides quickly, the callback can be used to pause the loading of resources
      *
      * @param context

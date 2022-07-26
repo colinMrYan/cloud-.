@@ -1151,58 +1151,58 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 return;
                             }
                             // 判断是否发送原始图片，原始图片不做压缩
-                            boolean isOriginImg = mediaResult.get(0).isOriginal();
-                            if (isOriginImg) {
-                                for (LocalMedia media : mediaResult) {
-                                    Compressor.ResolutionRatio resolutionRatio = null;
-                                    Compressor compressor = new Compressor(ConversationActivity.this);
-                                    resolutionRatio = compressor.getResolutionRation(media.getWidth(), media.getHeight());
-                                    String mediaPath = media.getRealPath();
-                                    if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
-                                        mediaPath = media.getCutPath();
-                                    }
-                                    combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
-                                }
-                            } else {
-                                ArrayList<Uri> source = new ArrayList<>();
-                                final ConcurrentHashMap<String, LocalMedia> queue = new ConcurrentHashMap<>();
-                                for (int i = 0; i < mediaResult.size(); i++) {
-                                    LocalMedia media = mediaResult.get(i);
-                                    if (PictureMimeType.isHasImage(media.getMimeType())) {
+                            ArrayList<Uri> source = new ArrayList<>();
+                            final ConcurrentHashMap<String, LocalMedia> queue = new ConcurrentHashMap<>();
+                            for (LocalMedia media : mediaResult) {
+                                if (PictureMimeType.isHasVideo(media.getMimeType())) {
+                                    // 视频流消息处理
+                                } else {
+                                    // 图片处理
+                                    boolean isOriginImg = media.isOriginal();
+                                    //上传原始图片不压缩
+                                    if (isOriginImg) {
+                                        Compressor.ResolutionRatio resolutionRatio = null;
+                                        Compressor compressor = new Compressor(ConversationActivity.this);
+                                        resolutionRatio = compressor.getResolutionRation(media.getWidth(), media.getHeight());
+                                        String mediaPath = media.getRealPath();
+                                        if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+                                            mediaPath = media.getCutPath();
+                                        }
+                                        combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
+                                    } else {
+                                        //非原始图片压缩再上传
                                         String availablePath = media.getAvailablePath();
                                         Uri uri = PictureMimeType.isContent(availablePath) ? Uri.parse(availablePath) : Uri.fromFile(new File(availablePath));
                                         source.add(uri);
                                         queue.put(availablePath, media);
-                                    }
-                                }
-                                if (queue.size() == 0) {
-                                    return;
-                                }
-                                createCompressEngine();
-                                //使用鲁班压缩压缩图片
-                                compressFileEngine.onStartCompress(ConversationActivity.this, source, new OnKeyValueResultCallbackListener() {
-                                    @Override
-                                    public void onCallback(String srcPath, String compressPath) {
-                                        if (TextUtils.isEmpty(srcPath)) {
-                                        } else {
-                                            LocalMedia media = queue.get(srcPath);
-                                            if (media != null) {
-                                                media.setCompressPath(compressPath);
-                                                media.setCompressed(!TextUtils.isEmpty(compressPath));
-                                                media.setSandboxPath(SdkVersionUtils.isQ() ? media.getCompressPath() : null);
-                                                String mediaPath = media.getRealPath();
-                                                if (media.isCompressed()) {
-                                                    mediaPath = media.getCompressPath();
+                                        if (queue.size() == 0) return;
+                                        createCompressEngine();
+                                        //使用鲁班压缩压缩图片
+                                        compressFileEngine.onStartCompress(ConversationActivity.this, source, new OnKeyValueResultCallbackListener() {
+                                            @Override
+                                            public void onCallback(String srcPath, String compressPath) {
+                                                if (TextUtils.isEmpty(srcPath)) {
+                                                } else {
+                                                    LocalMedia media = queue.get(srcPath);
+                                                    if (media != null) {
+                                                        media.setCompressPath(compressPath);
+                                                        media.setCompressed(!TextUtils.isEmpty(compressPath));
+                                                        media.setSandboxPath(SdkVersionUtils.isQ() ? media.getCompressPath() : null);
+                                                        String mediaPath = media.getRealPath();
+                                                        if (media.isCompressed()) {
+                                                            mediaPath = media.getCompressPath();
+                                                        }
+                                                        if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
+                                                            mediaPath = media.getCutPath();
+                                                        }
+                                                        combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
+                                                        queue.remove(srcPath);
+                                                    }
                                                 }
-                                                if (media.isCut() && !StringUtils.isEmpty(media.getCutPath())) {
-                                                    mediaPath = media.getCutPath();
-                                                }
-                                                combinAndSendMessageWithFile(mediaPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
-                                                queue.remove(srcPath);
                                             }
-                                        }
+                                        });
                                     }
-                                });
+                                }
                             }
                         }
                     }).start();
