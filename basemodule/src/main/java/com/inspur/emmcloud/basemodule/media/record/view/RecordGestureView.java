@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.basemodule.media.record.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -27,6 +29,7 @@ public class RecordGestureView extends RelativeLayout implements View.OnTouchLis
     private float mScaleFactor;
     private TXUGCRecord record;
     private FrameLayout mMaskLayout;
+    private OnSelectModeListener listener;
 
     public RecordGestureView(@NonNull Context context) {
         super(context);
@@ -115,7 +118,13 @@ public class RecordGestureView extends RelativeLayout implements View.OnTouchLis
     }
 
     @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    public boolean onScroll(MotionEvent downEvent, MotionEvent moveEvent, float distanceX, float distanceY) {
+        //手势临界值，大于20生效
+        if (Math.abs(downEvent.getX() - moveEvent.getX()) > 20) {
+            float dis = moveEvent.getX() - downEvent.getX();
+            // 往右滑->置为录像，往左滑->置为拍照
+            listener.onModeSelect(dis > 0);
+        }
         return true;
     }
 
@@ -127,5 +136,13 @@ public class RecordGestureView extends RelativeLayout implements View.OnTouchLis
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return true;
+    }
+
+    public void setOnSelectModeListener(OnSelectModeListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnSelectModeListener {
+        void onModeSelect(boolean isRecord);
     }
 }

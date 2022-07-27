@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.BarHide;
@@ -50,6 +51,7 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
         recordImageUrl = getIntent().getStringExtra(VIDEO_IMAGE_PATH);
         SuperPlayerModel model = new SuperPlayerModel();
 //        model.url = "http://vfx.mtime.cn/Video/2021/07/10/mp4/210710171112971120.mp4";
+//        model.url = "https://kelioss.oss-cn-qingdao.aliyuncs.com/2022/210710171112971120.mp4";
         model.url = recordUrl;
         model.placeholderImage = recordImageUrl;
         videoPlayerView.playWithModel(model);
@@ -58,9 +60,17 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
     private void initView() {
         videoPlayerView = (VideoPlayerView) findViewById(R.id.video_player_view);
         completeTv = (TextView) findViewById(R.id.tv_complete);
+        ImageView backIv = (ImageView) findViewById(R.id.iv_back);
         // 设置控制控件不可见
         videoPlayerView.setControlCanShow(false);
         videoPlayerView.setPlayerViewCallback(this);
+        backIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(0, android.R.anim.fade_out);
+            }
+        });
         completeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

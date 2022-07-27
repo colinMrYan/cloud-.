@@ -42,7 +42,8 @@ public class PictureWindowAnimationStyle implements Parcelable {
      * @return this
      */
     public static PictureWindowAnimationStyle ofDefaultWindowAnimationStyle() {
-        return new PictureWindowAnimationStyle(R.anim.ps_anim_enter, R.anim.ps_anim_exit);
+//        return new PictureWindowAnimationStyle(R.anim.ps_anim_enter, R.anim.ps_anim_exit);
+        return new PictureWindowAnimationStyle(R.anim.ps_anim_up_in, R.anim.ps_anim_down_out);
     }
 
 

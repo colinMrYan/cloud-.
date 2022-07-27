@@ -209,7 +209,6 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
      * 开始录制
      */
     public int startRecord() {
-        Log.d(TAG, "startRecord mCurrentState" + mCurrentState);
         if (mCurrentState == STATE_STOP) {
             String customVideoPath = VideoPathUtil.getCustomVideoOutputPath();
             String customCoverPath = customVideoPath.replace(".mp4", ".jpg");

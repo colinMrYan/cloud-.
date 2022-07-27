@@ -124,6 +124,20 @@ public class RecordModeView extends RelativeLayout implements View.OnClickListen
         animator.start();
     }
 
+    public void setSelectMode(boolean isRecord) {
+        if (isRecord) {
+            if (mTextClick.isSelected() || !mTextClick.isClickable()) {
+                return;
+            }
+            mTextClick.performClick();
+        } else {
+            if (mTextPhoto.isSelected() || !mTextPhoto.isClickable()) {
+                return;
+            }
+            mTextPhoto.performClick();
+        }
+    }
+
     /**
      * 设置切换"拍摄模式"监听器
      */
@@ -142,6 +156,6 @@ public class RecordModeView extends RelativeLayout implements View.OnClickListen
 
     // 拍照，测试精简版到底支持不支持
     public interface OnSnapListener {
-        void onSnap(Bitmap bitmap, String path , Uri uri);
+        void onSnap(Bitmap bitmap, String path, Uri uri);
     }
 }

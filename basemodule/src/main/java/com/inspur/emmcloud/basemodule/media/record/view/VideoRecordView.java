@@ -49,6 +49,7 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
     private boolean mFrontCameraFlag = false; // 是否前置摄像头
     private OnRecordListener mOnRecordListener;
     private boolean isInStopProcessing; // 正在停止录制
+    private RecordGestureView mRecordGestureView;
 
     public VideoRecordView(Context context) {
         this(context, null);
@@ -71,6 +72,7 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
         mButtonRecord = findViewById(R.id.record_button);
         mVideoView = findViewById(R.id.video_view);
         mRecordModeView = findViewById(R.id.record_mode_view);
+        mRecordGestureView = findViewById(R.id.gesture_view);
         mBackIv = findViewById(R.id.iv_back);
         mSwitchIv = findViewById(R.id.iv_switch);
         mBackIv.setOnClickListener(this);
@@ -82,6 +84,12 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
             @Override
             public void onRecordModeSelect(int currentMode) {
                 mButtonRecord.setCurrentRecordMode(currentMode);
+            }
+        });
+        mRecordGestureView.setOnSelectModeListener(new RecordGestureView.OnSelectModeListener() {
+            @Override
+            public void onModeSelect(boolean isRecord) {
+                mRecordModeView.setSelectMode(isRecord);
             }
         });
         TelephonyUtil.getInstance().initPhoneListener();
@@ -131,7 +139,6 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
 
     @Override
     public void backPressed() {
-
     }
 
     @Override
@@ -240,6 +247,7 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
         int id = v.getId();
         if (id == R.id.iv_back) {
             mActivity.finish();
+            mActivity.overridePendingTransition(0, R.anim.ps_anim_down_out);
         } else if (id == R.id.iv_switch) {
             mFrontCameraFlag = !mFrontCameraFlag;
             VideoRecordSDK.getInstance().switchCamera(mFrontCameraFlag);
