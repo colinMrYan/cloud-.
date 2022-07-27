@@ -93,18 +93,9 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
         loadImageBitmap(photoView, media, maxImageSize[0], maxImageSize[1]);
         setScaleDisplaySize(media, photoView);
         // 图片点击事件，仿微信
-//        photoView.setOnViewTapListener(new OnViewTapListener() {
-//            @Override
-//            public void onViewTap(View view, float x, float y) {
-//                if (mPreviewEventListener != null) {
-//                    mPreviewEventListener.onBackPressed();
-//                }
-//            }
-//        });
-        // 视频、图片点击事件，统一处理
-        surface.setOnClickListener(new View.OnClickListener() {
+        photoView.setOnViewTapListener(new OnViewTapListener() {
             @Override
-            public void onClick(View v) {
+            public void onViewTap(View view, float x, float y) {
                 if (mPreviewEventListener != null) {
                     mPreviewEventListener.onBackPressed();
                 }
@@ -137,8 +128,19 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
                     }
                 }
             });
+            // 视频、图片点击事件，统一处理
+            surface.setVisibility(View.VISIBLE);
+            surface.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mPreviewEventListener != null) {
+                        mPreviewEventListener.onBackPressed();
+                    }
+                }
+            });
         } else {
             // 图片
+            surface.setVisibility(View.GONE);
             playIv.setVisibility(View.GONE);
         }
         // 缓存holder，销毁时释放资源
