@@ -41,7 +41,7 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_BAR).fullScreen(true).init();
-        setContentView(R.layout.activity_video_player);
+        setContentView(R.layout.activity_video_preview);
         initView();
         initData();
     }
@@ -50,8 +50,6 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
         recordUrl = getIntent().getStringExtra(VIDEO_PATH);
         recordImageUrl = getIntent().getStringExtra(VIDEO_IMAGE_PATH);
         SuperPlayerModel model = new SuperPlayerModel();
-//        model.url = "http://vfx.mtime.cn/Video/2021/07/10/mp4/210710171112971120.mp4";
-//        model.url = "https://kelioss.oss-cn-qingdao.aliyuncs.com/2022/210710171112971120.mp4";
         model.url = recordUrl;
         model.placeholderImage = recordImageUrl;
         videoPlayerView.playWithModel(model);

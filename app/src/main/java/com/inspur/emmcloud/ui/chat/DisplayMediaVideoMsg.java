@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
@@ -50,22 +51,22 @@ public class DisplayMediaVideoMsg {
         durationTv.setText(formattedTime(msgContentMediaVideo.getVideoDuration()));
         String imageUri = msgContentMediaVideo.getImagePath();
         int chatImgBg = ResourceUtils.getResValueOfAttr(context, R.attr.bg_chat_img);
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(chatImgBg)
-                .showImageOnFail(chatImgBg)
-                .showImageOnLoading(chatImgBg)
-                .considerExifParams(true)
-                // 设置图片的解码类型
-                .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
-                .cacheOnDisk(true).build();
+//        DisplayImageOptions options = new DisplayImageOptions.Builder()
+//                .showImageForEmptyUri(chatImgBg)
+//                .showImageOnFail(chatImgBg)
+//                .showImageOnLoading(chatImgBg)
+//                .considerExifParams(true)
+//                // 设置图片的解码类型
+//                .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
+//                .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
             if (uiMessage.getSendStatus() == 1) {
                 imageUri = APIUri.getChatFileResouceUrl(message.getChannel(), imageUri);
             } else {
                 imageUri = "file://" + imageUri;
             }
-
         }
+
         //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaVideo.getImageWidth();
         int h = msgContentMediaVideo.getImageHeight();
@@ -74,9 +75,11 @@ public class DisplayMediaVideoMsg {
 //            w = msgContentMediaImage.getPreviewWidth();
 //        }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, w, h);
+        msgContentMediaVideo.setMedia("https://ecmcloud.oss-cn-beijing.aliyuncs.com/ossdemo/aaa6f73c6879cc84284d40257795648d.mp4");
+        GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, msgContentMediaVideo.getMedia(), 0, 0, imageView, chatImgBg);
 
-        if (!ImageDisplayUtils.getInstance().isHaveCacheImage(imageUri) && imageUri.startsWith("http") &&
-                msgContentMediaVideo.getImageHeight() != 0) {
+//        if (!ImageDisplayUtils.getInstance().isHaveCacheImage(imageUri) && imageUri.startsWith("http") &&
+//                msgContentMediaVideo.getImageHeight() != 0) {
 //            ViewGroup.LayoutParams layoutParams = DisplayMediaImageMsg.getImgViewSize(MyApplication.getInstance(), msgContentMediaVideo.getImageWidth(), msgContentMediaVideo.getImageHeight());
 //            if (layoutParams.height != 0 && layoutParams.width != 0) {
 //                int thumbnailHeight = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.height) / 2);
@@ -84,30 +87,30 @@ public class DisplayMediaVideoMsg {
 //                imageUri = imageUri + "&resize=true&w=" + msgContentMediaVideo.getImageWidth() +
 //                        "&h=" + msgContentMediaVideo.getImageHeight();
 //            }
-        }
-        ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                super.onLoadingStarted(imageUri, view);
-//                loadingView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view,
-                                          Bitmap loadedImage) {
-                FadeInBitmapDisplayer.animate(imageView, 800);
-                int w = loadedImage.getWidth();
-                int h = loadedImage.getHeight();
-                if (!isHasSetImageViewSize) {
-                    setImgViewSize(context, imageView, w, h);
-                }
-//                loadingView.setVisibility(View.GONE);
-            }
-
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-//                ToastUtils.show(failReason.toString());
-            }
-        });
+//        }
+//        ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
+//            @Override
+//            public void onLoadingStarted(String imageUri, View view) {
+//                super.onLoadingStarted(imageUri, view);
+////                loadingView.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view,
+//                                          Bitmap loadedImage) {
+//                FadeInBitmapDisplayer.animate(imageView, 800);
+//                int w = loadedImage.getWidth();
+//                int h = loadedImage.getHeight();
+//                if (!isHasSetImageViewSize) {
+//                    setImgViewSize(context, imageView, w, h);
+//                }
+////                loadingView.setVisibility(View.GONE);
+//            }
+//
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+////                ToastUtils.show(failReason.toString());
+//            }
+//        });
         return cardContentView;
 
     }

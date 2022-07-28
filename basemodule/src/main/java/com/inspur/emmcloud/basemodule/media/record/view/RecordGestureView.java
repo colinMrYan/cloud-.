@@ -119,6 +119,12 @@ public class RecordGestureView extends RelativeLayout implements View.OnTouchLis
 
     @Override
     public boolean onScroll(MotionEvent downEvent, MotionEvent moveEvent, float distanceX, float distanceY) {
+        if (downEvent == null || moveEvent == null) {
+            return false;
+        }
+        if (2 * Math.abs((downEvent.getY() - moveEvent.getY())) > Math.abs(downEvent.getX() - moveEvent.getX())) {
+            return false;
+        }
         //手势临界值，大于20生效
         if (Math.abs(downEvent.getX() - moveEvent.getX()) > 20) {
             float dis = moveEvent.getX() - downEvent.getX();

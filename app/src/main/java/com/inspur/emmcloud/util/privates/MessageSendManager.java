@@ -178,7 +178,8 @@ public class MessageSendManager {
             case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                 // 文件是否已经上传到服务
                 if (message.getMsgContentMediaVideo().getMedia().equals(message.getLocalPath())) {
-                    sendMessageWithVideoStepOne(message);
+//                    sendMessageWithVideoStepOne(message);
+                    sendMessageWithVideoStepTwo(message, "");
                 } else {
                     WSAPIService.getInstance().sendMessage(message);
                 }

@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -130,6 +131,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.tencent.rtmp.TXLiveConstants;
+import com.tencent.rtmp.TXVodPlayer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -149,6 +151,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
 import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
@@ -1001,7 +1004,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                         } else {
                             String imagePath = extras.getString(CommunicationRecordActivity.FILE_PATH);
-                            String videoPath = extras.getString(CommunicationRecordActivity.VIDEO_PATH);
+                            String videoPath = extras.getString(VIDEO_PATH);
                             int videoDuration = extras.getInt(CommunicationRecordActivity.VIDEO_TIME);
                             int videoWidth = extras.getInt(CommunicationRecordActivity.VIDEO_WIDTH);
                             int videoHeight = extras.getInt(CommunicationRecordActivity.VIDEO_HEIGHT);
@@ -1156,6 +1159,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                             for (LocalMedia media : mediaResult) {
                                 if (PictureMimeType.isHasVideo(media.getMimeType())) {
                                     // 视频流消息处理
+                                    String imagePath = media.getVideoThumbnailPath();
+                                    String videoPath = media.getRealPath();
+                                    int videoDuration = (int) media.getDuration()/1000;
+                                    int videoWidth = media.getWidth();
+                                    int videoHeight = media.getHeight();
+                                    sendMessageWithVideo(videoPath, imagePath, videoDuration, videoWidth, videoHeight);
                                 } else {
                                     // 图片处理
                                     boolean isOriginImg = media.isOriginal();
@@ -2242,8 +2251,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
                 config.renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
                 Intent intentVideo = new Intent(this, VideoPlayerActivity.class);
-//                intent.putExtra(VIDEO_PATH, ugcKitResult.outputPath);
-//                intent.putExtra(VIDEO_IMAGE_PATH, ugcKitResult.coverPath);
+                intentVideo.putExtra(VIDEO_PATH, message.getMsgContentMediaVideo().getMedia());
                 startActivity(intentVideo);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:

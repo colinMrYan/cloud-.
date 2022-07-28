@@ -59,7 +59,8 @@ public interface ImageEngine {
      * @param videoPath
      * @param imageView
      */
-    void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth, int maxHeight, @NonNull ImageView imageView);
+    void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth,
+                                 int maxHeight, @NonNull ImageView imageView ,int holder);
 
     /**
      * When the recyclerview slides quickly, the callback can be used to pause the loading of resources

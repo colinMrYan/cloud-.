@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.player.basic.AbsPlayer;
 import com.inspur.emmcloud.basemodule.media.player.basic.SuperPlayerDef;
@@ -91,12 +92,16 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     public void preparePlayVideo(SuperPlayerModel superPlayerModel) {
         if (!isDestroy) {
             if (superPlayerModel.coverPictureUrl != null) {
-                Glide.with(getContext()).load(superPlayerModel.coverPictureUrl)
+//                Glide.with(getContext()).load(superPlayerModel.coverPictureUrl)
+//                        .into(coverIv);
+                Glide.with(getContext())
+                        .setDefaultRequestOptions(new RequestOptions().frame(0))
+                        .load(superPlayerModel.url)
                         .into(coverIv);
             }
         }
         toggleView(coverIv, true);
-        pauseIv.setImageResource(R.drawable.ic_vod_play_normal);
+        pauseIv.setImageResource(R.drawable.ic_vod_play_center);
         updateVideoProgress(0, superPlayerModel.duration);
         playSb.setEnabled(superPlayerModel.playAction != SuperPlayerModel.PLAY_ACTION_MANUAL_PLAY);
         updateStartUI();
@@ -144,7 +149,7 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     public void updatePlayState(SuperPlayerDef.PlayerState playState) {
         switch (playState) {
             case INIT:
-                pauseIv.setImageResource(R.drawable.ic_vod_play_normal);
+                pauseIv.setImageResource(R.drawable.ic_vod_play_center);
                 break;
             case PLAYING:
                 playSb.setEnabled(true);
@@ -158,12 +163,12 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
                 toggleView(playPb, true);
                 break;
             case PAUSE:
-                pauseIv.setImageResource(R.drawable.ic_vod_play_normal);
+                pauseIv.setImageResource(R.drawable.ic_vod_play_center);
                 toggleView(playPb, false);
                 toggleView(resumeIv, true);
                 break;
             case END:
-                pauseIv.setImageResource(R.drawable.ic_vod_play_normal);
+                pauseIv.setImageResource(R.drawable.ic_vod_play_center);
                 toggleView(playPb, false);
                 break;
         }

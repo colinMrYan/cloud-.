@@ -135,11 +135,13 @@ public class GlideEngine implements ImageEngine {
      * @param videoPath 播放路径
      * @param imageView 承载图片ImageView
      */
-    public void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth, int maxHeight, @NonNull ImageView imageView) {
+    public void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth,
+                                        int maxHeight, @NonNull ImageView imageView, int holder) {
         Glide.with(context)
                 .setDefaultRequestOptions(new RequestOptions().frame(0).centerCrop())
                 .load(videoPath)
-                .override(maxWidth, maxHeight)
+//                .override(maxWidth, maxHeight)
+                .placeholder(holder)
                 .into(imageView);
     }
 

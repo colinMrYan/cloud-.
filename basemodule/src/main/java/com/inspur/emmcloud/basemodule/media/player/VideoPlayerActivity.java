@@ -42,11 +42,8 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
     private void initData() {
         String recordUrl = getIntent().getStringExtra(VIDEO_PATH);
         SuperPlayerModel model = new SuperPlayerModel();
-//        model.url = "http://vfx.mtime.cn/Video/2021/07/10/mp4/210710171112971120.mp4";
-        model.url = recordUrl;
-        model.placeholderImage = "http://xiaozhibo-10055601.file.myqcloud.com/coverImg.jpg";
-//        PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
-//        config.renderMode = TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN;
+//        model.url = recordUrl;
+        model.url = "https://ecmcloud.oss-cn-beijing.aliyuncs.com/ossdemo/aaa6f73c6879cc84284d40257795648d.mp4";
         videoPlayerView.playWithModel(model);
     }
 
