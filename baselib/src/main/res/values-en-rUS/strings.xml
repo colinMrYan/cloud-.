@@ -1117,6 +1117,7 @@
     <string name="service_conversation_desc">Professional team to serve you</string>
     <string name="service_conversation_search">Search service number</string>
     <string name="service_search">Service number search</string>
+    <string name="stream_not_support">Videos in this format cannot be shared</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

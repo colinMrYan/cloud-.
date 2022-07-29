@@ -21,6 +21,7 @@ public class PreviewSupportHolder {
     public ImageView playIv;
     public boolean isPicType;
     public VideoPlayerView mPlayerView;
+    private boolean supportUpload = true;
 
     public PreviewSupportHolder(@NonNull PhotoView photoView, ImageView playIv, boolean picType) {
         this.photoView = photoView;
@@ -28,11 +29,12 @@ public class PreviewSupportHolder {
         this.isPicType = picType;
     }
 
-    public PreviewSupportHolder(@NonNull PhotoView photoView, ImageView playIv, VideoPlayerView playerView, boolean picType) {
+    public PreviewSupportHolder(@NonNull PhotoView photoView, ImageView playIv, VideoPlayerView playerView, boolean picType, boolean supportUpload) {
         this.photoView = photoView;
         this.playIv = playIv;
         this.isPicType = picType;
         this.mPlayerView = playerView;
+        this.supportUpload = supportUpload;
     }
 
     public void setPlayerCallback() {
@@ -100,6 +102,11 @@ public class PreviewSupportHolder {
     //从adapter解绑
     public void detachVideo() {
         releaseVideo();
+    }
+
+    //是否支持上传
+    public boolean isSupportUpload() {
+        return supportUpload;
     }
 
     // 继续,不做处理

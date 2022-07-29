@@ -113,7 +113,7 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
             }
         });
         boolean hasVideo = PictureMimeType.isHasVideo(media.getMimeType());
-        PreviewSupportHolder previewHolder = new PreviewSupportHolder(photoView, playIv, hasVideo ? playerView : null, !hasVideo);
+        PreviewSupportHolder previewHolder = new PreviewSupportHolder(photoView, playIv, hasVideo ? playerView : null, !hasVideo,  !hasVideo || PictureMimeType.isMP4(media.getMimeType()));
         if (hasVideo) {
             // 视频
             playIv.setVisibility(View.VISIBLE);
@@ -160,6 +160,7 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
 
     // 获取当前preview holder
     public PreviewSupportHolder getCurrentHolder(int position) {
+        if (mItemCache.isEmpty()) return null;
         return mItemCache.get(position);
     }
 
@@ -257,7 +258,9 @@ public class PicturePreviewSupportAdapter extends PagerAdapter implements IPager
         this.currentSelectedItem = currentSelectedItem;
     }
 
-
+    public PreviewSupportHolder getCurrentSelectedHolder(){
+        return getCurrentHolder(currentSelectedItem);
+    }
     /**
      * 释放当前视频相关
      */

@@ -1186,6 +1186,7 @@
     <string name="service_conversation_desc">专业团队 为您服务</string>
     <string name="service_conversation_search">搜索服务号</string>
     <string name="service_search">服务号搜索</string>
+    <string name="stream_not_support">不能分享这种格式的视频</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>
