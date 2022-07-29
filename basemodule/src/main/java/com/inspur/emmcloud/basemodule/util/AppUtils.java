@@ -1189,7 +1189,7 @@ public class AppUtils {
     }
 
     /**
-     * 通知图库更新图片
+     * 路径为Picture时通知图库更新图片
      *
      * @param context
      * @param fileCursorPath

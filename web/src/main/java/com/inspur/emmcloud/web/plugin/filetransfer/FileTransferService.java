@@ -133,7 +133,7 @@ public class FileTransferService extends ImpPlugin {
                         if (saveFileCallBack != null) {
                             try {
                                 JSONObject json = new JSONObject();
-                                json.put("status", 1);
+                                json.put("state", 1);
                                 JSONObject result = new JSONObject();
                                 result.put("progress", progress);
                                 json.put("result", result);
@@ -375,7 +375,7 @@ public class FileTransferService extends ImpPlugin {
             //不存在则回调错误方法
             try {
                 JSONObject json = new JSONObject();
-                json.put("status", 0);
+                json.put("state", 0);
                 jsCallback(blockImageCallBack, json);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -394,7 +394,7 @@ public class FileTransferService extends ImpPlugin {
         if (StringUtils.isEmpty(uploadStream) && currentBlock != totalBlock) {
             try {
                 JSONObject json = new JSONObject();
-                json.put("status", 0);
+                json.put("state", 0);
                 jsCallback(blockImageCallBack, json);
             } catch (JSONException e) {
                 isUploadingFile = false;
@@ -404,7 +404,7 @@ public class FileTransferService extends ImpPlugin {
         }
         try {
             JSONObject json = new JSONObject();
-            json.put("status", 1);
+            json.put("state", 1);
             JSONObject result = new JSONObject();
             result.put("currentContent", uploadStream);
             result.put("allBlockSize", totalBlock);

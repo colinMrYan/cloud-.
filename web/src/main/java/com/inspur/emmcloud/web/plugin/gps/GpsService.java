@@ -216,6 +216,10 @@ public class GpsService extends ImpPlugin implements
             if (optionsObj.has("action")) {
                 uploadTrace = optionsObj.getBoolean("action");
             }
+            if (uploadTrace && StringUtils.isEmpty(uploadUri)) {
+                uploadTraceCallback(false, "invalid parameter");
+                return;
+            }
 
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
                 @Override

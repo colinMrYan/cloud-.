@@ -9,6 +9,7 @@ import android.util.Log;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.web.WebMediaCallbackImpl;
 import com.inspur.emmcloud.componentservice.web.WebMediaService;
@@ -82,6 +83,9 @@ public class IMPAudioService extends ImpPlugin {
                         if (StringUtils.isBlank(path)) {
                             return;
                         }
+                        if (!absolute) {
+                            path = getRelativeFilePath();
+                        }
                         service.playAudio(path);
                         break;
                     case "stop":
@@ -113,6 +117,10 @@ public class IMPAudioService extends ImpPlugin {
         durationTime = 0;
     }
 
+    private String getRelativeFilePath() {
+        return MyAppConfig.LOCAL_CACHE_VOICE_PATH + "/";
+    }
+
     public void upload() {
         durationTime = 0;
         if (service == null) return;
@@ -121,7 +129,7 @@ public class IMPAudioService extends ImpPlugin {
             public void onRecordEnd(String resourceLocalPath) throws JSONException {
                 if (saveToLocal) {
                     JSONObject json = new JSONObject();
-                    json.put("status", 1);
+                    json.put("state", 1);
                     JSONObject result = new JSONObject();
                     result.put("path", resourceLocalPath);
                     json.put("result", result);
@@ -135,7 +143,7 @@ public class IMPAudioService extends ImpPlugin {
                                             JSONObject json = new JSONObject();
                                             JSONObject result = new JSONObject();
                                             result.put("path", webPath);
-                                            json.put("status", 1);
+                                            json.put("state", 1);
                                             json.put("result", result);
                                             jsCallback(successCal, json);
                                         } catch (JSONException e) {

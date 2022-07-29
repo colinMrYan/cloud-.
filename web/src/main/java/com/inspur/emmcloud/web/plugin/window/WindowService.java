@@ -157,7 +157,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 impFragment.displayOrHideTitle(display);
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                     JSONObject result = new JSONObject();
                     json.put("result", result);
                 } catch (JSONException e) {

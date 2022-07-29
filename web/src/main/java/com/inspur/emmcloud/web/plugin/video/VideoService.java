@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -176,7 +175,7 @@ public class VideoService extends ImpPlugin {
     private void uploadShortVideo(String localSource) {
         JSONObject json = new JSONObject();
         try {
-            json.put("status", 1);
+            json.put("state", 1);
             JSONObject result = new JSONObject();
             decodeVideoToBase64(localSource, result);
             json.put("result", result);
@@ -228,7 +227,7 @@ public class VideoService extends ImpPlugin {
                         });
                     } else {
                         JSONObject json = new JSONObject();
-                        json.put("status", 1);
+                        json.put("state", 1);
                         JSONObject result = new JSONObject();
                         result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                         json.put("result", result);

@@ -68,14 +68,29 @@ public class PictureSelectorUtils {
     }
 
     //打开相册画廊
-    public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int GalleryCallbackNum) {
+    public void openGallery(Fragment fragment, int selectionMode, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
+        openGallery(fragment, selectionMode, true, true, false, maxImageNumber, maxVideoNumber, galleryCallbackNum);
+    }
+
+    public void openGallery( Fragment fragment,int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
+        Context context = fragment.getContext();
+        PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
+        selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
+        selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
+        selectorStyle.setTitleBarStyle(getTitleBarStyle());
+        PictureSelectionModel selectionModel = getSelectionModel(fragment, selectionMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
+        selectionModel.setSelectorUIStyle(selectorStyle);
+        selectionModel.forResult(galleryCallbackNum);
+    }
+
+    public void openGallery(Context context, int selectionMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber, int galleryCallbackNum) {
         PictureSelectorStyle selectorStyle = new PictureSelectorStyle();
         selectorStyle.setSelectMainStyle(getMainSelectorStyle(context));
         selectorStyle.setBottomBarStyle(getBottomNavBarStyle(context));
         selectorStyle.setTitleBarStyle(getTitleBarStyle());
         PictureSelectionModel selectionModel = getSelectionModel(context, selectionMode, isDisplayTimeAxis, useOriginalControl, displayCamera, maxImageNumber, maxVideoNumber);
         selectionModel.setSelectorUIStyle(selectorStyle);
-        selectionModel.forResult(GalleryCallbackNum);
+        selectionModel.forResult(galleryCallbackNum);
     }
 
     // 设置图片选择框架参数类
@@ -109,6 +124,98 @@ public class PictureSelectorUtils {
     }
 
     // 设置图片选择框架参数类
+    private PictureSelectionModel getSelectionModel(Fragment fragment, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
+        PictureSelectionModel selectionModel = PictureSelector.create(fragment)
+                // 目前只支持图片，后续完善视频
+                .openGallery(chooseMode)
+                // 微信样式
+//                .setSelectorUIStyle(selectorStyle)
+                .setImageEngine(GlideEngine.createGlideEngine())
+                // 剪裁引擎 暂时不用
+//              .setCropEngine(getCropFileEngine())
+
+                .setCompressEngine(new ImageFileCompressEngine())
+                .setSandboxFileEngine(new MeSandboxFileEngine())
+                // 相机相关 暂时不用
+//                                .setCameraInterceptListener(getCustomCameraEvent())
+                // 录音相关 暂时不用
+//                                .setRecordAudioInterceptListener(new MeOnRecordAudioInterceptListener())
+                .setSelectLimitTipsListener(new MeOnSelectLimitTipsListener())
+                 //编辑图片
+                .setEditMediaInterceptListener(getCustomEditMediaEvent())
+//                .setPermissionDescriptionListener(getPermissionDescriptionListener())
+                // 自定义预览，不用
+//                .setPreviewInterceptListener(getPreviewInterceptListener())
+//                                .setPermissionDeniedListener(getPermissionDeniedListener())
+                // 添加水印，暂时不用
+//                .setAddBitmapWatermarkListener(getAddBitmapWatermarkListener())
+                // 视频缩略图，暂时不用
+//                .setVideoThumbnailListener(getVideoThumbnailEventListener())
+                // 视频自动播放，不需要
+//                .isAutoVideoPlay(cb_auto_video.isChecked())
+                // 视频循环播放，不需要
+//                .isLoopAutoVideoPlay(cb_auto_video.isChecked())
+                // 过滤文件类型
+//                              .setQueryFilterListener(new OnQueryFilterListener() {
+//                                    @Override
+//                                    public boolean onFilter(String absolutePath) {
+//                                        return PictureMimeType.isUrlHasVideo(absolutePath);
+//                                    }
+//                                })
+                // 自定义加载器
+//                                .setExtendLoaderEngine(getExtendLoaderEngine())
+                // 自定义布局，不需要
+                .setInjectLayoutResourceListener(null)
+                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                .setLanguage(LanguageConfig.SYSTEM_LANGUAGE)
+                // 显示顺序，默认即可
+//                .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED)
+                // 时间轴
+                .isDisplayTimeAxis(isDisplayTimeAxis)
+                // 查询指定目录
+                .isOnlyObtainSandboxDir(false)
+                // 分页模式
+                .isPageStrategy(false)
+                // 原图功能
+                .isOriginalControl(useOriginalControl)
+                // 显示相机
+                .isDisplayCamera(displayCamera)
+                // 开启点击声音
+                .isOpenClickSound(false)
+                // 剪裁默认不支持gif，webp
+                .setSkipCropMimeType((String) null)
+                // 滑动选择，长按选择，可保留，微信没有
+                .isFastSlidingSelect(true)
+                //.setOutputCameraImageFileName("luck.jpeg")
+                //.setOutputCameraVideoFileName("luck.mp4")
+                // 视频图片同选
+                .isWithSelectVideoImage(true)
+                // 全屏预览，与微信相同
+                .isPreviewFullScreenMode(true)
+                // 预览缩放效果
+                .isPreviewZoomEffect(true)
+                // 点击预览 与微信相同
+                .isPreviewImage(true)
+                // 预览视频，与微信相同
+                .isPreviewVideo(true)
+                // 音频不需要
+                .isPreviewAudio(false)
+                //.setQueryOnlyMimeType(PictureMimeType.ofGIF())
+                // 是否显示蒙层 false 与微信保持一致
+                .isMaxSelectEnabledMask(false)
+                // 单选模式直接返回
+//                .isDirectReturnSingle()
+                // 图片，视频最多选择个数
+                .setMaxSelectNum(maxImageNumber)
+                .setMaxVideoSelectNum(maxVideoNumber)
+                // 图片列表加载动画
+                .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
+                // 是否显示gif，默认不显示
+                .isGif(false)
+                .setSelectedData(null);
+        return selectionModel;
+    }
+
     private PictureSelectionModel getSelectionModel(Context context, int chooseMode, boolean isDisplayTimeAxis, boolean useOriginalControl, boolean displayCamera, int maxImageNumber, int maxVideoNumber) {
         PictureSelectionModel selectionModel = PictureSelector.create(context)
                 // 目前只支持图片，后续完善视频
@@ -126,7 +233,7 @@ public class PictureSelectorUtils {
                 // 录音相关 暂时不用
 //                                .setRecordAudioInterceptListener(new MeOnRecordAudioInterceptListener())
                 .setSelectLimitTipsListener(new MeOnSelectLimitTipsListener())
-                // 编辑图片
+                 //编辑图片
                 .setEditMediaInterceptListener(getCustomEditMediaEvent())
 //                .setPermissionDescriptionListener(getPermissionDescriptionListener())
                 // 自定义预览，不用
@@ -293,7 +400,7 @@ public class PictureSelectorUtils {
     /**
      * 自定义压缩
      */
-    public static class ImageFileCompressEngine implements CompressFileEngine {
+    public static  class ImageFileCompressEngine implements CompressFileEngine {
 
         @Override
         public void onStartCompress(Context context, ArrayList<Uri> source, final OnKeyValueResultCallbackListener call) {

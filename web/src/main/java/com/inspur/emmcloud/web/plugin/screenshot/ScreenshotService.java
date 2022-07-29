@@ -90,7 +90,6 @@ public class ScreenshotService extends ImpPlugin {
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
-        AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().showScreenshotImg(screenshotImgPath);
         }
@@ -121,7 +120,7 @@ public class ScreenshotService extends ImpPlugin {
             public void shareSuccess() {
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("status", 1);
+                    json.put("state", 1);
                     JSONObject result = new JSONObject();
                     json.put("result", result);
                 } catch (JSONException e) {
