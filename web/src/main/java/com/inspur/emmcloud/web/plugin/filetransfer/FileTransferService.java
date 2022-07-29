@@ -160,7 +160,7 @@ public class FileTransferService extends ImpPlugin {
                                 try {
                                     if (downloadFileType.equals(SAVE_FILE)) {
                                         JSONObject jsonObject = new JSONObject();
-                                        jsonObject.put("status", 0);
+                                        jsonObject.put("state", 0);
                                         jsonObject.put("errorMessage", "");
                                         jsCallback(saveFileCallBack, jsonObject);
                                     }
@@ -196,8 +196,14 @@ public class FileTransferService extends ImpPlugin {
                             } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
+                                    jsonObject.put("state", 1);
                                     jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
-                                    jsonObject.put("status", 1);
+                                    JSONObject result = new JSONObject();
+                                    result.put("result", file.getPath());
+                                    result.put("fileSize", totalSize);
+                                    result.put("type", fileType);
+                                    result.put("name", fileName);
+                                    jsonObject.put("result", result);
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }
@@ -735,7 +741,7 @@ public class FileTransferService extends ImpPlugin {
                                 if (downloadFileType.equals(SAVE_FILE)) {
                                     JSONObject jsonObject = new JSONObject();
                                     try {
-                                        jsonObject.put("status", 2);
+                                        jsonObject.put("state", 2);
                                         jsonObject.put("errorMessage", "");
                                     } catch (Exception e1) {
                                         e1.printStackTrace();
@@ -1064,7 +1070,7 @@ public class FileTransferService extends ImpPlugin {
         if (!StringUtils.isBlank(uploadFailCB)) {
             JSONObject obj = new JSONObject();
             try {
-                obj.put("status", status);
+                obj.put("state", status);
                 obj.put("errorMessage", errorMessage);
             } catch (Exception e) {
                 e.printStackTrace();
