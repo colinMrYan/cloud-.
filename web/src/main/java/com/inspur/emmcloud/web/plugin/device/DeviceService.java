@@ -246,11 +246,12 @@ public class DeviceService extends ImpPlugin {
             }
         }
         if (time == 0L)
-            time = 500L;
+            time = 1000L;
         if (vibrator == null){
             vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         }
-        long[] patter = {time, 1000L, time, 1000L};
+        //等待0ms启动，震动间隔time时间。
+        long[] patter = {0L, time};
         vibrator.vibrate(patter, repeat ? 0 : -1);
         if (!StringUtils.isEmpty(successCb)) {
             JSONObject json = new JSONObject();
