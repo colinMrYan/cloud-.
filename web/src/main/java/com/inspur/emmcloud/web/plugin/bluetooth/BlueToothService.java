@@ -358,7 +358,7 @@ public class BlueToothService extends ImpPlugin {
             JSONObject json = new JSONObject();
             try {
                 //当前不在扫描状态
-                json.put("status", 2);
+                json.put("state", 2);
                 JSONObject result = new JSONObject();
                 json.put("result", result);
                 jsCallback(successCal, json);
