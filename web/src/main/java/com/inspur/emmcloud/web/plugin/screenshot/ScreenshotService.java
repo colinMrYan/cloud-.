@@ -100,7 +100,7 @@ public class ScreenshotService extends ImpPlugin {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK  && requestCode == REQ_IMAGE_EDIT) {
+        if (resultCode == Activity.RESULT_OK) {
             String screenshotImgPath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
             AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
             if (shareThirdParty) {
