@@ -205,7 +205,7 @@ public class VideoService extends ImpPlugin {
 //            inputFile.close();//关闭文件输入流
 //            result.put("base64", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
             result.put("value", realPath);
-            result.put("duration", mediaExtraInfo.getDuration());
+            result.put("time", (int) (mediaExtraInfo.getDuration() / 1000));
             result.put("type", mimeType);
             result.put("fileSize", file.length());
             result.put("name", file.getName());
@@ -241,7 +241,7 @@ public class VideoService extends ImpPlugin {
                     json.put("state", 1);
                     JSONObject result = new JSONObject();
                     result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
-                    result.put("duration", mediaExtraInfo.getDuration());
+                    result.put("time", (int) (mediaExtraInfo.getDuration() / 1000));
                     result.put("type", mimeType);
                     result.put("fileSize", file.length());
                     result.put("name", file.getName());

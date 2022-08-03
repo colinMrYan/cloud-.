@@ -199,7 +199,7 @@ public class FileTransferService extends ImpPlugin {
                                     jsonObject.put("state", 1);
                                     jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
                                     JSONObject result = new JSONObject();
-                                    result.put("result", file.getPath());
+                                    result.put("path", file.getPath());
                                     result.put("fileSize", totalSize);
                                     result.put("type", fileType);
                                     result.put("name", fileName);
