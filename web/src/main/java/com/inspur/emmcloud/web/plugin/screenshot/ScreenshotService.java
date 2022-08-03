@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.web.plugin.screenshot;
 
+import static com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity.REQ_IMAGE_EDIT;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,9 +47,9 @@ public class ScreenshotService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
             screenshot(paramsObject);
-        } else if(action.equals("enableScreenshot")){
+        } else if (action.equals("enableScreenshot")) {
             setWindowSecure(true);
-        } else if(action.equals("disableScreenshot")){
+        } else if (action.equals("disableScreenshot")) {
             setWindowSecure(false);
         } else {
             showCallIMPMethodErrorDlg();

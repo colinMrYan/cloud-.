@@ -49,7 +49,7 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
             case "onBackKeyDown":
                 onBackKeyDown(paramsObject);
                 break;
-            case "cancelBackKeyDown":
+            case "onCancelBackKeyDown":
                 cancelBackKeyDown();
                 break;
             case "onTitleBackKeyDown":

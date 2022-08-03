@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.web.plugin.video;
 
+import static android.app.Activity.RESULT_OK;
+import static com.umeng.socialize.utils.ContextUtil.getContext;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +17,8 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.media.selector.entity.MediaExtraInfo;
+import com.inspur.emmcloud.basemodule.media.selector.utils.MediaUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -22,12 +27,11 @@ import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpFragment;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,7 +42,7 @@ public class VideoService extends ImpPlugin {
 
     private String successCb, failCb;
     private String recordVideoFilePath;
-    private boolean returnBase64;
+    private boolean returnBase64 = false;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -95,9 +99,9 @@ public class VideoService extends ImpPlugin {
                             public void onPermissionRequestSuccess(List<String> permissions) {
                                 Uri fileUri = null;
                                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, optionsObj.optInt("quality",1));
+                                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, optionsObj.optInt("quality", 1));
                                 String fileName = optionsObj.optString("id");
-                                returnBase64 = optionsObj.optBoolean("isReturnBase64", true);
+                                returnBase64 = optionsObj.optBoolean("isReturnBase64", false);
                                 try {
                                     File file = createMediaFile(fileName);
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -114,7 +118,7 @@ public class VideoService extends ImpPlugin {
                                     jsCallback(failCb, e.getMessage());
                                 }
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time"))? 600 : Integer.parseInt(optionsObj.optString("time")));
+                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, TextUtils.isEmpty(optionsObj.optString("time")) ? 600 : Integer.parseInt(optionsObj.optString("time")));
                                 if (getImpCallBackInterface() != null) {
                                     getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.REQUEST_CODE_RECORD_VIDEO);
                                 }
@@ -187,21 +191,25 @@ public class VideoService extends ImpPlugin {
 
     private void decodeVideoToBase64(String localPath, JSONObject result) {
         try {
-            File file = new File(FilePathUtils.getRealPath(localPath));
-            FileInputStream inputFile = new FileInputStream(file);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int count = 0;
-            while ((count = inputFile.read(buffer)) >= 0) {
-                baos.write(buffer, 0, count);//读取输入流并写入输出字节流中
-            }
-            inputFile.close();//关闭文件输入流
-            result.put("base64", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
-            result.put("value", localPath);
-            result.put("duration",15);
-            result.put("type","mp4");
-            result.put("fileSize",count);
-            result.put("name",file.getName());
+            String realPath = FilePathUtils.getRealPath(localPath);
+            MediaExtraInfo mediaExtraInfo = MediaUtils.getVideoSize(getContext(), realPath);
+            File file = new File(realPath);
+            String mimeType = MediaUtils.getMimeTypeFromMediaUrl(file.getAbsolutePath());
+//            FileInputStream inputFile = new FileInputStream(file);
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            byte[] buffer = new byte[1024];
+//            int count = 0;
+//            while ((count = inputFile.read(buffer)) >= 0) {
+//                baos.write(buffer, 0, count);//读取输入流并写入输出字节流中
+//            }
+//            inputFile.close();//关闭文件输入流
+//            result.put("base64", Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+            result.put("value", realPath);
+            result.put("duration", mediaExtraInfo.getDuration());
+            result.put("type", mimeType);
+            result.put("fileSize", file.length());
+            result.put("name", file.getName());
+
         } catch (Exception e) {
             jsCallback(failCb, e.getMessage());
         }
@@ -210,35 +218,41 @@ public class VideoService extends ImpPlugin {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO) {
-            if (data != null && data.getData() != null) {
-                try {
-                    if (returnBase64) {
-                        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
-                            @Override
-                            public void onPermissionRequestSuccess(List<String> permissions) {
-                                uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
-                            }
+        if (requestCode == ImpFragment.REQUEST_CODE_RECORD_VIDEO && resultCode == RESULT_OK) {
+            try {
+                if (returnBase64) {
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(), Permissions.STORAGE, new PermissionRequestCallback() {
+                        @Override
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+                            uploadShortVideo(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                        }
 
-                            @Override
-                            public void onPermissionRequestFail(List<String> permissions) {
-                                ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
-                            }
-                        });
-                    } else {
-                        JSONObject json = new JSONObject();
-                        json.put("state", 1);
-                        JSONObject result = new JSONObject();
-                        result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
-                        json.put("result", result);
-                        jsCallback(successCb, json);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        @Override
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                        }
+                    });
+                } else {
+                    String realPath = FilePathUtils.getRealPath(FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                    MediaExtraInfo mediaExtraInfo = MediaUtils.getVideoSize(getContext(), realPath);
+                    File file = new File(realPath);
+                    String mimeType = MediaUtils.getMimeTypeFromMediaUrl(file.getAbsolutePath());
+                    JSONObject json = new JSONObject();
+                    json.put("state", 1);
+                    JSONObject result = new JSONObject();
+                    result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
+                    result.put("duration", mediaExtraInfo.getDuration());
+                    result.put("type", mimeType);
+                    result.put("fileSize", file.length());
+                    result.put("name", file.getName());
+                    json.put("result", result);
+                    jsCallback(successCb, json);
                 }
-            } else {
-                jsCallback(failCb, getFragmentContext().getString(R.string.web_video_record_fail));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        } else {
+            jsCallback(failCb, getFragmentContext().getString(R.string.web_video_record_fail));
         }
     }
 }
