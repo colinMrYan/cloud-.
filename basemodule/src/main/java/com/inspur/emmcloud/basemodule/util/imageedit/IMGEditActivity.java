@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.provider.MediaStore;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGMode;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGText;
@@ -184,7 +185,8 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                 if (bitmap != null) {
                     ContentResolver cr = getContentResolver();
                     String insertImage = MediaStore.Images.Media.insertImage(cr, bitmap, System.currentTimeMillis() + ".png", null);
-                    intent.putExtra(OUT_FILE_PATH, insertImage);
+                    String realPath = AppUtils.refreshMediaInSystemStorage(this, insertImage);
+                    intent.putExtra(OUT_FILE_PATH, realPath);
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     setResult(Activity.RESULT_CANCELED);
