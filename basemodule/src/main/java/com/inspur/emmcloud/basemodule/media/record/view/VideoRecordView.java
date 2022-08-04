@@ -31,6 +31,7 @@ import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.ugc.TXRecordCommon;
 
+import static com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK.STATE_START;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.REQUEST_CODE_IMAGE_EDIT;
 
 /**
@@ -89,6 +90,9 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
         mRecordGestureView.setOnSelectModeListener(new RecordGestureView.OnSelectModeListener() {
             @Override
             public void onModeSelect(boolean isRecord) {
+                if (VideoRecordSDK.getInstance().getRecordState() == STATE_START) {
+                    return;
+                }
                 mRecordModeView.setSelectMode(isRecord);
             }
         });

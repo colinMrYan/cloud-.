@@ -391,6 +391,6 @@ public class Constant {
     /**
      * 短视频，拍照等输入目录
      */
-    public static final String DEFAULT_MEDIA_PACK_FOLDER = "inspurrtmp";
+    public static final String DEFAULT_MEDIA_PACK_FOLDER = "InspurCompress";
     public static final String OUTPUT_DIR_NAME = "InspurUGC";
 }

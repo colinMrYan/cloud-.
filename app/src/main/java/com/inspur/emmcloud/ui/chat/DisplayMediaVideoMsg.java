@@ -13,19 +13,31 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.media.player.model.SuperPlayerModel;
 import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
+import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * DisplayMediaVideoMsg
@@ -47,10 +59,10 @@ public class DisplayMediaVideoMsg {
                 .findViewById(R.id.content_img);
         TextView durationTv = cardContentView.findViewById(R.id.tv_duration);
 //        final CustomLoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
-        MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
+        final MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
         durationTv.setText(formattedTime(msgContentMediaVideo.getVideoDuration()));
-        String imageUri = msgContentMediaVideo.getImagePath();
-        int chatImgBg = ResourceUtils.getResValueOfAttr(context, R.attr.bg_chat_img);
+//        String imageUri = msgContentMediaVideo.getImagePath();
+        final int chatImgBg = ResourceUtils.getResValueOfAttr(context, R.attr.bg_chat_img);
 //        DisplayImageOptions options = new DisplayImageOptions.Builder()
 //                .showImageForEmptyUri(chatImgBg)
 //                .showImageOnFail(chatImgBg)
@@ -59,13 +71,13 @@ public class DisplayMediaVideoMsg {
 //                // 设置图片的解码类型
 //                .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
 //                .cacheOnDisk(true).build();
-        if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            if (uiMessage.getSendStatus() == 1) {
-                imageUri = APIUri.getChatFileResouceUrl(message.getChannel(), imageUri);
-            } else {
-                imageUri = "file://" + imageUri;
-            }
-        }
+//        if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
+//            if (uiMessage.getSendStatus() == 1) {
+//                imageUri = APIUri.getChatFileResouceUrl(message.getChannel(), imageUri);
+//            } else {
+//                imageUri = "file://" + imageUri;
+//            }
+//        }
 
         //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaVideo.getImageWidth();
@@ -75,8 +87,55 @@ public class DisplayMediaVideoMsg {
 //            w = msgContentMediaImage.getPreviewWidth();
 //        }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, w, h);
-        msgContentMediaVideo.setMedia("https://ecmcloud.oss-cn-beijing.aliyuncs.com/ossdemo/aaa6f73c6879cc84284d40257795648d.mp4");
-        GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, msgContentMediaVideo.getMedia(), 0, 0, imageView, chatImgBg);
+//        msgContentMediaVideo.setMedia("https://ecmcloud.oss-cn-beijing.aliyuncs.com/ossdemo/aaa6f73c6879cc84284d40257795648d.mp4");
+        String imagePath = msgContentMediaVideo.getImagePath();
+        if (!message.getLocalPath().isEmpty()) {
+            File file = new File(message.getLocalPath());
+            if (file.exists()) {
+                GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, message.getLocalPath(), 0, 0, imageView, chatImgBg);
+            }
+        }
+//        else {
+//            String url111 = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(msgContentMediaVideo.getMedia()) + "&inlineContent=true";
+//            GlideEngine.createGlideEngine().loadVideoThumbnailImageWithHeader(context, url111, 0, 0, imageView, chatImgBg);
+//        }
+        else if (imagePath.startsWith("http")) {
+            GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, imagePath, 0, 0, imageView, chatImgBg);
+        } else {
+            imageView.setImageResource(chatImgBg);
+            BaseModuleApiService appAPIService = new BaseModuleApiService(context);
+            appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {
+                @Override
+                public void returnVideoSuccess(final String url) {
+                    PictureThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            JSONObject object = JSONUtils.getJSONObject(message.getContent());
+                            JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
+                            try {
+//                                object.put("media", url);
+                                picInfo.put("media", url);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            message.setContent(object.toString());
+                            MessageCacheUtil.saveMessage(context, message);
+                            GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, url, 0, 0, imageView, chatImgBg);
+                        }
+                    });
+                }
+
+                @Override
+                public void returnVideoFail(String error, int errorCode) {
+                }
+
+            });
+            String url111 = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(msgContentMediaVideo.getMedia()) + "&inlineContent=true";
+            appAPIService.getVideoUrl(url111);
+        }
+
+//        GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, msgContentMediaVideo.getMedia(), 0, 0, imageView, chatImgBg);
+//        GlideEngine.createGlideEngine().loadVideoThumbnailImageWithHeader(context, msgContentMediaVideo.getMedia(), 0, 0, imageView, chatImgBg);
 
 //        if (!ImageDisplayUtils.getInstance().isHaveCacheImage(imageUri) && imageUri.startsWith("http") &&
 //                msgContentMediaVideo.getImageHeight() != 0) {

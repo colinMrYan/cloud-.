@@ -477,7 +477,7 @@ public class PictureSelectorUtils {
         @Override
         public boolean onSelectLimitTips(Context context, PictureSelectionConfig config, int limitType) {
             if (limitType == SelectLimitType.SELECT_NOT_SUPPORT_SELECT_LIMIT) {
-                ToastUtils.show(context, "暂不支持的选择类型");
+//                ToastUtils.show(context, "暂不支持的选择类型");
                 return true;
             }
             return false;

@@ -65,6 +65,7 @@ public class VideoPlayerView extends RelativeLayout {
         mTXCloudVideoView = (TXCloudVideoView) mRootView.findViewById(R.id.video_view);
         controlView = (VideoControlView) mRootView.findViewById(R.id.control_view);
         controlView.setCallback(mControllerCallback);
+        controlView.updateVideoProgress(0, 0);
     }
 
     // 初始化播放器
@@ -341,5 +342,9 @@ public class VideoPlayerView extends RelativeLayout {
 
     public int getVideoHeight() {
         return mVideoPlayer.getVideoHeight();
+    }
+
+    public void showProgressLoading(){
+        controlView.prepareLoading();
     }
 }

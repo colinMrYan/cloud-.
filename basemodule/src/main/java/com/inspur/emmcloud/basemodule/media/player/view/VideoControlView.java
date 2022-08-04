@@ -72,7 +72,6 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
         resumeIv = (ImageView) findViewById(R.id.iv_resume);
         coverIv = (ImageView) findViewById(R.id.iv_cover);
         videoCloseIv = (ImageView) findViewById(R.id.iv_video_close);
-
         playSb.setProgress(0);
         playSb.setMax(100);
         videoCloseIv.setOnClickListener(this);
@@ -92,8 +91,6 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     public void preparePlayVideo(SuperPlayerModel superPlayerModel) {
         if (!isDestroy) {
             if (superPlayerModel.coverPictureUrl != null) {
-//                Glide.with(getContext()).load(superPlayerModel.coverPictureUrl)
-//                        .into(coverIv);
                 Glide.with(getContext())
                         .setDefaultRequestOptions(new RequestOptions().frame(0))
                         .load(superPlayerModel.url)
@@ -109,8 +106,8 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
 
     // 开始时的UI
     private void updateStartUI() {
-        toggleView(resumeIv, true);
-        toggleView(playPb, false);
+//        toggleView(resumeIv, true);
+//        toggleView(playPb, false);
     }
 
     /**

@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
@@ -9,6 +12,9 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.record.utils.VideoPathUtil;
+import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
+import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -25,9 +31,12 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.tencent.ugc.TXVideoEditConstants;
+import com.tencent.ugc.TXVideoEditer;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -177,9 +186,16 @@ public class MessageSendManager {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                 // 文件是否已经上传到服务
-                if (message.getMsgContentMediaVideo().getMedia().equals(message.getLocalPath())) {
+                MsgContentMediaVideo media = message.getMsgContentMediaVideo();
+                if (media.getMedia().equals(message.getLocalPath())) {
 //                    sendMessageWithVideoStepOne(message);
-                    sendMessageWithVideoStepTwo(message, "");
+                    if (media.getImageHeight() * media.getImageWidth() > 720 * 1280) {
+                        // 分辨率大于720 * 1280则压缩源文件
+                        compressVideo(message);
+//                        sendMessageWithVideoStepTwo(message, "");
+                    } else {
+                        sendMessageWithVideoStepTwo(message, "");
+                    }
                 } else {
                     WSAPIService.getInstance().sendMessage(message);
                 }
@@ -214,6 +230,52 @@ public class MessageSendManager {
             default:
                 break;
         }
+    }
+
+
+    private void compressVideo(final Message fakeMessage) {
+        final String generateVideoPath = VideoPathUtil.generateVideoPath(fakeMessage.getMsgContentMediaVideo().getName());
+        TXVideoEditer mTXVideoEditor = new TXVideoEditer(BaseApplication.getInstance());
+        mTXVideoEditor.setVideoPath(fakeMessage.getMsgContentMediaVideo().getMedia());
+        TXVideoEditer.TXVideoGenerateListener mTXVideoGenerateListener = new TXVideoEditer.TXVideoGenerateListener() {
+            @Override
+            public void onGenerateProgress(final float progress) {
+            }
+
+            @Override
+            public void onGenerateComplete(final TXVideoEditConstants.TXGenerateResult result) {
+                PictureThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result.retCode == TXVideoEditConstants.GENERATE_RESULT_OK) {
+                            // 生成成功
+                            MsgContentMediaVideo oldVideo = fakeMessage.getMsgContentMediaVideo();
+                            MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
+                            msgContentMediaVideo.setImageHeight(oldVideo.getImageHeight());
+                            msgContentMediaVideo.setImageWidth(oldVideo.getImageWidth());
+                            msgContentMediaVideo.setImagePath("");
+                            msgContentMediaVideo.setMedia(generateVideoPath);
+                            msgContentMediaVideo.setName(oldVideo.getName());
+                            msgContentMediaVideo.setVideoSize(oldVideo.getVideoSize());
+                            msgContentMediaVideo.setVideoDuration(oldVideo.getVideoDuration());
+                            fakeMessage.setContent(msgContentMediaVideo.toString());
+                            sendMessageWithVideoStepTwo(fakeMessage, "");
+                        } else {
+                            if (!recallSendingMessageList.contains(fakeMessage)) {
+                                //当网络失败或者发送时间已经超过10分钟时
+                                if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                                    addMessageInSendRetry(fakeMessage);
+                                } else {
+                                    setMessageSendFail(fakeMessage);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+        mTXVideoEditor.setVideoGenerateListener(mTXVideoGenerateListener);
+        mTXVideoEditor.generateVideo(TXVideoEditConstants.VIDEO_COMPRESSED_540P, generateVideoPath);
     }
 
 //    private void sendMessage(Message message){

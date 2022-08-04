@@ -130,4 +130,14 @@ public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
     public void returnCallbackAfterFileUploadFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnVideoSuccess(String url) {
+
+    }
+
+    @Override
+    public void returnVideoFail(String error, int errorCode) {
+
+    }
 }

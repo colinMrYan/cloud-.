@@ -6,22 +6,30 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.zafarkhaja.semver.Version;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.player.basic.SuperPlayer;
 import com.inspur.emmcloud.basemodule.media.player.basic.SuperPlayerDef;
 import com.inspur.emmcloud.basemodule.media.player.interfaces.ISuperPlayerListener;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.tencent.rtmp.ITXVodPlayListener;
 import com.tencent.rtmp.TXBitrateItem;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tencent.rtmp.TXLivePlayer;
+import com.tencent.rtmp.TXPlayerGlobalSetting;
 import com.tencent.rtmp.TXVodPlayConfig;
 import com.tencent.rtmp.TXVodPlayer;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 
+import org.jsoup.Connection;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Date：2022/7/11
@@ -74,11 +82,10 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
 
         File sdcardDir = context.getExternalFilesDir(null);
         if (sdcardDir != null) {
-            mVodPlayConfig.setCacheFolderPath(sdcardDir.getPath() + "/txcache");
+            TXPlayerGlobalSetting.setCacheFolderPath(sdcardDir.getPath() + "/txcache");
         }
-//        mVodPlayConfig.setPreferredResolution(720 * 1280);
-        mVodPlayConfig.setMaxCacheItems(config.maxCacheItem);
-        mVodPlayConfig.setHeaders(config.headers);
+        TXPlayerGlobalSetting.setMaxCacheSize(200);
+        setUrlHead();
         mVodPlayer.setConfig(mVodPlayConfig);
         mVodPlayer.setRenderMode(config.renderMode);
         mVodPlayer.setVodListener(this);
@@ -422,5 +429,27 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
     @Override
     public int getVideoDuration() {
         return videoDuration;
+    }
+
+    public void setUrlHead() {
+        String versionValue = AppUtils.getVersion(BaseApplication.getInstance());
+        try {
+            Version version = Version.valueOf(versionValue);
+            versionValue = version.getNormalVersion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+        headers.put("Authorization", BaseApplication.getInstance().getToken());
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        headers.put("Content-Disposition", "inline");
+        headers.put("User-Agent", "Android/" + AppUtils.getReleaseVersion() + "("
+                + AppUtils.GetChangShang() + " " + AppUtils.GetModel()
+                + ") " + "CloudPlus_Phone/"
+                + versionValue);
+//        headers.put("User-Agent","iOS/15.3.1(Apple iPhone9,1) CloudPlus_Phone/5.0.0");
+        mVodPlayConfig.setHeaders(headers);
     }
 }

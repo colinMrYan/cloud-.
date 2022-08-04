@@ -57,7 +57,6 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
-import com.inspur.emmcloud.basemodule.media.player.VideoPreviewActivity;
 import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
@@ -1161,7 +1160,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                     // 视频流消息处理
                                     String imagePath = media.getVideoThumbnailPath();
                                     String videoPath = media.getRealPath();
-                                    int videoDuration = (int) media.getDuration()/1000;
+                                    int videoDuration = (int) media.getDuration() / 1000;
                                     int videoWidth = media.getWidth();
                                     int videoHeight = media.getHeight();
                                     sendMessageWithVideo(videoPath, imagePath, videoDuration, videoWidth, videoHeight);
@@ -2174,8 +2173,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                     // TODO: 2022/7/25 视频转发多选
-                    operationIdList.add(R.string.chat_long_click_transmit);
-                    operationIdList.add(R.string.chat_long_click_multiple);
+//                    operationIdList.add(R.string.chat_long_click_transmit);
+//                    operationIdList.add(R.string.chat_long_click_multiple);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     break;
@@ -2251,8 +2250,20 @@ public class ConversationActivity extends ConversationBaseActivity {
                 PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
                 config.renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
                 Intent intentVideo = new Intent(this, VideoPlayerActivity.class);
-                intentVideo.putExtra(VIDEO_PATH, message.getMsgContentMediaVideo().getMedia());
+//                String path = message.getMsgContentMediaVideo().getMedia();
+//                String url111 = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(path);
+//                intentVideo.putExtra(VIDEO_PATH, message.getMsgContentMediaVideo().getMedia());
+//                startActivity(intentVideo);
+                String path = message.getMsgContentMediaVideo().getMedia();
+                String videoPath;
+//                if (path.startsWith("https:")) {
+//                    videoPath = path;
+//                } else {
+                    videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
+//                }
+                intentVideo.putExtra(VIDEO_PATH, videoPath);
                 startActivity(intentVideo);
+
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 if (uiMessage.getSendStatus() != 1) {

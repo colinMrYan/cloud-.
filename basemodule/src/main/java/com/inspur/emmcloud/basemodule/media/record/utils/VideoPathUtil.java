@@ -20,9 +20,10 @@ public class VideoPathUtil {
     /**
      * 生成编辑后输出视频路径
      *
+     * @param name
      * @return 路径
      */
-    public static String generateVideoPath() {
+    public static String generateVideoPath(String name) {
         File sdcardDir = BaseApplication.getInstance().getExternalFilesDir(null);
         if (sdcardDir == null) {
             Log.e(TAG, "generateVideoPath sdcardDir is null");
@@ -37,7 +38,7 @@ public class VideoPathUtil {
         String current = String.valueOf(System.currentTimeMillis() / 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String time = sdf.format(new Date(Long.valueOf(current + "000")));
-        String saveFileName = String.format("TXVideo_%s.mp4", time);
+        String saveFileName = String.format(name + "CompressVideo_%s.mp4", time);
         return outputFolder + "/" + saveFileName;
     }
 
