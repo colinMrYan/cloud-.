@@ -797,9 +797,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         // TODO Auto-generated method stub
 //        Message message = uiMessage.getMessage();
         String messageType = uiMessage.getMessage().getType();
-        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && (messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
+        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && ((messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
                 || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))
-                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
+                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VIDEO))) {
             ToastUtils.show(ConversationActivity.this, getString(R.string.resend_file_failed));
             return;
         }
