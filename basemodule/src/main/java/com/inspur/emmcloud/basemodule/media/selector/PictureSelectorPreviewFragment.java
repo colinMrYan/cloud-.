@@ -1246,17 +1246,20 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 isAnimationStart = false;
+                if (!isAnimInit)
+                displayUnSupportItemView(false, null);
             }
         });
 
         if (isAnimInit) {
             showFullScreenStatusBar();
+            displayUnSupportItemView(true, null);
         } else {
             hideFullScreenStatusBar();
         }
     }
 
-    //todo 展示或者隐藏不支持格式提示
+    //展示或者隐藏不支持格式提示
     private void displayUnSupportItemView(boolean forceHide, String mediaType) {
         if (forceHide) {
             descriptionView.setVisibility(View.GONE);
@@ -1396,13 +1399,16 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
 //                        }
 //                    }
 //                }
+                // 选择其它item，暂停当前videoPlayer
+                int lastSelectedItem = previewAdapter.getCurrentSelectedItem();
+                if (lastSelectedItem != position) {
+                    previewAdapter.pause(lastSelectedItem);
+                    previewAdapter.setCurrentSelectedItem(position);
+                }
+                // 选择视频流判断是否支持上传
+                displayUnSupportItemView(!titleBar.isEnabled(), currentMedia.getMimeType());
             }
-            // 选择其它item，暂停当前videoPlayer
-            int lastSelectedItem = previewAdapter.getCurrentSelectedItem();
-            if (lastSelectedItem != position) {
-                previewAdapter.pause(lastSelectedItem);
-                previewAdapter.setCurrentSelectedItem(position);
-            }
+
         }
 
         @Override
