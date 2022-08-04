@@ -255,6 +255,8 @@ public class MessageSendManager {
                             msgContentMediaVideo.setImageWidth(oldVideo.getImageWidth());
                             msgContentMediaVideo.setImagePath("");
                             msgContentMediaVideo.setMedia(generateVideoPath);
+                            // 重新发送消息时对比media和localPath,压缩后localPath需要重定向到压缩地址
+                            fakeMessage.setLocalPath(generateVideoPath);
                             msgContentMediaVideo.setName(oldVideo.getName());
                             msgContentMediaVideo.setVideoSize(oldVideo.getVideoSize());
                             msgContentMediaVideo.setVideoDuration(oldVideo.getVideoDuration());
