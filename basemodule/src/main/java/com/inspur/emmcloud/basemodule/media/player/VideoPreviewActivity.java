@@ -52,6 +52,7 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
         SuperPlayerModel model = new SuperPlayerModel();
         model.url = recordUrl;
         model.placeholderImage = recordImageUrl;
+        videoPlayerView.setLoop(true);
         videoPlayerView.playWithModel(model);
     }
 

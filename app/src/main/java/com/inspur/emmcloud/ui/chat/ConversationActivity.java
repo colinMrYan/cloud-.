@@ -151,6 +151,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import butterknife.BindView;
 
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
 import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
@@ -2261,6 +2262,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                } else {
                     videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
 //                }
+                String imagePath = message.getMsgContentMediaVideo().getImagePath();
+                intentVideo.putExtra(VIDEO_THUMBNAIL_PATH, !StringUtils.isEmpty(imagePath) && imagePath.startsWith("http") ? imagePath : message.getLocalPath());
                 intentVideo.putExtra(VIDEO_PATH, videoPath);
                 startActivity(intentVideo);
 

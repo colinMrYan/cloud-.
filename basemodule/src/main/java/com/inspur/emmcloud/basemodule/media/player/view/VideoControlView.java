@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.player.basic.AbsPlayer;
 import com.inspur.emmcloud.basemodule.media.player.basic.SuperPlayerDef;
@@ -90,7 +91,12 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
 
     public void preparePlayVideo(SuperPlayerModel superPlayerModel) {
         if (!isDestroy) {
-            if (superPlayerModel.coverPictureUrl != null) {
+            if (!StringUtils.isEmpty(superPlayerModel.coverPictureUrl)) {
+                Glide.with(getContext())
+                        .setDefaultRequestOptions(new RequestOptions().frame(0))
+                        .load(superPlayerModel.coverPictureUrl)
+                        .into(coverIv);
+            } else if (!StringUtils.isEmpty(superPlayerModel.url)) {
                 Glide.with(getContext())
                         .setDefaultRequestOptions(new RequestOptions().frame(0))
                         .load(superPlayerModel.url)
@@ -153,6 +159,7 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
                 pauseIv.setImageResource(R.drawable.ic_play_pause_normal);
                 toggleView(resumeIv, false);
                 toggleView(playPb, false);
+                toggleView(coverIv, false);
                 break;
             case LOADING:
                 playSb.setEnabled(true);
@@ -167,6 +174,8 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
             case END:
                 pauseIv.setImageResource(R.drawable.ic_vod_play_center);
                 toggleView(playPb, false);
+                toggleView(resumeIv, true);
+                toggleView(coverIv, true);
                 break;
         }
         mCurrentPlayState = playState;

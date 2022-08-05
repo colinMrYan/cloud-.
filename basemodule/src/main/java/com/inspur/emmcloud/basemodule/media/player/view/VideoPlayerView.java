@@ -72,7 +72,8 @@ public class VideoPlayerView extends RelativeLayout {
     private void initPlayer() {
         mVideoPlayer = new VideoPlayerImpl(mContext, mTXCloudVideoView);
         mVideoPlayer.setObserver(new PlayerObserver());
-        mVideoPlayer.setLoop(true);
+        // 控制是否循环播放，对外开放
+//        mVideoPlayer.setLoop(true);
         controlView.hide();
     }
 

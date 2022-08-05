@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
 
 /**
  * Date：2022/7/15
@@ -25,6 +26,7 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
     private VideoPlayerView videoPlayerView; // 播放器核心view
     private boolean mIsManualPause = false; // 手动暂停
     private String recordUrl;
+    private String thumbNailUrl;
 
     @Override
     public void onCreate() {
@@ -33,6 +35,9 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
         ImmersionBar.with(this).hideBar(BarHide.FLAG_HIDE_BAR).fullScreen(true).init();
         setContentView(R.layout.activity_video_player);
         recordUrl = getIntent().getStringExtra(VIDEO_PATH);
+        if (getIntent().hasExtra(VIDEO_THUMBNAIL_PATH)) {
+            thumbNailUrl = getIntent().getStringExtra(VIDEO_THUMBNAIL_PATH);
+        }
         initView();
         initData();
     }
@@ -41,6 +46,8 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
 //        if (recordUrl.startsWith("https:")) {
             SuperPlayerModel model = new SuperPlayerModel();
             model.url = recordUrl;
+            model.coverPictureUrl = thumbNailUrl;
+            videoPlayerView.setLoop(false);
             videoPlayerView.playWithModel(model);
 //        } else {
 //            videoPlayerView.showProgressLoading();
@@ -69,8 +76,9 @@ public class VideoPlayerActivity extends BaseFragmentActivity implements NotSupp
                 public void run() {
                     SuperPlayerModel model = new SuperPlayerModel();
                     model.url = realUrl;
+                    model.coverPictureUrl = thumbNailUrl;
+                    videoPlayerView.setLoop(false);
                     videoPlayerView.playWithModel(model);
-
                 }
             });
         }

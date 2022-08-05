@@ -54,6 +54,7 @@ public class PreviewSupportHolder {
                 @Override
                 public void onPlayEnd() {
                     //展示暂停按钮
+                    photoView.setVisibility(View.VISIBLE);
                     playIv.setVisibility(View.VISIBLE);
                 }
 
@@ -76,6 +77,7 @@ public class PreviewSupportHolder {
             SuperPlayerModel model = new SuperPlayerModel();
             model.url = media.getRealPath();
             model.placeholderImage = media.getRealPath();
+            mPlayerView.setLoop(false);
             mPlayerView.playWithModel(model);
         }
     }

@@ -40,6 +40,7 @@ public class CommunicationRecordActivity extends BaseFragmentActivity implements
     public static final int REQUEST_CODE_IMAGE_EDIT = 1001;
     public static final int REQUEST_CODE_VIDEO_EDIT = 1002;
     public static final String VIDEO_PATH = "VIDEO_PATH";
+    public static final String VIDEO_THUMBNAIL_PATH = "VIDEO_THUMBNAIL_PATH";
     public static final String VIDEO_TIME = "VIDEO_TIME";
     public static final String VIDEO_WIDTH = "VIDEO_WIDTH";
     public static final String VIDEO_HEIGHT = "VIDEO_HEIGHT";
