@@ -1726,6 +1726,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                             msgListView.MoveToPosition(uiMessageList.size() - 1);
                         }
                     } else {
+                        // 本人的视频消息时添加原文件，防止再次刷新
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) &&
+                                BaseApplication.getInstance().getUid().equals(receivedWSMessage.getFromUser())) {
+                            receivedWSMessage.setLocalPath(uiMessageList.get(index).getMessage().getLocalPath());
+                        }
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
                         //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
@@ -1969,7 +1974,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uid
      * @param multiMessageType
      */
-    private void createDirectChannel(String uid, final UIMessage uiMessage, final int multiMessageType) {
+    private void createDirectChannel(String uid, final UIMessage uiMessage,
+                                     final int multiMessageType) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
                     new OnCreateDirectConversationListener() {
@@ -2260,7 +2266,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                if (path.startsWith("https:")) {
 //                    videoPath = path;
 //                } else {
-                    videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
+                videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
 //                }
                 String imagePath = message.getMsgContentMediaVideo().getImagePath();
                 intentVideo.putExtra(VIDEO_THUMBNAIL_PATH, !StringUtils.isEmpty(imagePath) && imagePath.startsWith("http") ? imagePath : message.getLocalPath());
@@ -2401,7 +2407,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 仿微信长按处理
      */
-    private void showMessageOperationDlg(final List<Integer> operationIdList, final UIMessage uiMessage, final View messageView) {
+    private void showMessageOperationDlg(final List<Integer> operationIdList,
+                                         final UIMessage uiMessage, final View messageView) {
         if (mPopupWindowList == null) {
             mPopupWindowList = new MessageMenuPopupWindow(messageView.getContext());
         }
@@ -2647,7 +2654,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 转发多条消息
      */
-    private void shareMultiMessageToFriends(boolean itemByItem, Context context, Set<UIMessage> uiMessages) {
+    private void shareMultiMessageToFriends(boolean itemByItem, Context
+            context, Set<UIMessage> uiMessages) {
         Intent intent = new Intent();
         String result = "[" + (itemByItem ? getString(R.string.multi_transfer_single) : getString(R.string.multi_transfer_all))
                 + getString(R.string.messages_count, uiMessages.size());

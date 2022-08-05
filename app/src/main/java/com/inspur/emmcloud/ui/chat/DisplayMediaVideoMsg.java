@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -103,43 +104,58 @@ public class DisplayMediaVideoMsg {
             });
         } else {
             // 防止图片本地被删除，不为空再加载本地资源
-            File file = new File(localPath);
-            if (!TextUtils.isEmpty(localPath) && file.exists()) {
-                GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, localPath, 0, 0, imageView, chatImgBg, null);
-            } else {
-                imageView.setImageResource(chatImgBg);
-                BaseModuleApiService appAPIService = new BaseModuleApiService(context);
-                appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {
+            if (!TextUtils.isEmpty(localPath)) {
+                GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, localPath, 0, 0, imageView, chatImgBg, new RequestListener<Drawable>() {
                     @Override
-                    public void returnVideoSuccess(final String url) {
-                        PictureThreadUtils.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                JSONObject object = JSONUtils.getJSONObject(message.getContent());
-                                JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
-                                try {
-                                    picInfo.put("media", url);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                message.setContent(object.toString());
-                                MessageCacheUtil.saveMessage(context, message);
-                                GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, url, 0, 0, imageView, chatImgBg, null);
-                            }
-                        });
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        message.setLocalPath("");
+                        loadVideoCover(context, imageView, chatImgBg, message);
+                        return false;
                     }
 
                     @Override
-                    public void returnVideoFail(String error, int errorCode) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
                     }
-
                 });
-                String originUlr = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(msgContentMediaVideo.getMedia()) + "&inlineContent=true";
-                appAPIService.getVideoUrl(originUlr);
+            } else {
+                loadVideoCover(context, imageView, chatImgBg, message);
             }
         }
         return cardContentView;
 
+    }
+
+    private static void loadVideoCover(final Context context, final ImageView imageView, final int chatImgBg, final Message message) {
+        imageView.setImageResource(chatImgBg);
+        BaseModuleApiService appAPIService = new BaseModuleApiService(context);
+        appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {
+            @Override
+            public void returnVideoSuccess(final String url) {
+                PictureThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject object = JSONUtils.getJSONObject(message.getContent());
+                        JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
+                        try {
+                            picInfo.put("media", url);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        message.setContent(object.toString());
+                        MessageCacheUtil.saveMessage(context, message);
+                        GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, url, 0, 0, imageView, chatImgBg, null);
+                    }
+                });
+            }
+
+            @Override
+            public void returnVideoFail(String error, int errorCode) {
+            }
+
+        });
+        String originUlr = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(message.getMsgContentMediaVideo().getMedia()) + "&inlineContent=true";
+        appAPIService.getVideoUrl(originUlr);
     }
 
     /**
