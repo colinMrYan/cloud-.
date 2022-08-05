@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils.SDCARD_PREFIX;
 
 /**
  * FileTransferService中下载，读取，写入内容，列出文件列表，删除文件等新加插件传的路径都认为是相对路径
@@ -367,7 +368,10 @@ public class FileTransferService extends ImpPlugin {
 
     private void uploadFileInBlock(String filePath, int blockSize) {
         // imp方法接受文件名称，
-        filePath = FilePathUtils.getRealPath(filePath);
+        if (filePath.startsWith(SDCARD_PREFIX)) {
+            filePath = filePath.replace(SDCARD_PREFIX, "");
+        }
+
         String base64Stream = null;
         try {
             base64Stream = Base64Utils.encodeBase64File(filePath);
@@ -660,7 +664,7 @@ public class FileTransferService extends ImpPlugin {
                             try {
                                 object.put("name", file.getName());
                                 object.put("size", FileUtils.getFileSize(path));
-                                object.put("path", FilePathUtils.SDCARD_PREFIX + path);
+                                object.put("path", SDCARD_PREFIX + path);
                                 object.put("md5", FileUtils.getFileMD5(file));
                                 array.put(object);
                             } catch (Exception e) {
