@@ -367,6 +367,7 @@ public class FileTransferService extends ImpPlugin {
 
     private void uploadFileInBlock(String filePath, int blockSize) {
         // imp方法接受文件名称，
+        filePath = FilePathUtils.getRealPath(filePath);
         String base64Stream = null;
         try {
             base64Stream = Base64Utils.encodeBase64File(filePath);
