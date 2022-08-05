@@ -160,6 +160,7 @@ public class FileTransferService extends ImpPlugin {
                                 try {
                                     if (downloadFileType.equals(SAVE_FILE)) {
                                         JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("status", 0);
                                         jsonObject.put("state", 0);
                                         jsonObject.put("errorMessage", "");
                                         jsCallback(saveFileCallBack, jsonObject);
@@ -197,6 +198,7 @@ public class FileTransferService extends ImpPlugin {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
                                     jsonObject.put("state", 1);
+                                    jsonObject.put("status", 1);
                                     jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
                                     JSONObject result = new JSONObject();
                                     result.put("path", file.getPath());
@@ -741,6 +743,7 @@ public class FileTransferService extends ImpPlugin {
                                 if (downloadFileType.equals(SAVE_FILE)) {
                                     JSONObject jsonObject = new JSONObject();
                                     try {
+                                        jsonObject.put("status", 2);
                                         jsonObject.put("state", 2);
                                         jsonObject.put("errorMessage", "");
                                     } catch (Exception e1) {
@@ -1070,6 +1073,7 @@ public class FileTransferService extends ImpPlugin {
         if (!StringUtils.isBlank(uploadFailCB)) {
             JSONObject obj = new JSONObject();
             try {
+                obj.put("status", status);
                 obj.put("state", status);
                 obj.put("errorMessage", errorMessage);
             } catch (Exception e) {
