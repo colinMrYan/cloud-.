@@ -2,9 +2,11 @@ package com.inspur.emmcloud.basemodule.media.selector.engine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.bumptech.glide.request.RequestListener;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnCallbackListener;
 
 /**
@@ -60,7 +62,7 @@ public interface ImageEngine {
      * @param imageView
      */
     void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth,
-                                 int maxHeight, @NonNull ImageView imageView ,int holder);
+                                 int maxHeight, @NonNull ImageView imageView, int holder, RequestListener<Drawable> requestListener);
 
     /**
      * When the recyclerview slides quickly, the callback can be used to pause the loading of resources
