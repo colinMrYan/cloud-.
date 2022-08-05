@@ -111,7 +111,7 @@ public class NFCService extends ImpPlugin {
             result.put("Technologies", StringUtils.join(temp, "android.nfc.tech.", ","));
 
             result.put("NFC content", NFCContent);
-            NFCContent.put("cardId", tag.getId());
+            NFCContent.put("cardId", bytesToHexString(tag.getId()));
 
             String metaInfo = "";
             //Enable I/O operations to the tag from this TagTechnology object.
