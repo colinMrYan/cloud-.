@@ -97,6 +97,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onDoneClick() {
+        // 输入文字类型漏掉，补上此类型
+        if (mImgView.isTextWaterMarkAdd()) {
+            isHaveEdit = true;
+        }
         if (isHaveEdit) {
             boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
             File saveFile = null;
@@ -149,6 +153,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onDoneClickInSystemStorage() {
+        // 输入文字漏掉，补上此类型
+        if (mImgView.isTextWaterMarkAdd()) {
+            isHaveEdit = true;
+        }
         if (isHaveEdit) {
             boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
             File saveFile = null;
