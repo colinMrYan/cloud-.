@@ -40,7 +40,7 @@ public class VideoPathUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String time = sdf.format(new Date(Long.valueOf(current + "000")));
         String saveFileName = String.format(name + "CompressVideo_%s.mp4", time);
-        return outputFolder + "/" + saveFileName;
+        return outputFolder + "/" + TX_RECORD_VIDEO_PATH_MARK + saveFileName;
     }
 
     public static String getCustomVideoOutputPath() {

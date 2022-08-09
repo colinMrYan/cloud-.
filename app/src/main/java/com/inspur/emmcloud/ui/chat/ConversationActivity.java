@@ -1741,9 +1741,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                             adapter.setMessageList(uiMessageList);
                         } else {
                             adapter.setMessageList(uiMessageList);
-                            adapter.notifyItemChanged(index);
                         }
-
+                        adapter.notifyItemChanged(index);
                     }
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);

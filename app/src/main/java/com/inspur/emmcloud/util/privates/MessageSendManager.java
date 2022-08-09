@@ -280,7 +280,7 @@ public class MessageSendManager {
 //        WSAPIService.getInstance().sendMessage(message);
 //    }
 
-    // 上传成功后移除录制的视频源，不包括相册里的视频,（录制的视频不走压缩方法）
+    // 上传成功后移除录制的视频源，相册选择后的压缩视频源；
     private void sendSuccessThenDeleteRecordOriginFile(String path) {
         if (StringUtils.isEmpty(path)) return;
         File videoFile = new File(path);
@@ -469,7 +469,7 @@ public class MessageSendManager {
                 MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
                 msgContentMediaVideo.setImageHeight(fakeMessage.getMsgContentMediaVideo().getImageHeight());
                 msgContentMediaVideo.setImageWidth(fakeMessage.getMsgContentMediaVideo().getImageWidth());
-                msgContentMediaVideo.setImagePath(imagePath);
+                msgContentMediaVideo.setImagePath(StringUtils.isEmpty(imagePath) ? volumeFile.getPath() : imagePath);
                 msgContentMediaVideo.setMedia(volumeFile.getPath());
                 msgContentMediaVideo.setName(volumeFile.getName());
                 msgContentMediaVideo.setVideoSize(volumeFile.getSize());
