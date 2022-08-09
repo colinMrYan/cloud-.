@@ -16,6 +16,7 @@ import java.util.Date;
  */
 public class VideoPathUtil {
     private static final String TAG = "VideoPathUtil";
+    public static String TX_RECORD_VIDEO_PATH_MARK = "TXUGC_";
 
     /**
      * 生成编辑后输出视频路径
@@ -64,9 +65,9 @@ public class VideoPathUtil {
         }
         String tempOutputPath;
         if (TextUtils.isEmpty(fileNamePrefix)) {
-            tempOutputPath = outputDir + File.separator + "TXUGC_" + time + ".mp4";
+            tempOutputPath = outputDir + File.separator + TX_RECORD_VIDEO_PATH_MARK + time + ".mp4";
         } else {
-            tempOutputPath = outputDir + File.separator + "TXUGC_" + fileNamePrefix + time + ".mp4";
+            tempOutputPath = outputDir + File.separator + TX_RECORD_VIDEO_PATH_MARK + fileNamePrefix + time + ".mp4";
         }
         return tempOutputPath;
     }
