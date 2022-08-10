@@ -59,6 +59,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.bean.WSCommandBatch;
 import com.inspur.emmcloud.bean.chat.ChannelMessageReadStateResult;
 import com.inspur.emmcloud.bean.chat.ChannelMessageSet;
@@ -1106,11 +1107,19 @@ public class CommunicationFragment extends BaseFragment {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
-                    // 我发送成功后删除视频源文件
-                    if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) && receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())) {
-                        Message mVideoMsg = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId());
-                        if (mVideoMsg != null) {
-                            sendSuccessThenDeleteRecordOriginFile(mVideoMsg.getLocalPath());
+                    // 当前账号发送成功后删除视频源、图片压缩文件
+                    if (receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
+                            Message mVideoMsg = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId());
+                            if (mVideoMsg != null) {
+                                sendSuccessThenDeleteRecordOriginFile(mVideoMsg.getLocalPath());
+                            }
+                        }
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
+                            Message mImageMsg = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId());
+                            if (mImageMsg != null) {
+                                sendSuccessThenDeleteCompressFile(mImageMsg.getLocalPath());
+                            }
                         }
                     }
                     MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), receivedWSMessage);
@@ -1318,6 +1327,15 @@ public class CommunicationFragment extends BaseFragment {
         if (StringUtils.isEmpty(path)) return;
         File videoFile = new File(path);
         if (videoFile.exists() && videoFile.getName().startsWith(VideoPathUtil.TX_RECORD_VIDEO_PATH_MARK)) {
+            FileUtils.deleteFile(path);
+        }
+    }
+
+    // 上传成功后移除压缩的图片文件；
+    private void sendSuccessThenDeleteCompressFile(String path) {
+        if (StringUtils.isEmpty(path)) return;
+        File compressFile = new File(path);
+        if (compressFile.exists() && compressFile.getName().startsWith(PictureSelectorUtils.LUBAN_COMPRESS_MARK)) {
             FileUtils.deleteFile(path);
         }
     }

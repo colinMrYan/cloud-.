@@ -47,6 +47,7 @@ public class PictureSelectorUtils {
     private static final int DEFAULT_IMAGE_NUMBER = 9;
     private static final int DEFAULT_VIDEO_NUMBER = 9;
     public static final int REQ_IMAGE_EDIT = 10;
+    public static String LUBAN_COMPRESS_MARK = "LUBAN_CMP_";
 
     public static PictureSelectorUtils getInstance() {
         if (mInstance == null) {
@@ -431,7 +432,7 @@ public class PictureSelectorUtils {
                 public String rename(String filePath) {
                     int indexOf = filePath.lastIndexOf(".");
                     String postfix = indexOf != -1 ? filePath.substring(indexOf) : ".jpg";
-                    return DateUtils.getCreateFileName("CMP_") + postfix;
+                    return DateUtils.getCreateFileName(LUBAN_COMPRESS_MARK) + postfix;
                 }
             }).setCompressListener(new OnNewCompressListener() {
                 @Override
