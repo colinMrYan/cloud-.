@@ -113,9 +113,9 @@ public class DeviceService extends ImpPlugin {
             openFlashLamp();
         } else if (action.equals("closeFlashlamp")) {
             closeFlashLamp();
-        } else if (action.equals("openWebRevolve")) {
+        } else if (action.equals("enableWebRotate")) {
             openWebRevolve();
-        } else if (action.equals("closeWebRevolve")) {
+        } else if (action.equals("disableWebRotate")) {
             closeWebRevolve();
         } else if (action.equals("clearWebCache")) {
             clearWebCache();

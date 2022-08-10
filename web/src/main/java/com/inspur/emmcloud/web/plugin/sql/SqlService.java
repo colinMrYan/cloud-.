@@ -60,7 +60,7 @@ public class SqlService extends ImpPlugin {
             putItem(paramsObject);
         } else if (action.equals("getItem")) {
             getItem(paramsObject);
-        } else if (action.equals("delItem")) {
+        } else if (action.equals("deleteItem")) {
             deleteItem(paramsObject);
         } else if (action.equals("getAllItems")) {
             getAllItem(paramsObject);
