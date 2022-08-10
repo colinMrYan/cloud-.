@@ -45,6 +45,7 @@ import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.record.utils.VideoPathUtil;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
@@ -1105,6 +1106,13 @@ public class CommunicationFragment extends BaseFragment {
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
+                    // 我发送成功后删除视频源文件
+                    if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) && receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())) {
+                        Message mVideoMsg = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId());
+                        if (mVideoMsg != null) {
+                            sendSuccessThenDeleteRecordOriginFile(mVideoMsg.getLocalPath());
+                        }
+                    }
                     MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), receivedWSMessage);
                     //如果是音频消息，需要检查本地是否有音频文件，没有则下载
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
@@ -1305,6 +1313,14 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
+    // 上传成功后移除录制的视频源，相册选择后的压缩视频源；
+    private void sendSuccessThenDeleteRecordOriginFile(String path) {
+        if (StringUtils.isEmpty(path)) return;
+        File videoFile = new File(path);
+        if (videoFile.exists() && videoFile.getName().startsWith(VideoPathUtil.TX_RECORD_VIDEO_PATH_MARK)) {
+            FileUtils.deleteFile(path);
+        }
+    }
 
     private void cacheConversationList(final GetConversationListResult getConversationListResult) {
         Observable.create(new ObservableOnSubscribe<List<Conversation>>() {

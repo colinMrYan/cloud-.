@@ -280,15 +280,6 @@ public class MessageSendManager {
 //        WSAPIService.getInstance().sendMessage(message);
 //    }
 
-    // 上传成功后移除录制的视频源，相册选择后的压缩视频源；
-    private void sendSuccessThenDeleteRecordOriginFile(String path) {
-        if (StringUtils.isEmpty(path)) return;
-        File videoFile = new File(path);
-        if (videoFile.exists() && videoFile.getName().startsWith(VideoPathUtil.TX_RECORD_VIDEO_PATH_MARK)) {
-            FileUtils.deleteFile(path);
-        }
-    }
-
     public void addMessageInSendRetry(Message message) {
         if (!recallSendingMessageList.contains(message)) {
             if (isMessageSendTimeout(message)) {
@@ -463,8 +454,6 @@ public class MessageSendManager {
         ProgressCallback progressCallback = new ProgressCallback() {
             @Override
             public void onSuccess(VolumeFile volumeFile) {
-                // 上传成功删除本地视频、封面资源
-                sendSuccessThenDeleteRecordOriginFile(fakeMessage.getMsgContentMediaVideo().getMedia());
                 // 上传成功发送视频消息
                 MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
                 msgContentMediaVideo.setImageHeight(fakeMessage.getMsgContentMediaVideo().getImageHeight());
