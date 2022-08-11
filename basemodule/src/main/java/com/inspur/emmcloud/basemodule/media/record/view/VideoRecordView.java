@@ -239,6 +239,7 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
                 ((FragmentActivity) getContext()).startActivityForResult(
                         new Intent(getContext(), IMGEditActivity.class)
                                 .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, path)
+                                .putExtra(IMGEditActivity.OUT_FILE_PATH_IN_PICTURE, true)
                                 .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, 0), REQUEST_CODE_IMAGE_EDIT
                 );
                 ((FragmentActivity) getContext()).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

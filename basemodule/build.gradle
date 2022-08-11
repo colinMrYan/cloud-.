@@ -64,7 +64,7 @@ dependencies {
     api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.butterknife.butterknife
-    api(name: 'LiteAVSDK_UGC_10.3.0.11176', ext: 'aar')
+//    api(name: 'LiteAVSDK_UGC_10.3.0.11176', ext: 'aar')
 //    api deps.support.constraint
 //    api deps.Glide
 //    api deps.support.v7.appcompat

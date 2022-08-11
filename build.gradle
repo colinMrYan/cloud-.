@@ -103,6 +103,7 @@ buildscript {
             mmkv                : 'com.tencent:mmkv:1.0.19',
 //            tencentShortVideo   : 'com.tencent.liteav:LiteAVSDK_Professional:10.3.0.11144',
 //            tencentShortVideo   : 'com.tencent.liteav:LiteAVSDK_UGC:9.5.11582',
+            tencentShortVideo   : 'com.tencent.liteav:LiteAVSDK_UGC:10.3.0.11172',
             ARouter             : [
                     'arouter_api': 'com.alibaba:arouter-api:1.5.0',
                     'router_anno': 'com.alibaba:arouter-compiler:1.2.2',

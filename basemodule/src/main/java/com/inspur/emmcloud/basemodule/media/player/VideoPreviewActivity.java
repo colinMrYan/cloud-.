@@ -14,6 +14,7 @@ import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
 import com.inspur.emmcloud.basemodule.media.player.basic.SuperPlayerDef;
 import com.inspur.emmcloud.basemodule.media.player.model.SuperPlayerModel;
 import com.inspur.emmcloud.basemodule.media.player.view.VideoPlayerView;
+import com.inspur.emmcloud.basemodule.media.record.utils.AlbumSaverUtil;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.tencent.rtmp.TXLiveConstants;
@@ -73,6 +74,8 @@ public class VideoPreviewActivity extends BaseFragmentActivity implements NotSup
         completeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 视频同步到系统相册
+                AlbumSaverUtil.getInstance(v.getContext()).saveVideoToDCIM(recordUrl, videoPlayerView.getVideoDuration());
                 Intent intent = new Intent();
                 intent.putExtra(VIDEO_PATH, recordUrl);
                 intent.putExtra(VIDEO_TIME, videoPlayerView.getVideoDuration());
