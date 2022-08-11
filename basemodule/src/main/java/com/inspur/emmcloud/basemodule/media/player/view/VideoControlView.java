@@ -43,6 +43,7 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
     private GestureDetector mGestureDetector;
     private boolean mIsChangingSeekBarProgress; // 进度条是否正在拖动，避免SeekBar由于视频播放的update而跳动
     private boolean canUseControlView = true; // controlView 是否可用，默认可用
+    private boolean continueUpdateProgressBar = true; // 播放结束停止更新进度条
 
     public VideoControlView(Context context) {
         super(context);
@@ -155,6 +156,7 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
                 pauseIv.setImageResource(R.drawable.ic_vod_play_center);
                 break;
             case PLAYING:
+                continueUpdateProgressBar = true;
                 playSb.setEnabled(true);
                 pauseIv.setImageResource(R.drawable.ic_play_pause_normal);
                 toggleView(resumeIv, false);
@@ -176,19 +178,25 @@ public class VideoControlView extends AbsPlayer implements View.OnClickListener,
                 toggleView(playPb, false);
                 toggleView(resumeIv, true);
                 toggleView(coverIv, true);
+                // 播放完后停止更新进度条
+                if (!mIsChangingSeekBarProgress) {
+                    updateVideoProgress(0, mDuration);
+                }
+                continueUpdateProgressBar = false;
                 break;
         }
         mCurrentPlayState = playState;
     }
 
     /**
-     * 更新视频播放进度
+     * 更新视频播放进度，播放结束后也会持续回调
      *
      * @param current  当前进度(秒)
      * @param duration 视频总时长(秒)
      */
     @Override
     public void updateVideoProgress(long current, long duration) {
+        if (!continueUpdateProgressBar) return;
         mProgress = current < 0 ? 0 : current;
         mDuration = duration < 0 ? 0 : duration;
         currentTv.setText(formattedTime(mProgress));
