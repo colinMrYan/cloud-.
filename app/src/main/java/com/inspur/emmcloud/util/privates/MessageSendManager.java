@@ -256,6 +256,7 @@ public class MessageSendManager {
                             msgContentMediaVideo.setName(oldVideo.getName());
                             msgContentMediaVideo.setVideoSize(oldVideo.getVideoSize());
                             msgContentMediaVideo.setVideoDuration(oldVideo.getVideoDuration());
+                            msgContentMediaVideo.setOriginMediaPath(oldVideo.getOriginMediaPath());
                             fakeMessage.setContent(msgContentMediaVideo.toString());
                             sendMessageWithVideoStepTwo(fakeMessage, "");
                         } else {
@@ -463,6 +464,7 @@ public class MessageSendManager {
                 msgContentMediaVideo.setName(volumeFile.getName());
                 msgContentMediaVideo.setVideoSize(volumeFile.getSize());
                 msgContentMediaVideo.setVideoDuration(fakeMessage.getMsgContentMediaVideo().getVideoDuration());
+                msgContentMediaVideo.setOriginMediaPath(fakeMessage.getMsgContentMediaVideo().getOriginMediaPath());
                 fakeMessage.setContent(msgContentMediaVideo.toString());
                 MessageCacheUtil.saveMessage(BaseApplication.getInstance(), fakeMessage);
                 WSAPIService.getInstance().sendMessage(fakeMessage);

@@ -18,6 +18,7 @@ public class MsgContentMediaVideo {
     private int imageWidth;
     private int imageHeight;
     private long videoSize;
+    private String originMediaPath;
 
     public MsgContentMediaVideo() {
     }
@@ -32,6 +33,7 @@ public class MsgContentMediaVideo {
         videoSize = JSONUtils.getLong(object, "size", 0);
         media = JSONUtils.getString(object, "media", "");
         videoDuration = JSONUtils.getInt(object, "duration", 0);
+        originMediaPath = JSONUtils.getString(object, "originMediaPath", "");
     }
 
 
@@ -99,6 +101,14 @@ public class MsgContentMediaVideo {
         this.videoSize = videoSize;
     }
 
+    public String getOriginMediaPath() {
+        return originMediaPath;
+    }
+
+    public void setOriginMediaPath(String originMediaPath) {
+        this.originMediaPath = originMediaPath;
+    }
+
     public String toString() {
         JSONObject obj = new JSONObject();
         try {
@@ -111,6 +121,7 @@ public class MsgContentMediaVideo {
             obj.put("size", getVideoSize());
             obj.put("media", getMedia());
             obj.put("duration", getVideoDuration());
+            obj.put("originMediaPath", getOriginMediaPath());
         } catch (Exception e) {
             e.printStackTrace();
         }

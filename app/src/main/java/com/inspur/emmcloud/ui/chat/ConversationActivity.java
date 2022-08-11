@@ -1729,20 +1729,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                         // 本人的视频消息时添加原文件，防止再次刷新
                         if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) &&
                                 BaseApplication.getInstance().getUid().equals(receivedWSMessage.getFromUser())) {
-                            receivedWSMessage.setLocalPath(uiMessageList.get(index).getMessage().getLocalPath());
+                            receivedWSMessage.setLocalPath(uiMessageList.get(index).getMessage().getMsgContentMediaVideo().getOriginMediaPath());
                         }
                         uiMessageList.remove(index);
                         uiMessageList.add(index, new UIMessage(receivedWSMessage));
                         //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                        //视频消息也不再刷新，防止重新加载
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) ||
-                                receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE)) {
                             setMessageSendSuccess(index, receivedWSMessage);
                             adapter.setMessageList(uiMessageList);
+                        } else if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO)) {
+                            //视频消息刷新，将消息变化更新到视频item
+                            setMessageSendSuccess(index, receivedWSMessage);
+                            adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
                         } else {
                             adapter.setMessageList(uiMessageList);
+                            adapter.notifyItemChanged(index);
                         }
-                        adapter.notifyItemChanged(index);
                     }
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
@@ -2355,8 +2358,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (MediaPlayerManagerUtils.getManager().isPlaying()) {
             MediaPlayerManagerUtils.getManager().stop();
         }
-
-
         if (!FileUtils.isFileExist(fileSavePath)) {
             uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_NOT_DOWNLOAD);
             refreshAdapterItem(uiMessage);

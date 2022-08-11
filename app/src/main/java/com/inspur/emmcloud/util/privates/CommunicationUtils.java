@@ -332,6 +332,7 @@ public class CommunicationUtils {
         msgContentMediaVideo.setImageHeight(height);
         msgContentMediaVideo.setImageWidth(width);
         msgContentMediaVideo.setImagePath(imagePath);
+        msgContentMediaVideo.setOriginMediaPath(videoPath);
         msgContentMediaVideo.setMedia(videoPath);
         msgContentMediaVideo.setName(file.getName());
         msgContentMediaVideo.setVideoSize(file.length());
