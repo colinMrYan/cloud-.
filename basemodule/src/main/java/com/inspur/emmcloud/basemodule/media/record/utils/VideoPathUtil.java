@@ -71,4 +71,25 @@ public class VideoPathUtil {
         }
         return tempOutputPath;
     }
+
+    // 拍照时图片保存路径
+    public static String takePhotoPath() {
+        long currentTime = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+        String time = sdf.format(new Date(currentTime));
+
+        File sdcardDir = BaseApplication.getInstance().getExternalFilesDir(null);
+        if (sdcardDir == null) {
+            Log.e(TAG, "sdcardDir is null");
+            return null;
+        }
+
+        String outputDir = sdcardDir + File.separator + Constant.OUTPUT_DIR_NAME;
+        File outputFolder = new File(outputDir);
+        if (!outputFolder.exists()) {
+            outputFolder.mkdir();
+        }
+        String tempOutputPath = outputDir + File.separator + TX_RECORD_VIDEO_PATH_MARK + time + ".jpg";
+        return tempOutputPath;
+    }
 }

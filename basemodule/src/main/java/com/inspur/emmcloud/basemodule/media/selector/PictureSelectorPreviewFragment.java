@@ -1536,7 +1536,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
     @Override
     public void onEditMedia(Intent data) {
         if (mData.size() > viewPager.getCurrentItem()) {
-            String filePath = AppUtils.refreshMediaInSystemStorage(getContext(), data.getStringExtra(IMGEditActivity.OUT_FILE_PATH));
+            String filePath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
             LocalMedia currentMedia = mData.get(viewPager.getCurrentItem());
 //            Uri output = Crop.getOutput(data);
             currentMedia.setCutPath(StringUtils.isEmpty(filePath) ? "" : filePath);

@@ -26,10 +26,14 @@ import com.inspur.emmcloud.basemodule.media.record.basic.VideoKitResult;
 import com.inspur.emmcloud.basemodule.media.record.interfaces.IRecordButton;
 import com.inspur.emmcloud.basemodule.media.record.interfaces.IVideoRecordKit;
 import com.inspur.emmcloud.basemodule.media.record.utils.TelephonyUtil;
+import com.inspur.emmcloud.basemodule.media.record.utils.VideoPathUtil;
 import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
-import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.ugc.TXRecordCommon;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static com.inspur.emmcloud.basemodule.media.record.VideoRecordSDK.STATE_START;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.REQUEST_CODE_IMAGE_EDIT;
@@ -231,20 +235,39 @@ public class VideoRecordView extends RelativeLayout implements IRecordButton.OnR
         VideoRecordSDK.getInstance().takePhoto(new RecordModeView.OnSnapListener() {
             @Override
             public void onSnap(Bitmap bitmap, String path, Uri uri) {
-                // 适配AndroidQ以下刷新相册
-//                if (Build.VERSION.SDK_INT < 29) {
-                getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-                MediaScannerConnection.scanFile(getContext(), new String[]{path}, null, null);
-//                }
+                // 先将bitmap存入本地文件
+                String photoPath = VideoPathUtil.takePhotoPath();
+                saveBitmapToFile(bitmap, photoPath);
                 ((FragmentActivity) getContext()).startActivityForResult(
                         new Intent(getContext(), IMGEditActivity.class)
-                                .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, path)
+                                .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, photoPath)
                                 .putExtra(IMGEditActivity.OUT_FILE_PATH_IN_PICTURE, true)
+                                .putExtra(IMGEditActivity.FROM_CHAT_TAKE_PHOTO, true)
                                 .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, 0), REQUEST_CODE_IMAGE_EDIT
                 );
                 ((FragmentActivity) getContext()).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
+    }
+
+    private void saveBitmapToFile(Bitmap bitmap, String photoPath) {
+        if (bitmap != null) {
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(photoPath);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @Override

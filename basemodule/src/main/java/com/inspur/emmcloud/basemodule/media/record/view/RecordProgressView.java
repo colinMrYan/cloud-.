@@ -56,8 +56,8 @@ public class RecordProgressView extends View {
     }
 
     public void setProgress(long milliSecond) {
-        progress = (float) milliSecond * 360 / 10000;
-//        progress = (float) milliSecond * 360 / 60000;
+        // 设置录制时长60秒
+        progress = (float) milliSecond * 360 / 60000;
         invalidate();
     }
 

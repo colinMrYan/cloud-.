@@ -151,28 +151,6 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
             mRecordSDK.snapshot(new TXRecordCommon.ITXSnapshotListener() {
                 @Override
                 public void onSnapshot(final Bitmap bitmap) {
-                    // 删除图片逻辑暂时注掉
-//                    if (!TextUtils.isEmpty(insertImage)) {
-//                        if (photoPath.contains(photoName)) {
-//                            try {
-//                            // 删除图片
-//                                BaseApplication.getInstance().getContentResolver().delete(photoUri, null, null);
-//                            } catch (Exception e) {
-//                                // 防止崩溃，不同版本可能有问题
-//                            }
-//                        }
-//                    }
-                    ContentResolver cr = BaseApplication.getInstance().getContentResolver();
-                    insertImage = MediaStore.Images.Media.insertImage(cr, bitmap, photoName, null);
-                    photoUri = Uri.parse(insertImage);
-                    String[] projection = new String[]{MediaStore.Audio.Media.DATA};
-                    Cursor cursor = cr.query(photoUri, projection, null, null, null);
-                    if (cursor == null || !cursor.moveToFirst()) {
-                        return;
-                    }
-                    int index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-                    photoPath = cursor.getString(index);
-                    cursor.close();
                     BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -211,12 +189,12 @@ public class VideoRecordSDK implements TXRecordCommon.ITXVideoRecordListener {
     public int startRecord() {
         if (mCurrentState == STATE_STOP) {
             String customVideoPath = VideoPathUtil.getCustomVideoOutputPath();
-            String customCoverPath = customVideoPath.replace(".mp4", ".jpg");
+//            String customCoverPath = customVideoPath.replace(".mp4", ".jpg");
 
             int retCode = 0;
 
             if (mRecordSDK != null) {
-                retCode = mRecordSDK.startRecord(customVideoPath, customCoverPath);
+                retCode = mRecordSDK.startRecord(customVideoPath, "");
             }
             Log.d(TAG, "startRecord retCode:" + retCode);
             if (retCode != TXRecordCommon.START_RECORD_OK) {

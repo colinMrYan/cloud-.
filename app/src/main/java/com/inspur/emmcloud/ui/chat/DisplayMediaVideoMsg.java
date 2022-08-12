@@ -77,6 +77,10 @@ public class DisplayMediaVideoMsg {
         setImgViewSize(context, imageView, w, h);
         String imagePath = msgContentMediaVideo.getImagePath();
         String localPath = message.getLocalPath();
+        // 视频压缩时，获取原路径，Glide缓存key为原路径
+        if (!TextUtils.isEmpty(msgContentMediaVideo.getOriginMediaPath())) {
+            localPath = msgContentMediaVideo.getOriginMediaPath();
+        }
         // 先使用缓存，再使用本地加载，再请求网络
         if (imagePath.startsWith("http")) {
             GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, imagePath, 0, 0, imageView, chatImgBg, new RequestListener<Drawable>() {

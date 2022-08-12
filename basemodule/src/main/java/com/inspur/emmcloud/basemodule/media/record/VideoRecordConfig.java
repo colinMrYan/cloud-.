@@ -37,7 +37,7 @@ public class VideoRecordConfig {
     /**
      * 录制最长时间（以毫秒为单位）
      */
-    public int mMaxDuration = 10 * 1000;
+    public int mMaxDuration = 60 * 1000;
     /**
      * 录制方向
      */
@@ -83,7 +83,7 @@ public class VideoRecordConfig {
         mGOP = 1;
         mFPS = 30;
         mMinDuration = 2 * 1000;
-        mMaxDuration = 10 * 1000;
+        mMaxDuration = 60 * 1000;
         mHomeOrientation = TXLiveConstants.VIDEO_ANGLE_HOME_DOWN;
         mRenderRotation = TXLiveConstants.RENDER_ROTATION_PORTRAIT;
         mRecordSpeed = TXRecordCommon.RECORD_SPEED_NORMAL;

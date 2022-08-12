@@ -88,6 +88,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -2265,13 +2266,11 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                startActivity(intentVideo);
                 String path = message.getMsgContentMediaVideo().getMedia();
                 String videoPath;
-//                if (path.startsWith("https:")) {
-//                    videoPath = path;
-//                } else {
                 videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
-//                }
-                String imagePath = message.getMsgContentMediaVideo().getImagePath();
-                intentVideo.putExtra(VIDEO_THUMBNAIL_PATH, !StringUtils.isEmpty(imagePath) && imagePath.startsWith("http") ? imagePath : message.getLocalPath());
+                MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
+                String imagePath = msgContentMediaVideo.getImagePath();
+                String mediaPath = StringUtils.isEmpty(msgContentMediaVideo.getOriginMediaPath()) ? message.getLocalPath() : msgContentMediaVideo.getOriginMediaPath();
+                intentVideo.putExtra(VIDEO_THUMBNAIL_PATH, !StringUtils.isEmpty(imagePath) && imagePath.startsWith("http") ? imagePath : mediaPath);
                 intentVideo.putExtra(VIDEO_PATH, videoPath);
                 startActivity(intentVideo);
 
