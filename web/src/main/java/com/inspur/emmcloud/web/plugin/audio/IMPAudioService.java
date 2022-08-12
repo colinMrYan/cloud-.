@@ -64,7 +64,7 @@ public class IMPAudioService extends ImpPlugin {
                 JSONObject optionObj = paramsObject.optJSONObject("options");
                 uploadPath = optionObj.optString("id");
                 saveToLocal = optionObj.optBoolean("local");
-                if (TextUtils.isEmpty(uploadPath)) {
+                if (!saveToLocal && TextUtils.isEmpty(uploadPath)) {
                     return;
                 }
                 audioDialogChooseManager.showRecordingDialog();
@@ -135,7 +135,7 @@ public class IMPAudioService extends ImpPlugin {
                     json.put("result", result);
                     jsCallback(successCal, json);
                 } else {
-                    if (resourceLocalPath != null) {
+                    if (resourceLocalPath != null && !StringUtils.isEmpty(uploadPath)) {
                         service.uploadAudioFile(uploadPath, resourceLocalPath, new WebMediaCallbackImpl() {
                                     @Override
                                     public void onSuccess(String webPath) {

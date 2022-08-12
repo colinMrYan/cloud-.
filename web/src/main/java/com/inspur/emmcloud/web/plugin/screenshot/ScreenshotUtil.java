@@ -1,10 +1,12 @@
 package com.inspur.emmcloud.web.plugin.screenshot;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -79,6 +81,18 @@ public class ScreenshotUtil {
             e.printStackTrace();
         }
         return null;
+
+
+    }
+
+    // 截屏保存到picture图库
+    public  static String ScreenShotWithoutStateBar(Activity activity) {
+        ContentResolver cr = activity.getContentResolver();
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bitmap = view.getDrawingCache();
+        return MediaStore.Images.Media.insertImage(cr, bitmap, System.currentTimeMillis() + ".png", null);
     }
 
 }

@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils.SDCARD_PREFIX;
 
 /**
  * FileTransferService中下载，读取，写入内容，列出文件列表，删除文件等新加插件传的路径都认为是相对路径
@@ -161,6 +162,7 @@ public class FileTransferService extends ImpPlugin {
                                     if (downloadFileType.equals(SAVE_FILE)) {
                                         JSONObject jsonObject = new JSONObject();
                                         jsonObject.put("status", 0);
+                                        jsonObject.put("state", 0);
                                         jsonObject.put("errorMessage", "");
                                         jsCallback(saveFileCallBack, jsonObject);
                                     }
@@ -196,8 +198,15 @@ public class FileTransferService extends ImpPlugin {
                             } else if (downloadFileType.equals(SAVE_FILE) && StrUtil.strIsNotNull(saveFileCallBack)) {
                                 JSONObject jsonObject = new JSONObject();
                                 try {
-                                    jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
+                                    jsonObject.put("state", 1);
                                     jsonObject.put("status", 1);
+                                    jsonObject.put("path", reallyPath.replace(replaceBasePath, ""));
+                                    JSONObject result = new JSONObject();
+                                    result.put("path", file.getPath());
+                                    result.put("fileSize", totalSize);
+                                    result.put("type", fileType);
+                                    result.put("name", fileName);
+                                    jsonObject.put("result", result);
                                 } catch (Exception e1) {
                                     e1.printStackTrace();
                                 }
@@ -358,10 +367,15 @@ public class FileTransferService extends ImpPlugin {
     }
 
     private void uploadFileInBlock(String filePath, int blockSize) {
-        // imp方法接受文件名称，
+        // imp方法接受文件名称
+        String realPath = filePath;
+        if (realPath.startsWith(SDCARD_PREFIX)) {
+            realPath = realPath.replace(SDCARD_PREFIX, "");
+        }
+
         String base64Stream = null;
         try {
-            base64Stream = Base64Utils.encodeBase64File(filePath);
+            base64Stream = Base64Utils.encodeBase64File(realPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -369,13 +383,16 @@ public class FileTransferService extends ImpPlugin {
             //计算文件分片的总块数
             long totalBlock = base64Stream.length() / blockSize + (base64Stream.length() % blockSize > 0 ? 1 : 0);
             //包含上传可能是0长度但有内容的文件
-            uploadFileInBlock(base64Stream, Math.max(totalBlock, 1), 1, blockSize);
+            uploadFileInBlock(filePath, base64Stream, Math.max(totalBlock, 1), 1, blockSize);
             isUploadingFile = false;
         } else {
             //不存在则回调错误方法
             try {
                 JSONObject json = new JSONObject();
                 json.put("state", 0);
+                JSONObject result = new JSONObject();
+                result.put("filePath", filePath);
+                json.put("result", result);
                 jsCallback(blockImageCallBack, json);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -384,7 +401,7 @@ public class FileTransferService extends ImpPlugin {
         }
     }
 
-    private void uploadFileInBlock(String base64Stream, long totalBlock, int currentBlock, int PART_SIZE) {
+    private void uploadFileInBlock(final String filePath, String base64Stream, long totalBlock, int currentBlock, int PART_SIZE) {
         String uploadStream = base64Stream;
         if (currentBlock == totalBlock) {
             uploadStream = uploadStream.substring((currentBlock - 1) * PART_SIZE, base64Stream.length());
@@ -395,6 +412,9 @@ public class FileTransferService extends ImpPlugin {
             try {
                 JSONObject json = new JSONObject();
                 json.put("state", 0);
+                JSONObject result = new JSONObject();
+                result.put("filePath", filePath);
+                json.put("result", result);
                 jsCallback(blockImageCallBack, json);
             } catch (JSONException e) {
                 isUploadingFile = false;
@@ -409,10 +429,11 @@ public class FileTransferService extends ImpPlugin {
             result.put("currentContent", uploadStream);
             result.put("allBlockSize", totalBlock);
             result.put("currentBlockNum", currentBlock);
+            result.put("filePath", filePath);
             json.put("result", result);
             jsCallback(blockImageCallBack, json);
             if (currentBlock == totalBlock) return;
-            uploadFileInBlock(base64Stream, totalBlock, currentBlock + 1, PART_SIZE);
+            uploadFileInBlock(filePath, base64Stream, totalBlock, currentBlock + 1, PART_SIZE);
         } catch (Exception e1) {
             e1.printStackTrace();
             isUploadingFile = false;
@@ -651,7 +672,7 @@ public class FileTransferService extends ImpPlugin {
                             try {
                                 object.put("name", file.getName());
                                 object.put("size", FileUtils.getFileSize(path));
-                                object.put("path", FilePathUtils.SDCARD_PREFIX + path);
+                                object.put("path", SDCARD_PREFIX + path);
                                 object.put("md5", FileUtils.getFileMD5(file));
                                 array.put(object);
                             } catch (Exception e) {
@@ -736,6 +757,7 @@ public class FileTransferService extends ImpPlugin {
                                     JSONObject jsonObject = new JSONObject();
                                     try {
                                         jsonObject.put("status", 2);
+                                        jsonObject.put("state", 2);
                                         jsonObject.put("errorMessage", "");
                                     } catch (Exception e1) {
                                         e1.printStackTrace();
@@ -1065,6 +1087,7 @@ public class FileTransferService extends ImpPlugin {
             JSONObject obj = new JSONObject();
             try {
                 obj.put("status", status);
+                obj.put("state", status);
                 obj.put("errorMessage", errorMessage);
             } catch (Exception e) {
                 e.printStackTrace();

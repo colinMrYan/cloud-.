@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.web.plugin.screenshot;
 
+import static com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity.REQ_IMAGE_EDIT;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,9 +47,9 @@ public class ScreenshotService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         if (action.equals("do")) {
             screenshot(paramsObject);
-        } else if(action.equals("enableScreenshot")){
+        } else if (action.equals("enableScreenshot")) {
             setWindowSecure(true);
-        } else if(action.equals("disableScreenshot")){
+        } else if (action.equals("disableScreenshot")) {
             setWindowSecure(false);
         } else {
             showCallIMPMethodErrorDlg();
@@ -89,9 +91,10 @@ public class ScreenshotService extends ImpPlugin {
         shareThirdParty = JSONUtils.getBoolean(options, "isShare", true);
         successCb = JSONUtils.getString(paramsObject, "success", "");
         failCb = JSONUtils.getString(paramsObject, "fail", "");
-        String screenshotImgPath = ScreenshotUtil.screenshot(getActivity());
+        String screenshotImgPath = ScreenshotUtil.ScreenShotWithoutStateBar(getActivity());
+        String imagePath = AppUtils.refreshMediaInSystemStorage(getFragmentContext(), screenshotImgPath);
         if (getImpCallBackInterface() != null) {
-            getImpCallBackInterface().showScreenshotImg(screenshotImgPath);
+            getImpCallBackInterface().showScreenshotImg(imagePath);
         }
 
     }
@@ -100,7 +103,6 @@ public class ScreenshotService extends ImpPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             String screenshotImgPath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
-            AppUtils.refreshMedia(getFragmentContext(), screenshotImgPath);
             if (shareThirdParty) {
                 shareScreenshotImg(screenshotImgPath);
             }

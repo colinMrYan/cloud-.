@@ -187,6 +187,7 @@ public class GpsService extends ImpPlugin implements
     private void uploadTraceCallback(boolean success, String errorInfo) {
         JSONObject json = new JSONObject();
         try {
+            json.put("state", success ? 1 : 0);
             json.put("status", success ? 1 : 0);
             JSONObject result = new JSONObject();
             json.put("result", result);

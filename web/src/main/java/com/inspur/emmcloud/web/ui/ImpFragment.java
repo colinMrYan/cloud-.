@@ -1001,6 +1001,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
             screenshotImg.setVisibility(View.GONE);
             startActivityForResult(new Intent(getActivity(), IMGEditActivity.class)
                     .putExtra(IMGEditActivity.EXTRA_IS_COVER_ORIGIN, true)
+                    .putExtra(IMGEditActivity.OUT_FILE_PATH_IN_PICTURE, true)
                     .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, screenshotImgPath), REQUEST_EDIT_SCREENSHOT_IMG);
         }
     }

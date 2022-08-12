@@ -592,4 +592,24 @@ public class StringUtils {
         }
         return isurl;
     }
+
+    /**
+     * 字符串数组 to 字符串
+     *
+     * @param temp       字符串数组
+     * @param replaceStr 要替换的字符串
+     * @param s          分割符
+     * @return
+     */
+    public static String join(String[] temp, String replaceStr, String s) {
+        String str = "";
+        for (int i = 0; i < temp.length; i++) {
+            if (i == 0) {
+                str += temp[0].replace(replaceStr, "");
+                continue;
+            }
+            str += s + temp[i].replace(replaceStr, "");
+        }
+        return str;
+    }
 }
