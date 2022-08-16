@@ -443,7 +443,7 @@ public class VideoPlayerImpl implements SuperPlayer, ITXVodPlayListener {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
         headers.put("Authorization", BaseApplication.getInstance().getToken());
-        headers.put("Content-Type", "application/x-www-form-urlencoded");
+//        headers.put("Content-Type", "application/x-www-form-urlencoded");
         headers.put("Content-Disposition", "inline");
         headers.put("User-Agent", "Android/" + AppUtils.getReleaseVersion() + "("
                 + AppUtils.GetChangShang() + " " + AppUtils.GetModel()
