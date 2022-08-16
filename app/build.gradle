@@ -139,48 +139,6 @@ android {
             ) {
                 task.enabled = false
             }
-            if (task.name.startsWith("merge") && task.name.endsWith("NativeLibs")) {
-                task.doFirst {
-                    def startTime = System.currentTimeMillis()
-                    println "Support 64-bit => abi start."
-                    List<String> armeabi_v7a = []
-                    List<String> arm64_v8a = []
-                    it.inputs.files.each { file ->
-                        findSoFile(file, armeabi_v7a, arm64_v8a)
-                    }
-                    println("v7a size: ${armeabi_v7a.size()}")
-                    println("arm64 size: ${arm64_v8a.size()}")
-                    println("so in v7a, but not in arm64:")
-                    armeabi_v7a.each {
-                        if (!arm64_v8a.contains(it)) {
-                            println("$it")
-                        }
-                    }
-                    def endTime = System.currentTimeMillis()
-                    println("${task.name} cost time ${endTime - startTime}ms")
-                }
-            }
-        }
-    }
-}
-
-def findSoFile(File file, List<String> armeabi_v7a, List<String> arm64_v8a) {
-    if (null == file) {
-        return
-    }
-    if (file.isDirectory()) {
-        file.listFiles().each {
-            findSoFile(it, armeabi_v7a, arm64_v8a)
-        }
-    } else if (file.absolutePath.endsWith(".so")) {
-        def soPath = file.absolutePath
-        def soName = file.name
-        println "Support 64-bit => so: ${file.absolutePath}   ${file.name}"
-        // 如果你的so库存放文件夹名字不是这个,修改成你的文件夹名字
-        if (soPath.contains("armeabi-v7a")) {
-            armeabi_v7a.add(soName)
-        } else if (soPath.contains("arm64-v8a")) {
-            arm64_v8a.add(soName)
         }
     }
 }
