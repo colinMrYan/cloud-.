@@ -61,7 +61,7 @@ public class VideoRecordConfig {
     /**
      * 开启手动聚焦；自动聚焦设置为false,手动对焦为true
      */
-    public boolean mTouchFocus = true;
+    public boolean mTouchFocus = false;
 
     /**
      * 当前屏比
@@ -88,7 +88,7 @@ public class VideoRecordConfig {
         mRenderRotation = TXLiveConstants.RENDER_ROTATION_PORTRAIT;
         mRecordSpeed = TXRecordCommon.RECORD_SPEED_NORMAL;
         mFrontCamera = false;
-        mTouchFocus = true;
+        mTouchFocus = false;
         mAspectRatio = TXRecordCommon.VIDEO_ASPECT_RATIO_9_16;
         mRecordMode = RecordModeView.RECORD_MODE_TAKE_PHOTO;
     }
