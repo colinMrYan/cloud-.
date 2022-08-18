@@ -146,14 +146,16 @@ android {
                 task.doFirst {
                     println("==========================================================")
                     def v7a = []
+                    def v7aPath = []
                     def arm64 = []
                     it.inputs.files.each { file ->
                         if (file.absolutePath.contains("\\jni")) {
                             if (file.absolutePath.contains("armeabi-v7a")) {
-                                        v7a.add(file.name)
+                                v7aPath.add(file.absolutePath)
+                                v7a.add(file.name)
                             }
                             if (file.absolutePath.contains("arm64-v8a")) {
-                                        arm64.add(file.name)
+                                arm64.add(file.name)
                             }
                         }
                     }
@@ -162,6 +164,12 @@ android {
                     println("so in v7a, but not in arm64:")
                     v7a.each { name ->
                         if(!arm64.contains(name)) {
+                            v7aPath.each { path ->
+                                if (path.contains(name)) {
+                                    println(path)
+                                    return false
+                                }
+                            }
                             println(name)
                         }
                     }
