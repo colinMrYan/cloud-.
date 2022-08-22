@@ -47,7 +47,8 @@ public class AlbumSaverUtil {
         if (Build.VERSION.SDK_INT >= 29) {
             saveVideoToDCIMOnAndroid10(videoPath, duration);
         } else {
-            saveVideoToDCIMBelowAndroid10(videoPath, duration);
+            //
+//            saveVideoToDCIMBelowAndroid10(videoPath, duration);
         }
     }
 
@@ -58,7 +59,7 @@ public class AlbumSaverUtil {
                 ContentValues values = initCommonContentValues(file);
                 values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, System.currentTimeMillis());
                 values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-                values.put(MediaStore.Video.VideoColumns.DURATION, mVideoDuration);
+                values.put(MediaStore.Video.VideoColumns.DURATION, mVideoDuration * 1000);
                 mContext.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
 //                if (mCoverImagePath != null) {
@@ -86,7 +87,7 @@ public class AlbumSaverUtil {
             values.put(MediaStore.MediaColumns.SIZE, file.length());
             values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
             // 时长
-            values.put(MediaStore.Video.VideoColumns.DURATION, mVideoDuration);
+            values.put(MediaStore.Video.VideoColumns.DURATION, mVideoDuration * 1000);
             values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, System.currentTimeMillis());
             // Android 10 插入到图库标志位
             values.put(IS_PENDING, 1);
