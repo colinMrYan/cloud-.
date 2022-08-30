@@ -538,6 +538,14 @@
             android:resizeableActivity="true"
             android:screenOrientation="behind" />
         <activity
+            android:name=".ui.chat.ConversationMemberManagerIndexActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".ui.chat.ConversationGroupAdministratorActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+        <activity
             android:name=".ui.chat.ConversationQrCodeActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind" />

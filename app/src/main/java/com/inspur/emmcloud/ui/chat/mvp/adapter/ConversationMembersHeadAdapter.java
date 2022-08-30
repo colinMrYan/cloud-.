@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat.mvp.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +23,33 @@ import java.util.List;
 
 public class ConversationMembersHeadAdapter extends BaseAdapter {
 
-    Context context;
-    List<String> uidList;
-    boolean isOwner = false;
+    public static final String TYPE_DELETE_USER = "deleteUser";
+    public static final String TYPE_ADD_USER = "addUser";
+    public static final String TYPE_FILE_TRANSFER = "fileTransfer";
+
+    Context mContext;
+    List<String> mUidList;
+    List<String> mAdministratorList;
     String mOwnerUid;
 
-    public ConversationMembersHeadAdapter(Context context, boolean isOwner, List<String> uidList, String ownerUid) {
-        this.isOwner = isOwner;
-        this.context = context;
-        this.uidList = uidList;
+    public ConversationMembersHeadAdapter(Context context, List<String> uidList, String ownerUid, List<String> administratorList) {
+        mContext = context;
+        mUidList = uidList;
         mOwnerUid = ownerUid;
+        mAdministratorList = administratorList;
     }
 
-    public void setUIUidList(List<String> uiIidList) {
-        uidList = uiIidList;
+    public void setUIUidList(List<String> uiUidList) {
+        mUidList = uiUidList;
+    }
+
+    @Nullable
+    public String getUIUidFromIndex(int index) {
+        return mUidList.size() > index ? mUidList.get(index) : null;
+    }
+
+    public void setAdminList(List<String> adminList) {
+        mAdministratorList = adminList;
     }
 
     public void setOwner(String owner) {
@@ -44,7 +58,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return uidList.size();
+        return mUidList.size();
     }
 
     @Override
@@ -62,10 +76,11 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = View.inflate(context, R.layout.chat_group_info_member_head_item, null);
+            view = View.inflate(mContext, R.layout.chat_group_info_member_head_item, null);
             holder.headImage = view.findViewById(R.id.iv_chat_members_head);
             holder.nameTv = view.findViewById(R.id.tv_chat_members_name);
             holder.ownerTagImage = view.findViewById(R.id.iv_chat_members_owner);
+            holder.administratorTagImage = view.findViewById(R.id.iv_chat_members_administrator);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -73,23 +88,25 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         String uid;
         String userName;
         String userPhotoUrl;
-        uid = uidList.get(i);
-        if (uid.equals("deleteUser")) {
-            userPhotoUrl = "drawable://" + R.drawable.ic_delete_channel_member;
+        uid = mUidList.get(i);
+        if (TYPE_DELETE_USER.equals(uid)) {
             userName = "";
-        } else if (uid.equals("addUser")) {
-            userPhotoUrl = "drawable://" + R.drawable.ic_add_channel_member;
+            holder.headImage.setBackgroundResource(R.drawable.ic_delete_channel_member);
+        } else if (TYPE_ADD_USER.equals(uid)) {
             userName = "";
-        } else if (uid.equals("fileTransfer")) {
-            userPhotoUrl = "drawable://" + R.drawable.ic_file_transfer;
-            userName = context.getString(R.string.chat_file_transfer);
+            holder.headImage.setBackgroundResource(R.drawable.ic_add_channel_member);
+        } else if (TYPE_FILE_TRANSFER.equals(uid)) {
+            userName = mContext.getString(R.string.chat_file_transfer);
+            holder.headImage.setBackgroundResource(R.drawable.ic_file_transfer);
         } else {
             userName = ContactUserCacheUtils.getUserName(uid);
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
         }
         holder.ownerTagImage.setVisibility(TextUtils.equals(uid, mOwnerUid) && getCount() > 2 ? View.VISIBLE : View.GONE);
+        holder.administratorTagImage.setVisibility((mAdministratorList != null && mAdministratorList.contains(uid) && getCount() > 2 && !TextUtils.equals(uid, mOwnerUid)) ?
+                View.VISIBLE : View.GONE);
         holder.nameTv.setText(userName);
-        ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
         return view;
     }
 
@@ -100,6 +117,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         private TextView nameTv;
         private View itemView;
         private View ownerTagImage;
+        private View administratorTagImage;
     }
 
 }

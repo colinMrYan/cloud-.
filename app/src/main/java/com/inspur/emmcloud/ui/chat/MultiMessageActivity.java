@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -40,7 +37,7 @@ public class MultiMessageActivity extends BaseActivity {
     }
 
     private void initView() {
-        TextView tv_top_title = (TextView) findViewById(R.id.header_text);
+        TextView tv_top_title = findViewById(R.id.header_text);
         tv_top_title.setVisibility(View.VISIBLE);
         tv_top_title.setText(getResources().getString(R.string.find_search_chat_history));
         View ll_top_back = findViewById(R.id.ibt_back);

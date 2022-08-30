@@ -64,12 +64,10 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck) {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUpgradeFail(String error, boolean isManualCheck, int errorCode) {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -86,19 +84,16 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnChannelListSuccess(
             GetChannelListResult getSessionListResult) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnChannelListFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -114,19 +109,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnNewMsgsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult, String mid) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnMsgCommentFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -134,238 +126,230 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnWebSocketUrlSuccess(
             GetWebSocketUrlResult getWebSocketResult) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnWebSocketUrlFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
-        // TODO Auto-generated method stub
 
     }
 
 
     @Override
     public void returnMsgSuccess(GetMsgResult getMsgResult) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnMsgFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnBookingRoomSuccess(
-    ) {
-        // TODO Auto-generated method stub
+    public void returnBookingRoomSuccess() {
 
     }
 
     @Override
     public void returnBookingRoomFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnChannelInfoSuccess(
             ChannelGroup channelGroup) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnChannelInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnSearchChannelGroupSuccess(
-            GetSearchChannelGroupResult getSearchChannelGroupResult) {
-        // TODO Auto-generated method stub
-
+    public void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult) {
     }
 
     @Override
     public void returnSearchChannelGroupFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
     }
 
 
     @Override
-    public void returnCreateSingleChannelSuccess(
-            GetCreateSingleChannelResult getCreatSingleChannelResult) {
-        // TODO Auto-generated method stub
-
+    public void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult) {
     }
 
     @Override
     public void returnCreateSingleChannelFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnCreateChannelGroupSuccess(ChannelGroup channelGroup) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnCreateChannelGroupFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnTripSuccess(Trip trip) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnTripFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnLastUploadTripSuccess(Trip trip) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnLastUploadTripFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUpdateChannelGroupNameSuccess(
             GetBoolenResult getBoolenResult) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUpdateChannelGroupNameFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUploadTrainTicketSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnUploadTrainTicketFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnAddMembersSuccess(ChannelGroup channelGroup) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnAddMembersFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
 
     @Override
     public void returnDndSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnDndFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void returnAddAdministratorSuccess(String result) {
+
+    }
+
+    @Override
+    public void returnAddAdministratorFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnRemoveAdministratorSuccess(String result) {
+
+    }
+
+    @Override
+    public void returnRemoveAdministratorFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnEnableGroupSilentSuccess(String result) {
+
+    }
+
+    @Override
+    public void returnEnableGroupSilentFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnDisableGroupSilentSuccess(String result) {
+
+    }
+
+    @Override
+    public void returnDisableGroupSilentFail(String error, int errorCode) {
 
     }
 
     @Override
     public void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnTripArriveFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnDelMembersSuccess(
-            ChannelGroup channelGroup) {
-        // TODO Auto-generated method stub
+    public void returnDelMembersSuccess(ChannelGroup channelGroup) {
 
     }
 
     @Override
     public void returnDelMembersFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void returnKnowledgeListFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
     }
 
 

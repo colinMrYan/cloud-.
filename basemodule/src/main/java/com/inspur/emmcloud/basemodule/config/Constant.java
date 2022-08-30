@@ -110,6 +110,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_RECALL_MESSAGE = "tag_recall_message";
+    public static final String EVENTBUS_TAG_ENABLE_SILENT = "tag_enable_silent";
+    public static final String EVENTBUS_TAG_DISABLE_SILENT = "tag_disable_silent";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE = "tag_current_channel_recall_message";
     public static final String EVENTBUS_TAG_COMMAND_BATCH_MESSAGE = "tag_command_batch_message";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE = "tag_current_channel_command_batch_message";

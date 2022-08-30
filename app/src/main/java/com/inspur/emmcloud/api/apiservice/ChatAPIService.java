@@ -117,13 +117,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnChannelListSuccess(new GetChannelListResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnChannelListFail(error, responseCode);
             }
         });
@@ -170,13 +168,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnNewMsgsSuccess(new GetNewMsgsResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnNewMsgsFail(error, responseCode);
             }
         });
@@ -222,13 +218,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgCommentSuccess(new GetMsgCommentResult(new String(arg0)), mid);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgCommentFail(error, responseCode);
             }
         });
@@ -265,13 +259,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnChannelInfoSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnChannelInfoFail(error, responseCode);
             }
         });
@@ -349,14 +341,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSendMsgSuccess(new GetSendMsgResult(new String(arg0)),
                         fakeMessageId);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSendMsgFail(error, fakeMessageId, responseCode);
             }
         });
@@ -393,13 +383,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgSuccess(new GetMsgResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgFail(error, responseCode);
             }
         });
@@ -443,7 +431,6 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 if (isImg) {
                     try {
                         JSONObject jsonObject = new JSONObject(new String(arg0));
@@ -465,7 +452,6 @@ public class ChatAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 if (isImg) {
                     apiInterface.returnUploadResImgFail(error, responseCode, fakeMessageId);
                 } else {
@@ -504,14 +490,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSearchChannelGroupFail(error, responseCode);
             }
         });
@@ -557,14 +541,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSearchChannelGroupFail(error, responseCode);
             }
         });
@@ -602,14 +584,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnCreateSingleChannelSuccess(new GetCreateSingleChannelResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnCreateSingleChannelFail(error, responseCode);
 
             }
@@ -656,14 +636,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnUpdateChannelGroupNameSuccess(new GetBoolenResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnUpdateChannelGroupNameFail(error, responseCode);
             }
         });
@@ -697,13 +675,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnTransferGroupSuccess(new TransferGroupBean(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnTransferGroupFail(error, responseCode);
 
             }
@@ -748,14 +724,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface
                         .returnAddMembersSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnAddMembersFail(error, responseCode);
             }
         });
@@ -798,13 +772,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDelMembersSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDelMembersFail(error, responseCode);
             }
         });
@@ -844,13 +816,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDndSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDndFail(error, responseCode);
             }
         });
@@ -889,13 +859,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnAddConversationGroupMemberSuccess(uidList);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnAddConversationGroupMemberFail(error, responseCode);
             }
         });
@@ -934,13 +902,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDelConversationGroupMemberSuccess(uidList);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDelConversationGroupMemberFail(error, responseCode);
             }
         });
@@ -988,13 +954,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnCreateChannelGroupSuccess(new ChannelGroup(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnCreateChannelGroupFail(error, responseCode);
             }
         });
@@ -1028,13 +992,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(new String(arg0)), mid);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnMsgCommentCountFail(error, responseCode);
             }
         });
@@ -1468,13 +1430,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnConversationListSuccess(new GetConversationListResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnConversationListFail(error, responseCode);
             }
         });
@@ -1511,13 +1471,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSetConversationStickSuccess(id, isStick);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSetConversationStickFail(error, responseCode);
             }
         });
@@ -1554,13 +1512,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSetConversationHideSuccess(id, isHide);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnSetConversationHideFail(error, responseCode);
             }
         });
@@ -1597,16 +1553,185 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDndSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnDndFail(error, responseCode);
             }
         });
+    }
+
+
+    /**
+     * 添加频道管理员
+     * @param cid 频道id
+     * @param administrators 管理员列表
+     */
+    public void addConversationAdministrator(final String cid, final JSONArray administrators){
+        final String completeUrl = APIUri.getConversationAdministrator(cid);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        try {
+            params.setBodyContent(administrators.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addConversationAdministrator(cid, administrators);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAddAdministratorSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAddAdministratorFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 移除频道管理员
+     * @param cid 频道id
+     * @param administrators 管理员列表
+     */
+    public void removeConversationAdministrator(final String cid, final JSONArray administrators){
+        final String completeUrl = APIUri.getConversationAdministrator(cid);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        try {
+            params.setBodyContent(administrators.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        removeConversationAdministrator(cid, administrators);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnRemoveAdministratorSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRemoveAdministratorFail(error, responseCode);
+            }
+        });
+
+    }
+
+
+    /**
+     * 关闭群禁言
+     * @param cid 频道id
+     */
+    public void disableConversationSilent(final String cid){
+        final String completeUrl = APIUri.getConversationGroupSilent(cid);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        disableConversationSilent(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnDisableGroupSilentSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnDisableGroupSilentFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 启用群禁言
+     * @param cid 频道id
+     */
+    public void enableConversationSilent(final String cid){
+        final String completeUrl = APIUri.getConversationGroupSilent(cid);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        enableConversationSilent(cid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnEnableGroupSilentSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnEnableGroupSilentFail(error, responseCode);
+            }
+        });
+
     }
 
     /**
@@ -1638,14 +1763,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 apiInterface.returnConversationInfoSuccess(new Conversation(object));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnConversationInfoFail(error, responseCode);
             }
         });
@@ -1682,13 +1805,11 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 apiInterface.returnUpdateConversationNameSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnUpdateConversationNameFail(error, responseCode);
             }
         });
@@ -1726,16 +1847,13 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 apiInterface.returnCreateDirectConversationSuccess(new Conversation(object));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnCreateDirectConversationFail(error, responseCode);
-
             }
         });
     }
@@ -1780,14 +1898,12 @@ public class ChatAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
                 apiInterface.returnCreateGroupConversationSuccess(new Conversation(object));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
                 apiInterface.returnCreateGroupConversationFail(error, responseCode);
             }
         });
@@ -2166,20 +2282,14 @@ public class ChatAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-
             }
         });
     }

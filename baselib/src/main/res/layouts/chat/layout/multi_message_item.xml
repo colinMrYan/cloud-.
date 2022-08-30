@@ -56,6 +56,7 @@
         android:layout_below="@id/multi_message_item_name"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="16dp"
         android:layout_width="wrap_content"

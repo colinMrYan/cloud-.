@@ -45,10 +45,14 @@ public class Conversation implements Serializable {
     private long lastUpdate;
     @Column(name = "members")
     private String members;
+    @Column(name = "administrators")
+    private String administrators;
     @Column(name = "input")
     private String input;
     @Column(name = "dnd")
     private boolean dnd;
+    @Column(name = "silent")
+    private Integer silent = 0; //0表示不禁言 1表示禁言
     @Column(name = "stick")
     private boolean stick;
     @Column(name = "hide")
@@ -86,8 +90,10 @@ public class Conversation implements Serializable {
         String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");
         this.lastUpdate = TimeUtils.UTCString2Long(UTCLastUpdate);
         this.members = JSONUtils.getString(obj, "members", "");
+        this.administrators = JSONUtils.getString(obj, "administrators", "");
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
+        this.silent = JSONUtils.getBoolean(obj, "silent", false) ? 1 : 0;
         this.stick = JSONUtils.getBoolean(obj, "stick", false);
         this.hide = JSONUtils.getBoolean(obj, "hide", false);
         this.action = JSONUtils.getString(obj, "action", "");
@@ -201,9 +207,23 @@ public class Conversation implements Serializable {
         this.members = members;
     }
 
+
+    public String getAdministrators() {
+        return administrators;
+    }
+
+    public void setAdministrators(String administrators) {
+        this.administrators = administrators;
+    }
+
     public ArrayList<String> getMemberList() {
         ArrayList<String> memberList = JSONUtils.JSONArray2List(members, new ArrayList<String>());
         return memberList;
+    }
+
+    public ArrayList<String> getAdministratorList() {
+        ArrayList<String> administratorList = JSONUtils.JSONArray2List(administrators, new ArrayList<String>());
+        return administratorList;
     }
 
     public String getInput() {
@@ -220,6 +240,14 @@ public class Conversation implements Serializable {
 
     public void setDnd(boolean dnd) {
         this.dnd = dnd;
+    }
+
+    public boolean isSilent() {
+        return silent > 0;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent ? 1 : 0;
     }
 
     public boolean isStick() {
