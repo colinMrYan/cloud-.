@@ -167,7 +167,7 @@ public class DbCacheUtils {
                                 }
                             }
 
-                            if (oldVersion < 30) {
+                            if (oldVersion < 31) {
                                 if (tableIsExist(db, "Conversation")) {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN administrators TEXT DEFAULT ''");
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN silent INTEGER DEFAULT 0 ");
