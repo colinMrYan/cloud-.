@@ -23,8 +23,14 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.AppException;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.UrlParseUtils;
 import com.inspur.emmcloud.web.bean.WebFileDownloadBean;
@@ -602,7 +608,7 @@ public class FileTransferService extends ImpPlugin {
         }
 
         downloadUrl = downloadUrl.trim();
-        downloadUrl = StrUtil.changeUrl(downloadUrl);
+        downloadUrl = StrUtil.tranformStyle(downloadUrl);
         // 返回ID的应用则跳转到本地下载页面，否则执行原有逻辑
         if (TextUtils.isEmpty(fileId)) {
             showDownloadStatus();
@@ -799,6 +805,20 @@ public class FileTransferService extends ImpPlugin {
             String cookie = PreferencesUtils.getString(getFragmentContext(), "web_cookie", "");
             if (!StringUtils.isBlank(cookie)) {
                 urlConnection.setRequestProperty("Cookie", cookie);
+            }
+            if (!StringUtils.isEmpty(headerObj)) {
+                JSONObject header = JSONUtils.getJSONObject(headerObj);
+                if (header != null) {
+                    Iterator<String> keys = header.keys();
+                    while (keys.hasNext()) {
+                        try {
+                            String key = keys.next();
+                            urlConnection.setRequestProperty(key, header.getString(key));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
             String filename = getFileName(urlConnection, urlString);
             filename = URLDecoder.decode(filename, "UTF-8");   //防止文件名乱码
