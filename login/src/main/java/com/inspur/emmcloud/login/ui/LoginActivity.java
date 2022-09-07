@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity {
             loginApp();
 
         } else if (i == R.id.tv_forget_password) {
-            String forgetUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
             if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
                 bundle.putString("uri", forgetUrl);
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
