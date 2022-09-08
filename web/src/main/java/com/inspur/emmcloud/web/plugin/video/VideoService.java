@@ -239,6 +239,8 @@ public class VideoService extends ImpPlugin {
                     String mimeType = MediaUtils.getMimeTypeFromMediaUrl(file.getAbsolutePath());
                     JSONObject json = new JSONObject();
                     json.put("state", 1);
+                    // 支持旧版本
+                    json.put("path", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                     JSONObject result = new JSONObject();
                     result.put("value", FilePathUtils.SDCARD_PREFIX + recordVideoFilePath);
                     result.put("time", (int) (mediaExtraInfo.getDuration() / 1000));
