@@ -99,6 +99,7 @@ public class LoginMoreActivity extends BaseActivity {
                         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                         PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, "");
                         PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, "");
+                        PreferencesUtils.putString(getApplicationContext(), Constant.PREF_EMAIL_INFO, "");
                         finish();
                     }
                 })
