@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ public class DisplayMultiMsg {
 
     public static View getView(final Context context, final UIMessage uiMessage) {
         final Message message = uiMessage.getMessage();
-        final View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_multi_message_view, null);
+        @SuppressLint("InflateParams") final View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_multi_message_view, null);
         final boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
@@ -35,31 +36,33 @@ public class DisplayMultiMsg {
         splitLine.setBackgroundColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#404040" : "#e5e5e5"));
         StringBuilder sb = new StringBuilder();
         ArrayList<MultiMessageItem> arrayList = MultiMessageTransmitUtil.getListFromJsonStr(message.getContent());
-        for (MultiMessageItem item : arrayList) {
+        for (int i = 0; i < arrayList.size(); i++) {
+            MultiMessageItem item = arrayList.get(i);
             switch (item.type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    sb.append(item.sendUserName)
-                            .append(":")
-                            .append(item.text)
-                            .append("\n");
+                    sb.append(item.sendUserName).append(":").append(item.text);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                    sb.append(item.sendUserName)
-                            .append(":[")
-                            .append(context.getResources().getString(R.string.picture))
-                            .append("]\n");
+                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.picture)).append("]");
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    sb.append(item.sendUserName)
-                            .append(":[")
-                            .append(context.getResources().getString(R.string.file))
-                            .append("]\n");
+                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.file)).append("]");
                     break;
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.mession_link)).append("]");
+                    break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.video)).append("]");
+                    break;
+                default:
+                    break;
+            }
+            if (i < arrayList.size() - 1) {
+                sb.append("\n");
             }
         }
         contentText.setText(sb.toString());
-//            titleText.setText("聊天记录");
         return cardContentView;
     }
 }

@@ -214,4 +214,7 @@
     <color name="color_cc">#cccccc</color>
     <color name="color_3e">#3E4A59</color>
 
+    <color name="bg_color_layer_layer">#E6E6E6</color>
+    <color name="bg_color_layer_layer_dark">#4D4D4D</color>
+
 </resources>

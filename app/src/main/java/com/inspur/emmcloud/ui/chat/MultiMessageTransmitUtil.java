@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
+import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_MEDIA_VIDEO;
 
 public class MultiMessageTransmitUtil {
 
@@ -137,6 +138,7 @@ public class MultiMessageTransmitUtil {
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                         fileMessageSet.add(uiMessage);
                         break;
                     case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -146,9 +148,12 @@ public class MultiMessageTransmitUtil {
                         messageDataJson.put("text", MarkDown.fromMarkdown(spannableString.toString()));
                         jsonArray.put(messageDataJson);
                         break;
-//            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-//                transmitLinkMsg(cid, uiMessage);
-//                break;
+                    case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                        CommunicationUtils.wrapperLinkedSendMessageJSONWithoutTmpId(messageDataJson, uiMessage.getMessage().getMsgContentExtendedLinks());
+                        jsonArray.put(messageDataJson);
+                        break;
+                    default:
+                        break;
                 }
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
@@ -219,6 +224,16 @@ public class MultiMessageTransmitUtil {
                                                         fileDataJson.put("media", path);
                                                         fileDataJson.put("tmpId", message.getTmpId());
                                                         jsonArray.put(fileDataJson);
+                                                        break;
+                                                    case MESSAGE_TYPE_MEDIA_VIDEO:
+                                                        JSONObject videoDataJson = new JSONObject();
+                                                        videoDataJson.put("sendUserId", message.getFromUser());
+                                                        videoDataJson.put("sendUserName", fileMessage.getSenderName());
+                                                        videoDataJson.put("sendTime", message.getCreationDate() / 1000);
+                                                        videoDataJson.put("type", "file/regular-file");
+                                                        Message fakeMessage = CommunicationUtils.combineLocalVideoMessageHaveContent(cid, path, message.getMsgContentMediaVideo());
+                                                        CommunicationUtils.wrapperVideoSendMessageJSONWithoutTmpId(videoDataJson, fakeMessage.getMsgContentMediaVideo());
+                                                        jsonArray.put(videoDataJson);
                                                         break;
                                                 }
                                             } catch (JSONException e) {

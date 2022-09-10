@@ -541,8 +541,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
             return false;
         }
-        if (type.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || type.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
-                || type.equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+        if (Message.MESSAGE_TYPE_MEDIA_IMAGE.equals(type) || Message.MESSAGE_TYPE_FILE_REGULAR_FILE.equals(type)
+                || Message.MESSAGE_TYPE_TEXT_MARKDOWN.equals(type) || Message.MESSAGE_TYPE_EXTENDED_LINKS.equals(type)
+                || Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(type)) {
             return true;
         }
         if (type.equals(Message.MESSAGE_TYPE_TEXT_PLAIN)) {

@@ -2032,6 +2032,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 transmitLinkMsg(cid, uiMessage);
                 break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                transmitVideoMsg(cid, uiMessage.getMessage());
+                break;
             default:
                 break;
         }
@@ -2074,6 +2077,23 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void transmitLinkMsg(String cid, UIMessage uiMessage) {
         Message fakeMessage = CommunicationUtils.combinLocalExtendedLinksMessageHaveContent(cid, uiMessage.getMessage().getContent());
         sendTransmitMsg(fakeMessage);
+    }
+
+    /**
+     * 转发短视频消息
+     * @param cid 频道id
+     * @param sendMessage 转发消息
+     */
+    private void transmitVideoMsg(String cid, Message sendMessage) {
+        String path;
+        MsgContentMediaVideo msgContentMediaVideo = sendMessage.getMsgContentMediaVideo();
+        path = msgContentMediaVideo.getMedia();
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            //传image原因为与发送路径一致
+            apiService.transmitFile(path, sendMessage.getChannel(), cid, "image", sendMessage);
+        }
     }
 
     /**
@@ -2178,6 +2198,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     operationIdList.add(R.string.chat_long_click_transmit);
                     operationIdList.add(R.string.chat_long_click_multiple);
                     break;
@@ -2191,14 +2212,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_reply);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
-                    // TODO: 2022/7/25 视频转发多选
-//                    operationIdList.add(R.string.chat_long_click_transmit);
-//                    operationIdList.add(R.string.chat_long_click_multiple);
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_multiple);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    break;
-                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     if (!LanguageManager.getInstance().isAppLanguageEnglish()) {
@@ -2771,6 +2788,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, path, message.getMsgContentAttachmentFile());
                     break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    fakeMessage = CommunicationUtils.combineLocalVideoMessageHaveContent(cid, path, message.getMsgContentMediaVideo());
             }
             sendTransmitMsg(fakeMessage);
         }
