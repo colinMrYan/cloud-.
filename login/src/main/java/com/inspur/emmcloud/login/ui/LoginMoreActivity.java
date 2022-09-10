@@ -115,6 +115,7 @@ public class LoginMoreActivity extends BaseActivity {
                     String msg = data.getStringExtra("msg");
                     PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_FORGET_URL, JSONUtils.getString(msg, "forgetPassword", ""));
                     PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_MODIFY_URL, JSONUtils.getString(msg, "modifyPassword", ""));
+                    PreferencesUtils.putString(getApplicationContext(), Constant.PREF_EMAIL_INFO, JSONUtils.getString(msg, "mail", ""));
                     if (JSONUtils.isJsonObjStringHasKey(msg, "u") && JSONUtils.isJsonObjStringHasKey(msg, "n")) {
                         showConfirmDialog(msg);
                     } else {
