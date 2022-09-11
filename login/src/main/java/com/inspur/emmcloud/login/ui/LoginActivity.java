@@ -202,6 +202,13 @@ public class LoginActivity extends BaseActivity {
                 Constant.PREF_LOGIN_USERNAME, userName);
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
         if (!isHasSetShortPassword) {
+            String modifyUrl = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LOGIN_MODIFY_URL);
+            if (!StringUtils.isEmpty(modifyUrl) && modifyUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", modifyUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             IntentUtils.startActivity(LoginActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
             ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
