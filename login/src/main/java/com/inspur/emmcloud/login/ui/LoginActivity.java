@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -236,8 +238,15 @@ public class LoginActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(LoginActivity.this)) {
             LoginUtils loginUtils = new LoginUtils(LoginActivity.this, handler);
-            loginUtils.login(userName, password);
+            loginUtils.login(autoHoldMail(userName), password);
         }
+    }
+
+    // 支持自动填充邮箱后缀
+    private String autoHoldMail(String userName) {
+        String email = PreferencesUtils.getString(getApplicationContext(), Constant.PREF_EMAIL_INFO);
+        if (StringUtils.isEmpty(email) || FomatUtils.isPhoneNum(userName) || userName.endsWith(email)) {return userName;}
+        return userName + email;
     }
 
     private class EditWatcher implements TextWatcher {

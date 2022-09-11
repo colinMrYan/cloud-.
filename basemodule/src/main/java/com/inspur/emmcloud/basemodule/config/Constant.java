@@ -32,6 +32,7 @@ public class Constant {
     public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
     public static final String PREF_LOGIN_FORGET_URL = "login_forget_url";
     public static final String PREF_LOGIN_MODIFY_URL = "login_modify_url";
+    public static final String PREF_EMAIL_INFO = "email_auto_hold";
     public static final String PREF_CURRENT_ENTERPRISE_ID = "current_enterprise_id";
     public static final String PREF_CONTACT_USER_LASTQUERYTIME = "contact_user_lastquerytime";
     public static final String PREF_CONTACT_ORG_LASTQUERYTIME = "contact_org_lastquerytime";
