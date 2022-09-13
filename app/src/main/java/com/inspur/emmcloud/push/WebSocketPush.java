@@ -504,6 +504,8 @@ public class WebSocketPush {
                                             //接收到消息后告知服务端 此处复用了音视频通话的发送接口
                                             WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
                                             break;
+                                        default:
+                                            break;
                                     }
 
                                 }
@@ -514,6 +516,8 @@ public class WebSocketPush {
                                     SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMAND_BATCH_MESSAGE, wsCommandBatch);
                                     EventBus.getDefault().post(eventMessage);
                                 }
+                                break;
+                            default:
                                 break;
 
                         }

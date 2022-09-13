@@ -56,10 +56,12 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnMsgCommentCountFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -74,12 +76,12 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
@@ -104,12 +106,12 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnNewMessagesSuccess(GetChannelMessagesResult getChannelMessagesResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnNewMessagesFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
@@ -371,482 +373,515 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnFindSearchFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAllRobotsFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnRobotByIdSuccess(Robot robot) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnReactNativeUpdateFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetClientIdResultFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnVeriryApprovalPasswordSuccess(String password) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnVeriryApprovalPasswordFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnNewsInstructionFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAppTabAutoFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSplashPageInfoFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAppConfigFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUploadPositionSuccess() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveConfigSuccess() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveConfigFail() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, ChatFileUploadInfo chatFileUploadInfo) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnOpenActionBackgroudUrlSuccess() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnOpenActionBackgroudUrlFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnOpenDecideBotRequestSuccess() {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnOpenDecideBotRequestFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUploadPushInfoResultFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnChatFileUploadTokenFail(String error, int errorCode, ChatFileUploadInfo chatFileUploadInfo) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactUserListFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactOrgListFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnMultiContactOrgSuccess(GetMultiContactResult getMultiContactResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnMultiContactOrgFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactUserListUpdateFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnContactOrgListUpdateFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetVoiceCommunicationResultFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetVoiceCommunicationChannelInfoSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetVoiceCommunicationChannelInfoFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnJoinVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnRefuseVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnRefuseVoiceCommunicationChannelFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnLeaveVoiceCommunicationChannelSuccess(GetBoolenResult getBoolenResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnLeaveVoiceCommunicationChannelFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnQuitChannelGroupSuccess() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnQuitChannelGroupSuccessFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnConversationListSuccess(GetConversationListResult getConversationListResult) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnConversationListFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSetConversationStickSuccess(String id, boolean isStick) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSetConversationStickFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSetConversationHideSuccess(String id, boolean isHide) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSetConversationHideFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAddConversationGroupMemberSuccess(List<String> uidList) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAddConversationGroupMemberFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnDelConversationGroupMemberSuccess(List<String> uidList) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnDelConversationGroupMemberFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnConversationInfoSuccess(Conversation conversation) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnConversationInfoFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUpdateConversationNameSuccess() {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnUpdateConversationNameFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnCreateDirectConversationSuccess(Conversation conversation) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnCreateDirectConversationFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnCreateGroupConversationSuccess(Conversation conversation) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnCreateGroupConversationFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnDeleteConversationSuccess(String cid) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnDeleteConversationFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnNaviBarModelFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnShareFileToFriendsFromVolumeSuccess(String newPath, VolumeFile volumeFile) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnShareFileToFriendsFromVolumeFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnInvitationContentSuccess(ScanCodeJoinConversationBean scanCodeJoinConversationBean) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnInvitationContentFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAppRoleSuccess(String appRole) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnAppRoleFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnIsAgreedSuccess(String isSuccess) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnIsAgreedFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveAgreedSuccess(String isSaveSuccess) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSaveAgreedFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnTransmitPictureSuccess(String cid, String description, Message message) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnTransmitPictureError(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
 
     @Override
     public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetConversationServiceListSuccess(GetServiceChannelInfoListResult getConversationListResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetConversationServiceListFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetConversationServiceListAllSuccess(GetServiceChannelInfoListResult getConversationListResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnGetConversationServiceListAllFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSearchConversationServiceSuccess(GetServiceChannelInfoListResult getConversationListResult) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnSearchConversationServiceFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnFollowConversationServiceSuccess(ServiceChannelInfo conversations) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnFollowConversationServiceFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnTransferGroupFail(String error, int errorCode) {
-
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void returnTransferGroupSuccess(TransferGroupBean bean) {
-
+        // TODO Auto-generated method stub
     }
 }

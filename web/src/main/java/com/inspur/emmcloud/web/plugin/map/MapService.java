@@ -7,6 +7,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.amaplocation.ECMLoactionTransformUtils;
+import com.inspur.emmcloud.web.ui.ImpFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,10 +98,10 @@ public class MapService extends ImpPlugin {
 
     private void navigationByAutonavi(JSONObject jsonObject) {
         try {
-            if (!jsonObject.isNull("success"))
-                successCb = jsonObject.getString("success");
-            if (!jsonObject.isNull("fail"))
-                failCb = jsonObject.getString("fail");
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_SUCCESS))
+                successCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_SUCCESS);
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_FAIL))
+                failCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_FAIL);
             final JSONObject optionsObj = jsonObject.getJSONObject("options");
             int mapType = 0;
             if (optionsObj.has("openType")) {
@@ -340,10 +341,10 @@ public class MapService extends ImpPlugin {
         try {
             String destination = "";
             String mapId = "";
-            if (!jsonObject.isNull("success"))
-                successCb = jsonObject.getString("success");
-            if (!jsonObject.isNull("fail"))
-                failCb = jsonObject.getString("fail");
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_SUCCESS))
+                successCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_SUCCESS);
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_FAIL))
+                failCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_FAIL);
             if (!jsonObject.isNull("mapId")) {
                 mapId = jsonObject.getString("mapId");
             } else {
@@ -413,10 +414,10 @@ public class MapService extends ImpPlugin {
         String longitude = "";
         String latitude = "";
         try {
-            if (!jsonObject.isNull("success"))
-                successCb = jsonObject.getString("success");
-            if (!jsonObject.isNull("fail"))
-                failCb = jsonObject.getString("fail");
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_SUCCESS))
+                successCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_SUCCESS);
+            if (!jsonObject.isNull(ImpFragment.EXTRA_CALLBACK_FAIL))
+                failCb = jsonObject.getString(ImpFragment.EXTRA_CALLBACK_FAIL);
             if (!jsonObject.isNull("longitude"))
                 longitude = jsonObject.getString("longitude");
             if (!jsonObject.isNull("latitude"))

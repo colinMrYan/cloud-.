@@ -140,7 +140,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         } else if (id == R.id.btn_preview) {
             Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
             intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
-            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+            intent.putExtra(ImagePreviewActivity.ORIGIN_TAG, isOrigin);
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
         } else if (id == R.id.ibt_back) {
             // 点击返回按钮
@@ -290,7 +290,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                         imagePicker.getSelectedImages());
                 isOrigin = data.getBooleanExtra(
-                        ImagePreviewActivity.ISORIGIN, false);
+                        ImagePreviewActivity.ORIGIN_TAG, false);
                 intent.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                 setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
                 finish();
@@ -310,7 +310,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
             } else {
                 if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                     isOrigin = data.getBooleanExtra(
-                            ImagePreviewActivity.ISORIGIN, false);
+                            ImagePreviewActivity.ORIGIN_TAG, false);
                     orgPictureCheckBox.setChecked(isOrigin);
                 } else {
                     // 从拍照界面返回
@@ -320,7 +320,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                     } else {
                         // 说明是从裁剪页面过来的数据，直接返回就可以
                         isOrigin = data.getBooleanExtra(
-                                ImagePreviewActivity.ISORIGIN, false);
+                                ImagePreviewActivity.ORIGIN_TAG, false);
                         data.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                         setResult(ImagePicker.RESULT_CODE_ITEMS, data);
                         finish();
