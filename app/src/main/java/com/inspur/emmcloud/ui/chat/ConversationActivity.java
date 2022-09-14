@@ -2534,14 +2534,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    private void updateSilentState(){
+    private void updateSilentState() {
         String selfUid = BaseApplication.getInstance().getUid();
-        if(conversation.isSilent()
+        if (conversation.isSilent()
 //        ){
-                && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())){
+                && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())) {
             silentLayout.setVisibility(View.VISIBLE);
             chatInputMenu.setVisibility(View.GONE);
-        } else{
+        } else {
             chatInputMenu.setVisibility(View.VISIBLE);
             silentLayout.setVisibility(View.GONE);
         }

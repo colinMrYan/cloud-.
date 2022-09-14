@@ -1110,7 +1110,7 @@
     <!--已读未读-->
     <string name="read">read</string>
     <string name="unread">unread</string>
-    <string name="left_unread">unread</string>
+    <string name="left_unread">&#160; unread</string>
     <string name="all_read">all read</string>
     <string name="unread_detail_title">Message recipients list</string>
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
