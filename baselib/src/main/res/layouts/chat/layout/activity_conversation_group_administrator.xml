@@ -20,7 +20,7 @@
             android:layout_marginStart="6dp"
             android:onClick="onClick"
             android:padding="10dp"
-            android:text="@string/cancel"
+            android:text="@string/back"
             android:textColor="?attr/text_color"
             android:textSize="17sp" />
 

@@ -532,7 +532,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             mSelectedMessages.clear();
         }
         mMultipleSelect = b;
-        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     private boolean supportMultiSelect(UIMessage uiMessage) {

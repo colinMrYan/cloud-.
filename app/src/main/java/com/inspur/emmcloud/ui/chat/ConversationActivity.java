@@ -2081,7 +2081,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 转发短视频消息
-     * @param cid 频道id
+     *
+     * @param cid         频道id
      * @param sendMessage 转发消息
      */
     private void transmitVideoMsg(String cid, Message sendMessage) {
@@ -2499,24 +2500,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     public void changeViewByMultipleSelect(boolean selecting) {
-        final int firstItem = linearLayoutManager.findFirstVisibleItemPosition();
-        View firstItemView = linearLayoutManager.findViewByPosition(firstItem);
-        final float topOffset = firstItemView == null ? 0 : firstItemView.getTop();
+        msgListView.setKeepPositionOnce(true);
         adapter.toggleMultipleSelect(selecting);
-        msgListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 利用线程
-                msgListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        linearLayoutManager.scrollToPositionWithOffset(firstItem, (int) topOffset);
 
-                    }
-                });
-                msgListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         if (selecting) {
             configView.setVisibility(View.GONE);
             robotPhotoImg.setVisibility(View.GONE);

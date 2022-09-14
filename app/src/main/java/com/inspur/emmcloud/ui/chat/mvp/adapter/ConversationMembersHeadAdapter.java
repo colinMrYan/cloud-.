@@ -91,13 +91,13 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         uid = mUidList.get(i);
         if (TYPE_DELETE_USER.equals(uid)) {
             userName = "";
-            holder.headImage.setBackgroundResource(R.drawable.ic_delete_channel_member);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_delete_channel_member);
         } else if (TYPE_ADD_USER.equals(uid)) {
             userName = "";
-            holder.headImage.setBackgroundResource(R.drawable.ic_add_channel_member);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_add_channel_member);
         } else if (TYPE_FILE_TRANSFER.equals(uid)) {
             userName = mContext.getString(R.string.chat_file_transfer);
-            holder.headImage.setBackgroundResource(R.drawable.ic_file_transfer);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_file_transfer);
         } else {
             userName = ContactUserCacheUtils.getUserName(uid);
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
