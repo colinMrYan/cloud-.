@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react": "16.0.0-alpha.12",
-    "react-native": "0.46.4",
-    "react-native-navigation": "^1.1.255",
-    "react-native-picker": "^4.3.7",
-    "react-native-smart-pull-to-refresh-listview": "^1.6.11-beta.2",
-    "react-native-snap-carousel": "^3.3.4",
-    "react-native-svg": "5.3.0",
-    "react-native-vector-icons": "^4.4.2"
+    "react": "17.0.2",
+    "react-native": ">=0.63.0",
+    "react-native-navigation": "^6.0.2",
+    "react-native-picker": ">4.3.7",
+    "react-native-smart-pull-to-refresh-listview": ">1.6.11-beta.2",
+    "react-native-snap-carousel": ">3.3.4",
+    "react-native-svg": ">=12.3.0",
+    "react-native-vector-icons": ">4.4.2"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",
