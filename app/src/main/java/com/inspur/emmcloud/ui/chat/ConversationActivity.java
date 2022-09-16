@@ -149,6 +149,8 @@ import butterknife.BindView;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
 import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
 import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
@@ -1120,6 +1122,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                             break;
                     }
                     conversation.setSilent(data.getBooleanExtra(INTENT_SILENT, false));
+                    if (data.hasExtra(INTENT_SELECT_OWNER)) {
+                        conversation.setOwner(data.getStringExtra(INTENT_SELECT_OWNER));
+                    }
+                    if (data.hasExtra(INTENT_ADMIN_LIST)) {
+                        conversation.setAdministrators(data.getStringExtra(INTENT_ADMIN_LIST));
+                    }
                     updateSilentState();
                     break;
 //                case PictureConfig.CHOOSE_REQUEST:
@@ -1694,6 +1702,34 @@ public class ConversationActivity extends ConversationBaseActivity {
                 conversation.setSilent(false);
                 updateSilentState();
                 break;
+            case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:
+                String addJsonParam = (String) simpleEventMessage.getMessageObj();
+                try {
+                    JSONObject jsonObject = new JSONObject(addJsonParam);
+                    if (cid.equals(jsonObject.optString("channelId"))) {
+                        ArrayList<String> originAdminList = conversation.getAdministratorList();
+                        originAdminList.addAll(JSONUtils.JSONArray2List(jsonObject.optJSONArray("addedAdministrators"), new ArrayList<String>()));
+                        conversation.setAdministratorList(originAdminList);
+                        updateSilentState();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Constant.EVENTBUS_TAG_ADMINISTRATOR_REMOVE:
+                String removeJsonParam = (String) simpleEventMessage.getMessageObj();
+                try {
+                    JSONObject jsonObject = new JSONObject(removeJsonParam);
+                    if (cid.equals(jsonObject.optString("channelId"))) {
+                        ArrayList<String> originAdminList = conversation.getAdministratorList();
+                        originAdminList.removeAll(JSONUtils.JSONArray2List(jsonObject.optJSONArray("removedAdministrators"), new ArrayList<String>()));
+                        conversation.setAdministratorList(originAdminList);
+                        updateSilentState();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 break;
 
@@ -2008,6 +2044,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发消息
      */
     private void transmitMsg(String cid, UIMessage uiMessage, int multiMessageType) {
+        if (CommunicationUtils.currentUserConversationSilent(conversation)) {
+            ToastUtils.show(getString(R.string.channel_silent_error));
+            return;
+        }
         if (multiMessageType == MultiMessageTransmitUtil.TYPE_MULTI_ITEM_BY_ITEM) {
             transmitMultiMessageItemByItem(cid, adapter.getSelectedMessages());
             return;
@@ -2523,7 +2563,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void updateSilentState() {
         String selfUid = BaseApplication.getInstance().getUid();
         if (conversation.isSilent()
-//        ){
                 && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())) {
             silentLayout.setVisibility(View.VISIBLE);
             chatInputMenu.setVisibility(View.GONE);

@@ -55,6 +55,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
 import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
 
 /**
@@ -134,6 +136,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public int getLayoutResId() {
         return R.layout.activity_conversation_info;
     }
@@ -205,7 +212,14 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                             FileTransferDetailActivity.class);
                     startActivityForResult(intent, QEQUEST_FILE_TRANSFER);
                 } else if (i == uiUidList.size() - 1 && mUserGroupType > GROUP_TYPE_MEMBER) {    /**刪除群成員**/
-                    intent.putExtra("memberUidList", uiConversation.getMemberList());
+                    if (mUserGroupType == GROUP_TYPE_ADMINISTRATOR) {
+                        ArrayList<String> memberList = uiConversation.getMemberList();
+                        memberList.removeAll(uiConversation.getAdministratorList());
+                        memberList.remove(uiConversation.getOwner());
+                        intent.putExtra("memberUidList", memberList);
+                    } else {
+                        intent.putExtra("memberUidList", uiConversation.getMemberList());
+                    }
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
@@ -215,8 +229,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uiConversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                     intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.add_group_member));
-                    intent.setClass(getApplicationContext(),
-                            ContactSearchActivity.class);
+                    intent.setClass(getApplicationContext(), ContactSearchActivity.class);
                     // 单聊时点击+号为创建群聊，传入Uid
                     if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                         intent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP_FROM_DIRECT, true);
@@ -247,6 +260,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     Intent intent = new Intent();
                     intent.putExtra("operate", 0);
                     intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
+                    intent.putExtra(INTENT_SELECT_OWNER, uiConversation.getOwner());
+                    intent.putExtra(INTENT_ADMIN_LIST, uiConversation.getAdministrators());
                     setResult(RESULT_OK, intent);
                 }
                 finish();
@@ -359,6 +374,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             Intent intent = new Intent();
             intent.putExtra("operate", 0);
             intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
+            intent.putExtra(INTENT_SELECT_OWNER, uiConversation.getOwner());
+            intent.putExtra(INTENT_ADMIN_LIST, uiConversation.getAdministrators());
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -569,11 +586,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void updateGroupTransferSuccess(String owner) {
         channelMembersHeadAdapter.setOwner(owner);
-        //TODO:转让群主以后直接为普通用户
-        mUserGroupType = GROUP_TYPE_MEMBER;
+        uiConversation.setOwner(owner);
         quitTextView.setText(getString(R.string.quit_group));
-        uiUidList.remove("deleteUser");
-        conversationMemberManagerLayout.setVisibility(mUserGroupType > GROUP_TYPE_MEMBER ? View.VISIBLE : View.GONE);
+        if (uiConversation.getAdministratorList().contains(BaseApplication.getInstance().getUid())) {
+            //管理员
+            mUserGroupType = GROUP_TYPE_ADMINISTRATOR;
+            conversationMemberManagerLayout.setVisibility(View.VISIBLE);
+        } else {
+            //普通员工
+            mUserGroupType = GROUP_TYPE_MEMBER;
+            conversationMemberManagerLayout.setVisibility(View.GONE);
+            uiUidList.remove("deleteUser");
+        }
         channelMembersHeadAdapter.notifyDataSetChanged();
 
     }

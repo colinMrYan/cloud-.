@@ -816,4 +816,10 @@ public class CommunicationUtils {
         }
         return bodyObj;
     }
+
+    public static boolean currentUserConversationSilent(Conversation conversation){
+        String currentUid = BaseApplication.getInstance().getUid();
+        return conversation.isSilent() && !conversation.getOwner().equals(currentUid) &&
+                !conversation.getAdministratorList().contains(currentUid);
+    }
 }

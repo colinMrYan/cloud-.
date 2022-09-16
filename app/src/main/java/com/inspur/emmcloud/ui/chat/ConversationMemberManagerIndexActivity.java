@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -34,9 +35,11 @@ public class ConversationMemberManagerIndexActivity extends BaseActivity {
     public static final int REQUEST_GROUP_ADMINISTRATOR = 7;
     public static final String INTENT_ADMIN_LIST = "intentAdminList";
     public static final String INTENT_SILENT = "intentSilent";
+    public static final String INTENT_SELECT_OWNER = "selectOwner";
     private Conversation mConversation;
     private LoadingDialog loadingDlg;
     private int mType;
+    private String mSelectOwner;
 
     @Override
     public void onCreate() {
@@ -112,10 +115,8 @@ public class ConversationMemberManagerIndexActivity extends BaseActivity {
         if (resultCode == -1) {
             if (requestCode == REQUEST_GROUP_TRANSFER) {
                 if (data != null) {
-                    data.putExtra(INTENT_ADMIN_LIST, mConversation.getMemberList());
-                    data.putExtra(INTENT_SILENT, mConversation.isSilent());
+                    mSelectOwner = data.getStringExtra(INTENT_SELECT_OWNER);
                 }
-                setResult(RESULT_OK, data);
                 finish();
             } else if (requestCode == REQUEST_GROUP_ADMINISTRATOR && data != null) {
                 List<String> adminList = (List<String>) data.getSerializableExtra(INTENT_ADMIN_LIST);
@@ -176,6 +177,9 @@ public class ConversationMemberManagerIndexActivity extends BaseActivity {
     public void finish() {
         Intent data = new Intent();
         if (mConversation != null) {
+            if (!TextUtils.isEmpty(mSelectOwner)) {
+                data.putExtra(INTENT_SELECT_OWNER, mSelectOwner);
+            }
             data.putStringArrayListExtra(INTENT_ADMIN_LIST, mConversation.getAdministratorList());
             data.putExtra(INTENT_SILENT, mConversation.isSilent());
             setResult(RESULT_OK, data);

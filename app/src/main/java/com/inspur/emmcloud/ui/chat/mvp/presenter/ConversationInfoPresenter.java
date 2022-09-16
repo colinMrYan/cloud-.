@@ -24,6 +24,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversat
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversationInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
@@ -553,7 +554,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 case QEQUEST_FILE_TRANSFER:
                     mView.activityFinish();
                 case QEQUEST_GROUP_MANAGE:
-                    String selectOwner = data.getStringExtra("selectOwner");
+                    String selectOwner = data.getStringExtra(ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER);
                     if (!android.text.TextUtils.isEmpty(selectOwner)) {
                         mView.updateGroupTransferSuccess(selectOwner);
                     }

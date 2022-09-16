@@ -7,6 +7,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -122,9 +123,9 @@ public class Conversation implements Serializable {
         return id;
     }
 
-    public String getServiceConversationId(){
+    public String getServiceConversationId() {
         String conversationId = "";
-        if (this.id.startsWith("FIBER")){
+        if (this.id.startsWith("FIBER")) {
             String[] strings = id.split(":");
             conversationId = strings[1];
         }
@@ -226,6 +227,10 @@ public class Conversation implements Serializable {
         return administratorList;
     }
 
+    public void setAdministratorList(ArrayList<String> arrayList) {
+        administrators = new JSONArray(arrayList).toString();
+    }
+
     public String getInput() {
         return input;
     }
@@ -306,7 +311,7 @@ public class Conversation implements Serializable {
         this.serviceId = serviceId;
     }
 
-    public boolean isServiceConversationType(){
+    public boolean isServiceConversationType() {
         return !TextUtils.isEmpty(serviceId);
     }
 

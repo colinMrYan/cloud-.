@@ -495,6 +495,16 @@ public class WebSocketPush {
                                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
                                             WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
                                             break;
+                                        case "client.chat.channel.group.administrator.add":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD, wsCommand.getParams()));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        case "client.chat.channel.group.administrator.remove":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_ADMINISTRATOR_REMOVE, wsCommand.getParams()));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
                                         case "client.chat.channel.group.member.add":
                                         case "client.chat.channel.group.member.remove":
                                         case "client.chat.channel.group.create":
@@ -502,8 +512,6 @@ public class WebSocketPush {
                                         case "client.chat.channel.group.name.update":
                                         case "client.chat.channel.group.member.quit":
                                         case "client.chat.channel.group.member.join":
-                                        case "client.chat.channel.group.administrator.add":
-                                        case "client.chat.channel.group.administrator.remove":
                                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
                                             //接收到消息后告知服务端 此处复用了音视频通话的发送接口
                                             WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
