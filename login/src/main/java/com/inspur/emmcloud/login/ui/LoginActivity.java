@@ -238,7 +238,7 @@ public class LoginActivity extends BaseActivity {
     // 支持自动填充邮箱后缀
     private String autoHoldMail(String userName) {
         String email = PreferencesUtils.getString(getApplicationContext(), Constant.PREF_EMAIL_INFO);
-        if (StringUtils.isEmpty(email) || FomatUtils.isPhoneNum(userName) || userName.endsWith(email)) {return userName;}
+        if (StringUtils.isEmpty(email) || FomatUtils.isPhoneNum(userName) || userName.contains("@")) {return userName;}
         return userName + email;
     }
 
