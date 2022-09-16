@@ -117,6 +117,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private List<String> uiUidList = new ArrayList<>();
     private LoadingDialog loadingDialog;
     private boolean conversationNameChanged = false;
+    private String mCid;
 
     @Override
     public void onCreate() {
@@ -133,11 +134,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             return;
         }
         init();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -356,11 +352,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         }
     }
 
-    private void refreshMyConversation() {
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
-        mPresenter.getConversationInfo(cid);
-        uiConversation = mPresenter.getConversation(cid);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.getConversationInfo(mCid);
     }
+
+    private void refreshMyConversation() {
+        mCid = getIntent().getExtras().getString(EXTRA_CID);
+//        mPresenter.getConversationInfo(mCid);
+        uiConversation = mPresenter.getConversation(mCid);
+    }
+
 
     @Override
     public void initView(Conversation conversation) {
@@ -586,6 +589,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void updateGroupTransferSuccess(String owner) {
         channelMembersHeadAdapter.setOwner(owner);
+        channelMembersHeadAdapter.setAdminList(uiConversation.getAdministratorList());
         uiConversation.setOwner(owner);
         quitTextView.setText(getString(R.string.quit_group));
         if (uiConversation.getAdministratorList().contains(BaseApplication.getInstance().getUid())) {

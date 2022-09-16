@@ -291,6 +291,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mConversation = new Conversation(object);
                 Conversation conversation = ConversationCacheUtils.getConversation(context, mConversation.getId());
                 mConversation.setHide(conversation.isHide());
+                ConversationCacheUtils.saveConversation(mView.getContext(), mConversation);
                 mView.initView(mConversation);
             }
 
