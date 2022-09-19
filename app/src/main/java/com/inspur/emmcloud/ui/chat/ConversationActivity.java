@@ -1671,6 +1671,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 Conversation newConversation = ((Conversation) simpleEventMessage.getMessageObj());
+                if (!TextUtils.equals(newConversation.getId(), conversation.getId())) {
+                    break;
+                }
                 conversation.setName(newConversation.getName());
                 headerText.setText(newConversation.getName());
                 if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
