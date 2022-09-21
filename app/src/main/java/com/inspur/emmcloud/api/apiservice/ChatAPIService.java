@@ -72,6 +72,8 @@ import java.util.Set;
 public class ChatAPIService {
     private Context context;
     private APIInterface apiInterface;
+    private static final String MESSAGE_TAG = "/message/";
+    private static final String METHOD_TAG = "members";
 
     public ChatAPIService(Context context) {
         this.context = context;
@@ -192,7 +194,7 @@ public class ChatAPIService {
      */
     public void getComment(final String mid) {
 
-        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl() + (MESSAGE_TAG + mid
                 + "/comment");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -358,7 +360,7 @@ public class ChatAPIService {
      * @param mid
      */
     public void getMsg(final String mid) {
-        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid);
+        final String completeUrl = APIUri.getECMChatChannelUrl() + (MESSAGE_TAG + mid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -835,7 +837,7 @@ public class ChatAPIService {
     public void addConversationGroupMember(final String id, final List<String> uidList) {
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.addParameter("members", uidList);
+        params.addParameter(METHOD_TAG, uidList);
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
 
@@ -878,7 +880,7 @@ public class ChatAPIService {
     public void delConversationGroupMember(final String id, final List<String> uidList) {
         final String url = APIUri.getModifyGroupMemberUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        params.addParameter("members", JSONUtils.toJSONArray(uidList));
+        params.addParameter(METHOD_TAG, JSONUtils.toJSONArray(uidList));
         params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
 
@@ -926,7 +928,7 @@ public class ChatAPIService {
             JSONObject paramObj = new JSONObject();
             paramObj.put("name", name);
             paramObj.put("type", "GROUP");
-            paramObj.put("members", members);
+            paramObj.put(METHOD_TAG, members);
             params.setBodyContent(paramObj.toString());
             params.setAsJsonContent(true);
         } catch (Exception e) {
@@ -966,7 +968,7 @@ public class ChatAPIService {
     }
 
     public void getMsgCommentCount(final String mid) {
-        final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid
+        final String completeUrl = APIUri.getECMChatChannelUrl() + (MESSAGE_TAG + mid
                 + "/comment/count");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1871,7 +1873,7 @@ public class ChatAPIService {
                 .getHttpRequestParams(completeUrl);
         try {
             params.addParameter("name", name);
-            params.addParameter("members", members);
+            params.addParameter(METHOD_TAG, members);
             params.setAsJsonContent(true);
         } catch (Exception e) {
             e.printStackTrace();

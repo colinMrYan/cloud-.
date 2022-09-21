@@ -28,6 +28,13 @@ import java.util.Map;
 public class WSAPIService {
     private static WSAPIService apiService = null;
     private static final String HEADER_TAG = "headers";
+    private static final String METHOD = "method";
+    private static final String CHANNEL =  "/channel/";
+    private static final String MESSAGE =  "/message";
+    private static final String ACTION =  "action";
+    private static final String ENTERPRISE =  "enterprise";
+    private static final String TRACER =  "tracer";
+    private static final String TMP_ID =  "tmpId";
 
     public WSAPIService() {
     }
@@ -84,12 +91,12 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
@@ -100,7 +107,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -114,12 +121,12 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
@@ -131,7 +138,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, fakeMessage.getId());
@@ -146,15 +153,15 @@ public class WSAPIService {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
             JSONObject whisperObj = new JSONObject();
             whisperObj.put("to", JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
             actionObj.put("query", whisperObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
@@ -164,7 +171,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             bodyObj.put("whispers", JSONUtils.toJSONArray(msgContentTextPlain.getWhisperUsers()));
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
@@ -179,19 +186,19 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             MsgContentTextPlain msgContentTextPlain = fakeMessage.getMsgContentTextPlain();
             bodyObj.put("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
             bodyObj.put("text", msgContentTextPlain.getText());
             bodyObj.put("messageType", Message.MESSAGE_TYPE_TEXT_BURN);
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -205,12 +212,12 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", "comment/text-plain");
@@ -222,7 +229,7 @@ public class WSAPIService {
                 JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
                 bodyObj.put("mentions", mentionsObj);
             }
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -237,15 +244,15 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", CommunicationUtils.wrapperFileSendMessageJSONWithoutTmpId(bodyObj, fakeMessage.getMsgContentAttachmentFile()));
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -259,12 +266,12 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + message.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", message.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, message.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VOICE);
@@ -284,7 +291,7 @@ public class WSAPIService {
                     break;
             }
             bodyObj.put("subtitles", subTitleObj);
-            bodyObj.put("tmpId", message.getId());
+            bodyObj.put(TMP_ID, message.getId());
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -298,15 +305,15 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + message.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", message.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, message.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("tmpId", message.getId());
+            bodyObj.put(TMP_ID, message.getId());
             object.put("body", CommunicationUtils.wrapperLinkedSendMessageJSONWithoutTmpId(bodyObj, message.getMsgContentExtendedLinks()));
             EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -321,15 +328,15 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + message.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + message.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", message.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, message.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("tmpId", message.getId());
+            bodyObj.put(TMP_ID, message.getId());
             object.put("body", CommunicationUtils.wrapperVideoSendMessageJSONWithoutTmpId(bodyObj, message.getMsgContentMediaVideo()));
             EventMessage eventMessage = new EventMessage(message.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", message);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, message.getId());
@@ -342,15 +349,15 @@ public class WSAPIService {
         try {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
-            actionObj.put("path", "/channel/" + fakeMessage.getChannel() + "/message");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "post");
+            actionObj.put("path", CHANNEL + fakeMessage.getChannel() + MESSAGE);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", fakeMessage.getId());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, fakeMessage.getId());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("tmpId", fakeMessage.getId());
+            bodyObj.put(TMP_ID, fakeMessage.getId());
             object.put("body", CommunicationUtils.wrapperImageSendMessageJSONWithoutTmpId(bodyObj, fakeMessage.getMsgContentMediaImage()));
             EventMessage eventMessage = new EventMessage(fakeMessage.getId(), Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE, "", fakeMessage);
 //            eventMessage.setTimeout(MyAppConfig.WEBSOCKET_REQUEST_TIMEOUT_SEND_MESSAGE);
@@ -365,17 +372,17 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
-            actionObj.put("path", "/message");
+            actionObj.put(METHOD, "get");
+            actionObj.put("path", MESSAGE);
             if (lastMessageId != null) {
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("cursor", lastMessageId);
                 actionObj.put("query", queryObj);
             }
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
             eventMessage.setTimeout(50);
@@ -390,15 +397,15 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
+            actionObj.put(METHOD, "get");
             actionObj.put("path", "/channel/message-with-unread-count");
             JSONObject queryObj = new JSONObject();
             queryObj.put("limit", 100);
             actionObj.put("query", queryObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
             eventMessage.setTimeout(50);
@@ -413,12 +420,12 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
+            actionObj.put(METHOD, "get");
             actionObj.put("path", "/message/" + mid);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
@@ -433,15 +440,15 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
+            actionObj.put(METHOD, "get");
             actionObj.put("path", "/message/" + mid + "/comment");
             JSONObject channelObj = new JSONObject();
             channelObj.put("channelId", cid);
             actionObj.put("query", channelObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
@@ -466,12 +473,12 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "post");
+            actionObj.put(METHOD, "post");
             actionObj.put("path", "/command/server");
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             JSONObject paramObj = new JSONObject();
             paramObj.put("channelId", channelId);
@@ -480,7 +487,7 @@ public class WSAPIService {
             paramObj.put("type", type);
             paramObj.put("to", jsonArray);
             JSONObject bodyObj = new JSONObject();
-            bodyObj.put("action", action);
+            bodyObj.put(ACTION, action);
             bodyObj.put("params", paramObj);
             object.put("body", bodyObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT);
@@ -501,10 +508,10 @@ public class WSAPIService {
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
             actionObj.put("status", 200);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObj = new JSONObject();
             bodyObj.put("result", "ok");
@@ -521,15 +528,15 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
+            actionObj.put(METHOD, "get");
             actionObj.put("path", "/message/" + mid + "/comment/count");
             JSONObject channelObj = new JSONObject();
             channelObj.put("channelId", channelId);
             actionObj.put("query", channelObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT, "", mid);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
@@ -543,18 +550,18 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put(METHOD, "get");
+            actionObj.put("path", CHANNEL + cid + MESSAGE);
             JSONObject queryObj = new JSONObject();
             queryObj.put("before", mid);
             queryObj.put("limit", 20);
             queryObj.put("withStateOfOwnMessages", true);
             queryObj.put("messageStatesExcludedUsers", excludeUsers);
             actionObj.put("query", queryObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE, "", cid);
             WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
@@ -568,18 +575,18 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "get");
-            actionObj.put("path", "/channel/" + cid + "/message");
+            actionObj.put(METHOD, "get");
+            actionObj.put("path", CHANNEL + cid + MESSAGE);
             JSONObject queryObj = new JSONObject();
             queryObj.put("before", "");
             queryObj.put("limit", 20);
             queryObj.put("withStateOfOwnMessages", true);
             queryObj.put("messageStatesExcludedUsers", excludeUsers);
             actionObj.put("query", queryObj);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             HashMap hashMap = new HashMap();
             hashMap.put("cid", cid);
@@ -595,12 +602,12 @@ public class WSAPIService {
             String tracer = CommunicationUtils.getTracer();
             JSONObject object = new JSONObject();
             JSONObject actionObj = new JSONObject();
-            actionObj.put("method", "delete");
-            actionObj.put("path", "/channel/" + cid + "/message/state/read");
-            object.put("action", actionObj);
+            actionObj.put(METHOD, "delete");
+            actionObj.put("path", CHANNEL + cid + "/message/state/read");
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", tracer);
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, tracer);
             object.put(HEADER_TAG, headerObj);
             HashMap hashMap = new HashMap();
             hashMap.put("cid", cid);
@@ -619,12 +626,12 @@ public class WSAPIService {
             try {
                 String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
-                actionObj.put("method", "put");
+                actionObj.put(METHOD, "put");
                 actionObj.put("path", "/client/" + clientId + "/state");
-                object.put("action", actionObj);
+                object.put(ACTION, actionObj);
                 JSONObject headerObj = new JSONObject();
-                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-                headerObj.put("tracer", tracer);
+                headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put(TRACER, tracer);
                 object.put(HEADER_TAG, headerObj);
                 JSONObject bodyObject = new JSONObject();
                 bodyObject.put("state", state);
@@ -655,12 +662,12 @@ public class WSAPIService {
             try {
                 String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
-                actionObj.put("method", "delete");
-                actionObj.put("path", "/channel/" + cid + "/message/state/unread");
-                object.put("action", actionObj);
+                actionObj.put(METHOD, "delete");
+                actionObj.put("path", CHANNEL + cid + "/message/state/unread");
+                object.put(ACTION, actionObj);
                 JSONObject headerObj = new JSONObject();
-                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-                headerObj.put("tracer", tracer);
+                headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put(TRACER, tracer);
                 object.put(HEADER_TAG, headerObj);
                 EventMessage eventMessage = new EventMessage(tracer, Constant.EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ, "", "");
                 WebSocketPush.getInstance().sendEventMessage(eventMessage, object, tracer);
@@ -684,15 +691,15 @@ public class WSAPIService {
             try {
                 String tracer = CommunicationUtils.getTracer();
                 JSONObject actionObj = new JSONObject();
-                actionObj.put("method", "post");
+                actionObj.put(METHOD, "post");
                 actionObj.put("path", "/command/server");
-                object.put("action", actionObj);
+                object.put(ACTION, actionObj);
                 JSONObject headerObj = new JSONObject();
-                headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-                headerObj.put("tracer", tracer);
+                headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+                headerObj.put(TRACER, tracer);
                 object.put(HEADER_TAG, headerObj);
                 JSONObject bodyObject = new JSONObject();
-                bodyObject.put("action", "server.chat.message.recall");
+                bodyObject.put(ACTION, "server.chat.message.recall");
                 JSONObject paramsObj = new JSONObject();
                 paramsObj.put("messageId", message.getId());
                 paramsObj.put("channelId", message.getChannel());
@@ -719,10 +726,10 @@ public class WSAPIService {
         try {
             JSONObject actionObj = new JSONObject();
             actionObj.put("status", 200);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", wsCommand.getTracer());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, wsCommand.getTracer());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObject = new JSONObject();
             bodyObject.put("request", JSONUtils.getJSONObject(wsCommand.getRequest()));
@@ -746,10 +753,10 @@ public class WSAPIService {
         try {
             JSONObject actionObj = new JSONObject();
             actionObj.put("status", 200);
-            object.put("action", actionObj);
+            object.put(ACTION, actionObj);
             JSONObject headerObj = new JSONObject();
-            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            headerObj.put("tracer", wsCommandBatch.getTracer());
+            headerObj.put(ENTERPRISE, MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put(TRACER, wsCommandBatch.getTracer());
             object.put(HEADER_TAG, headerObj);
             JSONObject bodyObject = new JSONObject();
             bodyObject.put("request", JSONUtils.getJSONObject(wsCommandBatch.getRequest()));

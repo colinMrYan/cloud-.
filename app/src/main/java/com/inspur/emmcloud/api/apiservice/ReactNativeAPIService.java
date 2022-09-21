@@ -31,6 +31,7 @@ import java.io.File;
 public class ReactNativeAPIService {
     private Context context;
     private APIInterface apiInterface;
+    private static final String CLIENT_TAG = "&clientId=";
 
     public ReactNativeAPIService(Context context) {
         this.context = context;
@@ -101,7 +102,7 @@ public class ReactNativeAPIService {
      * @param appId
      */
     public void writeBackVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command, final String appId) {
-        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId) + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId) + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + CLIENT_TAG + clientId +
                 "&command=" + command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -148,7 +149,7 @@ public class ReactNativeAPIService {
 //     * @param command
 //     */
 //    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command) {
-//        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl() + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+//        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl() + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + CLIENT_TAG + clientId +
 //                "&command=" + command;
 //        RequestParams params = ((MyApplication) context.getApplicationContext())
 //                .getHttpRequestParams(completeUrl);
@@ -193,7 +194,7 @@ public class ReactNativeAPIService {
      */
     public void getDownLoadUrl(final Context context, final String findDownloadUrl,
                                final String clientId, final String currentVersion) {
-        final String completeUrl = findDownloadUrl + "?version=" + currentVersion + "&clientId=" + clientId;
+        final String completeUrl = findDownloadUrl + "?version=" + currentVersion + CLIENT_TAG + clientId;
         RequestParams params = ((BaseApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -247,7 +248,7 @@ public class ReactNativeAPIService {
      */
     public void getReactNativeUpdate(final String version, final long lastCreationDate, final String clientId) {
         final String completeUrl = APIUri.getReactNativeUpdate() + "version=" + version + "&lastCreationDate="
-                + lastCreationDate + "&clientId=" + clientId;
+                + lastCreationDate + CLIENT_TAG + clientId;
         RequestParams params = ((BaseApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
