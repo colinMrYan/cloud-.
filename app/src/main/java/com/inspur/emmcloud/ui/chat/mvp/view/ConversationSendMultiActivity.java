@@ -119,7 +119,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
         }
         mPresenter = new ConversationSearchPresenter();
         mPresenter.attachView(this);
-        mPresenter.getConversationData();
+        mPresenter.getTransmitConversationData();
         // 多选时顶部已选人/群组列表初始化
         selectHeadAdapter = new ConversationSendMultiHeadAdapter(this, selectList);
         multiSelectGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
