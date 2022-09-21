@@ -279,7 +279,6 @@ public class ConversationCacheUtils {
         try {
             conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).findAll();
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
         if (conversationList == null) {

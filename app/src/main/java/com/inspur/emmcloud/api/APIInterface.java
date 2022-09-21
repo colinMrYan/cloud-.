@@ -147,6 +147,21 @@ public interface APIInterface {
     void returnDndFail(String error, int errorCode);
 
 
+    void returnAddAdministratorSuccess(String result);
+
+    void returnAddAdministratorFail(String error, int errorCode);
+
+    void returnRemoveAdministratorSuccess(String result);
+
+    void returnRemoveAdministratorFail(String error, int errorCode);
+
+    void returnEnableGroupSilentSuccess(String result);
+
+    void returnEnableGroupSilentFail(String error, int errorCode);
+
+    void returnDisableGroupSilentSuccess(String result);
+
+    void returnDisableGroupSilentFail(String error, int errorCode);
 
     void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 

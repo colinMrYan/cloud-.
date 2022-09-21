@@ -8,6 +8,8 @@
     <attr name="color_bg_common" format="reference|color" />
     <attr name="text_ll_color_nor" format="reference|color" />
     <attr name="text_ll_color_sel" format="reference|color" />
+    <attr name="bg_color_layer_layer" format="reference|color" />
+
     <attr name="text_color" format="reference|color" />
     <attr name="color_4c_ba" format="reference|color" />
     <attr name="color_ec_1c" format="reference|color" />

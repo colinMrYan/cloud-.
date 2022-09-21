@@ -75,6 +75,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -194,6 +195,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -314,6 +316,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -433,6 +436,7 @@
         <item name="color_3a_88">@color/color_88</item>
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer_dark</item>
         <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="dialog_common_bg_40">@color/color_40</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>

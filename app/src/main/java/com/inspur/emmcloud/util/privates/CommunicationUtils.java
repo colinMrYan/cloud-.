@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
+import com.inspur.emmcloud.bean.chat.RelatedLink;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -427,6 +429,28 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combineLocalVideoMessageHaveContent(String cid, String filePath, MsgContentMediaVideo msgContentMediaVideo) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_MEDIA_VIDEO);
+        message.setLocalPath("");
+        MsgContentMediaVideo contentMediaVideo = new MsgContentMediaVideo();
+        contentMediaVideo.setImageHeight(msgContentMediaVideo.getImageHeight());
+        contentMediaVideo.setImageWidth(msgContentMediaVideo.getImageWidth());
+        contentMediaVideo.setImagePath(filePath);
+        contentMediaVideo.setMedia(filePath);
+        contentMediaVideo.setName(msgContentMediaVideo.getName());
+        contentMediaVideo.setOriginMediaPath(msgContentMediaVideo.getOriginMediaPath());
+        contentMediaVideo.setVideoDuration(msgContentMediaVideo.getVideoDuration());
+        contentMediaVideo.setVideoSize(msgContentMediaVideo.getVideoSize());
+        contentMediaVideo.setTmpId(msgContentMediaVideo.getTmpId());
+        message.setContent(contentMediaVideo.toString());
+        return message;
+    }
+
 
     public static Message combinLocalReplyAttachmentCardMessage(ContactUser contactUser, String cid, String fromUser) {
         String currentTime = System.currentTimeMillis() + "";
@@ -707,4 +731,95 @@ public class CommunicationUtils {
         }
     }
 
+
+    public static JSONObject wrapperLinkedSendMessageJSONWithoutTmpId(@NonNull JSONObject bodyObj, MsgContentExtendedLinks msgContentExtendedLinks) {
+        try {
+            bodyObj.put("type", "extended/links");
+            bodyObj.put("poster", msgContentExtendedLinks.getPoster());
+            bodyObj.put("title", msgContentExtendedLinks.getTitle());
+            bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
+            bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            String appName = msgContentExtendedLinks.getAppName();
+            if (!TextUtils.isEmpty(appName)) {
+                bodyObj.put("app_name", appName);
+                bodyObj.put("ico", msgContentExtendedLinks.getIco());
+                bodyObj.put("app_url", msgContentExtendedLinks.getAppUrl());
+                bodyObj.put("isHaveAPPNavbar", msgContentExtendedLinks.isHaveAPPNavBar());
+            }
+            bodyObj.put(Constant.WEB_FRAGMENT_SHOW_HEADER, msgContentExtendedLinks.isShowHeader());
+            JSONArray array = new JSONArray();
+            for (RelatedLink relatedLink : msgContentExtendedLinks.getRelatedLinkList()) {
+                array.put(relatedLink.toJSonObject());
+            }
+            bodyObj.put("relatedLinks", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return bodyObj;
+    }
+
+    public static JSONObject wrapperVideoSendMessageJSONWithoutTmpId(@NonNull JSONObject bodyObj, MsgContentMediaVideo contentMediaVideo) {
+        JSONObject imgObj = new JSONObject();
+        try {
+            imgObj.put("width", contentMediaVideo.getImageWidth());
+            imgObj.put("height", contentMediaVideo.getImageHeight());
+            imgObj.put("media", contentMediaVideo.getImagePath());
+            bodyObj.put("thumbnail", imgObj);
+            bodyObj.put("type", Message.MESSAGE_TYPE_MEDIA_VIDEO);
+            bodyObj.put("duration", contentMediaVideo.getVideoDuration());
+            bodyObj.put("media", contentMediaVideo.getMedia());
+            bodyObj.put("size", contentMediaVideo.getVideoSize());
+            bodyObj.put("name", contentMediaVideo.getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return bodyObj;
+    }
+
+    public static JSONObject wrapperImageSendMessageJSONWithoutTmpId(@NonNull JSONObject bodyObj, MsgContentMediaImage msgContentMediaImage) {
+        try {
+            bodyObj.put("type", "media/image");
+            JSONObject thumbnailObj = new JSONObject();
+            thumbnailObj.put("width", msgContentMediaImage.getThumbnailWidth());
+            thumbnailObj.put("height", msgContentMediaImage.getThumbnailHeight());
+            thumbnailObj.put("size", msgContentMediaImage.getThumbnailSize());
+            thumbnailObj.put("media", msgContentMediaImage.getRawMedia());
+            JSONObject previewObj = new JSONObject();
+            previewObj.put("width", msgContentMediaImage.getPreviewWidth());
+            previewObj.put("height", msgContentMediaImage.getPreviewHeight());
+            previewObj.put("size",msgContentMediaImage.getPreviewSize());
+            previewObj.put("media", msgContentMediaImage.getRawMedia());
+            JSONObject rawObj = new JSONObject();
+            rawObj.put("width", msgContentMediaImage.getRawWidth());
+            rawObj.put("height", msgContentMediaImage.getRawHeight());
+            rawObj.put("size", msgContentMediaImage.getRawSize());
+            rawObj.put("media", msgContentMediaImage.getRawMedia());
+            bodyObj.put("name", msgContentMediaImage.getName());
+            bodyObj.put("preview", previewObj);
+            bodyObj.put("thumbnail", thumbnailObj);
+            bodyObj.put("raw", rawObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return bodyObj;
+    }
+
+    public static JSONObject wrapperFileSendMessageJSONWithoutTmpId(@NonNull JSONObject bodyObj, MsgContentRegularFile msgContentRegularFile) {
+        try {
+            bodyObj.put("type", "file/regular-file");
+            bodyObj.put("category", CommunicationUtils.getChatFileCategory(msgContentRegularFile.getName()));
+            bodyObj.put("name", msgContentRegularFile.getName());
+            bodyObj.put("size", msgContentRegularFile.getSize());
+            bodyObj.put("media", msgContentRegularFile.getMedia());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return bodyObj;
+    }
+
+    public static boolean currentUserConversationSilent(Conversation conversation){
+        String currentUid = BaseApplication.getInstance().getUid();
+        return conversation.isSilent() && !conversation.getOwner().equals(currentUid) &&
+                !conversation.getAdministratorList().contains(currentUid);
+    }
 }

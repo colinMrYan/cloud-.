@@ -195,6 +195,40 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_conversation_member_manager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/text_ll_color_nor"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_member_manager_title_transfer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:text="@string/channel_group_member_manager"
+                    android:textColor="?attr/text_color_e1"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <View
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_member_manager_title_transfer" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
                 android:id="@+id/rl_conversation_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -476,33 +510,6 @@
                 <View
                     style="@style/divide_style"
                     android:layout_below="@id/tv_conversation_report" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_group_transfer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="?attr/text_ll_color_nor"
-                android:onClick="onClick"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_group_transfer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:paddingTop="11dp"
-                    android:paddingBottom="11dp"
-                    android:text="@string/transfer_group"
-                    android:textColor="?attr/text_color_e1"
-                    android:textSize="16sp" />
-
-                <View
-                    style="@style/divide_style"
-                    android:layout_below="@id/tv_group_transfer"
-                    android:layout_marginLeft="16dp" />
             </RelativeLayout>
 
             <RelativeLayout

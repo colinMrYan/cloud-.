@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/content_bg"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg_1c">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/channel_group_member_manager"
+            android:textColor="?attr/header_text_color_e1"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/rl_member_manager_transfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/text_ll_color_nor"
+            android:onClick="onClick"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:id="@+id/tv_member_manager_title_transfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="@string/member_manager_transfer_owner"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_arrow_right" />
+
+            <View
+                style="@style/divide_style"
+                android:layout_below="@id/tv_member_manager_title_transfer" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_member_manager_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/text_ll_color_nor"
+            android:onClick="onClick"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:id="@+id/tv_member_manager_manager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="@string/member_manager_name"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_arrow_right" />
+
+            <View
+                style="@style/divide_style"
+                android:layout_below="@id/tv_member_manager_manager" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_member_manager_forbidden"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="?attr/text_ll_color_nor"
+            android:onClick="onClick"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:id="@+id/tv_member_manager_forbidden"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="70dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="@string/member_manager_forbidden_speak"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch_member_manager_forbidden"
+                android:layout_width="51dp"
+                android:layout_height="31dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_arrow_right"
+                app:thumbTint="@color/white"
+                app:track="@drawable/selector_switch_track" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

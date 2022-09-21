@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -23,20 +22,6 @@
         android:textColor="?attr/text_color_33_66"
         android:textSize="13sp" />
 
-    <com.inspur.emmcloud.widget.TextViewFixTouchConsume
-        android:id="@+id/multi_message_item_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/multi_message_item_name"
-        android:layout_gravity="center_vertical"
-        android:lineSpacingMultiplier="1.2"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:layout_toRightOf="@id/multi_message_item_header"
-        android:textColor="?attr/text_color"
-        android:textSize="16sp" />
-
     <TextView
         android:id="@+id/multi_message_item_time"
         android:layout_width="wrap_content"
@@ -51,71 +36,13 @@
         android:textSize="13sp" />
 
     <RelativeLayout
-        android:id="@+id/multi_message_item_ll_image"
-        android:layout_toRightOf="@id/multi_message_item_header"
-        android:layout_below="@id/multi_message_item_name"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <com.itheima.roundedimageview.RoundedImageView
-            android:id="@+id/content_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:tint="?attr/color_d8_30"
-            app:riv_corner_radius="6dp"
-            app:riv_oval="false" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/multi_message_item_ll_file"
+        android:id="@+id/multi_message_item_content_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/multi_message_item_header"
+        android:layout_height="match_parent"
         android:layout_below="@id/multi_message_item_name"
-        android:layout_gravity="center_vertical"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="16dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp">
-
-        <ImageView
-            android:id="@+id/iv_file_icon"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginBottom="10dp"
-            android:scaleType="fitXY" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_file_icon">
-
-            <TextView
-                android:id="@+id/tv_file_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1"
-                android:maxLines="3"
-                android:textColor="?attr/text_color_e1"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/tv_file_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_file_name"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/color_text_common_level_two"
-                android:textSize="12sp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
+        android:layout_toRightOf="@id/multi_message_item_header" />
 </RelativeLayout>

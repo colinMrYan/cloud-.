@@ -24,6 +24,15 @@
             android:layout_alignParentBottom="true"
             android:src="@drawable/icon_chat_owner"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_chat_members_administrator"
+            android:layout_width="53dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_chat_administrator_tag"
+            android:visibility="gone" />
     </com.inspur.emmcloud.baselib.widget.SquareLayout>
 
     <TextView

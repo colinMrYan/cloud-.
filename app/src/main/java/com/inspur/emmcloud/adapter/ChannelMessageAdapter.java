@@ -368,7 +368,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         int sentSize = sentList == null ? 0 : sentList.size();
         int deliveredSize = deliveredList == null ? 0 : deliveredList.size();
         int allSize = readSize + sentSize + deliveredSize;
-        if (allSize == 0 || !uiMessage.getMessage().getFromUser().equals(uid)) {
+        if (allSize == 0 || !uiMessage.getMessage().getFromUser().equals(uid) || uiMessage.getSendStatus() != 1) {
             holder.unreadText.setVisibility(View.GONE);
         } else if (allSize == 1) {
             holder.unreadText.setVisibility(View.VISIBLE);
@@ -441,7 +441,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      */
     private void showUserName(ViewHolder holder, UIMessage UIMessage) {
-        // TODO Auto-generated method stub
         if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
                 MyApplication.getInstance().getUid()) && StringUtils.isBlank(UIMessage.getMessage().getRecallFrom())) {
             holder.senderNameText.setVisibility(View.VISIBLE);
@@ -532,17 +531,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             mSelectedMessages.clear();
         }
         mMultipleSelect = b;
-        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     private boolean supportMultiSelect(UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         String type = message.getType();
-        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+        if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) || uiMessage.getSendStatus() != 1) {
             return false;
         }
-        if (type.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || type.equals(Message.MESSAGE_TYPE_FILE_REGULAR_FILE)
-                || type.equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+        boolean messageTypeSupport = Message.MESSAGE_TYPE_MEDIA_IMAGE.equals(type) || Message.MESSAGE_TYPE_FILE_REGULAR_FILE.equals(type)
+                || Message.MESSAGE_TYPE_TEXT_MARKDOWN.equals(type) || Message.MESSAGE_TYPE_EXTENDED_LINKS.equals(type)
+                || Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(type);
+        if (messageTypeSupport) {
             return true;
         }
         if (type.equals(Message.MESSAGE_TYPE_TEXT_PLAIN)) {

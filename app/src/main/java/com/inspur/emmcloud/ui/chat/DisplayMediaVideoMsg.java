@@ -203,7 +203,7 @@ public class DisplayMediaVideoMsg {
         return true;
     }
 
-    private static String formattedTime(long second) {
+    public static String formattedTime(long second) {
         String formatTime;
         long h, m, s;
         h = second / 3600;

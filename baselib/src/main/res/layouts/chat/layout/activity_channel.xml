@@ -186,6 +186,23 @@
         android:layout_height="wrap_content"
         android:background="?attr/text_ll_color_nor" />
 
+    <LinearLayout
+        android:id="@+id/silent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:background="?attr/text_ll_color_nor">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="?attr/text_color"
+            android:textSize="17sp"
+            android:text="@string/member_manager_forbidden_speak"/>
+    </LinearLayout>
+
 <!--    后续单独封装通用布局-->
     <LinearLayout
         android:id="@+id/bottom_bar"

@@ -561,6 +561,25 @@ public class APIUri {
         return getECMChatConversationBaseUrl() + "/channel/" + id + "/visuality";
     }
 
+
+    /**
+     * 群管理员
+     * @param cid 频道id
+     * @return 群管理员url
+     */
+    public static String getConversationAdministrator(String cid) {
+        return getECMChatUrl() + "/rest/channel/group/" + cid + "/admin";
+    }
+
+    /**
+     * 群组全员禁言设置url
+     * @param cid 频道id
+     * @return 群组全员禁言设置url
+     */
+    public static String getConversationGroupSilent(String cid) {
+        return getECMChatUrl() + "/rest/channel/group/" + cid + "/chat/silent";
+    }
+
     /**
      * 设置会话是否消息免打扰
      *

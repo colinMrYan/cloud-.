@@ -37,7 +37,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(30)
+                .setDbVersion(31)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -164,6 +164,13 @@ public class DbCacheUtils {
                             if (oldVersion < 30) {
                                 if (tableIsExist(db, "Conversation")) {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN serviceId TEXT DEFAULT ''");
+                                }
+                            }
+
+                            if (oldVersion < 31) {
+                                if (tableIsExist(db, "Conversation")) {
+                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN administrators TEXT DEFAULT ''");
+                                    db.execNonQuery("ALTER TABLE Conversation ADD COLUMN silent INTEGER DEFAULT 0 ");
                                 }
                             }
                         } catch (Exception e) {

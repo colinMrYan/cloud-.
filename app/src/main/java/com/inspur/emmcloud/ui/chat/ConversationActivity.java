@@ -7,7 +7,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,7 +80,6 @@ import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
-import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
@@ -103,9 +101,7 @@ import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuItem;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationReportActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -131,7 +127,6 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.ECMChatInputMenuCallback;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.tencent.rtmp.TXLiveConstants;
-import com.tencent.rtmp.TXVodPlayer;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,6 +149,9 @@ import butterknife.BindView;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
 import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
 import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
 import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
 import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
@@ -205,6 +203,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @BindView(R.id.multi_transfer_all_ll)
     LinearLayout multiTransferAll;
+
+    @BindView(R.id.silent_layout)
+    LinearLayout silentLayout;
 
     @BindView(R.id.btn_conversation_unread)
     CustomRoundButton unreadRoundBtn;
@@ -290,7 +291,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
     @Override
     protected void onNewIntent(Intent intent) {
-        // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
         initConversationInfo();
@@ -418,7 +418,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
-                // TODO Auto-generated method stub
                 sendMessageWithText(content, false, mentionsMap);
             }
 
@@ -485,6 +484,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
+        updateSilentState();
     }
 
     /**
@@ -795,7 +795,6 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uiMessage
      */
     private void resendMessage(UIMessage uiMessage) {
-        // TODO Auto-generated method stub
 //        Message message = uiMessage.getMessage();
         String messageType = uiMessage.getMessage().getType();
         if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && ((messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
@@ -1122,6 +1121,14 @@ public class ConversationActivity extends ConversationBaseActivity {
                         default:
                             break;
                     }
+                    conversation.setSilent(data.getBooleanExtra(INTENT_SILENT, false));
+                    if (data.hasExtra(INTENT_SELECT_OWNER)) {
+                        conversation.setOwner(data.getStringExtra(INTENT_SELECT_OWNER));
+                    }
+                    if (data.hasExtra(INTENT_ADMIN_LIST)) {
+                        conversation.setAdministrators(data.getStringExtra(INTENT_ADMIN_LIST));
+                    }
+                    updateSilentState();
                     break;
 //                case PictureConfig.CHOOSE_REQUEST:
                 case REQUEST_GELLARY:
@@ -1664,6 +1671,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 Conversation newConversation = ((Conversation) simpleEventMessage.getMessageObj());
+                if (!TextUtils.equals(newConversation.getId(), conversation.getId())) {
+                    break;
+                }
                 conversation.setName(newConversation.getName());
                 headerText.setText(newConversation.getName());
                 if (conversation.getMemberList().size() != newConversation.getMemberList().size()) {
@@ -1686,6 +1696,44 @@ public class ConversationActivity extends ConversationBaseActivity {
                 adapter.setMessageList(uiMessageList);
                 adapter.notifyItemInserted(uiMessageList.size() - 1);
                 msgListView.MoveToPosition(uiMessageList.size() - 1);
+                break;
+            case Constant.EVENTBUS_TAG_ENABLE_SILENT:
+                conversation.setSilent(true);
+                updateSilentState();
+                break;
+            case Constant.EVENTBUS_TAG_DISABLE_SILENT:
+                conversation.setSilent(false);
+                updateSilentState();
+                break;
+            case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:
+                String addJsonParam = (String) simpleEventMessage.getMessageObj();
+                try {
+                    JSONObject jsonObject = new JSONObject(addJsonParam);
+                    if (cid.equals(jsonObject.optString("channelId"))) {
+                        ArrayList<String> originAdminList = conversation.getAdministratorList();
+                        originAdminList.addAll(JSONUtils.JSONArray2List(jsonObject.optJSONArray("addedAdministrators"), new ArrayList<String>()));
+                        conversation.setAdministratorList(originAdminList);
+                        updateSilentState();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Constant.EVENTBUS_TAG_ADMINISTRATOR_REMOVE:
+                String removeJsonParam = (String) simpleEventMessage.getMessageObj();
+                try {
+                    JSONObject jsonObject = new JSONObject(removeJsonParam);
+                    if (cid.equals(jsonObject.optString("channelId"))) {
+                        ArrayList<String> originAdminList = conversation.getAdministratorList();
+                        originAdminList.removeAll(JSONUtils.JSONArray2List(jsonObject.optJSONArray("removedAdministrators"), new ArrayList<String>()));
+                        conversation.setAdministratorList(originAdminList);
+                        updateSilentState();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
                 break;
 
         }
@@ -1751,6 +1799,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             } else {
+                MessageSendErrorHandler.handlerErrorMessage(this, eventMessage);
                 //此方法中有对于这条消息的判断，如果非此频道的消息则不会有任何处理
                 setMessageSendFailStatus(String.valueOf(eventMessage.getId()));
             }
@@ -1760,7 +1809,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO Auto-generated method stub
         if (chatInputMenu.isAddMenuLayoutShow()) {
             chatInputMenu.hideAddMenuLayout();
             return;
@@ -1999,6 +2047,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发消息
      */
     private void transmitMsg(String cid, UIMessage uiMessage, int multiMessageType) {
+        if (CommunicationUtils.currentUserConversationSilent(conversation)) {
+            ToastUtils.show(getString(R.string.channel_silent_error));
+            return;
+        }
         if (multiMessageType == MultiMessageTransmitUtil.TYPE_MULTI_ITEM_BY_ITEM) {
             transmitMultiMessageItemByItem(cid, adapter.getSelectedMessages());
             return;
@@ -2022,6 +2074,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 transmitLinkMsg(cid, uiMessage);
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                transmitVideoMsg(cid, uiMessage.getMessage());
                 break;
             default:
                 break;
@@ -2065,6 +2120,24 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void transmitLinkMsg(String cid, UIMessage uiMessage) {
         Message fakeMessage = CommunicationUtils.combinLocalExtendedLinksMessageHaveContent(cid, uiMessage.getMessage().getContent());
         sendTransmitMsg(fakeMessage);
+    }
+
+    /**
+     * 转发短视频消息
+     *
+     * @param cid         频道id
+     * @param sendMessage 转发消息
+     */
+    private void transmitVideoMsg(String cid, Message sendMessage) {
+        String path;
+        MsgContentMediaVideo msgContentMediaVideo = sendMessage.getMsgContentMediaVideo();
+        path = msgContentMediaVideo.getMedia();
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            //传image原因为与发送路径一致
+            apiService.transmitFile(path, sendMessage.getChannel(), cid, "image", sendMessage);
+        }
     }
 
     /**
@@ -2169,6 +2242,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     operationIdList.add(R.string.chat_long_click_transmit);
                     operationIdList.add(R.string.chat_long_click_multiple);
                     break;
@@ -2182,14 +2256,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     operationIdList.add(R.string.chat_long_click_reply);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
-                    // TODO: 2022/7/25 视频转发多选
-//                    operationIdList.add(R.string.chat_long_click_transmit);
-//                    operationIdList.add(R.string.chat_long_click_multiple);
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_multiple);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                    break;
-                case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    operationIdList.add(R.string.chat_long_click_transmit);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     if (!LanguageManager.getInstance().isAppLanguageEnglish()) {
@@ -2473,38 +2543,35 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     public void changeViewByMultipleSelect(boolean selecting) {
-        final int firstItem = linearLayoutManager.findFirstVisibleItemPosition();
-        View firstItemView = linearLayoutManager.findViewByPosition(firstItem);
-        final float topOffset = firstItemView == null ? 0 : firstItemView.getTop();
+        msgListView.setKeepPositionOnce(true);
         adapter.toggleMultipleSelect(selecting);
-        msgListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // 利用线程
-                msgListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        linearLayoutManager.scrollToPositionWithOffset(firstItem, (int) topOffset);
 
-                    }
-                });
-                msgListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
         if (selecting) {
             configView.setVisibility(View.GONE);
             robotPhotoImg.setVisibility(View.GONE);
             cancelText.setVisibility(View.VISIBLE);
             bottomBar.setVisibility(View.VISIBLE);
             chatInputMenu.setVisibility(View.GONE);
+            silentLayout.setVisibility(View.GONE);
             findViewById(R.id.ibt_back).setVisibility(View.GONE);
-
         } else {
             cancelText.setVisibility(View.GONE);
             bottomBar.setVisibility(View.GONE);
-            chatInputMenu.setVisibility(View.VISIBLE);
+            updateSilentState();
             setChannelTitle();
             findViewById(R.id.ibt_back).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void updateSilentState() {
+        String selfUid = BaseApplication.getInstance().getUid();
+        if (conversation.isSilent()
+                && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())) {
+            silentLayout.setVisibility(View.VISIBLE);
+            chatInputMenu.setVisibility(View.GONE);
+        } else {
+            chatInputMenu.setVisibility(View.VISIBLE);
+            silentLayout.setVisibility(View.GONE);
         }
     }
 
@@ -2749,6 +2816,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
                     fakeMessage = CommunicationUtils.combineTransmitRegularFileMessage(cid, path, message.getMsgContentAttachmentFile());
                     break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    fakeMessage = CommunicationUtils.combineLocalVideoMessageHaveContent(cid, path, message.getMsgContentMediaVideo());
             }
             sendTransmitMsg(fakeMessage);
         }
