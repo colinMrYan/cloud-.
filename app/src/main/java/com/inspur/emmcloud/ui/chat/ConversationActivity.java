@@ -282,7 +282,14 @@ public class ConversationActivity extends ConversationBaseActivity {
 
                 @Override
                 public void showFunction() {
-                    chatInputMenu.updateVoiceAndMoreLayout(false);
+                    // 阅后即焚、悄悄话设置可见后需要立即刷新界面，等待布局可见后切换软键盘
+                    swipeRefreshLayout.requestLayout();
+                    swipeRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatInputMenu.updateVoiceAndMoreLayout(false);
+                        }
+                    },100);
                 }
             });
         }

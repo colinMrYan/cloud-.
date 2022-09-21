@@ -94,7 +94,6 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         for (String userId : userIds) {
             if (ContactUserCacheUtils.getContactUserByUid(userId) == null) robotIds.add(userId);
         }
-        if (listener != null) listener.showFunction();
         robotIds.add(BaseApplication.getInstance().getUid());
         ArrayList<String> targetUsers = userIds;
         targetUsers.removeAll(robotIds);
@@ -106,6 +105,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         } else {
             setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
         }
+        if (listener != null) listener.showFunction();
         recyclerGridAdapter.setContactUserList(targetUsers);
     }
 
