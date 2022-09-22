@@ -2054,7 +2054,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发消息
      */
     private void transmitMsg(String cid, UIMessage uiMessage, int multiMessageType) {
-        if (CommunicationUtils.currentUserConversationSilent(conversation)) {
+        if (CommunicationUtils.currentUserConversationSilent(conversation) && TextUtils.equals(cid, conversation.getId())) {
             ToastUtils.show(getString(R.string.channel_silent_error));
             return;
         }
