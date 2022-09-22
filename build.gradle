@@ -133,7 +133,8 @@ buildscript {
 
     repositories {
         maven {url  uri('release')}
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         maven {
             credentials {
                 username "MvnRead"
@@ -160,7 +161,8 @@ buildscript {
 allprojects {
     repositories {
         maven {url  uri('../release')}
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         // 金融云 repo
         maven {
             credentials {

@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.web.webview;
 
+import static com.inspur.emmcloud.basemodule.config.MyAppConfig.LOCAL_IMG_CREATE_PATH;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -15,9 +17,14 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Message;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,14 +39,24 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -58,6 +75,7 @@ public class ImpWebChromeClient extends WebChromeClient {
     private View customView;
     private FrameLayout fullscreenContainer;
     private WebChromeClient.CustomViewCallback customViewCallback;
+    private String mCameraPhotoPath = null;
 //    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     public ImpWebChromeClient(Context context, ImpWebView webView, FrameLayout frameLayout) {
@@ -342,22 +360,83 @@ public class ImpWebChromeClient extends WebChromeClient {
                                      ValueCallback<Uri[]> filePathCallback,
                                      FileChooserParams fileChooserParams) {
         mUploadCallbackAboveL = filePathCallback;
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        String type = "*/*";
-        if (fileChooserParams != null
-                && fileChooserParams.getAcceptTypes() != null
-                && fileChooserParams.getAcceptTypes().length > 0) {
-            if (!TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
-                type = fileChooserParams.getAcceptTypes()[0];
+        // 针对广水添加相机和相册选项
+        showFileChooser();
+        return true;
+//        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+//        i.addCategory(Intent.CATEGORY_OPENABLE);
+//        String type = "*/*";
+//        if (fileChooserParams != null
+//                && fileChooserParams.getAcceptTypes() != null
+//                && fileChooserParams.getAcceptTypes().length > 0) {
+//            if (!TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
+//                type = fileChooserParams.getAcceptTypes()[0];
+//            }
+//        }
+//        i.setType(type);
+//
+//        if (mWebView.getImpCallBackInterface() != null) {
+//            mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+//        }
+    }
+
+    private void showFileChooser() {
+        // 指定拍照存储位置的方式调起相机
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            Uri photoFile;
+            try {
+                File file = createImageFile();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    photoFile = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
+                    if (photoFile != null) {
+                        mCameraPhotoPath = "file:" + file.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+                    } else {
+                        takePictureIntent = null;
+                    }
+                } else {
+                    String path = LOCAL_IMG_CREATE_PATH;
+                    File mediaStorageDir = new File(path);
+                    photoFile = Uri.fromFile(mediaStorageDir);
+                    if (photoFile != null) {
+                        mCameraPhotoPath = mediaStorageDir.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        i.setType(type);
-
-        if (mWebView.getImpCallBackInterface() != null) {
-            mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "File Browser"), FILE_CHOOSER_RESULT_CODE);
+        Intent contentSelectionIntent = new Intent(Intent.ACTION_PICK);
+        contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        contentSelectionIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        Intent[] intentArray;
+        if (takePictureIntent != null) {
+            intentArray = new Intent[]{takePictureIntent};
+        } else {
+            intentArray = new Intent[2];
         }
-        return true;
+        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+        chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+        if (mWebView.getImpCallBackInterface() != null) {
+            mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(chooserIntent, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String dirPath = LOCAL_IMG_CREATE_PATH;
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return new File(dirPath, System.currentTimeMillis() + ".png");
     }
 
     public ValueCallback<Uri> getValueCallback() {
@@ -366,6 +445,14 @@ public class ImpWebChromeClient extends WebChromeClient {
 
     public ValueCallback<Uri[]> getValueCallbackAboveL() {
         return mUploadCallbackAboveL;
+    }
+
+    public void setmCameraPhotoPath(String mCameraPhotoPath) {
+        this.mCameraPhotoPath = mCameraPhotoPath;
+    }
+
+    public String getmCameraPhotoPath() {
+        return mCameraPhotoPath;
     }
 
     /*

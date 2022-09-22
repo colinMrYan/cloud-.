@@ -2,6 +2,7 @@ package com.inspur.emmcloud.web.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -81,6 +82,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -856,25 +858,58 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
-                    : data.getData();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
                 ValueCallback<Uri[]> mUploadCallbackAboveL = webView
                         .getWebChromeClient().getValueCallbackAboveL();
                 if (null == mUploadCallbackAboveL) {
                     return;
                 }
-                if (uri == null) {
+                try {
+                    Integer count = 1;
+                    ClipData images = null;
+                    if (data != null) {
+                        images = data.getClipData();
+                    }
+                    if (images == null && data != null && data.getDataString() != null) {
+                        count = data.getDataString().length();
+                    } else if (images != null) {
+                        count = images.getItemCount();
+                    }
+                    Uri[] results = new Uri[count];
+                    if (resultCode == Activity.RESULT_OK) {
+                        File file = null;
+                        String mCameraPhotoPath = webView.getWebChromeClient().getmCameraPhotoPath();
+                        if (!StringUtils.isEmpty(mCameraPhotoPath)) {
+                            String file_path = mCameraPhotoPath.replace("file:", "");
+                            file = new File(file_path);
+                        }
+                        if (file != null && file.exists()) {
+                            // If there is not data, then we may have taken a photo
+                            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                            webView.getWebChromeClient().setmCameraPhotoPath(null);
+                        } else if (data != null && data.getClipData() == null) {
+                            results = new Uri[]{Uri.parse(data.getDataString())};
+                        } else {
+                            if (images != null) {
+                                for (int i = 0; i < images.getItemCount(); i++) {
+                                    results[i] = images.getItemAt(i).getUri();
+                                }
+                            }
+                        }
+                        mUploadCallbackAboveL.onReceiveValue(results);
+                    } else {
+                        mUploadCallbackAboveL.onReceiveValue(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //失败也要回调，否则无法再次执行
                     mUploadCallbackAboveL.onReceiveValue(null);
-                } else {
-                    Uri[] uris = new Uri[]{uri};
-                    mUploadCallbackAboveL.onReceiveValue(uris);
                 }
                 mUploadCallbackAboveL = null;
             } else {
+                Uri uri = data == null || resultCode != Activity.RESULT_OK ? null
+                        : data.getData();
                 ValueCallback<Uri> mUploadMessage = webView
                         .getWebChromeClient().getValueCallback();
                 if (null == mUploadMessage) {
