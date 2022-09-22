@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.web.webview;
 
+import static android.Manifest.permission.CAMERA;
 import static com.inspur.emmcloud.basemodule.config.MyAppConfig.LOCAL_IMG_CREATE_PATH;
 
 import android.annotation.SuppressLint;
@@ -14,6 +15,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +24,8 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -39,12 +43,15 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
@@ -380,52 +387,74 @@ public class ImpWebChromeClient extends WebChromeClient {
 //        }
     }
 
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(getActivity(), CAMERA) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, 10000);
+    }
+
     private void showFileChooser() {
-        // 指定拍照存储位置的方式调起相机
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            Uri photoFile;
-            try {
-                File file = createImageFile();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    photoFile = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
-                    if (photoFile != null) {
-                        mCameraPhotoPath = "file:" + file.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+        if (checkPermission()) {
+            // 指定拍照存储位置的方式调起相机
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                Uri photoFile;
+                try {
+                    File file = createImageFile();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        photoFile = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", file);
+                        if (photoFile != null) {
+                            mCameraPhotoPath = "file:" + file.getAbsolutePath();
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+                        } else {
+                            takePictureIntent = null;
+                        }
                     } else {
-                        takePictureIntent = null;
+                        String path = LOCAL_IMG_CREATE_PATH;
+                        File mediaStorageDir = new File(path);
+                        photoFile = Uri.fromFile(mediaStorageDir);
+                        if (photoFile != null) {
+                            mCameraPhotoPath = mediaStorageDir.getAbsolutePath();
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+                        } else {
+                            takePictureIntent = null;
+                        }
                     }
-                } else {
-                    String path = LOCAL_IMG_CREATE_PATH;
-                    File mediaStorageDir = new File(path);
-                    photoFile = Uri.fromFile(mediaStorageDir);
-                    if (photoFile != null) {
-                        mCameraPhotoPath = mediaStorageDir.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
-                    } else {
-                        takePictureIntent = null;
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        Intent contentSelectionIntent = new Intent(Intent.ACTION_PICK);
-        contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        contentSelectionIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        Intent[] intentArray;
-        if (takePictureIntent != null) {
-            intentArray = new Intent[]{takePictureIntent};
+            Intent contentSelectionIntent = new Intent(Intent.ACTION_PICK);
+            contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            contentSelectionIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            Intent[] intentArray;
+            if (takePictureIntent != null) {
+                intentArray = new Intent[]{takePictureIntent};
+            } else {
+                intentArray = new Intent[2];
+            }
+            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+            if (mWebView.getImpCallBackInterface() != null) {
+                mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(chooserIntent, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+            }
         } else {
-            intentArray = new Intent[2];
-        }
-        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-        chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-        if (mWebView.getImpCallBackInterface() != null) {
-            mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(chooserIntent, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    showFileChooser();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                }
+            });
         }
     }
 
