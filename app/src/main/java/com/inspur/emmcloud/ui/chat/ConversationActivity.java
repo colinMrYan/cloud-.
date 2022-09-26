@@ -57,13 +57,13 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
 import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
+import com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnKeyValueResultCallbackListener;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SdkVersionUtils;
-import com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
@@ -81,10 +81,10 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
-import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
-import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
@@ -94,6 +94,7 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
+import com.inspur.emmcloud.componentservice.communication.RecentTransmitModel;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.schedule.ScheduleService;
@@ -101,9 +102,9 @@ import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
-import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -1085,6 +1086,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     }
                     changeViewByMultipleSelect(false);
+                    // 保存最近转发到数据库
+
                     // 多人消息转发后，communicationFragment列表可能更新不全，原因暂未查明。先发送event刷新list解决此问题
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_MULTI_MESSAGE_SEND, ""));
 
@@ -2102,10 +2105,12 @@ public class ConversationActivity extends ConversationBaseActivity {
             MessageCacheUtil.saveMessage(ConversationActivity.this, fakeMessage);
             MessageSendManager.getInstance().sendMessage(fakeMessage);
             ToastUtils.show(R.string.chat_message_send_success);
+            // 保存最近转发到数据库
+            ConversationCacheUtils.saveRecentTransmitConversation(this, new RecentTransmitModel
+                    (fakeMessage.getChannel(), "", "", "", System.currentTimeMillis()));
         } else {
             ToastUtils.show(R.string.chat_message_send_fail);
         }
-
     }
 
     /**
@@ -2361,16 +2366,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                 view.invalidate();
                 int width = view.getWidth();
                 int height = view.getHeight();
-                Intent intent = new Intent(context,
-                        ImagePagerActivity.class);
+                Intent intent = new Intent(context, ImagePagerNewActivity.class);
                 List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-                intent.putExtra(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
+                intent.putExtra(ImagePagerNewActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerNewActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
+                intent.putExtra(ImagePagerNewActivity.PHOTO_SELECT_X_TAG, location[0]);
+                intent.putExtra(ImagePagerNewActivity.PHOTO_SELECT_Y_TAG, location[1]);
+                intent.putExtra(ImagePagerNewActivity.PHOTO_SELECT_W_TAG, width);
+                intent.putExtra(ImagePagerNewActivity.PHOTO_SELECT_H_TAG, height);
+//                 图片查看页显示更多按钮则传true
+                intent.putExtra(ImagePagerNewActivity.PHOTO_SHOW_MORE, true);
+                intent.putExtra(ImagePagerNewActivity.EXTRA_CHANNEL_ID, cid);
                 context.startActivity(intent);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:

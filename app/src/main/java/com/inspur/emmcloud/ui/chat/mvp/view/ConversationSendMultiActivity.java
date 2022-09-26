@@ -37,6 +37,7 @@ import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationSearchPresenter;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ShareUtil;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import org.json.JSONObject;
 
@@ -66,6 +67,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     NoScrollGridView multiSelectGv;
     ConversationSendMultiAdapter sendMoreAdapter;
     List<Conversation> list = new ArrayList<>();
+    List<Conversation> recentList = new ArrayList<>(); // 最近转发列表
     String shareContent;
     private String uri;
     private Bundle extras;
@@ -134,16 +136,28 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
         multiSelectGv.setAdapter(selectHeadAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
+
+        // 获取最近转发
+        recentList = ConversationCacheUtils.getRecentTransmitIdList(this);
+        if (recentList.size() > 0) {
+            // null代表标题 最近转发
+            list.add(0, null);
+            list.addAll(0, recentList);
+            // 添加标题，最近聊天
+            list.add(0, null);
+        }
+
         sendMoreAdapter = new ConversationSendMultiAdapter(getActivity(), list);
         sendMoreAdapter.setAdapterListener(new ConversationSendMultiAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Conversation conversation = list.get(position);
-                // 单选
                 if (!isSelectMore) {
+                    // 单选
                     searchModel = conversation.conversation2SearchModel();
                     ShareUtil.share(ConversationSendMultiActivity.this, searchModel, shareContent, isWebShare, mMultiMessageType);
                 } else {
+                    // 多选
                     SearchModel searchModel = conversation.conversation2SearchModel();
                     // 转换成统一bean：已选list可能包含会话，也可能包含联系人
                     String contactId = "";

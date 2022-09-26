@@ -100,6 +100,7 @@
     <attr name="color_stroke_46_00" format="reference" />
     <attr name="color_stroke_46_dd" format="reference" />
     <attr name="text_color_e1_66" format="reference" />
+    <attr name="text_color_e6_1a" format="reference" />
     <attr name="color_divider_1c_dd" format="reference" />
     <attr name="schedule_event_share_ic" format="reference" />
     <attr name="schedule_event_chat_ic" format="reference" />
@@ -117,6 +118,13 @@
     <attr name="ic_chat_input_keyboards" format="reference" />
     <attr name="multi_transfer_single_icon" format="reference" />
     <attr name="multi_transfer_all_icon" format="reference" />
+    <attr name="color_tran90_1b_ff" format="reference" />
+    <attr name="color_33_d1" format="reference" />
+    <attr name="color_33_ff" format="reference" />
+    <attr name="color_99_66" format="reference" />
+    <attr name="color_99_87" format="reference" />
+    <attr name="color_f1_11" format="reference|color" />
+    <attr name="color_f8_12" format="reference|color" />
     <attr name="color_ff_33" format="reference|color" />
     <attr name="color_ff_1c" format="reference|color" />
     <attr name="color_99_b3" format="reference|color" />

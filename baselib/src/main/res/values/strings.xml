@@ -375,6 +375,7 @@
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_multiple">多选</string>
     <string name="chat_long_click_transmit">转发</string>
+    <string name="transmit_operate">转发给</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
@@ -1422,5 +1423,10 @@
         <item>高</item>
     </string-array>
 
+    <string name="transmit_to_friends">发送给朋友</string>
+    <string name="save_img">保存图片</string>
+    <string name="location_to_chat">定位到聊天位置</string>
 
+    <string name="recent_transmit">最近转发</string>
+    <string name="recent_conversation">最近聊天</string>
 </resources>

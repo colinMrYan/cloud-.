@@ -278,7 +278,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         ArrayList<String> urlList = new ArrayList<>();
         urlList.add(url);
         Intent intent = new Intent(getApplicationContext(),
-                ImagePagerActivity.class);
+                ImagePagerNewActivity.class);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);

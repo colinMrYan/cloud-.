@@ -35,6 +35,7 @@
 
     <color name="mark_down_url_read">#551a8b</color>
     <color name="mark_down_url_read_95">#95B0C5</color>
+    <color name="color_1a">#1A1A1A</color>
     <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
     <color name="content_bg_level_two">#f6f6f6</color>
@@ -213,8 +214,14 @@
     <color name="color_212433">#212433</color>
     <color name="color_cc">#cccccc</color>
     <color name="color_3e">#3E4A59</color>
+    <color name="color_tran90_1b">#f21B1B1B</color>
+    <color name="color_tran90_ff">#f2FFFFFF</color>
+    <color name="color_d1">#D1D1D1</color>
 
     <color name="bg_color_layer_layer">#E6E6E6</color>
     <color name="bg_color_layer_layer_dark">#4D4D4D</color>
+    <color name="color_f1">#F1F2F5</color>
+    <color name="color_12">#121212</color>
+    <color name="color_87">#878787</color>
 
 </resources>

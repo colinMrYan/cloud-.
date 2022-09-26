@@ -109,5 +109,4 @@
         android:background="?attr/content_bg"
         android:divider="@null"
         android:dividerHeight="0dp" />
-
 </LinearLayout>

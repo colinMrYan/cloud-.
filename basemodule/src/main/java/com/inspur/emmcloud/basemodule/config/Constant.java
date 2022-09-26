@@ -120,6 +120,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE = "tag_current_channel_command_batch_message";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
+    public static final String EVENTBUS_TAG_ON_PHOTO_LONG = "tag_on_photo_long";
     public static final String EVENTBUS_TAG_ON_PHOTO_CLOSE = "tag_on_photo_close";
     //频道本身属性发生变化（非消息导致）
     public static final String EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED = "tag_conversation_self_data_changed";
@@ -286,6 +287,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER_NEW = "/communication/ImagePagerNewActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_SHARE_FILE = "/communication/ShareFilesActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER_DEL = "/communication/ChannelMembersDelActivity";
     public static final String AROUTER_CLASS_CONVERSATION = "/communication/ConversationActivity";
