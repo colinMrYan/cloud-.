@@ -57,7 +57,7 @@ public class MessageMultiBottomDialog extends Dialog {
         int screenHeight = dm.heightPixels;
         params.width = screenWidth;
 //        params.width = Math.min(screenWidth, screenHeight);
-        params.dimAmount = 0.31f;
+        params.dimAmount = 0.40f;
         getWindow().setAttributes(params);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         setCanceledOnTouchOutside(true);

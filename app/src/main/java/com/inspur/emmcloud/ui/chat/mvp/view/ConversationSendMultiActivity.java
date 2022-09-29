@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -15,7 +14,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
@@ -30,8 +28,8 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil;
 import com.inspur.emmcloud.ui.chat.SearchActivity;
 import com.inspur.emmcloud.ui.chat.SearchSendMultiActivity;
+import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendHeadAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiAdapter;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiHeadAdapter;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversionSearchContract;
 import com.inspur.emmcloud.ui.chat.mvp.presenter.ConversationSearchPresenter;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -44,7 +42,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,8 +60,8 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     TextView selectMoreTv;
     @BindView(R.id.tv_ok)
     TextView okTv;
-    @BindView(R.id.gv_multi_select)
-    NoScrollGridView multiSelectGv;
+    @BindView(R.id.rv_select)
+    RecyclerView selectRv;
     ConversationSendMultiAdapter sendMoreAdapter;
     List<Conversation> list = new ArrayList<>();
     List<Conversation> recentList = new ArrayList<>(); // 最近转发列表
@@ -85,7 +82,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     // 多选相关参数
     private boolean isSelectMore = false; // 默认单选
     private List<MessageForwardMultiBean> selectList = new ArrayList<>();
-    private ConversationSendMultiHeadAdapter selectHeadAdapter;
+    private ConversationSendHeadAdapter headAdapter;
 
     public ConversationSendMultiActivity() {
     }
@@ -123,17 +120,20 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
         mPresenter.attachView(this);
         mPresenter.getTransmitConversationData();
         // 多选时顶部已选人/群组列表初始化
-        selectHeadAdapter = new ConversationSendMultiHeadAdapter(this, selectList);
-        multiSelectGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        headAdapter = new ConversationSendHeadAdapter(this, selectList);
+        headAdapter.setHeadItemClickListener(new ConversationSendHeadAdapter.HeadAdapterListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 selectList.remove(position);
                 notifySelectText();
                 sendMoreAdapter.setSelectList(selectList);
-                showMultiSelectHeadView();
+                showMultiSelectHeadView(false, position);
             }
         });
-        multiSelectGv.setAdapter(selectHeadAdapter);
+        LinearLayoutManager headManager = new LinearLayoutManager(getActivity());
+        headManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        selectRv.setLayoutManager(headManager);
+        selectRv.setAdapter(headAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
 
@@ -178,10 +178,12 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
                             searchModel.getName(), searchModel.getType(), searchModel.getIcon(), contactId);
                     if (selectList.contains(selectBean)) {
                         // 已选，则从列表移除
+                        int removePosition = selectList.indexOf(selectBean);
                         selectList.remove(selectBean);
                         notifySelectText();
                         sendMoreAdapter.setSelectList(selectList);
-                        showMultiSelectHeadView();
+                        showMultiSelectHeadView(false, removePosition);
+
                     } else {
                         // 未选，则添加到列表
                         // 多选最多9人
@@ -192,7 +194,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
                         selectList.add(selectBean);
                         notifySelectText();
                         sendMoreAdapter.setSelectList(selectList);
-                        showMultiSelectHeadView();
+                        showMultiSelectHeadView(true, -1);
                     }
                 }
 
@@ -269,16 +271,27 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
         isSelectMore = !isSelectMore;
         // 传入adapter多选还是单选
         sendMoreAdapter.notifySelectMode(isSelectMore);
-        showMultiSelectHeadView();
+        showMultiSelectHeadView(true, -1); // 传true或false都行
     }
 
     // 顶部多选头像view是否可见
-    private void showMultiSelectHeadView() {
+    private void showMultiSelectHeadView(boolean isInsert, int removePosition) {
         if (selectList.size() > 0) {
-            multiSelectGv.setVisibility(View.VISIBLE);
-            selectHeadAdapter.setSelectHead(selectList);
+            selectRv.setVisibility(View.VISIBLE);
+            if (isInsert) {
+                // 增加条目
+                if (selectList.size() == 1) {
+                    headAdapter.notifyDataSetChanged();
+                } else {
+                    headAdapter.notifyItemInserted(selectList.size());
+                    selectRv.smoothScrollToPosition(selectList.size());
+                }
+            } else {
+                // 删除条目
+                headAdapter.notifyItemRemoved(removePosition);
+            }
         } else {
-            multiSelectGv.setVisibility(View.GONE);
+            selectRv.setVisibility(View.GONE);
         }
     }
 
@@ -302,10 +315,11 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
 
             if (selectList.contains(selectBean)) {
                 // 已选，则从列表移除
+                int position = selectList.indexOf(selectBean);
                 selectList.remove(selectBean);
                 notifySelectText();
                 sendMoreAdapter.setSelectList(selectList);
-                showMultiSelectHeadView();
+                showMultiSelectHeadView(false, position);
             } else {
                 // 未选，则添加到列表
                 // 多选最多9人
@@ -317,18 +331,20 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
                 if (selectBean.getType().equals(SearchModel.TYPE_USER)) {
                     for (int i = 0; i < list.size(); i++) {
                         Conversation conversation = list.get(i);
-                        int contactIndex = conversation.getMemberList().indexOf(selectBean.getContactId());
-                        if (conversation.getType().equals(Conversation.TYPE_DIRECT) && contactIndex >= 0) {
-                            selectBean.setConversationId(conversation.getId());
-                            // 聊天已存在则将type换成direct，就不需要再创建聊天了
-                            selectBean.setType(conversation.getType());
+                        if (conversation != null) {
+                            int contactIndex = conversation.getMemberList().indexOf(selectBean.getContactId());
+                            if (conversation.getType().equals(Conversation.TYPE_DIRECT) && contactIndex >= 0) {
+                                selectBean.setConversationId(conversation.getId());
+                                // 聊天已存在则将type换成direct，就不需要再创建聊天了
+                                selectBean.setType(conversation.getType());
+                            }
                         }
                     }
                 }
                 selectList.add(selectBean);
                 notifySelectText();
                 sendMoreAdapter.setSelectList(selectList);
-                showMultiSelectHeadView();
+                showMultiSelectHeadView(true, -1);
             }
         }
     }

@@ -214,8 +214,8 @@
     <color name="color_212433">#212433</color>
     <color name="color_cc">#cccccc</color>
     <color name="color_3e">#3E4A59</color>
-    <color name="color_tran90_1b">#f21B1B1B</color>
-    <color name="color_tran90_ff">#f2FFFFFF</color>
+    <color name="color_tran90_1b">#E61B1B1B</color>
+    <color name="color_tran90_ff">#E6FFFFFF</color>
     <color name="color_d1">#D1D1D1</color>
 
     <color name="bg_color_layer_layer">#E6E6E6</color>

@@ -567,6 +567,7 @@ public class ImagePagerNewActivity extends BaseFragmentActivity {
                 dialog.dismiss();
             }
         }).build().show();
+        showOperateLl();
     }
 
     private void showTransmitDialog(Conversation conversation) {

@@ -189,7 +189,7 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
                 int width = view.getWidth();
                 int height = view.getHeight();
                 Intent intent = new Intent(context,
-                        ImagePagerActivity.class);
+                        ImagePagerNewActivity.class);
                 Message message = item.transferMessage(cid);
                 List<Message> imgTypeMsgList = new ArrayList<>();
                 imgTypeMsgList.add(message);
