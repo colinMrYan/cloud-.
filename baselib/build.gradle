@@ -103,6 +103,8 @@ dependencies {
     api deps.support.v7.cardView
     api deps.support.annotations
     api deps.support.multidex
+    implementation files('libs/jcore-android-3.3.5.jar')
+    implementation files('libs/jpush-android-4.8.1.jar')
     testApi deps.junit
     api(deps.butterknife.butterknife) {
         exclude group: 'com.android.support'
