@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGImage;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGMode;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGPath;
@@ -570,6 +571,14 @@ public class IMGView extends FrameLayout implements Runnable, ScaleGestureDetect
             return true;
         }
         return onScrollTo(getScrollX() + Math.round(dx), getScrollY() + Math.round(dy));
+    }
+
+
+    public boolean isTextWaterMarkAdd() {
+        if (mImage != null) {
+            return mImage.hasInputTextPreUse();
+        }
+        return false;
     }
 
     private static class Pen extends IMGPath {

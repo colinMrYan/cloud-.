@@ -118,6 +118,8 @@ public class WXEntryActivity extends WXCallbackActivity implements IWXAPIEventHa
 //                        Log.d("zhang", "onResp: ");
 //                        finish();
 //                        break;
+                default:
+                    break;
             }
         } else {
             finish();

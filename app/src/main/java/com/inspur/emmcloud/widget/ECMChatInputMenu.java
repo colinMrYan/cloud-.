@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
@@ -47,6 +48,7 @@ import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppRoleUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -55,6 +57,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -957,9 +960,10 @@ public class ECMChatInputMenu extends LinearLayout {
                             PictureSelectorUtils.getInstance().openGallery(getContext());
                             break;
                         case "camera":
-                            String fileName = System.currentTimeMillis() + ".jpg";
-                            PreferencesUtils.putString(getContext(), "capturekey", fileName);
-                            AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
+//                            String fileName = System.currentTimeMillis() + ".jpg";
+//                            PreferencesUtils.putString(getContext(), "capturekey", fileName);
+//                            AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
+                            startCamera();
                             break;
                         case "file":
                             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.STORAGE, new PermissionRequestCallback() {
@@ -1052,6 +1056,38 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             });
             viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
+        }
+    }
+
+    // 拍照/摄像
+    private void startCamera() {
+        // 判断存储卡是否可以用，可用进行存储
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            String[] permissions = new String[]{Permissions.CAMERA, Permissions.RECORD_AUDIO, Permissions.READ_EXTERNAL_STORAGE,
+                    Permissions.WRITE_EXTERNAL_STORAGE};
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), permissions,
+                    new PermissionRequestCallback() {
+                        @Override
+                        public void onPermissionRequestSuccess(List<String> permissions) {
+//                            File appDir = new File(Environment.getExternalStorageDirectory(), "DCIM");
+//                            if (!appDir.exists()) {
+//                                appDir.mkdir();
+//                            }
+                            Intent intent = new Intent(getContext(), CommunicationRecordActivity.class);
+//                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
+//                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, picPath);
+                            ((Activity)getContext()).startActivityForResult(intent, CAMERA_RESULT);
+                            ((Activity)getContext()).overridePendingTransition(R.anim.ps_anim_up_in, R.anim.ps_anim_fade_in);
+                        }
+
+                        @Override
+                        public void onPermissionRequestFail(List<String> permissions) {
+                            ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance()
+                                    .getPermissionToast(getContext(), permissions));
+                        }
+                    });
+        } else {
+            ToastUtils.show(getContext(), R.string.baselib_sd_not_exist);
         }
     }
 

@@ -64,8 +64,10 @@ public class OfflineAppUtil {
             @Override
             public void callbackSuccess(File file) {
                 LoadingDialog.dimissDlg(loadingDlg);
-                try {
-                    ZipUtils.upZipFile(file, offlineAppZipFileDirTempPath);
+                // 对于压缩包中有含、不含子目录的离线文件处理
+//                try {
+//                  ZipUtils.upZipFile(file, offlineAppZipFileDirTempPath);
+                    ZipUtils.upZipFile(file.getAbsolutePath(), offlineAppZipFileDirTempPath);
                     FileUtils.deleteFile(file.getAbsolutePath());
 
                     if (FileUtils.isFileExist(offlineAppZipFileDirPath)) {
@@ -75,10 +77,10 @@ public class OfflineAppUtil {
                     if (isShowLoadingDlg) {
                         openOfflineApp(activity, app, offlineAppZipFileDirPath);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    ToastUtils.show(R.string.react_native_app_open_failed);
-                }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    ToastUtils.show(R.string.react_native_app_open_failed);
+//                }
             }
 
             @Override

@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
+import com.inspur.emmcloud.basemodule.bean.ImageOperateMoreEvent;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -158,6 +159,14 @@ public class ImageDetailFragment extends Fragment {
                 EventBus.getDefault().post(eventMessage);
             }
         });
+        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ImageOperateMoreEvent event =new ImageOperateMoreEvent(Constant.EVENTBUS_TAG_ON_PHOTO_LONG);
+                EventBus.getDefault().post(event);
+                return true;
+            }
+        });
         mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListener() {
             @Override
             public void onFlingDown() {
@@ -280,9 +289,9 @@ public class ImageDetailFragment extends Fragment {
 
     private void showImageResouce() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.default_image_dark)
+                .showImageOnFail(R.drawable.default_image_dark)
+                .showImageOnLoading(R.drawable.default_image_dark)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
@@ -318,7 +327,7 @@ public class ImageDetailFragment extends Fragment {
                             mImageView.setImage(bitmap);
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            mImageView.setImage(R.drawable.default_image);
+                            mImageView.setImage(R.drawable.default_image_dark);
                         }
 
                     }
@@ -326,7 +335,7 @@ public class ImageDetailFragment extends Fragment {
                 mImageView.setImage(new FileBitmapDecoderFactory(path), previewDrawable);
             } catch (Exception e) {
                 e.printStackTrace();
-                mImageView.setImage(R.drawable.default_image);
+                mImageView.setImage(R.drawable.default_image_dark);
             }
         } else {
             ImageLoader.getInstance().loadImage(mImageUrl, options,
@@ -334,7 +343,7 @@ public class ImageDetailFragment extends Fragment {
                         @Override
                         public void onLoadingStarted(String imageUri, View view) {
                             if (getActivity() != null) {
-                                mImageView.setImage(R.drawable.default_image);
+                                mImageView.setImage(R.drawable.default_image_dark);
                                 progressBar.setVisibility(View.VISIBLE);
                             }
                         }
@@ -343,7 +352,7 @@ public class ImageDetailFragment extends Fragment {
                         public void onLoadingFailed(String imageUri, View view,
                                                     FailReason failReason) {
                             if (getActivity() != null) {
-                                mImageView.setImage(R.drawable.default_image);
+                                mImageView.setImage(R.drawable.default_image_dark);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -387,9 +396,9 @@ public class ImageDetailFragment extends Fragment {
         String url = rawUrl == null ? mImageUrl : rawUrl;
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.default_image_dark)
+                .showImageOnFail(R.drawable.default_image_dark)
+                .showImageOnLoading(R.drawable.default_image_dark)
                 .imageScaleType(ImageScaleType.NONE)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)

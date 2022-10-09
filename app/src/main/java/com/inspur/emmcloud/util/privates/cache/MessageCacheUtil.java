@@ -165,7 +165,6 @@ public class MessageCacheUtil {
         try {
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("channel", "=", cid), new KeyValue("read", 1));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -179,7 +178,6 @@ public class MessageCacheUtil {
         try {
             DbCacheUtils.getDb(context).update(Message.class, null, new KeyValue("read", 1));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -205,7 +203,6 @@ public class MessageCacheUtil {
                     .and("recallFrom", "=", "")
                     .and("channel", "=", cid).count();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return unreadCount;
@@ -225,7 +222,6 @@ public class MessageCacheUtil {
             }
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "in", messageIdList), new KeyValue("read", 1));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -243,7 +239,6 @@ public class MessageCacheUtil {
             }
             DbCacheUtils.getDb(context).saveOrUpdate(message);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -278,7 +273,6 @@ public class MessageCacheUtil {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (messageList == null) {
@@ -317,7 +311,6 @@ public class MessageCacheUtil {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         if (messageList == null) {

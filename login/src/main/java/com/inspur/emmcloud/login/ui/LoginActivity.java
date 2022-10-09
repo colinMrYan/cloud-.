@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity {
             loginApp();
 
         } else if (i == R.id.tv_forget_password) {
-            String forgetUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
             if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
                 bundle.putString("uri", forgetUrl);
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
@@ -204,6 +204,13 @@ public class LoginActivity extends BaseActivity {
                 Constant.PREF_LOGIN_USERNAME, userName);
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
         if (!isHasSetShortPassword) {
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             IntentUtils.startActivity(LoginActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
             ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();

@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     android:background="?attr/dialog_common_bg_36"
     android:orientation="vertical"
+    android:id="@+id/ll_bg"
     android:paddingTop="22dp">
 
     <TextView
+        android:id="@+id/tv_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
@@ -57,7 +59,9 @@
         android:maxLines="3"
         android:padding="5dp" />
 
-    <View style="@style/divide_style" />
+    <View
+        android:id="@+id/view_X"
+        style="@style/divide_style" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,6 +84,7 @@
             android:textSize="@dimen/header_function_textsize" />
 
         <View
+            android:id="@+id/view_Y"
             android:layout_width="1px"
             android:layout_height="40dp"
             android:background="?attr/color_list_divider" />

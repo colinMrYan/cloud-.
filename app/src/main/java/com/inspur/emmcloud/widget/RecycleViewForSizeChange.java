@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 
 public class RecycleViewForSizeChange extends RecyclerView {
     private boolean isFirst = true;
+    private boolean mKeepPositionOnce = false;
     public RecycleViewForSizeChange(Context context) {
         super(context);
     }
@@ -23,10 +24,14 @@ public class RecycleViewForSizeChange extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
+    public void setKeepPositionOnce(boolean keepPositionOnce){
+        mKeepPositionOnce = keepPositionOnce;
+    }
+
     @Override
     protected void onSizeChanged(int w, final int h, int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (!isFirst) {
+        if (!isFirst && !mKeepPositionOnce) {
             this.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -38,7 +43,7 @@ public class RecycleViewForSizeChange extends RecyclerView {
         } else {
             isFirst = false;
         }
-
+        mKeepPositionOnce = false;
     }
 
     public void MoveToPosition(int position) {

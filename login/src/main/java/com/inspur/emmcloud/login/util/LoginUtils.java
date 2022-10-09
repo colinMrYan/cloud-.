@@ -330,6 +330,10 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         String refreshToken = getLoginResult.getRefreshToken();
         BaseApplication.getInstance().setAccessToken(accessToken);
         BaseApplication.getInstance().setRefreshToken(refreshToken);
+        // 郑总token刷新失败分析日志
+        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+            PVCollectModelCacheUtils.saveCollectModel("returnOauthSignInSuccess", "---at---" + accessToken + "---rt---" + refreshToken);
+        }
         if (mode == LoginBySmsActivity.MODE_FORGET_PASSWORD) {
             handler.sendEmptyMessage(LOGIN_SUCCESS);
         } else {

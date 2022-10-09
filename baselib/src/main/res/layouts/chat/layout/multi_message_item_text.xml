@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.widget.TextViewFixTouchConsume
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/multi_message_item_message"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/multi_message_item_name"
+    android:layout_gravity="center_vertical"
+    android:lineSpacingMultiplier="1.2"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="16dp"
+    android:layout_toRightOf="@id/multi_message_item_header"
+    android:textColor="?attr/text_color"
+    android:textSize="16sp" />
+
+
+

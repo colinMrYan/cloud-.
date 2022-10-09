@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.media.luban.OnRenameListener;
 import com.inspur.emmcloud.basemodule.media.selector.animators.AnimationType;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelectionModel;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureSelector;
+import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureSelectionConfig;
 import com.inspur.emmcloud.basemodule.media.selector.config.SelectLimitType;
 import com.inspur.emmcloud.basemodule.media.selector.config.SelectMimeType;
@@ -25,6 +26,7 @@ import com.inspur.emmcloud.basemodule.media.selector.engine.UriToFileTransformEn
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnKeyValueResultCallbackListener;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnMediaEditInterceptListener;
+import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnSelectFilterListener;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnSelectLimitTipsListener;
 import com.inspur.emmcloud.basemodule.media.selector.language.LanguageConfig;
 import com.inspur.emmcloud.basemodule.media.selector.style.BottomNavBarStyle;
@@ -45,6 +47,7 @@ public class PictureSelectorUtils {
     private static final int DEFAULT_IMAGE_NUMBER = 9;
     private static final int DEFAULT_VIDEO_NUMBER = 9;
     public static final int REQ_IMAGE_EDIT = 10;
+    public static String LUBAN_COMPRESS_MARK = "LUBAN_CMP_";
 
     public static PictureSelectorUtils getInstance() {
         if (mInstance == null) {
@@ -59,7 +62,7 @@ public class PictureSelectorUtils {
 
     //打开相册画廊，默认打开方式
     public void openGallery(Context context) {
-        openGallery(context, SelectMimeType.ofImage(), DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
+        openGallery(context, SelectMimeType.ofAll(), DEFAULT_IMAGE_NUMBER, DEFAULT_VIDEO_NUMBER, GALLERY_RESULT);
     }
 
     //打开相册画廊
@@ -212,7 +215,17 @@ public class PictureSelectorUtils {
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 // 是否显示gif，默认不显示
                 .isGif(false)
-                .setSelectedData(null);
+                .setSelectedData(null)
+                .setSelectFilterListener(new OnSelectFilterListener() {
+                    @Override
+                    public boolean onSelectFilter(LocalMedia media) {
+                        // 仅支持图片和mp4
+                        if (PictureMimeType.isHasVideo(media.getMimeType()) && !PictureMimeType.isMP4(media.getMimeType())) return true;
+                        //超过10分钟（ms），提示无法上传
+                        if (PictureMimeType.isHasVideo(media.getMimeType()) && media.getDuration() >= 10 * 60 * 1000) return true;
+                        return false;
+                    }
+                });
         return selectionModel;
     }
 
@@ -304,7 +317,17 @@ public class PictureSelectorUtils {
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 // 是否显示gif，默认不显示
                 .isGif(false)
-                .setSelectedData(null);
+                .setSelectedData(null)
+                .setSelectFilterListener(new OnSelectFilterListener() {
+                    @Override
+                    public boolean onSelectFilter(LocalMedia media) {
+                        //设置过滤类型
+                        if (PictureMimeType.isHasVideo(media.getMimeType()) && !PictureMimeType.isMP4(media.getMimeType())) return true;
+                        //超过10分钟（ms），提示无法上传
+                        if (PictureMimeType.isHasVideo(media.getMimeType()) && media.getDuration() >= 10 * 60 * 1000) return true;
+                        return false;
+                    }
+                });
         return selectionModel;
     }
 
@@ -409,7 +432,7 @@ public class PictureSelectorUtils {
                 public String rename(String filePath) {
                     int indexOf = filePath.lastIndexOf(".");
                     String postfix = indexOf != -1 ? filePath.substring(indexOf) : ".jpg";
-                    return DateUtils.getCreateFileName("CMP_") + postfix;
+                    return DateUtils.getCreateFileName(LUBAN_COMPRESS_MARK) + postfix;
                 }
             }).setCompressListener(new OnNewCompressListener() {
                 @Override
@@ -455,7 +478,7 @@ public class PictureSelectorUtils {
         @Override
         public boolean onSelectLimitTips(Context context, PictureSelectionConfig config, int limitType) {
             if (limitType == SelectLimitType.SELECT_NOT_SUPPORT_SELECT_LIMIT) {
-                ToastUtils.show(context, "暂不支持的选择类型");
+//                ToastUtils.show(context, "暂不支持的选择类型");
                 return true;
             }
             return false;

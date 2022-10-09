@@ -974,7 +974,7 @@ public class FileUtils {
                 ArrayList<String> urlList = new ArrayList<>();
                 urlList.add("file://" + file.getAbsolutePath());
                 bundle.putStringArrayList("image_urls", urlList);
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER_NEW).with(bundle);
                 return;
             }
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -1017,7 +1017,7 @@ public class FileUtils {
             ArrayList<String> urlList = new ArrayList<>();
             urlList.add("file://" + file.getAbsolutePath());
             bundle.putStringArrayList("image_urls", urlList);
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER).with(bundle).navigation();
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_IMAGEPAGER_NEW).with(bundle).navigation();
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);

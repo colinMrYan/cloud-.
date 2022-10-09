@@ -297,7 +297,7 @@ public class FileTransferService extends ImpPlugin {
      */
     private void saveFile(JSONObject paramsObject) {
         downloadFileType = SAVE_FILE;
-        saveFileCallBack = JSONUtils.getString(paramsObject, "success", "");
+        saveFileCallBack = JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "");
         JSONObject jsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         downloadUrl = JSONUtils.getString(jsonObject, "url", "");
         fileName = JSONUtils.getString(jsonObject, "saveName", "");
@@ -339,9 +339,9 @@ public class FileTransferService extends ImpPlugin {
         try {
             jsonObject.put("folders", new JSONArray(folderArrayListFilter));
             jsonObject.put("files", new JSONArray(fileArrayListFilter));
-            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, ""), jsonObject);
         } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_FAIL, ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
     }
@@ -354,7 +354,7 @@ public class FileTransferService extends ImpPlugin {
     private void getBlockLocalImg(JSONObject paramsObject) {
         if (isUploadingFile) return;
         isUploadingFile = true;
-        blockImageCallBack = JSONUtils.getString(paramsObject, "success", "");
+        blockImageCallBack = JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "");
         JSONObject optionsJsonObject = JSONUtils.getJSONObject(paramsObject, "options", new JSONObject());
         int blockSize = JSONUtils.getInt(optionsJsonObject, "blockSize", 4096);
         // 绝对路径、相对路径
@@ -459,10 +459,10 @@ public class FileTransferService extends ImpPlugin {
         String relativePath = new File(folderName, fileName).getPath();
         if (FilePathUtils.isSafePath(relativePath)) {
             boolean isDel = FileUtils.deleteFile(relativePath);
-            jsCallback(isDel ? JSONUtils.getString(paramsObject, "success", "") :
-                    JSONUtils.getString(paramsObject, "fail", ""), "");
+            jsCallback(isDel ? JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "") :
+                    JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_FAIL, ""), "");
         } else {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(""));
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_FAIL, ""), getErrorJson(""));
         }
     }
 
@@ -482,9 +482,9 @@ public class FileTransferService extends ImpPlugin {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("content", readContent);
-            jsCallback(JSONUtils.getString(paramsObject, "success", ""), jsonObject);
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, ""), jsonObject);
         } catch (Exception e) {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson(e.getMessage()));
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_FAIL, ""), getErrorJson(e.getMessage()));
             e.printStackTrace();
         }
     }
@@ -521,9 +521,9 @@ public class FileTransferService extends ImpPlugin {
         if (FilePathUtils.isSafePath(relativePath)) {
             FileUtils.writeFile(relativePath, JSONUtils.getString(optionsJsonObject, "content", ""),
                     JSONUtils.getBoolean(optionsJsonObject, "append", true));
-            jsCallback(JSONUtils.getString(paramsObject, "success", ""));
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, ""));
         } else {
-            jsCallback(JSONUtils.getString(paramsObject, "fail", ""), getErrorJson("file path error"));
+            jsCallback(JSONUtils.getString(paramsObject, ImpFragment.EXTRA_CALLBACK_FAIL, ""), getErrorJson("file path error"));
         }
     }
 
@@ -622,7 +622,7 @@ public class FileTransferService extends ImpPlugin {
 
     // 下载
     private void selectFile(JSONObject jsonObject) {
-        successCb = JSONUtils.getString(jsonObject, "success", "");
+        successCb = JSONUtils.getString(jsonObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "");
         failCb = JSONUtils.getString(jsonObject, "failCb", "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         int maximum = JSONUtils.getInt(optionsObj, "maximum", 1);
@@ -646,8 +646,8 @@ public class FileTransferService extends ImpPlugin {
     }
 
     private void getFileBase64(JSONObject jsonObject) {
-        successCb = JSONUtils.getString(jsonObject, "success", "");
-        failCb = JSONUtils.getString(jsonObject, "fail", "");
+        successCb = JSONUtils.getString(jsonObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "");
+        failCb = JSONUtils.getString(jsonObject, ImpFragment.EXTRA_CALLBACK_FAIL, "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         String filePath = JSONUtils.getString(optionsObj, "filePath", "");
         filePath = FilePathUtils.getRealPath(filePath);
@@ -958,8 +958,8 @@ public class FileTransferService extends ImpPlugin {
      * @param jsonObject
      */
     private void upload(JSONObject jsonObject) {
-        uploadSucCB = JSONUtils.getString(jsonObject, "success", "");
-        uploadFailCB = JSONUtils.getString(jsonObject, "fail", "");
+        uploadSucCB = JSONUtils.getString(jsonObject, ImpFragment.EXTRA_CALLBACK_SUCCESS, "");
+        uploadFailCB = JSONUtils.getString(jsonObject, ImpFragment.EXTRA_CALLBACK_FAIL, "");
         JSONObject optionsObj = JSONUtils.getJSONObject(jsonObject, "options", new JSONObject());
         uploadUrl = JSONUtils.getString(optionsObj, "url", "");
         boolean isShowProgress = JSONUtils.getBoolean(optionsObj, "showProgress", false);

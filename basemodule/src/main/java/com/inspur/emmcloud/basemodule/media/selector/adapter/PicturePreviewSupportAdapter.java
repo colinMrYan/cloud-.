@@ -12,8 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.media.player.view.VideoPlayerView;
 import com.inspur.emmcloud.basemodule.media.selector.adapter.holder.BasePreviewHolder;
 import com.inspur.emmcloud.basemodule.media.selector.adapter.holder.PreviewSupportHolder;
+import com.inspur.emmcloud.basemodule.media.selector.basic.IPagerAdapterLifecycle;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureSelectionConfig;
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
@@ -32,7 +34,7 @@ import java.util.List;
  * Author：wang zhen
  * Description support版本使用viewpager adapter
  */
-public class PicturePreviewSupportAdapter extends PagerAdapter {
+public class PicturePreviewSupportAdapter extends PagerAdapter implements IPagerAdapterLifecycle {
     private List<LocalMedia> mData;
     private Context context;
     private int screenWidth;
@@ -43,6 +45,9 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
     private BasePreviewHolder.OnPreviewEventListener mPreviewEventListener;
     // 视频播放，销毁时释放资源
     private final LinkedHashMap<Integer, PreviewSupportHolder> mItemCache = new LinkedHashMap<>();
+    // 当前展示的界面索引
+    private int currentSelectedItem = 0;
+
 
     // 构造
     public PicturePreviewSupportAdapter(Context context, List<LocalMedia> list) {
@@ -70,11 +75,13 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         View contentView = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.ps_preview_item, container, false);
         PhotoView photoView = (PhotoView) contentView.findViewById(R.id.preview_image);
         ImageView playIv = (ImageView) contentView.findViewById(R.id.iv_play_video);
+        VideoPlayerView playerView = (VideoPlayerView) contentView.findViewById(R.id.video_player_view);
+        View surface = (View) contentView.findViewById(R.id.surface_click_view);
         // 基本参数
         this.config = PictureSelectionConfig.getInstance();
         this.screenWidth = DensityUtil.getRealScreenWidth(contentView.getContext());
@@ -94,6 +101,7 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
                 }
             }
         });
+
         // 仿微信时使用不到
         photoView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -105,22 +113,39 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
             }
         });
         boolean hasVideo = PictureMimeType.isHasVideo(media.getMimeType());
+        PreviewSupportHolder previewHolder = new PreviewSupportHolder(photoView, playIv, hasVideo ? playerView : null, !hasVideo,  !hasVideo || PictureMimeType.isMP4(media.getMimeType()));
         if (hasVideo) {
             // 视频
             playIv.setVisibility(View.VISIBLE);
             playIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    try {
+                        // 播放视频流
+                        (mItemCache.get(position)).startVideo(media);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            // 视频、图片点击事件，统一处理
+            surface.setVisibility(View.VISIBLE);
+            surface.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mPreviewEventListener != null) {
+                        mPreviewEventListener.onBackPressed();
+                    }
                 }
             });
         } else {
             // 图片
+            surface.setVisibility(View.GONE);
             playIv.setVisibility(View.GONE);
         }
         // 缓存holder，销毁时释放资源
-        PreviewSupportHolder previewHolder = new PreviewSupportHolder(photoView, playIv, !hasVideo);
         mItemCache.put(position, previewHolder);
+        attach(position);
         // 添加itemView
         (container).addView(contentView, 0);
         return contentView;
@@ -128,11 +153,14 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
+        // 界面解绑，释放播放器资源
+        detach(position);
         (container).removeView((View) object);
     }
 
     // 获取当前preview holder
     public PreviewSupportHolder getCurrentHolder(int position) {
+        if (mItemCache.isEmpty()) return null;
         return mItemCache.get(position);
     }
 
@@ -222,6 +250,17 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
         photoView.setImageBitmap(bitmap);
     }
 
+    public int getCurrentSelectedItem() {
+        return currentSelectedItem;
+    }
+
+    public void setCurrentSelectedItem(int currentSelectedItem) {
+        this.currentSelectedItem = currentSelectedItem;
+    }
+
+    public PreviewSupportHolder getCurrentSelectedHolder(){
+        return getCurrentHolder(currentSelectedItem);
+    }
     /**
      * 释放当前视频相关
      */
@@ -239,4 +278,41 @@ public class PicturePreviewSupportAdapter extends PagerAdapter {
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
+
+    // item绑定到adapter
+    @Override
+    public void attach(int currentPosition) {
+        try {
+            (mItemCache.get(currentPosition)).attachVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // fragment生命周期onResume
+    @Override
+    public void resume(int currentPosition) {
+        // 继续之后不会恢复播放，需要点击从头播放,不做继续播放的处理
+    }
+
+    // fragment生命周期onPause
+    @Override
+    public void pause(int currentPosition) {
+        try {
+            (mItemCache.get(currentPosition)).pauseVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // item从adapter解绑
+    @Override
+    public void detach(int currentPosition) {
+        try {
+            (mItemCache.get(currentPosition)).detachVideo();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

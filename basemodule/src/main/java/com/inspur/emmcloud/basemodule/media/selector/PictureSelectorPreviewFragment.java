@@ -154,6 +154,8 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
 
     protected View selectClickArea;
 
+    protected TextView descriptionView;
+
     protected CompleteSelectView completeSelectView;
 
     protected boolean needScaleBig = true;
@@ -171,7 +173,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
 
 
     public static PictureSelectorPreviewFragment newInstance() {
-       PictureSelectorPreviewFragment fragment = new PictureSelectorPreviewFragment();
+        PictureSelectorPreviewFragment fragment = new PictureSelectorPreviewFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -241,6 +243,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         completeSelectView.setSelectedChange(true);
         notifySelectNumberStyle(currentMedia);
         notifyPreviewGalleryData(isAddRemove, currentMedia);
+
     }
 
     @Override
@@ -260,6 +263,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         tvSelected = view.findViewById(R.id.ps_tv_selected);
         tvSelectedWord = view.findViewById(R.id.ps_tv_selected_word);
         selectClickArea = view.findViewById(R.id.select_click_area);
+        descriptionView = view.findViewById(R.id.item_descriptions_view);
         completeSelectView = view.findViewById(R.id.ps_complete_select);
         magicalView = view.findViewById(R.id.magical);
         // viewPager2 转为viewPager
@@ -674,6 +678,10 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                     handleExternalPreviewBack();
                 } else {
                     if (!isInternalBottomPreview && config.isPreviewZoomEffect) {
+                        // 返回释放播放器资源
+                        if (previewAdapter != null) {
+                            previewAdapter.pause(viewPager.getCurrentItem());
+                        }
                         magicalView.backToMin();
                     } else {
                         onBackCurrentFragment();
@@ -779,6 +787,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                         }
                         viewPager.setCurrentItem(newPosition, false);
                         notifyGallerySelectMedia(media);
+                        //展示不支持格式提示
                         viewPager.post(new Runnable() {
                             @Override
                             public void run() {
@@ -1072,6 +1081,17 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         return viewPager;
     }
 
+    @Override
+    public void onFragmentResume() {
+        if (previewAdapter != null) previewAdapter.resume(viewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onPause() {
+        if (previewAdapter != null) previewAdapter.pause(viewPager.getCurrentItem());
+        super.onPause();
+    }
+
     private void initViewPagerData(ArrayList<LocalMedia> data) {
         previewAdapter = new PicturePreviewSupportAdapter(getContext(), data);
         previewAdapter.setOnPreviewEventListener(new MyOnPreviewEventListener());
@@ -1206,7 +1226,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         if (isAnimationStart) {
             return;
         }
-        boolean isAnimInit = titleBar.getTranslationY() == 0.0F;
+        final boolean isAnimInit = titleBar.getTranslationY() == 0.0F;
         AnimatorSet set = new AnimatorSet();
         float titleBarForm = isAnimInit ? 0 : -titleBar.getHeight();
         float titleBarTo = isAnimInit ? -titleBar.getHeight() : 0;
@@ -1226,13 +1246,35 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
             @Override
             public void onAnimationEnd(Animator animation) {
                 isAnimationStart = false;
+                if (!isAnimInit)
+                displayUnSupportItemView(false, null);
             }
         });
 
         if (isAnimInit) {
             showFullScreenStatusBar();
+            displayUnSupportItemView(true, null);
         } else {
             hideFullScreenStatusBar();
+        }
+    }
+
+    //展示或者隐藏不支持格式提示
+    private void displayUnSupportItemView(boolean forceHide, String mediaType) {
+        if (forceHide) {
+            descriptionView.setVisibility(View.GONE);
+            return;
+        }
+        //判断格式是否支持上传
+        if (previewAdapter != null && viewPager != null) {
+            PreviewSupportHolder currentItem = previewAdapter.getCurrentSelectedHolder();
+            if (currentItem != null) {
+                descriptionView.setVisibility(currentItem.isSupportUpload() ? View.GONE : View.VISIBLE);
+                return;
+            }
+        }
+        if (!StringUtils.isEmpty(mediaType)) {
+            descriptionView.setVisibility(PictureMimeType.isHasImage(mediaType) || PictureMimeType.isMP4(mediaType) ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -1347,7 +1389,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                 bottomNarBar.isDisplayEditor(PictureMimeType.isHasVideo(currentMedia.getMimeType())
                         || PictureMimeType.isHasAudio(currentMedia.getMimeType()));
 //                if (!isExternalPreview && !isInternalBottomPreview && !config.isOnlySandboxDir) {
-                    // 不用分页模式
+                // 不用分页模式
 //                    if (config.isPageStrategy) {
 //                        if (isHasMore) {
 //                            if (position == (previewAdapter.getCount() - 1) - PictureConfig.MIN_PAGE_SIZE
@@ -1357,7 +1399,16 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
 //                        }
 //                    }
 //                }
+                // 选择其它item，暂停当前videoPlayer
+                int lastSelectedItem = previewAdapter.getCurrentSelectedItem();
+                if (lastSelectedItem != position) {
+                    previewAdapter.pause(lastSelectedItem);
+                    previewAdapter.setCurrentSelectedItem(position);
+                }
+                // 选择视频流判断是否支持上传
+                displayUnSupportItemView(!titleBar.isEnabled(), currentMedia.getMimeType());
             }
+
         }
 
         @Override
@@ -1485,7 +1536,7 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
     @Override
     public void onEditMedia(Intent data) {
         if (mData.size() > viewPager.getCurrentItem()) {
-            String filePath = AppUtils.refreshMediaInSystemStorage(getContext(), data.getStringExtra(IMGEditActivity.OUT_FILE_PATH));
+            String filePath = data.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
             LocalMedia currentMedia = mData.get(viewPager.getCurrentItem());
 //            Uri output = Crop.getOutput(data);
             currentMedia.setCutPath(StringUtils.isEmpty(filePath) ? "" : filePath);
@@ -1536,4 +1587,4 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
         }
         super.onDestroy();
     }
-    }
+}

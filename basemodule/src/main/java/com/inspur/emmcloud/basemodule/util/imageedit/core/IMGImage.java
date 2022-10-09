@@ -745,6 +745,10 @@ public class IMGImage {
         }
     }
 
+    public boolean hasInputTextPreUse() {
+        return (mForeSticker != null || !mBackStickers.isEmpty());
+    }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

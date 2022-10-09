@@ -68,7 +68,7 @@ public class GroupAlbumItemAdapter extends BaseAdapter {
         } else {
             holder.albumCheckBox.setVisibility(View.GONE);
         }
-        ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.default_image);
+        ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.default_image_dark);
         return convertView;
     }
 

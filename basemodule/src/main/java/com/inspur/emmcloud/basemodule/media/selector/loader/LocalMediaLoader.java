@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.media.selector.loader;
 
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.MediaUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SdkVersionUtils;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SortUtils;
+import com.inspur.emmcloud.basemodule.media.selector.utils.ValueOf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,6 +182,18 @@ public final class LocalMediaLoader extends IBridgeMediaLoader {
                                     if (getConfig().isFilterSizeDuration && duration <= 0) {
                                         //If the length is 0, the corrupted video is processed and filtered out
                                         continue;
+                                    }
+                                }
+                                if (PictureMimeType.isHasVideo(mimeType) && width == 0 && height == 0) {
+                                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                                    retriever.setDataSource(absolutePath);
+                                    String videoOrientation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                                    if (TextUtils.equals("90", videoOrientation) || TextUtils.equals("270", videoOrientation)) {
+                                        height = ValueOf.toInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                                        width = ValueOf.toInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                                    } else {
+                                        width = ValueOf.toInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                                        height = ValueOf.toInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                                     }
                                 }
                                 LocalMedia media = LocalMedia.parseLocalMedia(id, url, absolutePath, fileName, folderName, duration, getConfig().chooseMode, mimeType, width, height, size, bucketId, data.getLong(dateAddedColumn));

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -43,6 +44,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.tencent.mmkv.MMKV;
+import com.tencent.ugc.TXUGCBase;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.xutils.http.RequestParams;
@@ -182,6 +184,10 @@ public abstract class BaseApplication extends MultiDexApplication {
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+        // 短视频licence设置
+        String ugcKey = "28db2b484abaeef442fd8ce79929466d";
+        String ugcLicenceUrl = "https://license.vod2.myqcloud.com/license/v2/1310194503_1/v_cube.license";
+        TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
     }
 
     /**************************************登出逻辑相关********************************************************/

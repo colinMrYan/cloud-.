@@ -62,8 +62,16 @@
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
         <item name="header_text_color_e1">@color/header_text_black</item>
+        <item name="text_color_e6_1a">@color/color_1a</item>
+        <item name="color_tran90_1b_ff">@color/color_tran90_ff</item>
+        <item name="color_33_d1">@color/color_d1</item>
+        <item name="color_33_ff">@color/white</item>
+        <item name="color_99_66">@color/color_text_tip</item>
+        <item name="color_99_87">@color/color_87</item>
+        <item name="color_f1_11">@color/color_f1</item>
         <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg</item>
+        <item name="color_f8_12">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
@@ -75,6 +83,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -158,7 +167,9 @@
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
         <item name="android:textColorAlertDialogListItem">@color/text_color</item>
-        <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
+        <item name="wallet_bottom_rectangle_with_shade">
+            @drawable/wallet_bottom_rectangle_with_shade
+        </item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_white</item>
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
@@ -181,8 +192,16 @@
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
         <item name="header_text_color_e1">@color/header_text_grey</item>
+        <item name="text_color_e6_1a">@color/color_1a</item>
+        <item name="color_tran90_1b_ff">@color/color_tran90_ff</item>
+        <item name="color_33_d1">@color/color_d1</item>
+        <item name="color_33_ff">@color/white</item>
+        <item name="color_99_66">@color/color_text_tip</item>
+        <item name="color_99_87">@color/color_87</item>
+        <item name="color_f1_11">@color/color_f1</item>
         <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg</item>
+        <item name="color_f8_12">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
@@ -194,6 +213,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -278,7 +298,9 @@
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_black</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
-        <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
+        <item name="wallet_bottom_rectangle_with_shade">
+            @drawable/wallet_bottom_rectangle_with_shade
+        </item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_white</item>
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
@@ -301,8 +323,16 @@
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
         <item name="header_text_color_e1">@color/header_text</item>
+        <item name="text_color_e6_1a">@color/color_1a</item>
+        <item name="color_tran90_1b_ff">@color/color_tran90_ff</item>
+        <item name="color_33_d1">@color/color_d1</item>
+        <item name="color_33_ff">@color/white</item>
+        <item name="color_99_66">@color/color_text_tip</item>
+        <item name="color_99_87">@color/color_87</item>
+        <item name="color_f1_11">@color/color_f1</item>
         <item name="header_button_text_color_e1">@color/white</item>
         <item name="content_bg">@color/content_bg</item>
+        <item name="color_f8_12">@color/content_bg</item>
         <item name="content_bg_level_two">@color/content_bg_level_two</item>
         <item name="content_bg_30">@color/content_bg_level_two</item>
         <item name="content_bg_ff_00">@color/content_bg_level_two</item>
@@ -314,6 +344,7 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
         <item name="common_bg_30">@color/button_color_nor</item>
@@ -397,7 +428,9 @@
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
         <item name="schedule_tab_text_color_select">?attr/text_ll_color_nor</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
-        <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade</item>
+        <item name="wallet_bottom_rectangle_with_shade">
+            @drawable/wallet_bottom_rectangle_with_shade
+        </item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_white</item>
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
@@ -420,8 +453,16 @@
         <item name="footer_bg_color">@color/footer_bg_dark</item>
         <item name="header_text_color">@color/header_text</item>
         <item name="header_text_color_e1">@color/header_text_e1</item>
+        <item name="text_color_e6_1a">@color/bg_color_layer_layer</item>
+        <item name="color_tran90_1b_ff">@color/color_tran90_1b</item>
+        <item name="color_33_d1">@color/text_color</item>
+        <item name="color_33_ff">@color/text_color</item>
+        <item name="color_99_66">@color/color_text_common_level_two</item>
+        <item name="color_99_87">@color/color_text_common_level_two</item>
+        <item name="color_f1_11">@color/content_bg_dark</item>
         <item name="header_button_text_color_e1">@color/footer_tab_text_sel_blue</item>
         <item name="content_bg">@color/content_bg_dark</item>
+        <item name="color_f8_12">@color/color_12</item>
         <item name="content_bg_level_two">@color/content_bg_dark_level_two</item>
         <item name="content_bg_f6_1c">@color/color_bg_common_dark</item>
         <item name="content_bg_30">@color/content_bg_dark_30</item>
@@ -433,6 +474,7 @@
         <item name="color_3a_88">@color/color_88</item>
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="bg_color_layer_layer">@color/bg_color_layer_layer_dark</item>
         <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="dialog_common_bg_40">@color/color_40</item>
         <item name="common_bg_30">@color/bubble_bg_color_dark</item>
@@ -516,7 +558,9 @@
         <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
         <item name="schedule_tab_text_color_normal">@color/color_text_common_88</item>
         <item name="schedule_tab_text_color_select">@color/header_text_e1</item>
-        <item name="wallet_bottom_rectangle_with_shade">@drawable/wallet_bottom_rectangle_with_shade_dark</item>
+        <item name="wallet_bottom_rectangle_with_shade">
+            @drawable/wallet_bottom_rectangle_with_shade_dark
+        </item>
         <item name="ic_wallet_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_wallet_setting">@drawable/setting_icon_card_package_set_black</item>
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_dark</item>

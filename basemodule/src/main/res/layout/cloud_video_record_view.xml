@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 视频预览界面 -->
+    <com.tencent.rtmp.ui.TXCloudVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+    <com.inspur.emmcloud.basemodule.media.record.view.RecordGestureView
+        android:id="@+id/gesture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/record_mask_buttom"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+            <com.inspur.emmcloud.basemodule.media.record.view.RecordButton
+                android:id="@+id/record_button"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/record_button">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="20dp"
+                    android:src="@drawable/icon_record_finish" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/record_button">
+
+                <ImageView
+                    android:id="@+id/iv_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="20dp"
+                    android:src="@drawable/icon_switch_camera" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <com.inspur.emmcloud.basemodule.media.record.view.RecordModeView
+            android:id="@+id/record_mode_view"
+            android:layout_width="180dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal" />
+
+        <View
+            android:id="@+id/record_mode_dot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/record_mode_instruction_bkg" />
+    </LinearLayout>
+
+</RelativeLayout>

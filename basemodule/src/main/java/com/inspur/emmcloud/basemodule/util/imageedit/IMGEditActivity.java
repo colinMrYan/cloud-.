@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGMode;
 import com.inspur.emmcloud.basemodule.util.imageedit.core.IMGText;
@@ -30,9 +31,11 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     public static final String EXTRA_IS_COVER_ORIGIN = "IS_COVER_ORIGIN_IMG";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
+    public static final String FROM_CHAT_TAKE_PHOTO = "from_chat_take_photo"; // 是否从聊天相机
     boolean isHaveEdit = false;
     private int encodingType = 0;
     private String originFilePath = "";
+    private boolean fromChatTakePhoto;
 
     @Override
     public Bitmap getBitmap() {
@@ -41,6 +44,7 @@ public class IMGEditActivity extends IMGEditBaseActivity {
             return null;
         }
         originFilePath = getIntent().getStringExtra(EXTRA_IMAGE_PATH);
+        fromChatTakePhoto = getIntent().getBooleanExtra(FROM_CHAT_TAKE_PHOTO, false);
         if (originFilePath == null) {
             return null;
         }
@@ -98,6 +102,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onDoneClick() {
+        // 输入文字类型漏掉，补上此类型
+        if (mImgView.isTextWaterMarkAdd()) {
+            isHaveEdit = true;
+        }
         if (isHaveEdit) {
             boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
             File saveFile = null;
@@ -150,6 +158,10 @@ public class IMGEditActivity extends IMGEditBaseActivity {
 
     @Override
     public void onDoneClickInSystemStorage() {
+        // 输入文字漏掉，补上此类型
+        if (mImgView.isTextWaterMarkAdd()) {
+            isHaveEdit = true;
+        }
         if (isHaveEdit) {
             boolean isCoverOriginImg = getIntent().getBooleanExtra(EXTRA_IS_COVER_ORIGIN, false);
             File saveFile = null;
@@ -185,17 +197,38 @@ public class IMGEditActivity extends IMGEditBaseActivity {
                 if (bitmap != null) {
                     ContentResolver cr = getContentResolver();
                     String insertImage = MediaStore.Images.Media.insertImage(cr, bitmap, System.currentTimeMillis() + ".png", null);
-                    String realPath = AppUtils.refreshMediaInSystemStorage(this, insertImage);
-                    intent.putExtra(OUT_FILE_PATH, realPath);
+                    String path = AppUtils.refreshMediaInSystemStorage(this, insertImage);
+                    if (fromChatTakePhoto) {
+                        // 聊天拍照图片，编辑完成删除原拍照图片
+                        FileUtils.deleteFile(originFilePath);
+                    }
+                    intent.putExtra(OUT_FILE_PATH, path);
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     setResult(Activity.RESULT_CANCELED);
                 }
             }
         } else {
-            Intent intent = new Intent();
-            intent.putExtra(OUT_FILE_PATH, originFilePath);
-            setResult(Activity.RESULT_OK, intent);
+            ContentResolver cr = getContentResolver();
+            try {
+                if (fromChatTakePhoto) {
+                    // 保存到本地相册
+                    String insertImage = MediaStore.Images.Media.insertImage(cr, originFilePath, System.currentTimeMillis() + ".png", null);
+                    String photoPath = AppUtils.refreshMediaInSystemStorage(this, insertImage);
+                    // 聊天拍照图片
+                    FileUtils.deleteFile(originFilePath);
+                    Intent intent = new Intent();
+                    intent.putExtra(OUT_FILE_PATH, photoPath);
+                    setResult(Activity.RESULT_OK, intent);
+                } else {
+                    // 删除或保留都可
+                    Intent intent = new Intent();
+                    intent.putExtra(OUT_FILE_PATH, originFilePath);
+                    setResult(Activity.RESULT_OK, intent);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         finish();
     }
@@ -225,5 +258,11 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     @Override
     public void onColorChanged(int checkedColor) {
         mImgView.setPenColor(checkedColor);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

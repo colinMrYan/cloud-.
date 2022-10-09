@@ -9,11 +9,14 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.media.record.utils.VideoPathUtil;
+import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.system.VoiceResult;
@@ -24,9 +27,12 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.tencent.ugc.TXVideoEditConstants;
+import com.tencent.ugc.TXVideoEditer;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -174,6 +180,22 @@ public class MessageSendManager {
                     WSAPIService.getInstance().sendMessage(message);
                 }
                 break;
+            case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                // 文件是否已经上传到服务
+                MsgContentMediaVideo media = message.getMsgContentMediaVideo();
+                if (media.getMedia().equals(message.getLocalPath())) {
+//                    sendMessageWithVideoStepOne(message);
+                    if (media.getImageHeight() * media.getImageWidth() > 720 * 1280) {
+                        // 分辨率大于720 * 1280则压缩源文件
+                        compressVideo(message);
+//                        sendMessageWithVideoStepTwo(message, "");
+                    } else {
+                        sendMessageWithVideoStepTwo(message, "");
+                    }
+                } else {
+                    WSAPIService.getInstance().sendMessage(message);
+                }
+                break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 CommonCallBack commonCallBack = new CommonCallBack() {
                     @Override
@@ -206,6 +228,55 @@ public class MessageSendManager {
         }
     }
 
+
+    private void compressVideo(final Message fakeMessage) {
+        final String generateVideoPath = VideoPathUtil.generateVideoPath(fakeMessage.getMsgContentMediaVideo().getName());
+        TXVideoEditer mTXVideoEditor = new TXVideoEditer(BaseApplication.getInstance());
+        mTXVideoEditor.setVideoPath(fakeMessage.getMsgContentMediaVideo().getMedia());
+        TXVideoEditer.TXVideoGenerateListener mTXVideoGenerateListener = new TXVideoEditer.TXVideoGenerateListener() {
+            @Override
+            public void onGenerateProgress(final float progress) {
+            }
+
+            @Override
+            public void onGenerateComplete(final TXVideoEditConstants.TXGenerateResult result) {
+                PictureThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result.retCode == TXVideoEditConstants.GENERATE_RESULT_OK) {
+                            // 生成成功
+                            MsgContentMediaVideo oldVideo = fakeMessage.getMsgContentMediaVideo();
+                            MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
+                            msgContentMediaVideo.setImageHeight(oldVideo.getImageHeight());
+                            msgContentMediaVideo.setImageWidth(oldVideo.getImageWidth());
+                            msgContentMediaVideo.setImagePath("");
+                            msgContentMediaVideo.setMedia(generateVideoPath);
+                            // 重新发送消息时对比media和localPath,压缩后localPath需要重定向到压缩地址
+                            fakeMessage.setLocalPath(generateVideoPath);
+                            msgContentMediaVideo.setName(oldVideo.getName());
+                            msgContentMediaVideo.setVideoSize(oldVideo.getVideoSize());
+                            msgContentMediaVideo.setVideoDuration(oldVideo.getVideoDuration());
+                            msgContentMediaVideo.setOriginMediaPath(oldVideo.getOriginMediaPath());
+                            fakeMessage.setContent(msgContentMediaVideo.toString());
+                            sendMessageWithVideoStepTwo(fakeMessage, "");
+                        } else {
+                            if (!recallSendingMessageList.contains(fakeMessage)) {
+                                //当网络失败或者发送时间已经超过10分钟时
+                                if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                                    addMessageInSendRetry(fakeMessage);
+                                } else {
+                                    setMessageSendFail(fakeMessage);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+        mTXVideoEditor.setVideoGenerateListener(mTXVideoGenerateListener);
+        mTXVideoEditor.generateVideo(TXVideoEditConstants.VIDEO_COMPRESSED_540P, generateVideoPath);
+    }
+
 //    private void sendMessage(Message message){
 //        WSAPIService.getInstance().sendMessage(message);
 //    }
@@ -216,8 +287,17 @@ public class MessageSendManager {
                 setMessageSendFail(message);
             } else {
                 message.setWaitingSendRetry(true);
-                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
-                messageListInSendRetry.add(message);
+                // 不影响之前的逻辑，只修改上传视频重试逻辑
+//                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                if (!Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(message.getType())) {
+                    MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                    messageListInSendRetry.add(message);
+                } else {
+                    if (!messageListInSendRetry.contains(message)) {
+                        MessageCacheUtil.saveMessage(BaseApplication.getInstance(), message);
+                        messageListInSendRetry.add(message);
+                    }
+                }
                 startCheckMessageSendTimeout();
             }
         } else {
@@ -323,6 +403,99 @@ public class MessageSendManager {
             }
         });
         voice2StringMessageUtils.startVoiceListeningByVoiceFile(message.getMsgContentMediaVoice().getDuration(), filePath);
+    }
+
+    /**
+     * 发送视频类型的消息，需要发送2个文件：首帧图和视频，先发送图片再发视频
+     *
+     * @param fakeMessage
+     */
+    private void sendMessageWithVideoStepOne(final Message fakeMessage) {
+        ProgressCallback progressCallback = new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                // 图片发送成功后，发送视频
+//                fakeMessage.getMsgContentMediaVideo().setImagePath(volumeFile.getPath());
+                sendMessageWithVideoStepTwo(fakeMessage, volumeFile.getPath());
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
+            }
+
+            @Override
+            public void onFail() {
+                // recallSendingMessageList 一直都是空的！！！从没有add
+                if (!recallSendingMessageList.contains(fakeMessage)) {
+                    //当网络失败或者发送时间已经超过10分钟时
+                    if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                        addMessageInSendRetry(fakeMessage);
+                    } else {
+                        setMessageSendFail(fakeMessage);
+                    }
+                }
+
+            }
+        };
+
+        if (!recallSendingMessageList.contains(fakeMessage)) {
+            ChatFileUploadManagerUtils.getInstance().uploadVideoImageFile(fakeMessage, progressCallback);
+        } else {
+            recallSendingMessageList.remove(fakeMessage);
+        }
+    }
+
+    /**
+     * 发送视频类型的消息，第二步
+     *
+     * @param fakeMessage
+     */
+    private void sendMessageWithVideoStepTwo(final Message fakeMessage, final String imagePath) {
+        ProgressCallback progressCallback = new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+                // 上传成功发送视频消息
+                MsgContentMediaVideo msgContentMediaVideo = new MsgContentMediaVideo();
+                msgContentMediaVideo.setImageHeight(fakeMessage.getMsgContentMediaVideo().getImageHeight());
+                msgContentMediaVideo.setImageWidth(fakeMessage.getMsgContentMediaVideo().getImageWidth());
+                msgContentMediaVideo.setImagePath(StringUtils.isEmpty(imagePath) ? volumeFile.getPath() : imagePath);
+                msgContentMediaVideo.setMedia(volumeFile.getPath());
+                msgContentMediaVideo.setName(volumeFile.getName());
+                msgContentMediaVideo.setVideoSize(volumeFile.getSize());
+                msgContentMediaVideo.setVideoDuration(fakeMessage.getMsgContentMediaVideo().getVideoDuration());
+                msgContentMediaVideo.setOriginMediaPath(fakeMessage.getMsgContentMediaVideo().getOriginMediaPath());
+                fakeMessage.setContent(msgContentMediaVideo.toString());
+                MessageCacheUtil.saveMessage(BaseApplication.getInstance(), fakeMessage);
+                WSAPIService.getInstance().sendMessage(fakeMessage);
+            }
+
+            @Override
+            public void onLoading(int progress, long current, String speed) {
+                //此处不进行loading进度，因为消息的发送进度不等于资源的发送进度
+            }
+
+            @Override
+            public void onFail() {
+                if (!recallSendingMessageList.contains(fakeMessage)) {
+                    //当网络失败或者发送时间已经超过10分钟时
+                    if (!NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+                        addMessageInSendRetry(fakeMessage);
+                    } else {
+                        setMessageSendFail(fakeMessage);
+                    }
+                } else {
+                    recallSendingMessageList.remove(fakeMessage);
+                }
+
+            }
+        };
+
+        if (!recallSendingMessageList.contains(fakeMessage)) {
+            ChatFileUploadManagerUtils.getInstance().uploadVideoFile(fakeMessage, progressCallback);
+        } else {
+            recallSendingMessageList.remove(fakeMessage);
+        }
     }
 
     /**

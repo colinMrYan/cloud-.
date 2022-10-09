@@ -21,6 +21,7 @@ import java.util.Set;
 public class Message implements Serializable {
     public static final String MESSAGE_TYPE_FILE_REGULAR_FILE = "file/regular-file";
     public static final String MESSAGE_TYPE_MEDIA_IMAGE = "media/image";
+    public static final String MESSAGE_TYPE_MEDIA_VIDEO = "media/video";
     public static final String MESSAGE_TYPE_MEDIA_VOICE = "media/voice";
     public static final String MESSAGE_TYPE_TEXT_PLAIN = "text/plain";
     public static final String MESSAGE_TYPE_TEXT_WHISPER = "text/whisper";
@@ -161,6 +162,9 @@ public class Message implements Serializable {
         return new MsgContentRegularFile(content);
     }
 
+    public MsgContentMediaVideo getMsgContentMediaVideo() {
+        return new MsgContentMediaVideo(content);
+    }
 
     public MsgContentMediaImage getMsgContentMediaImage() {
         return new MsgContentMediaImage(content);

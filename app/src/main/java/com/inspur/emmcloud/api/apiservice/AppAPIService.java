@@ -39,6 +39,7 @@ import org.xutils.http.RequestParams;
 public class AppAPIService {
     private Context context;
     private APIInterface apiInterface;
+    private static final String VERSION_TAG = "?version=";
 
     public AppAPIService(Context context) {
         this.context = context;
@@ -189,10 +190,12 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
             }
 
             @Override
@@ -218,7 +221,7 @@ public class AppAPIService {
      * 获取显示tab页的接口
      */
     public void getAppNewTabs(final String version, final String clientId, final String mainTabSaveConfigVersion) {
-        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
+        final String completeUrl = APIUri.getAppNewTabs() + VERSION_TAG + version + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
@@ -263,7 +266,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-
+                        // TODO Auto-generated method stub
                     }
 
                     @Override
@@ -356,7 +359,7 @@ public class AppAPIService {
      * @param versionCode
      */
     public void getSplashPageInfo(final String clientId, final String versionCode) {
-        final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
+        final String completeUrl = APIUri.getSplashPageUrl() + VERSION_TAG + versionCode + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override

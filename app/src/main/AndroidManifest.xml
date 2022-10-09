@@ -501,6 +501,12 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:name=".ui.chat.ImagePagerNewActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".ui.chat.MembersActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind"
@@ -535,6 +541,14 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".ui.chat.ConversationNameModifyActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".ui.chat.ConversationMemberManagerIndexActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".ui.chat.ConversationGroupAdministratorActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind" />
         <activity

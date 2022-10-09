@@ -309,6 +309,9 @@ public class Channel implements Serializable {
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_picture);
                     break;
+                case Message.MESSAGE_TYPE_MEDIA_VIDEO:
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_video);
+                    break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_link);
                     break;

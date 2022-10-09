@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.inspur.emmcloud.R;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -44,6 +45,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.chat.ImagePagerNewActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -177,10 +179,10 @@ public class UserInfoActivity extends BaseActivity {
         //从多组织表里获取组织
         final List<ContactOrg> contactOrgList = ContactOrgCacheUtils.getMultiOrgByInspurId(contactUser.getId());
         //如果不是多组织的则走原来逻辑
-        if(contactOrgList.size() == 0){
+        if (contactOrgList.size() == 0) {
             contactOrgList.add(ContactOrgCacheUtils.getContactOrg(contactUser.getParentId()));
         }
-        DepartMentAdpater departMentAdpater = new DepartMentAdpater(this,contactOrgList);
+        DepartMentAdpater departMentAdpater = new DepartMentAdpater(this, contactOrgList);
         departMentAdpater.setDepartMentDetailListener(new DepartMentAdpater.DepartMentDetailListener() {
             @Override
             public void onDepartMentDetailClickListener(int postion) {
@@ -283,13 +285,25 @@ public class UserInfoActivity extends BaseActivity {
                 addSystemContact();
                 break;
             case R.id.iv_user_photo:
-                Intent intent = new Intent(UserInfoActivity.this,
-                        ImagePagerV0Activity.class);
-                ArrayList<String> urls = new ArrayList<>();
-                urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contactUser.getId()));
-                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, 0);
-                intent.putStringArrayListExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urls);
-                startActivity(intent);
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                    Intent intent = new Intent(UserInfoActivity.this,
+                            ImagePagerV0Activity.class);
+                    ArrayList<String> urls = new ArrayList<>();
+                    urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contactUser.getId()));
+                    intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, 0);
+                    intent.putStringArrayListExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urls);
+                    startActivity(intent);
+                } else {
+                    // 新版图片查看器
+                    Intent intent = new Intent(UserInfoActivity.this,
+                            ImagePagerNewActivity.class);
+                    ArrayList<String> urls = new ArrayList<>();
+                    urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contactUser.getId()));
+                    intent.putExtra(ImagePagerNewActivity.EXTRA_IMAGE_INDEX, 0);
+                    intent.putStringArrayListExtra(ImagePagerNewActivity.EXTRA_IMAGE_URLS, urls);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.ll_mobile_chat:
             case R.id.iv_start_chat:
