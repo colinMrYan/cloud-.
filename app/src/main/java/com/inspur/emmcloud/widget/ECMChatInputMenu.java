@@ -1116,7 +1116,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public void updateVoiceAndMoreLayout(boolean show) {
         displayingWhisperOrBurnView = !show;
-        addBtn.setVisibility(show ? VISIBLE : GONE);
+        addBtn.setVisibility(show && StringUtils.isEmpty(getInputContent()) ? VISIBLE : GONE);
         voiceBtn.setVisibility(show ? VISIBLE : GONE);
         if (!show) {
             if (viewpagerLayout.getVisibility() == View.VISIBLE) {
