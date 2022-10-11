@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -445,7 +448,14 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        AppUtils.refreshMedia(BaseApplication.getInstance(), savedImagePath);
+        ContentResolver cr = getContext().getContentResolver();
+        // 支持各机型 图片刷到相册
+        try {
+            String insertImage = MediaStore.Images.Media.insertImage(cr, savedImagePath, System.currentTimeMillis() + ".png", null);
+            AppUtils.refreshMediaInSystemStorage(getContext(), insertImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface DownLoadProgressRefreshListener {
