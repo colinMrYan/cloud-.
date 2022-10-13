@@ -82,6 +82,12 @@
             android:screenOrientation="behind" />
 
         <activity
+            android:name=".ui.setting.NotificationSettingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+
+        <activity
             android:name=".ui.setting.SafeCenterActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

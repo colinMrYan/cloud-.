@@ -257,6 +257,7 @@
     <string name="no_this_knowledge">No this knowledge</string>
     <string name="comment">Comment</string>
     <string name="write_comment">Comment</string>
+    <string name="power_save_alert">You have joined the power saving optimization whitelist and can receive messages in a timely manner</string>
 
     <string name="news_font_name_text">Font Size</string>
     <string name="baselib_share_to">Share to</string>
@@ -1037,7 +1038,14 @@
     <string name="voice_communication_notification_group_content">Tap to recover</string>
     <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
-    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch">New message system notification</string>
+    <string name="notification_setting_title">New message notification</string>
+    <string name="notification_guide">Permission setting guide for new message reminders</string>
+    <string name="open_notification_text">New message notifications</string>
+    <string name="notification_introduce_guide">Due to the limitations of the mobile phone system, Cloud + sometimes cannot receive new messages in the background, and the timeliness of receiving new messages can be improved through the settings</string>
+    <string name="notification_power_whitelist">Add Cloud + to the power saving optimization whitelist</string>
+    <string name="notification_system_setting_guide">Go to your phone system settings to modify the tone and vibration of the new message reminder</string>
+    <string name="notification_power_guide">Enabling power saving mode may cause messages to be delayed or lost, so please add Cloud + to the power saving optimization whitelist</string>
     <string name="caring_switch">Font Size</string>
     <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>

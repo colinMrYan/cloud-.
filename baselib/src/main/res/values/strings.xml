@@ -263,6 +263,7 @@
     <string name="no_this_knowledge">暂无这条知识</string>
     <string name="comment">评论</string>
     <string name="write_comment">写评论</string>
+    <string name="power_save_alert">您已经加入到省电优化白名单，可以及时收到消息通知</string>
 
     <string name="news_font_name_text">字号</string>
     <string name="baselib_share_to">分享到</string>
@@ -1101,7 +1102,14 @@
     <string name="voice_input_clear">清空</string>
     <string name="voice_input_mention">发送给</string>
 
-    <string name="notification_switch">新消息通知</string>
+    <string name="notification_switch">新消息系统通知</string>
+    <string name="notification_setting_title">新消息通知</string>
+    <string name="notification_guide">手机新消息提醒权限设置指南</string>
+    <string name="open_notification_text">新消息通知</string>
+    <string name="notification_introduce_guide">由于手机系统的限制，导致云+在后台有时无法及时接收新消息，通过设置可提高接收新消息的及时性</string>
+    <string name="notification_power_whitelist">将云+加入省电优化白名单</string>
+    <string name="notification_system_setting_guide">前往手机系统设置修改新消息提醒的提示音与震动</string>
+    <string name="notification_power_guide">开启省电模式可能会导致消息延迟或丢失，请将云+加入到省电优化白名单</string>
     <string name="caring_switch">字体大小</string>
     <string name="caring_switch_tip">需要云+重启后才能生效</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>

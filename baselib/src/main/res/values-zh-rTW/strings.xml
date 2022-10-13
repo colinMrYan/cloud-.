@@ -262,6 +262,7 @@
     <string name="no_this_knowledge">暫無這條知識</string>
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
+    <string name="power_save_alert">您已經加入到省電優化白名單，可以及時收到消息通知</string>
 
     <string name="baselib_share_many_picture">等%1$d張圖片</string>
     <string name="baselib_share_many_files">等%1$d個文件</string>
@@ -1048,7 +1049,14 @@
     <string name="voice_communication_notification_group_content">點擊恢復</string>
     <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
-    <string name="notification_switch">新消息通知</string>
+    <string name="notification_switch">新消息系統通知</string>
+    <string name="notification_setting_title">新消息通知</string>
+    <string name="notification_guide">手機新消息提醒許可權設置指南</string>
+    <string name="open_notification_text">新消息通知</string>
+    <string name="notification_introduce_guide">由於手機系統的限制，導致雲+在後台有時無法及時接收新消息，通過設置可提高接收新消息的及時性</string>
+    <string name="notification_power_whitelist">將雲+加入省電優化白名單</string>
+    <string name="notification_system_setting_guide">前往手機系統設置修改新消息提醒的提示音與震動</string>
+    <string name="notification_power_guide">開啟省電模式可能會導致消息延遲或丟失，請將雲+加入到省電優化白名單</string>
     <string name="caring_switch">字體大小</string>
     <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
