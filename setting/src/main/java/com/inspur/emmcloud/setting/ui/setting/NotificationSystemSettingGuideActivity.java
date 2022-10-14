@@ -154,7 +154,8 @@ public class NotificationSystemSettingGuideActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 200 && resultCode == -1) {
+        // 加入白名单强制关闭省电提示
+        if (requestCode == 200 && resultCode == -1 && data == null) {
             refreshView(true);
             mark = 1;
         }
