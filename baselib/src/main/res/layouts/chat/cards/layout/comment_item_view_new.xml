@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/text_ll_color_nor"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp">
+
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        android:id="@+id/msg_img"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="12dp"
+        android:focusable="false" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/commentdetail_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="12dp"
+                android:textColor="?attr/color_4d_b3"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/commentdetail_time_text"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/color_80"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout"
+            android:layout_marginTop="6dp"
+            android:textColor="?attr/color_e6_1a"
+            android:textSize="@dimen/content_normal_textsize" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/comment_text"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="0.5px"
+            android:background="?attr/color_list_divider" />
+    </RelativeLayout>
+
+</LinearLayout>

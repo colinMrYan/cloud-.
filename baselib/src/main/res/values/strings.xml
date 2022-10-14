@@ -1215,6 +1215,8 @@
     <string name="no_notification_and_power">检测到系统通知未打开并且系统限制云+后台运行，请打开系统通知并且将云+放入省电优化白名单！！</string>
     <string name="no_notification">检测到系统通知未打开，请打开系统通知！！</string>
     <string name="no_power_save">检测到限制云+后台运行，请将云+放入省电优化白名单！！</string>
+
+    <string name="comment_count">消息回复 (%1$d)</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

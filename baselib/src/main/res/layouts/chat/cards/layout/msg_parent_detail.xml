@@ -15,8 +15,8 @@
             android:id="@+id/msg_display_header_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_fileupround_layout"
-            android:paddingLeft="15dp"
+            android:background="?attr/text_ll_color_nor"
+            android:paddingStart="15dp"
             android:paddingTop="10dp"
             android:paddingRight="20dp"
             android:paddingBottom="10dp">
@@ -35,19 +35,20 @@
                 android:layout_toRightOf="@id/sender_photo_img"
                 android:paddingRight="6dp"
                 android:singleLine="true"
-                android:textColor="@color/color_text_link"
+                android:textColor="@color/color_80"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView
                 android:id="@+id/msg_send_time_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/sender_photo_img"
+                android:layout_below="@+id/sender_name_text"
+                android:layout_marginTop="3dp"
                 android:layout_toRightOf="@id/sender_photo_img"
                 android:paddingRight="6dp"
                 android:singleLine="true"
-                android:textColor="@color/color_text_common_level_two"
-                android:textSize="@dimen/content_small_textsize" />
+                android:textColor="?attr/color_4d_b3"
+                android:textSize="@dimen/content_moresmaller_textsize" />
         </RelativeLayout>
 
         <View
@@ -61,15 +62,39 @@
             android:id="@+id/msg_display_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/line_view" />
+            android:layout_below="@id/line_view"
+            android:background="?attr/text_ll_color_nor"
+            android:paddingLeft="15dp"
+            android:paddingTop="7dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="12dp" />
     </RelativeLayout>
 
-    <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
-        android:id="@+id/comment_list"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:divider="?attr/color_bg_common"
-        android:dividerHeight="0dp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/text_ll_color_nor"
+            android:paddingLeft="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="5dp"
+            android:textColor="?attr/color_e6_1a"
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
+
+        <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
+            android:id="@+id/comment_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?attr/color_bg_common"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
 
 </LinearLayout>

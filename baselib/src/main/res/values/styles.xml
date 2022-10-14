@@ -83,6 +83,10 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="color_f6_33">@color/grey_f6f6f6</item>
+        <item name="color_ff_80">@color/color_text_tip</item>
+        <item name="color_ff_d1">@color/color_d1</item>
+        <item name="color_40_de">@color/color_de</item>
         <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
@@ -153,6 +157,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
+        <item name="ic_location">@drawable/ic_location_light</item>
+        <item name="color_e6_1a">@color/color_1a</item>
+        <item name="color_4d_b3">@color/color_b3</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
         <item name="plugin_ic_header_title_drop_down">
             @drawable/plugin_ic_header_title_drop_down_white
@@ -175,6 +182,7 @@
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_close_reply">@drawable/ic_close_small_light</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
@@ -213,6 +221,10 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="color_f6_33">@color/grey_f6f6f6</item>
+        <item name="color_ff_80">@color/color_text_tip</item>
+        <item name="color_ff_d1">@color/color_d1</item>
+        <item name="color_40_de">@color/color_de</item>
         <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
@@ -285,6 +297,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_white</item>
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
+        <item name="ic_location">@drawable/ic_location_light</item>
+        <item name="color_e6_1a">@color/color_1a</item>
+        <item name="color_4d_b3">@color/color_b3</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
         <item name="plugin_ic_header_title_drop_down">
             @drawable/plugin_ic_header_title_drop_down_white
@@ -306,6 +321,7 @@
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_close_reply">@drawable/ic_close_small_light</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
@@ -344,6 +360,10 @@
         <item name="color_3a_88">@color/color_3a</item>
         <item name="home_common_bg">@color/button_color_nor</item>
         <item name="text_ll_color_nor">@color/button_color_nor</item>
+        <item name="color_f6_33">@color/grey_f6f6f6</item>
+        <item name="color_ff_80">@color/color_text_tip</item>
+        <item name="color_ff_d1">@color/color_d1</item>
+        <item name="color_40_de">@color/color_de</item>
         <item name="bg_color_layer_layer">@color/bg_color_layer_layer</item>
         <item name="dialog_common_bg_36">@color/button_color_nor</item>
         <item name="dialog_common_bg_40">@color/button_color_nor</item>
@@ -414,6 +434,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_blue</item>
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
+        <item name="ic_location">@drawable/ic_location_dark</item>
+        <item name="color_e6_1a">@color/color_1a</item>
+        <item name="color_4d_b3">@color/color_b3</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
         <item name="plugin_ic_header_title_drop_down">
             @drawable/plugin_ic_header_title_drop_down_blue
@@ -436,6 +459,7 @@
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_normal</item>
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_normal</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_normal</item>
+        <item name="ic_chat_close_reply">@drawable/ic_close_small_light</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
@@ -474,6 +498,10 @@
         <item name="color_3a_88">@color/color_88</item>
         <item name="home_common_bg">@color/content_bg_dark</item>
         <item name="text_ll_color_nor">@color/button_color_nor_dark</item>
+        <item name="color_f6_33">@color/text_color</item>
+        <item name="color_ff_80">@color/color_tran80_ff</item>
+        <item name="color_ff_d1">@color/color_tran30_ff</item>
+        <item name="color_40_de">@color/color_40</item>
         <item name="bg_color_layer_layer">@color/bg_color_layer_layer_dark</item>
         <item name="dialog_common_bg_36">@color/color_36</item>
         <item name="dialog_common_bg_40">@color/color_40</item>
@@ -545,6 +573,9 @@
         <item name="ic_header_option">@drawable/ic_header_option_blue</item>
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
+        <item name="ic_location">@drawable/ic_location_dark</item>
+        <item name="color_e6_1a">@color/bg_color_layer_layer</item>
+        <item name="color_4d_b3">@color/bg_color_layer_layer_dark</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
         <item name="plugin_ic_header_title_drop_down">
             @drawable/plugin_ic_header_title_drop_down_blue
@@ -566,6 +597,7 @@
         <item name="ic_chat_voice_input">@drawable/ic_chat_input_voice_new_dark</item>
         <item name="ic_chat_button_add">@drawable/ic_chat_button_add_dark</item>
         <item name="ic_chat_button_emotion">@drawable/ic_chat_button_emotion_dark</item>
+        <item name="ic_chat_close_reply">@drawable/ic_close_small_dark</item>
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_dark</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_dark</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_dark</item>

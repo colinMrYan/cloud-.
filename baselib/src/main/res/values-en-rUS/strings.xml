@@ -1145,6 +1145,9 @@
     <string name="no_notification_and_power">Detects that the system notification is not turned on and the system restricts the operation of cloud + background, please open the system notification and put the cloud + into the power saving optimization whitelist!!</string>
     <string name="no_notification">Detected that the system notification is not turned on, please turn on the system notification!!</string>
     <string name="no_power_save">Monitor to limit cloud + background operation，Please put Cloud + into the power saving optimization whitelist</string>
+
+    <string name="comment_count">Message Reply(%1$d)</string>
+
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

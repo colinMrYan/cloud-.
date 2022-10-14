@@ -216,13 +216,18 @@
     <color name="color_3e">#3E4A59</color>
     <color name="color_tran90_1b">#E61B1B1B</color>
     <color name="color_tran90_ff">#E6FFFFFF</color>
+    <color name="color_tran80_ff">#CCFFFFFF</color>
+    <color name="color_tran30_ff">#3DFFFFFF</color>
     <color name="color_d1">#D1D1D1</color>
 
     <color name="bg_color_layer_layer">#E6E6E6</color>
+    <color name="color_">#E6E6E6</color>
     <color name="bg_color_layer_layer_dark">#4D4D4D</color>
     <color name="color_f1">#F1F2F5</color>
     <color name="color_12">#121212</color>
     <color name="color_87">#878787</color>
     <color name="color_80">#808080</color>
+    <color name="color_eb">#EBEBEB</color>
+    <color name="color_de">#DEDEDE</color>
 
 </resources>

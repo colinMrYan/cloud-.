@@ -1149,6 +1149,8 @@
     <string name="no_notification_and_power">檢測到系統通知未打開並且系統限制雲+後台運行</string>
     <string name="no_notification">檢測到系統通知未打開，請打開系統通知！！</string>
     <string name="no_power_save">檢測到限制雲+後台運行，請將雲+放入省電優化白名單</string>
+
+    <string name="comment_count">消息回復 (%1$d)</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>

@@ -30,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
+import com.inspur.emmcloud.ui.chat.DisplayCommentNewMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
@@ -267,7 +268,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     if (serviceConversation) {
                         cardContentView = DisplayServiceCommentTextPlainMsg.getView(context, message);
                     } else {
-                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                        // 老版
+//                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
+                        // 新版回复View
+                        cardContentView = DisplayCommentNewMsg.getView(context, message);
                     }
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:

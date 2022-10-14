@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,6 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -172,6 +172,12 @@ public class ECMChatInputMenu extends LinearLayout {
     NoScrollGridView emotionGrid;
     @BindView(R.id.emotion_btn)
     ImageButton emotionBtn;
+    @BindView(R.id.rl_reply)
+    RelativeLayout replyRl;
+    @BindView(R.id.tv_reply)
+    TextView replyTv;
+    @BindView(R.id.iv_reply_close)
+    ImageView replyCloseIv;
     EmotionAdapter emotionAdapter;
     EmotionAdapter emotionRecentAdapter;
     ArrayList<String> recentEmotionList = new ArrayList<>();
@@ -195,6 +201,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<String> languageList = new ArrayList<>();
     private ValueAnimator animator;
     private boolean displayingWhisperOrBurnView = false;
+    private boolean isDisplayReplyView = false; // 回复消息的回复布局是否展示
+    private String messageReplyID = ""; // 回复消息的消息ID
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -321,7 +329,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 sendMsgBtn.setVisibility(isContentBlank ? GONE : VISIBLE);
                 sendMsgBtn.setEnabled(!isContentBlank);
                 sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                addBtn.setVisibility(isContentBlank && !displayingWhisperOrBurnView ? VISIBLE : GONE);
+                addBtn.setVisibility(isContentBlank && !displayingWhisperOrBurnView && !isDisplayReplyView ? VISIBLE : GONE);
                 if (isGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -1076,8 +1084,8 @@ public class ECMChatInputMenu extends LinearLayout {
                             Intent intent = new Intent(getContext(), CommunicationRecordActivity.class);
 //                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, appDir.getAbsolutePath());
 //                            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, picPath);
-                            ((Activity)getContext()).startActivityForResult(intent, CAMERA_RESULT);
-                            ((Activity)getContext()).overridePendingTransition(R.anim.ps_anim_up_in, R.anim.ps_anim_fade_in);
+                            ((Activity) getContext()).startActivityForResult(intent, CAMERA_RESULT);
+                            ((Activity) getContext()).overridePendingTransition(R.anim.ps_anim_up_in, R.anim.ps_anim_fade_in);
                         }
 
                         @Override
@@ -1291,7 +1299,7 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img, R.id.voice_input_language,
-            R.id.voice_input_clear, R.id.voice_input_send, R.id.emotion_btn, R.id.emotion_delete})
+            R.id.voice_input_clear, R.id.voice_input_send, R.id.emotion_btn, R.id.emotion_delete, R.id.iv_reply_close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
@@ -1313,7 +1321,11 @@ public class ECMChatInputMenu extends LinearLayout {
                 Map<String, String> mentionsMap = null;
                 mentionsMap = inputEdit.getMentionsMap();
                 if (chatInputMenuListener != null) {
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
+                    if (isDisplayReplyView) {
+                        chatInputMenuListener.onSendReplyMsg(content, getContentMentionUidList(), null, mentionsMap, messageReplyID);
+                    } else {
+                        chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), null, mentionsMap);
+                    }
                 }
                 inputEdit.clearInsertModelList();
                 inputEdit.setText("");
@@ -1367,6 +1379,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
             case R.id.emotion_delete:  //表情删除
                 EmotionUtil.getInstance(getContext()).deleteSingleEmojcon(inputEdit);
+                break;
+            case R.id.iv_reply_close:
+                // 关闭回复布局
+                closeReplyView();
                 break;
             default:
                 break;
@@ -1653,8 +1669,45 @@ public class ECMChatInputMenu extends LinearLayout {
         this.inputMenuClickCallback = inputMenuClickCallback;
     }
 
+    // 展示回复view
+    public void showReplyView(String content, String replyId) {
+        messageReplyID = replyId;
+        isDisplayReplyView = true;
+        if (addMenuLayout.isShown()) {
+            setOtherLayoutHeightLock(true);
+//            setAddMenuLayoutShow(false);
+            hideAddMenuLayout();
+            setOtherLayoutHeightLock(false);
+        }
+        setVoiceInputStatus(TAG_KEYBOARD_INPUT);
+        InputMethodUtils.display((Activity) getContext(), inputEdit, 50);
+        addBtn.setVisibility(GONE);
+        replyTv.setText(content);
+        replyRl.setVisibility(VISIBLE);
+        voiceBtn.setVisibility(GONE);
+    }
+
+    // 关闭回复view
+    public void closeReplyView() {
+        // 关闭回复，消息ID则置为空
+        messageReplyID = "";
+        isDisplayReplyView = false;
+        replyRl.setVisibility(GONE);
+        String content = inputEdit.getText().toString().trim();
+        if (!TextUtils.isEmpty(content)) {
+            sendMsgBtn.setVisibility(VISIBLE);
+            addBtn.setVisibility(GONE);
+        } else {
+            sendMsgBtn.setVisibility(GONE);
+            addBtn.setVisibility(VISIBLE);
+        }
+        voiceBtn.setVisibility(VISIBLE);
+    }
+
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
+        void onSendReplyMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap, String mid);
 
         void onSendVoiceRecordMsg(String results, float seconds, String filePath);
 

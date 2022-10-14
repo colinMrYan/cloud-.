@@ -290,7 +290,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         public void run() {
                             chatInputMenu.updateVoiceAndMoreLayout(false);
                         }
-                    },100);
+                    }, 100);
                 }
             });
         }
@@ -427,6 +427,12 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 sendMessageWithText(content, false, mentionsMap);
+            }
+
+            // 消息回复
+            @Override
+            public void onSendReplyMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap, String mid) {
+                sendReplyComment(content, mentionsMap, mid);
             }
 
             @Override
@@ -769,6 +775,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     Message message = uiMessage.getMessage();
                     switch (message.getType()) {
                         case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                         case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                             Bundle bundle = new Bundle();
                             bundle.putString("mid", message.getId());
@@ -1520,6 +1527,16 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     * 发送消息回复文本
+     */
+    private void sendReplyComment(String content, Map<String, String> mentionsMap, String mid) {
+        chatInputMenu.closeReplyView();
+        Message replyMessage = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, content, mentionsMap);
+        addLocalMessage(replyMessage, 0);
+        MessageSendManager.getInstance().sendMessage(replyMessage);
+    }
+
+    /**
      * 发送文本消息
      */
     private void sendMessageWithText(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
@@ -2254,6 +2271,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     break;
                 case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    operationIdList.add(R.string.chat_long_click_transmit);
+                    operationIdList.add(R.string.chat_long_click_multiple);
+                    operationIdList.add(R.string.chat_long_click_reply);
+                    break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                     operationIdList.add(R.string.chat_long_click_transmit);
                     operationIdList.add(R.string.chat_long_click_multiple);
@@ -2270,6 +2291,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
                     operationIdList.add(R.string.chat_long_click_transmit);
                     operationIdList.add(R.string.chat_long_click_multiple);
+                    operationIdList.add(R.string.chat_long_click_reply);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     break;
@@ -2660,12 +2682,32 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * （图片）回复功能
      */
-    private void replyMessage(Message message) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mid", message.getId());
-        bundle.putString(EXTRA_CID, message.getChannel());
-        IntentUtils.startActivity(ConversationActivity.this,
-                ChannelMessageDetailActivity.class, bundle);
+    private void replyMessage(Message commentedMessage) {
+//        Bundle bundle = new Bundle();
+//        bundle.putString("mid", message.getId());
+//        bundle.putString(EXTRA_CID, message.getChannel());
+//        IntentUtils.startActivity(ConversationActivity.this,
+//                ChannelMessageDetailActivity.class, bundle);
+
+        // 新版回复功能
+        String userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
+        String commentedMessageType = commentedMessage.getType();
+        String commentContent;
+        switch (commentedMessageType) {
+            case "file/regular-file":
+                commentContent = getString(R.string.send_a_file);
+                break;
+            case "media/image":
+                commentContent = getString(R.string.send_a_picture);
+                break;
+            case "media/video":
+                commentContent = getString(R.string.send_a_video);
+                break;
+            default:
+                commentContent = commentedMessage.getShowContent();
+                break;
+        }
+        chatInputMenu.showReplyView(userName + "：" + commentContent, commentedMessage.getId());
     }
 
 
