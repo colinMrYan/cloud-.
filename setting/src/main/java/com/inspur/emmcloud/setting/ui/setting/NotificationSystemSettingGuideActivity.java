@@ -1,29 +1,24 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
-import android.app.Activity;
-import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.setting.R;
 import com.inspur.emmcloud.setting.R2;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +57,7 @@ public class NotificationSystemSettingGuideActivity extends BaseActivity {
 
     private void refreshView(boolean forceIgnorePowerState) {
         if (powerManager == null) powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        ignoredPowerSaving = false;
+        ignoredPowerSaving = true;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             ignoredPowerSaving = powerManager.isIgnoringBatteryOptimizations(getPackageName()) || forceIgnorePowerState;
         }
@@ -97,9 +92,8 @@ public class NotificationSystemSettingGuideActivity extends BaseActivity {
             return;
         }
         // 系统通知设置
-        // 系统通知设置
         if (i == R.id.notification_system_setting_layout) {
-            gotoNotificationSetting(this);
+            gotoNotificationSetting();
             return;
         }
         // 省电模式
@@ -127,62 +121,34 @@ public class NotificationSystemSettingGuideActivity extends BaseActivity {
     }
 
     // 进入系统通知设置界面
-    public static void gotoNotificationSetting(Activity activity) {
-        ApplicationInfo appInfo = activity.getApplicationInfo();
-        String pkg = activity.getApplicationContext().getPackageName();
-        int uid = appInfo.uid;
+    public void gotoNotificationSetting() {
+        String packageName = BaseApplication.getInstance().getPackageName();
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Intent intent = new Intent();
+            // 根据通知栏开启权限判断结果，判断是否需要提醒用户跳转系统通知管理页面
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
                 //这种方案适用于 API 26, 即8.0（含8.0）以上可以用
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE, pkg);
-                intent.putExtra(Settings.EXTRA_CHANNEL_ID, uid);
-                //这种方案适用于 API21——25，即 5.0——7.1 之间的版本可以使用
-                intent.putExtra("app_package", pkg);
-                intent.putExtra("app_uid", uid);
-                activity.startActivityForResult(intent, REQUEST_SETTING_NOTIFICATION);
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.addCategory(Intent.CATEGORY_DEFAULT);
-                intent.setData(Uri.parse("package:" + activity.getPackageName()));
-                activity.startActivityForResult(intent, REQUEST_SETTING_NOTIFICATION);
-            } else {
-                Intent intent = new Intent(Settings.ACTION_SETTINGS);
-                activity.startActivityForResult(intent, REQUEST_SETTING_NOTIFICATION);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName);
             }
+            //这种方案适用于 API21——25，即 5.0——7.1 之间的版本可以使用
+            intent.putExtra("app_package", packageName);
+            startActivity(intent);
         } catch (Exception e) {
-            Intent intent = new Intent(Settings.ACTION_SETTINGS);
-            activity.startActivityForResult(intent, REQUEST_SETTING_NOTIFICATION);
+            e.printStackTrace();
+            // 出现异常则跳转到应用设置界面
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", packageName, null);
+            intent.setData(uri);
+            startActivity(intent);
         }
     }
 
     // 确认系统通知状态
     public static boolean isNotificationEnabled(Context context) {
-        AppOpsManager mAppOps = (AppOpsManager)
-                context.getSystemService(Context.APP_OPS_SERVICE);
-        ApplicationInfo appInfo = context.getApplicationInfo();
-        String pkg = context.getApplicationContext().getPackageName();
-        int uid = appInfo.uid;
-        try {
-            Class appOpsClass = Class.forName(AppOpsManager.class.getName());
-            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
-            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-            int value = (int) opPostNotificationValue.get(Integer.class);
-            return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return false;
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        return manager.areNotificationsEnabled();
     }
 
     @Override
