@@ -1057,6 +1057,9 @@
     <string name="notification_power_whitelist">將雲+加入省電優化白名單</string>
     <string name="notification_system_setting_guide">前往手機系統設置修改新消息提醒的提示音與震動</string>
     <string name="notification_power_guide">開啟省電模式可能會導致消息延遲或丟失，請將雲+加入到省電優化白名單</string>
+    <string name="notification_system_notification_title">收不到消息通知或通知延遲？</string>
+    <string name="notification_system_guide">由於手機系統限制，你可能無法及時收到消息通知，請完成此項設置以解決該問題</string>
+    <string name="notification_system_setting_title">消息通知系統設置</string>
     <string name="caring_switch">字體大小</string>
     <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
@@ -1143,6 +1146,9 @@
     <string name="service_conversation_search"></string>
     <string name="service_search">服務號蒐索</string>
     <string name="stream_not_support">不能分享這種格式的視頻</string>
+    <string name="no_notification_and_power">檢測到系統通知未打開並且系統限制雲+後台運行</string>
+    <string name="no_notification">檢測到系統通知未打開，請打開系統通知！！</string>
+    <string name="no_power_save">檢測到限制雲+後台運行，請將雲+放入省電優化白名單</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>

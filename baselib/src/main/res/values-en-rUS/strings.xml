@@ -1046,6 +1046,9 @@
     <string name="notification_power_whitelist">Add Cloud + to the power saving optimization whitelist</string>
     <string name="notification_system_setting_guide">Go to your phone system settings to modify the tone and vibration of the new message reminder</string>
     <string name="notification_power_guide">Enabling power saving mode may cause messages to be delayed or lost, so please add Cloud + to the power saving optimization whitelist</string>
+    <string name="notification_system_notification_title">Can not receive a message notification or is the notification delayed?</string>
+    <string name="notification_system_guide">Due to phone system limitations, you may not be able to receive timely message notifications, please complete this setting to resolve the issue</string>
+    <string name="notification_system_setting_title">Message notification system settings</string>
     <string name="caring_switch">Font Size</string>
     <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
@@ -1139,6 +1142,9 @@
     <string name="service_conversation_search">Search service number</string>
     <string name="service_search">Service number search</string>
     <string name="stream_not_support">Videos in this format cannot be shared</string>
+    <string name="no_notification_and_power">Detects that the system notification is not turned on and the system restricts the operation of cloud + background, please open the system notification and put the cloud + into the power saving optimization whitelist!!</string>
+    <string name="no_notification">Detected that the system notification is not turned on, please turn on the system notification!!</string>
+    <string name="no_power_save">Monitor to limit cloud + background operation，Please put Cloud + into the power saving optimization whitelist</string>
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>

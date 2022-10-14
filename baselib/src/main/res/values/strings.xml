@@ -1110,6 +1110,9 @@
     <string name="notification_power_whitelist">将云+加入省电优化白名单</string>
     <string name="notification_system_setting_guide">前往手机系统设置修改新消息提醒的提示音与震动</string>
     <string name="notification_power_guide">开启省电模式可能会导致消息延迟或丢失，请将云+加入到省电优化白名单</string>
+    <string name="notification_system_notification_title">收不到消息通知或通知延迟？</string>
+    <string name="notification_system_guide">由于手机系统限制，你可能无法及时收到消息通知，请完成此项设置以解决该问题</string>
+    <string name="notification_system_setting_title">消息通知系统设置</string>
     <string name="caring_switch">字体大小</string>
     <string name="caring_switch_tip">需要云+重启后才能生效</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
@@ -1209,6 +1212,9 @@
     <string name="service_conversation_search">搜索服务号</string>
     <string name="service_search">服务号搜索</string>
     <string name="stream_not_support">不能分享这种格式的视频</string>
+    <string name="no_notification_and_power">检测到系统通知未打开并且系统限制云+后台运行，请打开系统通知并且将云+放入省电优化白名单！！</string>
+    <string name="no_notification">检测到系统通知未打开，请打开系统通知！！</string>
+    <string name="no_power_save">检测到限制云+后台运行，请将云+放入省电优化白名单！！</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

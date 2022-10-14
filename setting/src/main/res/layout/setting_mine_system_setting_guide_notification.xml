@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="?attr/home_common_bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/notification_setting_title"
+            android:text="@string/notification_system_setting_title"
             android:textColor="?attr/header_text_color_e1"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -38,53 +38,75 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?attr/content_bg">
+        android:background="?attr/content_bg"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/notification_setting_layout"
+        <TextView
+            android:id="@+id/error_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/ps_color_e0ff6100"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:singleLine="false"
+            android:textColor="?attr/text_color_e1" />
+
+        <RelativeLayout
+            android:id="@+id/notification_guide_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:layout_marginTop="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
             <TextView
-                android:id="@+id/setting_title"
+                android:id="@+id/guide_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
-                android:text="@string/open_notification_text"
+                android:text="@string/notification_guide"
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/switch_setting_notification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                app:thumbTint="@color/white"
-                app:track="@drawable/selector_switch_track" />
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_arrow_right" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@id/setting_title"
+                android:layout_below="@id/guide_title"
                 android:background="?attr/color_list_divider" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/notification_system_layout"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/notification_introduce_guide"
+            android:textColor="@color/color_80"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:id="@+id/notification_system_setting_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:layout_marginTop="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -95,7 +117,7 @@
                 android:layout_centerVertical="true"
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
-                android:text="@string/notification_system_notification_title"
+                android:text="@string/notification_switch"
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
@@ -113,16 +135,66 @@
                 android:layout_below="@id/system_title"
                 android:background="?attr/color_list_divider" />
         </RelativeLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/notification_system_guide"
-            android:textColor="@color/color_80"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:textSize="14sp"/>
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/notification_system_setting_guide"
+            android:textColor="@color/color_80"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:id="@+id/notification_power_saving_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/text_layout_selector"
+            android:onClick="onClick"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/power_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="@string/notification_power_whitelist"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_arrow_right" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/power_title"
+                android:background="?attr/color_list_divider" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/power_info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/notification_power_guide"
+            android:textColor="@color/color_80"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 </LinearLayout>
