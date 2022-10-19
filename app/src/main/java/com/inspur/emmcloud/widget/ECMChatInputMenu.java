@@ -920,7 +920,7 @@ public class ECMChatInputMenu extends LinearLayout {
             if (isInputFileEnable && AppRoleUtils.isCanSendFile()) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[2], functionNameArray[2], functionActionArray[2]));
             }
-            if (isInputVoiceEnable && !displayingWhisperOrBurnView) {
+            if (isInputVoiceEnable && !displayingWhisperOrBurnView && !isDisplayReplyView) {
                 voiceBtn.setVisibility(VISIBLE);
             } else {
                 voiceBtn.setVisibility(GONE);

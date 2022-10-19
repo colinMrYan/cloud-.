@@ -141,7 +141,10 @@ public class DisplayCommentNewMsg {
                     originTv.setVisibility(View.VISIBLE);
                     originIv.setVisibility(View.GONE);
                     videoRl.setVisibility(View.GONE);
-                    originTv.setText(commentedMessage.getMsgContentTextPlain().getText());
+                    String originText = commentedMessage.getMsgContentTextPlain().getText();
+                    String originSpannableString = ChatMsgContentUtils.getMentions(originText, commentedMessage.getMsgContentTextPlain().getMentionsMap());
+                    Spannable originSpan = EmotionUtil.getInstance(context).getSmiledText(originSpannableString, originTv.getTextSize());
+                    originTv.setText(originSpan);
                     break;
             }
         } else {

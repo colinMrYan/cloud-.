@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -304,7 +306,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             msgDisplayView = inflater.inflate(R.layout.msg_common_text_detail, null);
             msgContent = (TextView) msgDisplayView
                     .findViewById(R.id.content_text);
-            msgContent.setText(message.getMsgContentTextPlain().getText());
+            String originText = message.getMsgContentTextPlain().getText();
+            String originSpannableString = ChatMsgContentUtils.getMentions(originText, message.getMsgContentTextPlain().getMentionsMap());
+            Spannable originSpan = EmotionUtil.getInstance(this).getSmiledText(originSpannableString, msgContent.getTextSize());
+            msgContent.setText(originSpan);
 
         } else {
             msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
