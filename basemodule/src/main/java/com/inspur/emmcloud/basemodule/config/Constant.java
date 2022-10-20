@@ -32,6 +32,7 @@ public class Constant {
     public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
     public static final String PREF_LOGIN_FORGET_URL = "login_forget_url";
     public static final String PREF_LOGIN_MODIFY_URL = "login_modify_url";
+    public static final String PREF_EMAIL_INFO = "email_auto_hold";
     public static final String PREF_CURRENT_ENTERPRISE_ID = "current_enterprise_id";
     public static final String PREF_CONTACT_USER_LASTQUERYTIME = "contact_user_lastquerytime";
     public static final String PREF_CONTACT_ORG_LASTQUERYTIME = "contact_org_lastquerytime";
@@ -110,11 +111,16 @@ public class Constant {
     public static final String EVENTBUS_TAG_REFRESH_CONVERSATION = "tag_refresh_conversation";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_RECALL_MESSAGE = "tag_recall_message";
+    public static final String EVENTBUS_TAG_ENABLE_SILENT = "tag_enable_silent";
+    public static final String EVENTBUS_TAG_DISABLE_SILENT = "tag_disable_silent";
+    public static final String EVENTBUS_TAG_ADMINISTRATOR_ADD = "tag_administrator_add";
+    public static final String EVENTBUS_TAG_ADMINISTRATOR_REMOVE = "tag_administrator_remove";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_RECALL_MESSAGE = "tag_current_channel_recall_message";
     public static final String EVENTBUS_TAG_COMMAND_BATCH_MESSAGE = "tag_command_batch_message";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_COMMAND_BATCH_MESSAGE = "tag_current_channel_command_batch_message";
     public static final String EVENTBUS_TAG_VIDEO_CALL = "client.video.call";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
+    public static final String EVENTBUS_TAG_ON_PHOTO_LONG = "tag_on_photo_long";
     public static final String EVENTBUS_TAG_ON_PHOTO_CLOSE = "tag_on_photo_close";
     //频道本身属性发生变化（非消息导致）
     public static final String EVENTBUS_TAG_CONVERSATION_SELF_DATA_CHANGED = "tag_conversation_self_data_changed";
@@ -281,6 +287,7 @@ public class Constant {
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER = "/communication/ImagePagerActivity";
+    public static final String AROUTER_CLASS_COMMUNICATION_IMAGEPAGER_NEW = "/communication/ImagePagerNewActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_SHARE_FILE = "/communication/ShareFilesActivity";
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER_DEL = "/communication/ChannelMembersDelActivity";
     public static final String AROUTER_CLASS_CONVERSATION = "/communication/ConversationActivity";
@@ -387,4 +394,10 @@ public class Constant {
     public static final int APP_THEME_DARK = 3;
 
     public static final int MULTI_SELECT_COUNT = 9;
+
+    /**
+     * 短视频，拍照等输入目录
+     */
+    public static final String DEFAULT_MEDIA_PACK_FOLDER = "InspurCompress";
+    public static final String OUTPUT_DIR_NAME = "InspurUGC";
 }

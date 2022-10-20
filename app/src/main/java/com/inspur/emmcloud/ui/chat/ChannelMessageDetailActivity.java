@@ -1,10 +1,16 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,21 +22,33 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.media.player.VideoPlayerActivity;
+import com.inspur.emmcloud.basemodule.media.player.basic.PlayerGlobalConfig;
+import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
+import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -40,7 +58,10 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -52,16 +73,21 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
+import com.tencent.rtmp.TXLiveConstants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
 
 
 /**
@@ -81,6 +107,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircleTextImageView senderHeadImg;
     private TextView msgSendTimeText;
+    private TextView countTv;
     private TextView senderNameText;
     private ImageView msgContentImg;
     private TextView msgContent;
@@ -128,6 +155,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 .findViewById(R.id.comment_list);
         msgDisplayLayout = (RelativeLayout) msgDetailLayout
                 .findViewById(R.id.msg_display_layout);
+        countTv = (TextView) msgDetailLayout.findViewById(R.id.tv_count);
         commentScrollView.addView(msgDetailLayout);
         initChatInputMenu();
     }
@@ -147,6 +175,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsMap);
+            }
+
+            @Override
+            public void onSendReplyMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap, String mid) {
+
             }
 
             @Override
@@ -206,7 +239,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void displayMsgDetail() {
         disPlayCommonInfo();
         View msgDisplayView = null;
-        if (message.getType().equals("media/image")){
+        if (message.getType().equals("media/image")) {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
                     .findViewById(R.id.content_img);
@@ -214,11 +247,19 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     .findViewById(R.id.comment_filename_text);
             TextView fileSizeText = (TextView) msgDisplayView
                     .findViewById(R.id.comment_filesize_text);
-            String fileName;
-            String fileSize;
+//            String fileName;
+//            String fileSize;
+//            fileName = msgContentMediaImage.getName();
+//            fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
             MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
-            fileName = msgContentMediaImage.getName();
-            fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
+            //判断是否有Preview 图片如果有的话用preview ，否则用原图
+            int w = msgContentMediaImage.getRawWidth();
+            int h = msgContentMediaImage.getRawHeight();
+            if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
+                h = msgContentMediaImage.getPreviewHeight();
+                w = msgContentMediaImage.getPreviewWidth();
+            }
+            setImgViewSize(this, msgContentImg, w, h);
             String imgPathResult = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentMediaImage.getRawMedia());
             boolean isHaveOriginalImage = ImageDisplayUtils.getInstance().isHaveCacheImage(imgPathResult);
             if (!isHaveOriginalImage) {
@@ -234,15 +275,43 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     displayZoomImage(v, imgPath);
                 }
             });
-            fileNameText.setText(fileName);
-            fileSizeText.setText(fileSize);
-        } else if (message.getType().equals("text/plain")){
+//            fileNameText.setText(fileName);
+//            fileSizeText.setText(fileSize);
+        } else if (message.getType().equals("media/video")) {
+            msgDisplayView = inflater.inflate(R.layout.msg_video_detail, null);
+            ImageView videoIv = (ImageView) msgDisplayView
+                    .findViewById(R.id.iv_video);
+            MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
+            setImgViewSize(this, videoIv, msgContentMediaVideo.getImageWidth(),
+                    msgContentMediaVideo.getImageHeight());
+            loadVideoMessage(videoIv);
+            videoIv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PlayerGlobalConfig config = PlayerGlobalConfig.getInstance();
+                    config.renderMode = TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
+                    Intent intentVideo = new Intent(ChannelMessageDetailActivity.this, VideoPlayerActivity.class);
+                    String path = message.getMsgContentMediaVideo().getMedia();
+                    String videoPath;
+                    videoPath = APIUri.getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + StringUtils.encodeURIComponent(path) + "&inlineContent=true";
+                    MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
+                    String imagePath = msgContentMediaVideo.getImagePath();
+                    String mediaPath = StringUtils.isEmpty(msgContentMediaVideo.getOriginMediaPath()) ? message.getLocalPath() : msgContentMediaVideo.getOriginMediaPath();
+                    intentVideo.putExtra(VIDEO_THUMBNAIL_PATH, !StringUtils.isEmpty(imagePath) && imagePath.startsWith("http") ? imagePath : mediaPath);
+                    intentVideo.putExtra(VIDEO_PATH, videoPath);
+                    startActivity(intentVideo);
+                }
+            });
+        } else if (message.getType().equals("text/plain")) {
             msgDisplayView = inflater.inflate(R.layout.msg_common_text_detail, null);
             msgContent = (TextView) msgDisplayView
                     .findViewById(R.id.content_text);
-            msgContent.setText(message.getMsgContentTextPlain().getText());
+            String originText = message.getMsgContentTextPlain().getText();
+            String originSpannableString = ChatMsgContentUtils.getMentions(originText, message.getMsgContentTextPlain().getMentionsMap());
+            Spannable originSpan = EmotionUtil.getInstance(this).getSmiledText(originSpannableString, msgContent.getTextSize());
+            msgContent.setText(originSpan);
 
-        }else{
+        } else {
             msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
             msgDisplayView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -278,7 +347,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         ArrayList<String> urlList = new ArrayList<>();
         urlList.add(url);
         Intent intent = new Intent(getApplicationContext(),
-                ImagePagerActivity.class);
+                ImagePagerNewActivity.class);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
         intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
@@ -336,6 +405,13 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             case R.id.ibt_back:
                 onBackPressed();
                 break;
+            case R.id.iv_location:
+                // 定位到聊天
+                Bundle bundle = new Bundle();
+                bundle.putString(ConversationActivity.EXTRA_CID, cid);
+                bundle.putSerializable(ConversationActivity.EXTRA_POSITION_MESSAGE, new UIMessage(message));
+                IntentUtils.startActivity(this, ConversationActivity.class, bundle, true);
+                break;
             default:
                 break;
         }
@@ -376,6 +452,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         } else {
             commentAdapter.notifyDataSetChanged();
         }
+        countTv.setVisibility(View.VISIBLE);
+        countTv.setText(getString(R.string.comment_count, commentList.size()));
         // 滚动到页面最后
         commentScrollView.post(new Runnable() {
             public void run() {
@@ -453,6 +531,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     commentAdapter = new CommentAdapter();
                     commentListView.setAdapter(commentAdapter);
                     commentAdapter.notifyDataSetChanged();
+                    countTv.setVisibility(View.VISIBLE);
+                    countTv.setText(getString(R.string.comment_count, commentList.size()));
+                } else {
+                    countTv.setVisibility(View.GONE);
                 }
             } else {
 //                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
@@ -499,7 +581,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.comment_item_view, null);
+            convertView = vi.inflate(R.layout.comment_item_view_new, null);
             TextView userNameText = (TextView) convertView
                     .findViewById(R.id.tv_name);
             TextView sendTimeText = (TextView) convertView
@@ -530,4 +612,126 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             return convertView;
         }
     }
+
+    // 加载视频消息类型View
+    private void loadVideoMessage(final ImageView videoIv) {
+        MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
+        final int chatImgBg = ResourceUtils.getResValueOfAttr(this, R.attr.bg_chat_img);
+        String imagePath = msgContentMediaVideo.getImagePath();
+        String localPath = message.getLocalPath();
+        // 视频压缩时，获取原路径，Glide缓存key为原路径
+        if (!TextUtils.isEmpty(msgContentMediaVideo.getOriginMediaPath())) {
+            localPath = msgContentMediaVideo.getOriginMediaPath();
+        }
+        // 先使用缓存，再使用本地加载，再请求网络
+        if (imagePath.startsWith("http")) {
+            GlideEngine.createGlideEngine().loadVideoThumbnailImage(this, imagePath, 0, 0, videoIv, chatImgBg, new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    if (e != null && e.getMessage().contains("FileNotFoundException")) {
+                        // 防止Glide缓存失效，重新请求
+                        JSONObject object = JSONUtils.getJSONObject(message.getContent());
+                        JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
+                        try {
+                            picInfo.put("media", "");
+                        } catch (JSONException jsonException) {
+                            jsonException.printStackTrace();
+                        }
+                        message.setContent(object.toString());
+                        MessageCacheUtil.saveMessage(ChannelMessageDetailActivity.this, message);
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+            });
+        } else {
+            // 防止图片本地被删除，不为空再加载本地资源
+            if (!TextUtils.isEmpty(localPath)) {
+                GlideEngine.createGlideEngine().loadVideoThumbnailImage(this, localPath, 0, 0, videoIv, chatImgBg, new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        message.setLocalPath("");
+                        loadVideoCover(ChannelMessageDetailActivity.this, videoIv, chatImgBg, message);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                });
+            } else {
+                loadVideoCover(this, videoIv, chatImgBg, message);
+            }
+        }
+    }
+
+    private static void loadVideoCover(final Context context, final ImageView imageView, final int chatImgBg, final Message message) {
+        imageView.setImageResource(chatImgBg);
+        BaseModuleApiService appAPIService = new BaseModuleApiService(context);
+        appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {
+            @Override
+            public void returnVideoSuccess(final String url) {
+                PictureThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject object = JSONUtils.getJSONObject(message.getContent());
+                        JSONObject picInfo = JSONUtils.getJSONObject(object, "thumbnail", new JSONObject());
+                        try {
+                            picInfo.put("media", url);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        message.setContent(object.toString());
+                        MessageCacheUtil.saveMessage(context, message);
+                        GlideEngine.createGlideEngine().loadVideoThumbnailImage(context, url, 0, 0, imageView, chatImgBg, null);
+                    }
+                });
+            }
+
+            @Override
+            public void returnVideoFail(String error, int errorCode) {
+            }
+
+        });
+        String originUlr = APIUri.getECMChatUrl() + "/api/v1/channel/" + message.getChannel() + "/file/request?path=" + StringUtils.encodeURIComponent(message.getMsgContentMediaVideo().getMedia()) + "&inlineContent=true";
+        appAPIService.getVideoUrl(originUlr);
+    }
+
+    private static boolean setImgViewSize(Activity context, ImageView imageView, int w, int h) {
+        if (w == 0 || h == 0) {
+            return false;
+        }
+        int minW = DensityUtil.dip2px(context, 120);
+        int minH = DensityUtil.dip2px(context, 120);
+        int maxW = DensityUtil.dip2px(context, 260);
+        int maxH = DensityUtil.dip2px(context, 260);
+        LayoutParams params = imageView.getLayoutParams();
+        if (w == h) {
+            params.width = maxW;
+            params.height = maxH;
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else if (h > w) {
+            params.height = maxH;
+            params.width = (int) (maxH * 1.0 * w / h);
+            if (params.width < minW) {
+                params.width = minW;
+            }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        } else {
+            params.width = maxW;
+            params.height = (int) (maxW * 1.0 * h / w);
+            if (params.height < minH) {
+                params.height = minH;
+            }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+        imageView.setLayoutParams(params);
+        return true;
+    }
+
 }

@@ -113,6 +113,8 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public  static final int REQUEST_CONNECT_DEVICE_SECURE = 14;
     public static final int REQUEST_CONNECT_DEVICE_INSECURE = 15;
     public static final int SELECTOR_SERVICE_GALLERY_REQUEST = 16;
+    public static String EXTRA_CALLBACK_SUCCESS = "success";
+    public static String EXTRA_CALLBACK_FAIL = "fail";
 //    public  static final int GELLARY_RESULT = 2;
     private static final String JAVASCRIPT_PREFIX = "javascript:";
     private static String EXTRA_OUTSIDE_URL = "extra_outside_url";

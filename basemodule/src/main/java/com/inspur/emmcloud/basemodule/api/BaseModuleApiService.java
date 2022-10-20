@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
@@ -30,6 +31,8 @@ import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 import org.xutils.x;
 
 import java.util.List;
@@ -633,4 +636,61 @@ public class BaseModuleApiService {
         });
     }
 
+
+    public void getVideoUrl(String url) {
+        RequestParams params = new RequestParams(url);
+        String versionValue = AppUtils.getVersion(BaseApplication.getInstance());
+        try {
+            Version version = Version.valueOf(versionValue);
+            versionValue = version.getNormalVersion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.addHeader("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+        params.addHeader("Authorization", BaseApplication.getInstance().getToken());
+        params.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        params.addHeader("Content-Disposition", "inline");
+        params.addHeader(
+                "User-Agent",
+                "Android/" + AppUtils.getReleaseVersion() + "("
+                        + AppUtils.GetChangShang() + " " + AppUtils.GetModel()
+                        + ") " + "CloudPlus_Phone/"
+                        + versionValue);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest request) throws Throwable {
+                String locationUrl = request.getResponseHeader("Location");
+                apiInterface.returnVideoSuccess(locationUrl);
+                return null;
+            }
+        });
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnVideoSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+
+                apiInterface.returnVideoFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getBadgeCountFromBadgeServer();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
 }

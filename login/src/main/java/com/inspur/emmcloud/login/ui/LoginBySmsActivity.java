@@ -168,6 +168,13 @@ public class LoginBySmsActivity extends BaseActivity {
     private void enterApp() {
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
         if (!isHasSetShortPassword) {
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             IntentUtils.startActivity(LoginBySmsActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
             ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();

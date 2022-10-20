@@ -97,8 +97,8 @@ public class SettingActivity extends BaseActivity {
     RelativeLayout switchTabLayout;
     @BindView(R2.id.tv_setting_tab_name)
     TextView tabName;
-    @BindView(R2.id.switch_view_setting_notification)
-    SwitchCompat notificationSwitch;
+    @BindView(R2.id.rl_setting_notification_layout)
+    RelativeLayout notificationLayout;
     @BindView(R2.id.switch_view_setting_native_rotate)
     SwitchCompat nativeRotateSwitch;
     @BindView(R2.id.phone_recognize_layout)
@@ -162,7 +162,6 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        notificationSwitch.setChecked(getSwitchOpen());
     }
 
     /**
@@ -211,28 +210,6 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         }
-        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {    //代表上升沿 先检测
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        showNotificationDlg(isChecked);
-                    } else {
-                        PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
-                        switchPush();
-                        notificationSwitch.setChecked(true);
-                    }
-                } else {
-                    if (NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
-                        showNotificationCloseDlg();
-                    } else {
-                        PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
-                        notificationSwitch.setChecked(false);
-                    }
-                }
-            }
-        });
 
         if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
@@ -246,29 +223,6 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() > 1 ? View.VISIBLE : View.GONE);
         tabName.setText(getTabLayoutName());
-    }
-
-    private void showNotificationCloseDlg() {
-        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
-                .setMessage(R.string.notification_switch_cant_recive)
-                .setCancelable(false)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        notificationSwitch.setChecked(true);
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        notificationSwitch.setChecked(false);
-                        PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
-                        switchPush();
-                    }
-                })
-                .show();
     }
 
     private String getTabLayoutName() {
@@ -404,6 +358,8 @@ public class SettingActivity extends BaseActivity {
             IntentUtils.startActivity(SettingActivity.this, PhoneRecognizeActivity.class);
         } else if (i == R.id.font_size_layout) {
             IntentUtils.startActivity(SettingActivity.this, TextSizeSettingActivity.class);
+        } else if (i == R.id.rl_setting_notification_layout) {
+            IntentUtils.startActivity(SettingActivity.this, NotificationSettingActivity.class);
         } else {
         }
     }
@@ -411,39 +367,6 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * 弹出注销提示框
-     */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void showNotificationDlg(boolean isChecked) {
-        if (!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
-            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
-            notificationSwitch.setChecked(false);
-            new CustomDialog.MessageDialogBuilder(SettingActivity.this)
-                    .setCancelable(false)
-                    .setMessage(getString(R.string.notification_switch_open_setting))
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    })
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            NotificationSetUtils.openNotificationSetting(SettingActivity.this);
-                        }
-                    })
-                    .show();
-        } else {
-            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, isChecked);
-            PushManagerUtils.getInstance().startPush();
-            notificationSwitch.setChecked(isChecked);
-        }
     }
 
 

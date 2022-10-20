@@ -204,7 +204,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.titleText.setText(conversationName);
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
-                    holder.titleText.setText(uiConversation.getTitle());
+                holder.titleText.setText(uiConversation.getTitle());
                 ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**机器人、服务号频道**/
                 Robot robot = RobotCacheUtils.getRobotById(context, uiConversation.getConversation().getName());
@@ -305,10 +305,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
         holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? VISIBLE : View.INVISIBLE);
         if (uiConversation.getUnReadCount() > 0) {
-            if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)){
+            if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) {
                 holder.unreadIcon.setVisibility(VISIBLE);
                 holder.unreadText.setVisibility(GONE);
-            }else {
+            } else {
                 holder.unreadIcon.setVisibility(GONE);
                 holder.unreadText.setVisibility(VISIBLE);
                 holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
@@ -349,7 +349,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         String uid = mentionsMap.get(key);
                         uidList.add(uid);
                         if ((uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid))) {
-                            newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + (isWhisperType ? BaseApplication.getInstance().getString(R.string.send_a_whispers) : message.getShowContent());
+                            if (isWhisperType) {
+                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_whispers);
+                            } else if (Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN.equals(message.getType())) {
+                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_comment);
+                            } else {
+                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + message.getShowContent();
+                            }
                             contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
                             return contentStringBuilder.toString();
                         }

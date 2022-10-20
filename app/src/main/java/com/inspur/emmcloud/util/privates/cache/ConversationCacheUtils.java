@@ -9,6 +9,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.componentservice.communication.RecentTransmitModel;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 
 import org.json.JSONArray;
@@ -279,7 +280,6 @@ public class ConversationCacheUtils {
         try {
             conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).findAll();
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
         if (conversationList == null) {
@@ -541,7 +541,7 @@ public class ConversationCacheUtils {
 
     public static List<Conversation> getConversationListByIdList(Context context, List<String> conversationIdList) {
         List<Conversation> conversationList = new ArrayList<>();
-        if(conversationIdList == null || conversationIdList.size() == 0){
+        if (conversationIdList == null || conversationIdList.size() == 0) {
             return conversationList;
         }
         try {
@@ -554,4 +554,44 @@ public class ConversationCacheUtils {
         }
         return conversationList;
     }
+
+    /**
+     * 存储频道列表
+     *
+     * @param recentTransmitModel 最近转发 conversation
+     */
+    public static void saveRecentTransmitConversation(Context context, RecentTransmitModel recentTransmitModel) {
+        try {
+            if (recentTransmitModel == null) {
+                return;
+            }
+            DbCacheUtils.getDb(context).saveOrUpdate(recentTransmitModel);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取最近转发列表
+     */
+    public static List<Conversation> getRecentTransmitIdList(Context context) {
+        List<RecentTransmitModel> list = null;
+        try {
+            list = DbCacheUtils.getDb(context).selector(RecentTransmitModel.class)
+                    .orderBy("lastUpdate", true).limit(5).findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        List<Conversation> conversationList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            conversationList.add(getConversation(context, list.get(i).getId()));
+        }
+        return conversationList;
+    }
+
+
 }

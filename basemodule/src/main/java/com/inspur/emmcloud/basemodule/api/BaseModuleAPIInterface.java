@@ -64,4 +64,6 @@ public interface BaseModuleAPIInterface {
 
     void returnCallbackAfterFileUploadFail(String error, int errorCode);
 
+    void returnVideoSuccess(String url);
+    void returnVideoFail(String error, int errorCode);
 }

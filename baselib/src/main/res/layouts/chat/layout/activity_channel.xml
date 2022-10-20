@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="25dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="25dp"
             android:onClick="onClick"
             android:text="@string/cancel"
             android:textColor="?attr/header_text_color_e1"
@@ -173,8 +173,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:padding="6dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_normal_close" />
 
@@ -186,63 +185,85 @@
         android:layout_height="wrap_content"
         android:background="?attr/text_ll_color_nor" />
 
-<!--    后续单独封装通用布局-->
+    <LinearLayout
+        android:id="@+id/silent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/text_ll_color_nor"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/member_manager_forbidden_speak"
+            android:textColor="?attr/text_color"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <!--    后续单独封装通用布局-->
     <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:visibility="gone"
-        android:background="?attr/text_ll_color_nor">
+        android:background="?attr/text_ll_color_nor"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/multi_transfer_single_ll"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:onClick="onClick"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <ImageView
-                android:layout_height="20dp"
                 android:layout_width="20dp"
-                android:layout_marginTop="7.5dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
-                android:src="?attr/multi_transfer_single_icon"/>
+                android:layout_marginTop="7.5dp"
+                android:src="?attr/multi_transfer_single_icon" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"
-                android:textColor="?attr/text_color"
-                android:text="@string/multi_transfer_single"/>
+                android:layout_marginTop="5dp"
+                android:text="@string/multi_transfer_single"
+                android:textColor="?attr/text_color" />
         </LinearLayout>
 
         <View
             android:layout_width="1px"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
-            android:background="#e6e6e6"/>
+            android:background="#e6e6e6" />
 
 
         <LinearLayout
             android:id="@+id/multi_transfer_all_ll"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:onClick="onClick"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <ImageView
-                android:layout_height="20dp"
                 android:layout_width="20dp"
-                android:layout_marginTop="7.5dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
-                android:src="?attr/multi_transfer_all_icon"/>
+                android:layout_marginTop="7.5dp"
+                android:src="?attr/multi_transfer_all_icon" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"
-                android:textColor="?attr/text_color"
-                android:text="@string/multi_transfer_all"/>
+                android:layout_marginTop="5dp"
+                android:text="@string/multi_transfer_all"
+                android:textColor="?attr/text_color" />
         </LinearLayout>
     </LinearLayout>
 

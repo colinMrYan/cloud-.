@@ -28,10 +28,10 @@
 
     <ImageView
         android:id="@+id/iv_play_video"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/ps_ic_video_play"
+        android:src="@drawable/ic_vod_play_normal"
         android:visibility="gone" />
 
 

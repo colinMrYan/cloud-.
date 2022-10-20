@@ -24,6 +24,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateGroupConversat
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.componentservice.login.OauthCallBack;
+import com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity;
 import com.inspur.emmcloud.ui.chat.mvp.contract.ConversationInfoContract;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiServiceImpl;
 import com.inspur.emmcloud.ui.chat.mvp.model.api.ApiUrl;
@@ -42,6 +43,10 @@ import org.xutils.http.RequestParams;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity.QEQUEST_GROUP_MANAGE;
+
 /**
  * Created by libaochao on 2019/10/12.
  */
@@ -51,7 +56,6 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     private static final int QEQUEST_FILE_TRANSFER = 4;
-    private static final int REQUEST_GROUP_TRANSFER = 5;
 
     Conversation mConversation = new Conversation();
 
@@ -72,6 +76,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
          */
         //查实际人数保证查到的人都是存在的群成员
         Boolean isOwner = conversation.getOwner().equals(BaseApplication.getInstance().getUid());
+        Boolean isAdmin = conversation.getAdministratorList().contains(BaseApplication.getInstance().getUid());
         List<String> conversationMembersList = conversation.getMemberList();
         List<String> uiMemberUidList = new ArrayList<>();
         List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(conversationMembersList, isOwner ? 43 : 44);
@@ -83,10 +88,10 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
         if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             uiMemberUidList.add("fileTransfer");
         } else {
-            if(AppTabUtils.hasContactPermission(context)){
+            if (AppTabUtils.hasContactPermission(context)) {
                 uiMemberUidList.add("addUser");
             }
-            if (isOwner) {
+            if (isOwner || isAdmin) {
                 uiMemberUidList.add("deleteUser");
             }
         }
@@ -101,7 +106,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             uiUidList.add("fileTransfer");
         } else {
             uiUidList.add(uid);
-            if(AppTabUtils.hasContactPermission(context)){
+            if (AppTabUtils.hasContactPermission(context)) {
                 uiUidList.add("addUser");
             }
         }
@@ -188,7 +193,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mView.dismissLoading();
                 ArrayList<String> memberUidList = mConversation.getMemberList();
                 memberUidList.addAll(uidList);
-                if (needUpdateGroupName(mConversation.getMemberList())){
+                if (needUpdateGroupName(mConversation.getMemberList())) {
                     updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)), null);
                 }
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
@@ -233,8 +238,8 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mView.dismissLoading();
                 ArrayList<String> memberUidList = mConversation.getMemberList();
                 memberUidList.removeAll(uidList);
-                if (needUpdateGroupName(mConversation.getMemberList())){
-                    updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)),null);
+                if (needUpdateGroupName(mConversation.getMemberList())) {
+                    updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)), null);
                 }
                 mConversation.setMembers(JSONUtils.toJSONString(memberUidList));
                 ConversationCacheUtils.setConversationMember(MyApplication.getInstance(), mConversation.getId(), memberUidList);
@@ -286,6 +291,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 mConversation = new Conversation(object);
                 Conversation conversation = ConversationCacheUtils.getConversation(context, mConversation.getId());
                 mConversation.setHide(conversation.isHide());
+                ConversationCacheUtils.saveConversation(mView.getContext(), mConversation);
                 mView.initView(mConversation);
             }
 
@@ -419,8 +425,8 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
     public void delChannel() {
         ArrayList<String> memberUidList = mConversation.getMemberList();
         memberUidList.remove(BaseApplication.getInstance().getUid());
-        if (needUpdateGroupName(mConversation.getMemberList())){
-            updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)),null);
+        if (needUpdateGroupName(mConversation.getMemberList())) {
+            updateGroupName(createChannelGroupName(createSequenceUserArray(memberUidList)), null);
         }
         final String conversationId = mConversation.getId();
         String completeUrl = ApiUrl.getDeleteChannelUrl(conversationId);
@@ -480,6 +486,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 ApiServiceImpl.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
+
             @Override
             public void callbackSuccess(byte[] arg0) {
                 mView.dismissLoading();
@@ -496,7 +503,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                 ConversationCacheUtils.updateConversationName(BaseApplication.getInstance(), mConversation.getId(), newName);
                 mConversation.setName(newName);
                 mConversation.setShowName(newName);
-                ConversationCacheUtils.updateConversation(MyApplication.getInstance(), mConversation,"showName", "name");
+                ConversationCacheUtils.updateConversation(MyApplication.getInstance(), mConversation, "showName", "name");
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, mConversation));
 //                mView.updateUiConversation(mConversation);
 //                mView.updateGroupNameSuccess();
@@ -515,7 +522,7 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
             }
         });
 
-        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -547,9 +554,17 @@ public class ConversationInfoPresenter extends BasePresenter<ConversationInfoCon
                     break;
                 case QEQUEST_FILE_TRANSFER:
                     mView.activityFinish();
-                case REQUEST_GROUP_TRANSFER:
-                    String selectOwner = data.getStringExtra("selectOwner");
-                    mView.updateGroupTransferSuccess(selectOwner);
+                case QEQUEST_GROUP_MANAGE:
+                    String selectOwner = data.getStringExtra(ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER);
+                    if (!android.text.TextUtils.isEmpty(selectOwner)) {
+                        mView.updateGroupTransferSuccess(selectOwner);
+                    }
+                    if (data.hasExtra(INTENT_SILENT)) {
+                        mView.updateSilent(data.getBooleanExtra(INTENT_SILENT, false));
+                    }
+                    if (data.hasExtra(INTENT_ADMIN_LIST)) {
+                        mView.updateAdminList(data.getStringArrayListExtra(INTENT_ADMIN_LIST));
+                    }
                     break;
                 default:
                     break;

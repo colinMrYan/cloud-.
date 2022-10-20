@@ -203,6 +203,12 @@
     <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="channel_group_qrcode">Group QR Code</string>
+    <string name="channel_group_member_manager">Group management</string>
+    <string name="member_manager_transfer_owner">Group owner management right transfer</string>
+    <string name="member_manager_name">Group administrator</string>
+    <string name="member_manager_forbidden_speak">All employees are forbidden to speak</string>
+    <string name="group_administrator_info">The group administrator can have the following capabilities:\n1. Set all members to be forbidden to speak.\n2. After all members are forbidden to speak, only the group owner and the administrator are allowed to speak.</string>
+
     <string name="channel_group_qrcode_card">Group QR Code</string>
     <string name="channel_group_qrcode_valid">Valid until %1$s and will update upon joining group</string>
     <string name="meeting_room">Meeting Room</string>
@@ -251,6 +257,7 @@
     <string name="no_this_knowledge">No this knowledge</string>
     <string name="comment">Comment</string>
     <string name="write_comment">Comment</string>
+    <string name="power_save_alert">You have joined the power saving optimization whitelist and can receive messages in a timely manner</string>
 
     <string name="news_font_name_text">Font Size</string>
     <string name="baselib_share_to">Share to</string>
@@ -281,6 +288,7 @@
     <string name="communicate">Messages</string>
     <string name="group_info">Inspur Infomation</string>
     <string name="send_a_picture">[Image]</string>
+    <string name="send_a_video">[Video]</string>
     <string name="send_a_comment">[Comment]</string>
     <string name="send_a_file">[File]</string>
     <string name="send_a_link">[Link]</string>
@@ -304,6 +312,8 @@
     <string name="creat_group_fail">Group creation failed</string>
     <string name="all_group_member">Members(%1$d)</string>
     <string name="add_group_member">Add Member </string>
+    <string name="add_group_administrator">Add administrator</string>
+    <string name="remove_group_administrator">Remove administrator</string>
     <string name="channel_group">Group</string>
     <string name="group_member">Members List</string>
     <string name="group_name_cannot_null">Please type group name </string>
@@ -355,6 +365,7 @@
     <string name="chat_long_click_copy">Copy</string>
     <string name="chat_long_click_multiple">Multiple selection</string>
     <string name="chat_long_click_transmit">Forward</string>
+    <string name="transmit_operate">Forward to</string>
     <string name="chat_long_click_recall">Recall</string>
     <string name="chat_info_message_status_recall">%1$s recalled a message</string>
     <string name="recall_fail_for_timeout">You cannot recall a sent message after two minutes.</string>
@@ -385,6 +396,10 @@
     <string name="chat_group_member_size">%1$s (%2$d)</string>
     <string name="chat_group_qr_code_share">Share Group QrCode</string>
     <string name="chat_search_related_messages">Record(s) for%1$s</string>
+    <string name="sensitive_words_matched_error">Sensitive words are involved and cannot be sent</string>
+    <string name="channel_silent_error">This group has been forbidden to speak</string>
+    <string name="enable_all_silent">All employees are forbidden to speak</string>
+    <string name="disable_all_silent">All silence has been closed</string>
     <string name="chat_more_private_chat">More Private Chats</string>
     <string name="chat_private_chat">Private Chats</string>
     <string name="chat_group_welcome_join_group">Welcome to group</string>
@@ -1023,7 +1038,17 @@
     <string name="voice_communication_notification_group_content">Tap to recover</string>
     <string name="voice_communication_notification_content">Tap to continue as voice call in progress</string>
 
-    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch">New message system notification</string>
+    <string name="notification_setting_title">New message notification</string>
+    <string name="notification_guide">Permission setting guide for new message reminders</string>
+    <string name="open_notification_text">New message notifications</string>
+    <string name="notification_introduce_guide">Due to the limitations of the mobile phone system, Cloud + sometimes cannot receive new messages in the background, and the timeliness of receiving new messages can be improved through the settings</string>
+    <string name="notification_power_whitelist">Add Cloud + to the power saving optimization whitelist</string>
+    <string name="notification_system_setting_guide">Go to your phone system settings to modify the tone and vibration of the new message reminder</string>
+    <string name="notification_power_guide">Enabling power saving mode may cause messages to be delayed or lost, so please add Cloud + to the power saving optimization whitelist</string>
+    <string name="notification_system_notification_title">Can not receive a message notification or is the notification delayed?</string>
+    <string name="notification_system_guide">Due to phone system limitations, you may not be able to receive timely message notifications, please complete this setting to resolve the issue</string>
+    <string name="notification_system_setting_title">Message notification system settings</string>
     <string name="caring_switch">Font Size</string>
     <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
@@ -1097,7 +1122,7 @@
     <!--已读未读-->
     <string name="read">read</string>
     <string name="unread">unread</string>
-    <string name="left_unread">unread</string>
+    <string name="left_unread">&#160; unread</string>
     <string name="all_read">all read</string>
     <string name="unread_detail_title">Message recipients list</string>
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
@@ -1116,6 +1141,13 @@
     <string name="service_conversation_desc">Professional team to serve you</string>
     <string name="service_conversation_search">Search service number</string>
     <string name="service_search">Service number search</string>
+    <string name="stream_not_support">Videos in this format cannot be shared</string>
+    <string name="no_notification_and_power">Detects that the system notification is not turned on and the system restricts the operation of cloud + background, please open the system notification and put the cloud + into the power saving optimization whitelist!!</string>
+    <string name="no_notification">Detected that the system notification is not turned on, please turn on the system notification!!</string>
+    <string name="no_power_save">Monitor to limit cloud + background operation，Please put Cloud + into the power saving optimization whitelist</string>
+
+    <string name="comment_count">Message Reply(%1$d)</string>
+
     <string-array name="segment_control_items">
         <item>Low</item>
         <item>Middle</item>
@@ -1142,5 +1174,10 @@
         <item>SAT</item>
     </string-array>
 
+    <string name="transmit_to_friends">Send To Friends</string>
+    <string name="save_img">Save Picture</string>
+    <string name="location_to_chat">Navigate to Chat</string>
 
+    <string name="recent_transmit">Recent Transmit</string>
+    <string name="recent_conversation">Recent Conversation</string>
 </resources>

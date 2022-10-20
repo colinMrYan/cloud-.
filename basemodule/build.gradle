@@ -15,9 +15,9 @@ android {
         multiDexEnabled true
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.inspur.emmcloud",
+                JPUSH_PKGNAME: "com.inspur.emmcloud",
                 JPUSH_APPKEY : "62712cda36f300fb813134bc", //JPush 上注册的包名对应的 Appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
         javaCompileOptions {
             annotationProcessorOptions {
@@ -36,22 +36,22 @@ android {
 //        lintConfig file("lint.xml")
         abortOnError false
         checkReleaseBuilds false
-        disable 'MissingTranslation', 'ExtraTranslation','TypographyFractions','TypographyQuotes'
+        disable 'MissingTranslation', 'ExtraTranslation', 'TypographyFractions', 'TypographyQuotes'
     }
     def isDebug = false
-    for(String s : gradle.startParameter.taskNames) {
+    for (String s : gradle.startParameter.taskNames) {
         if (s.contains("Debug") | s.contains("debug")) {
             isDebug = true
             break
         }
     }
-    if(isDebug){
+    if (isDebug) {
         tasks.whenTaskAdded { task ->
             if (task.name.contains("lint")
-                    ||task.name.contains("Aidl")//用不到测试的时候就可以先关闭
-                    ||task.name.contains("mockableAndroidJar")
-                    ||task.name.contains("UnitTest")
-                    ||task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
+                    || task.name.contains("Aidl")//用不到测试的时候就可以先关闭
+                    || task.name.contains("mockableAndroidJar")
+                    || task.name.contains("UnitTest")
+                    || task.name.contains("AndroidTest")//用不到NDK和JNI的也关闭掉
             ) {
                 task.enabled = false
             }
@@ -64,6 +64,7 @@ dependencies {
     api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.butterknife.butterknife
+//    api(name: 'LiteAVSDK_UGC_10.3.0.11176', ext: 'aar')
 //    api deps.support.constraint
 //    api deps.Glide
 //    api deps.support.v7.appcompat

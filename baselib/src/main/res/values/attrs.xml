@@ -8,6 +8,8 @@
     <attr name="color_bg_common" format="reference|color" />
     <attr name="text_ll_color_nor" format="reference|color" />
     <attr name="text_ll_color_sel" format="reference|color" />
+    <attr name="bg_color_layer_layer" format="reference|color" />
+
     <attr name="text_color" format="reference|color" />
     <attr name="color_4c_ba" format="reference|color" />
     <attr name="color_ec_1c" format="reference|color" />
@@ -54,6 +56,9 @@
     <attr name="ic_header_option" format="reference" />
     <attr name="status_bar_dark_font" format="boolean" />
     <attr name="ic_back_btn" format="reference" />
+    <attr name="ic_location" format="reference" />
+    <attr name="color_4d_b3" format="reference" />
+    <attr name="color_e6_1a" format="reference" />
     <attr name="ic_appcenter_search" format="reference" />
     <attr name="plugin_ic_header_title_drop_down" format="reference" />
     <attr name="plugin_ic_header_title_drop_up" format="reference" />
@@ -98,6 +103,7 @@
     <attr name="color_stroke_46_00" format="reference" />
     <attr name="color_stroke_46_dd" format="reference" />
     <attr name="text_color_e1_66" format="reference" />
+    <attr name="text_color_e6_1a" format="reference" />
     <attr name="color_divider_1c_dd" format="reference" />
     <attr name="schedule_event_share_ic" format="reference" />
     <attr name="schedule_event_chat_ic" format="reference" />
@@ -112,9 +118,21 @@
     <attr name="ic_chat_voice_input" format="reference" />
     <attr name="ic_chat_button_add" format="reference" />
     <attr name="ic_chat_button_emotion" format="reference" />
+    <attr name="ic_chat_close_reply" format="reference" />
     <attr name="ic_chat_input_keyboards" format="reference" />
     <attr name="multi_transfer_single_icon" format="reference" />
     <attr name="multi_transfer_all_icon" format="reference" />
+    <attr name="color_tran90_1b_ff" format="reference" />
+    <attr name="color_33_d1" format="reference" />
+    <attr name="color_33_ff" format="reference" />
+    <attr name="color_99_66" format="reference" />
+    <attr name="color_99_87" format="reference" />
+    <attr name="color_f6_33" format="reference" />
+    <attr name="color_ff_80" format="reference" />
+    <attr name="color_40_de" format="reference" />
+    <attr name="color_ff_d1" format="reference" />
+    <attr name="color_f1_11" format="reference|color" />
+    <attr name="color_f8_12" format="reference|color" />
     <attr name="color_ff_33" format="reference|color" />
     <attr name="color_ff_1c" format="reference|color" />
     <attr name="color_99_b3" format="reference|color" />

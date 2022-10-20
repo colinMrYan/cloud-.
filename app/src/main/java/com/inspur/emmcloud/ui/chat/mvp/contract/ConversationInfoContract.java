@@ -44,6 +44,10 @@ public interface ConversationInfoContract {
 
         void updateGroupTransferSuccess(String owner);
 
+        void updateAdminList(List<String> adminList);
+
+        void updateSilent(boolean isSilent);
+
     }
 
     interface Presenter {

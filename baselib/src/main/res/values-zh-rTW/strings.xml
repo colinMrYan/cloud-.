@@ -38,7 +38,7 @@
     <string name="send">發送</string>
     <string name="picture">圖片</string>
     <string name="album">相冊</string>
-    <string name="take_photo">拍照</string>
+    <string name="take_photo">拍攝</string>
     <string name="mention">提及</string>
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
@@ -194,6 +194,12 @@
     <string name="channel_group_file">群文件</string>
     <string name="channel_group_members_name">群名稱</string>
     <string name="channel_group_qrcode">群二維碼</string>
+    <string name="channel_group_member_manager">群管理</string>
+    <string name="member_manager_transfer_owner">群主管理權轉讓</string>
+    <string name="member_manager_name">群管理員</string>
+    <string name="member_manager_forbidden_speak">全員禁言</string>
+    <string name="group_administrator_info">群管理員可以擁有以下能力：\n1.設定全員禁言。\n2.全員禁言開啟後，只允許群主和管理員發言。</string>
+
     <string name="channel_group_qrcode_card">群二維碼名片</string>
     <string name="channel_group_qrcode_valid">該二維碼7天內（%1$s之前）有效，重新進入將更新</string>
     <string name="channel_set_top"> 置頂</string>
@@ -256,6 +262,7 @@
     <string name="no_this_knowledge">暫無這條知識</string>
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
+    <string name="power_save_alert">您已經加入到省電優化白名單，可以及時收到消息通知</string>
 
     <string name="baselib_share_many_picture">等%1$d張圖片</string>
     <string name="baselib_share_many_files">等%1$d個文件</string>
@@ -286,6 +293,7 @@
     <string name="communicate">溝通</string>
     <string name="group_info">浪潮資訊</string>
     <string name="send_a_picture">[圖片]</string>
+    <string name="send_a_video">[視頻]</string>
     <string name="send_a_comment">[評論]</string>
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[連結]</string>
@@ -311,6 +319,8 @@
     <string name="creat_group_fail">群組創建失敗</string>
     <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>
+    <string name="add_group_administrator">添加管理員 </string>
+    <string name="remove_group_administrator">移除管理員 </string>
     <string name="channel_group">群組</string>
     <string name="group_member">群成員列表 </string>
     <string name="group_name_cannot_null">請輸入群組名稱 </string>
@@ -362,6 +372,7 @@
     <string name="chat_long_click_copy">複製</string>
     <string name="chat_long_click_multiple">多選</string>
     <string name="chat_long_click_transmit">轉發</string>
+    <string name="transmit_operate">轉發給</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一條消息</string>
     <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>
@@ -387,6 +398,10 @@
     <string name="chat_contact_single_select">單選</string>
     <string name="chat_contact_related_message">%1$d條相關的聊天記錄</string>
     <string name="chat_search_related_messages">%1$s的記錄</string>
+    <string name="sensitive_words_matched_error">涉及敏感詞，不允許發送</string>
+    <string name="channel_silent_error">該群已禁言</string>
+    <string name="enable_all_silent">全員禁言已開啟</string>
+    <string name="disable_all_silent">全員禁言已關閉</string>
     <string name="chat_group_member_size">%1$s(%2$d)</string>
     <string name="chat_group_qr_code_share">分享二維碼</string>
     <string name="chat_group_welcome_join_group">歡迎加入群聊</string>
@@ -1034,7 +1049,17 @@
     <string name="voice_communication_notification_group_content">點擊恢復</string>
     <string name="voice_communication_notification_content">語音通話中，輕觸以繼續</string>
 
-    <string name="notification_switch">新消息通知</string>
+    <string name="notification_switch">新消息系統通知</string>
+    <string name="notification_setting_title">新消息通知</string>
+    <string name="notification_guide">手機新消息提醒許可權設置指南</string>
+    <string name="open_notification_text">新消息通知</string>
+    <string name="notification_introduce_guide">由於手機系統的限制，導致雲+在後台有時無法及時接收新消息，通過設置可提高接收新消息的及時性</string>
+    <string name="notification_power_whitelist">將雲+加入省電優化白名單</string>
+    <string name="notification_system_setting_guide">前往手機系統設置修改新消息提醒的提示音與震動</string>
+    <string name="notification_power_guide">開啟省電模式可能會導致消息延遲或丟失，請將雲+加入到省電優化白名單</string>
+    <string name="notification_system_notification_title">收不到消息通知或通知延遲？</string>
+    <string name="notification_system_guide">由於手機系統限制，你可能無法及時收到消息通知，請完成此項設置以解決該問題</string>
+    <string name="notification_system_setting_title">消息通知系統設置</string>
     <string name="caring_switch">字體大小</string>
     <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
@@ -1120,6 +1145,12 @@
     <string name="service_conversation_desc">專業團隊 為您服務</string>
     <string name="service_conversation_search"></string>
     <string name="service_search">服務號蒐索</string>
+    <string name="stream_not_support">不能分享這種格式的視頻</string>
+    <string name="no_notification_and_power">檢測到系統通知未打開並且系統限制雲+後台運行</string>
+    <string name="no_notification">檢測到系統通知未打開，請打開系統通知！！</string>
+    <string name="no_power_save">檢測到限制雲+後台運行，請將雲+放入省電優化白名單</string>
+
+    <string name="comment_count">消息回復 (%1$d)</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春節</item>
@@ -1341,5 +1372,10 @@
         <item>高</item>
     </string-array>
 
+    <string name="transmit_to_friends">發送給朋友</string>
+    <string name="save_img">保存圖片</string>
+    <string name="location_to_chat">定位到聊天位置</string>
 
+    <string name="recent_transmit">最近轉發</string>
+    <string name="recent_conversation">最近聊天</string>
 </resources>

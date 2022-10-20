@@ -153,6 +153,18 @@ public final class PictureMimeType {
         return mimeType.startsWith(MIME_TYPE_JPG);
     }
 
+    /**
+     * Determine if it is MP4.
+     *
+     * @param mimeType mp4 file mimeType
+     */
+    public static boolean isMP4(String mimeType) {
+        if (TextUtils.isEmpty(mimeType)) {
+            return false;
+        }
+        return mimeType.startsWith(MP4_Q);
+    }
+
 
     /**
      * is Network image

@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -141,7 +143,7 @@ public class LoginActivity extends BaseActivity {
             loginApp();
 
         } else if (i == R.id.tv_forget_password) {
-            String forgetUrl = PreferencesByUsersUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
             if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
                 bundle.putString("uri", forgetUrl);
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
@@ -202,6 +204,13 @@ public class LoginActivity extends BaseActivity {
                 Constant.PREF_LOGIN_USERNAME, userName);
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
         if (!isHasSetShortPassword) {
+            String forgetUrl = PreferencesUtils.getString(this, Constant.PREF_LOGIN_FORGET_URL);
+            if (!StringUtils.isEmpty(forgetUrl) && forgetUrl.startsWith("http")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", forgetUrl);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
+                return;
+            }
             IntentUtils.startActivity(LoginActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
             ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
@@ -229,8 +238,15 @@ public class LoginActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(LoginActivity.this)) {
             LoginUtils loginUtils = new LoginUtils(LoginActivity.this, handler);
-            loginUtils.login(userName, password);
+            loginUtils.login(autoHoldMail(userName), password);
         }
+    }
+
+    // 支持自动填充邮箱后缀
+    private String autoHoldMail(String userName) {
+        String email = PreferencesUtils.getString(getApplicationContext(), Constant.PREF_EMAIL_INFO);
+        if (StringUtils.isEmpty(email) || FomatUtils.isPhoneNum(userName) || userName.contains("@") || userName.endsWith(email)) {return userName;}
+        return userName + email;
     }
 
     private class EditWatcher implements TextWatcher {

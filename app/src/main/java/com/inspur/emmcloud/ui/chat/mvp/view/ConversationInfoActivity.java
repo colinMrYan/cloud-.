@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
@@ -30,6 +29,7 @@ import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
+import com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity;
 import com.inspur.emmcloud.ui.chat.ConversationNameModifyActivity;
 import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
 import com.inspur.emmcloud.ui.chat.FileTransferDetailActivity;
@@ -55,6 +55,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
+
 /**
  * Created by libaochao on 2019/10/12.
  */
@@ -67,7 +71,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
     private static final int QEQUEST_FILE_TRANSFER = 4;
-    private static final int QEQUEST_GROUP_TRANSFER = 5;
+    public static final int QEQUEST_GROUP_MANAGE = 5;
+    public static final int GROUP_TYPE_OWNER = 3;
+    public static final int GROUP_TYPE_ADMINISTRATOR = 2;
+    public static final int GROUP_TYPE_MEMBER = 1;
+    private int mUserGroupType = GROUP_TYPE_MEMBER;
+
     @BindView(R.id.rv_conversation_members_head)
     NoScrollGridView conversationMembersHeadRecyclerView;
     @BindView(R.id.tv_title)
@@ -88,14 +97,12 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     TextView quitTextView;
     @BindView(R.id.rl_conversation_qr)
     RelativeLayout conversationQRLayout;
+    @BindView(R.id.rl_conversation_member_manager)
+    RelativeLayout conversationMemberManagerLayout;
     @BindView(R.id.rl_conversation_name)
     RelativeLayout conversationNameLayout;
     @BindView(R.id.rl_conversation_quit)
     RelativeLayout conversationQuitLayout;
-    @BindView(R.id.rl_group_transfer)
-    RelativeLayout groupTransferLayout;
-    @BindView(R.id.tv_group_transfer)
-    TextView groupTransferTv;
     @BindView(R.id.rl_conversation_search_record)
     RelativeLayout searchRecordLayout;
     @BindView(R.id.rl_channel_search_record_have_margin)
@@ -108,9 +115,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private Conversation uiConversation;
     private ConversationMembersHeadAdapter channelMembersHeadAdapter;
     private List<String> uiUidList = new ArrayList<>();
-    private boolean isOwner = false;
     private LoadingDialog loadingDialog;
     private boolean conversationNameChanged = false;
+    private String mCid;
 
     @Override
     public void onCreate() {
@@ -140,7 +147,13 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     private void init() {
         if (uiConversation.getType().equals(Conversation.TYPE_GROUP)) {
             String data = getString(R.string.chat_group_info_detail_title, mPresenter.getConversationRealMemberSize());
-            isOwner = uiConversation.getOwner().equals(BaseApplication.getInstance().getUid());
+            if (uiConversation.getOwner().equals(BaseApplication.getInstance().getUid())) {
+                mUserGroupType = GROUP_TYPE_OWNER;
+            } else if (uiConversation.getAdministratorList().contains(BaseApplication.getInstance().getUid())) {
+                mUserGroupType = GROUP_TYPE_ADMINISTRATOR;
+            } else {
+                mUserGroupType = GROUP_TYPE_MEMBER;
+            }
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
@@ -150,18 +163,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
             mPresenter.updateSearchMoreState();
-            groupTransferLayout.setVisibility(isOwner ? View.VISIBLE : View.GONE);
-            quitTextView.setText(isOwner ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
+            conversationMemberManagerLayout.setVisibility(mUserGroupType > GROUP_TYPE_MEMBER ? View.VISIBLE : View.GONE);
+            quitTextView.setText(mUserGroupType == GROUP_TYPE_OWNER ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT) || uiConversation.getType().equals(Conversation.TYPE_TRANSFER)) {
-            isOwner = false;
+            mUserGroupType = GROUP_TYPE_MEMBER;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
             titleTextView.setText(R.string.chat_single_info_detail_title);
             ((TextView) findViewById(R.id.tv_conversation_files_title)).setText(R.string.file);
             ((TextView) findViewById(R.id.tv_conversation_images)).setText(R.string.channel_single_chat_images);
             conversationQRLayout.setVisibility(View.GONE);
+            conversationMemberManagerLayout.setVisibility(View.GONE);
             conversationNameLayout.setVisibility(View.GONE);
             conversationQuitLayout.setVisibility(View.GONE);
-            groupTransferLayout.setVisibility(View.GONE);
             searchRecordLayout.setVisibility(View.GONE);
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
             muteNotificationLayout.setVisibility(uiConversation.getType().equals(Conversation.TYPE_TRANSFER) ? View.GONE : View.VISIBLE);
@@ -169,7 +182,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationShowSwitch.setChecked(uiConversation.isHide());
         conversationShowSwitch.setOnCheckedChangeListener(this);
         conversationShow.setVisibility(uiConversation.isHide() ? View.VISIBLE : View.GONE);
-        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, isOwner, uiUidList, uiConversation.getOwner());
+        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, uiUidList, uiConversation.getOwner(), uiConversation.getAdministratorList());
         Configuration configuration = getResources().getConfiguration();
         // 适配横屏头像显示
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -194,19 +207,25 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     intent.setClass(getApplicationContext(),
                             FileTransferDetailActivity.class);
                     startActivityForResult(intent, QEQUEST_FILE_TRANSFER);
-                } else if (i == uiUidList.size() - 1 && isOwner) {    /**刪除群成員**/
-                    intent.putExtra("memberUidList", uiConversation.getMemberList());
+                } else if (i == uiUidList.size() - 1 && mUserGroupType > GROUP_TYPE_MEMBER) {    /**刪除群成員**/
+                    if (mUserGroupType == GROUP_TYPE_ADMINISTRATOR) {
+                        ArrayList<String> memberList = uiConversation.getMemberList();
+                        memberList.removeAll(uiConversation.getAdministratorList());
+                        memberList.remove(uiConversation.getOwner());
+                        intent.putExtra("memberUidList", memberList);
+                    } else {
+                        intent.putExtra("memberUidList", uiConversation.getMemberList());
+                    }
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);
-                } else if ((i == uiUidList.size() - 2 && isOwner
-                        || (i == uiUidList.size() - 1 && !isOwner)) && AppTabUtils.hasContactPermission(ConversationInfoActivity.this)) { /**添加群成員**/
+                } else if ((i == uiUidList.size() - 2 && mUserGroupType > GROUP_TYPE_MEMBER
+                        || (i == uiUidList.size() - 1 && mUserGroupType == GROUP_TYPE_MEMBER)) && AppTabUtils.hasContactPermission(ConversationInfoActivity.this)) { /**添加群成員**/
                     intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                     intent.putExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uiConversation.getMemberList());
                     intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                     intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.add_group_member));
-                    intent.setClass(getApplicationContext(),
-                            ContactSearchActivity.class);
+                    intent.setClass(getApplicationContext(), ContactSearchActivity.class);
                     // 单聊时点击+号为创建群聊，传入Uid
                     if (uiConversation.getType().equals(Conversation.TYPE_DIRECT)) {
                         intent.putExtra(ContactSearchFragment.EXTRA_CREATE_NEW_GROUP_FROM_DIRECT, true);
@@ -236,6 +255,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 if (conversationNameChanged) {
                     Intent intent = new Intent();
                     intent.putExtra("operate", 0);
+                    intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
+                    intent.putExtra(INTENT_SELECT_OWNER, uiConversation.getOwner());
+                    intent.putExtra(INTENT_ADMIN_LIST, uiConversation.getAdministrators());
                     setResult(RESULT_OK, intent);
                 }
                 finish();
@@ -260,6 +282,17 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 bundle.putInt(MEMBER_SIZE, mPresenter.getConversationRealMemberSize());
                 IntentUtils.startActivity(this,
                         ConversationQrCodeActivity.class, bundle);
+                break;
+            case R.id.rl_conversation_member_manager:
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
+                Intent memberManagerIntent = new Intent();
+                memberManagerIntent.setClass(this, ConversationMemberManagerIndexActivity.class);
+                memberManagerIntent.putExtra("cid", uiConversation.getId());
+                memberManagerIntent.putExtra(ConversationMemberManagerIndexActivity.MANAGER_TYPE, mUserGroupType);
+                startActivityForResult(memberManagerIntent, QEQUEST_GROUP_MANAGE);
                 break;
             case R.id.rl_conversation_images:
                 if (uiConversation == null) {
@@ -293,19 +326,11 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
                     return;
                 }
-                if (isOwner) {
+                if (mUserGroupType == GROUP_TYPE_OWNER) {
                     showDelGroupWarningDlg();
                 } else {
                     showQuitGroupWarningDlg();
                 }
-                break;
-            case R.id.rl_group_transfer:
-                Intent intent = new Intent();
-                intent.setClass(this, MembersActivity.class);
-                intent.putExtra("title", getString(R.string.voice_communication_choice_members));
-                intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.GROUP_TRANSFER);
-                intent.putExtra("cid", uiConversation.getId());
-                startActivityForResult(intent, QEQUEST_GROUP_TRANSFER);
                 break;
             case R.id.rl_more_members:
                 if (uiConversation == null) {
@@ -327,11 +352,18 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         }
     }
 
-    private void refreshMyConversation() {
-        String cid = getIntent().getExtras().getString(EXTRA_CID);
-        mPresenter.getConversationInfo(cid);
-        uiConversation = mPresenter.getConversation(cid);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.getConversationInfo(mCid);
     }
+
+    private void refreshMyConversation() {
+        mCid = getIntent().getExtras().getString(EXTRA_CID);
+//        mPresenter.getConversationInfo(mCid);
+        uiConversation = mPresenter.getConversation(mCid);
+    }
+
 
     @Override
     public void initView(Conversation conversation) {
@@ -344,6 +376,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         if (conversationNameChanged) {
             Intent intent = new Intent();
             intent.putExtra("operate", 0);
+            intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
+            intent.putExtra(INTENT_SELECT_OWNER, uiConversation.getOwner());
+            intent.putExtra(INTENT_ADMIN_LIST, uiConversation.getAdministrators());
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -439,6 +474,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
         intent.putExtra("operate", 1);
+        intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -449,6 +485,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
         intent.putExtra("operate", 1);
+        intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -551,13 +588,33 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public void updateGroupTransferSuccess(String owner) {
-        groupTransferLayout.setVisibility(View.GONE);
         channelMembersHeadAdapter.setOwner(owner);
-        isOwner = false;
+        channelMembersHeadAdapter.setAdminList(uiConversation.getAdministratorList());
+        uiConversation.setOwner(owner);
         quitTextView.setText(getString(R.string.quit_group));
-        uiUidList.remove("deleteUser");
+        if (uiConversation.getAdministratorList().contains(BaseApplication.getInstance().getUid())) {
+            //管理员
+            mUserGroupType = GROUP_TYPE_ADMINISTRATOR;
+            conversationMemberManagerLayout.setVisibility(View.VISIBLE);
+        } else {
+            //普通员工
+            mUserGroupType = GROUP_TYPE_MEMBER;
+            conversationMemberManagerLayout.setVisibility(View.GONE);
+            uiUidList.remove("deleteUser");
+        }
         channelMembersHeadAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void updateAdminList(List<String> adminList) {
+        channelMembersHeadAdapter.setAdminList(adminList);
+        channelMembersHeadAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateSilent(boolean isSilent) {
+        uiConversation.setSilent(isSilent);
     }
 
     @Override

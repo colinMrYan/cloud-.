@@ -403,6 +403,14 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
                             .onSelectLimitTips(getContext(), config, SelectLimitType.SELECT_NOT_SUPPORT_SELECT_LIMIT);
                 }
                 if (isSelectLimit) {
+                    // !mp4和超过10分钟提示
+                    if (PictureMimeType.isHasVideo(currentMedia.getMimeType())) {
+                        if (!PictureMimeType.isMP4(currentMedia.getMimeType())) {
+                            showTipsDialog(getString(R.string.ps_select_no_support));
+                        } else if (currentMedia.getDuration() > 10 * 60 * 1000) {
+                            showTipsDialog(getString(R.string.ps_select_video_max_second, 10 * 60));
+                        }
+                    }
                 } else {
                     ToastUtils.showToast(getContext(), getString(R.string.ps_select_no_support));
                 }
@@ -1742,7 +1750,7 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
             queue.put(media.getPath(), media);
         }
         if (queue.size() == 0) {
-        dispatchUriToFileTransformResult(result);
+            dispatchUriToFileTransformResult(result);
         } else {
             PictureThreadUtils.executeByIo(new PictureThreadUtils.SimpleTask<ArrayList<LocalMedia>>() {
 

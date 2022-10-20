@@ -41,7 +41,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private final GridLayoutManager gridLayoutManager;
 
     public enum ConversationType {
-        STANDARD, WHISPER, BURN
+        STANDARD, WHISPER, BURN, REPLY
     }
 
     public interface OnWhisperEventListener {
@@ -94,11 +94,9 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         for (String userId : userIds) {
             if (ContactUserCacheUtils.getContactUserByUid(userId) == null) robotIds.add(userId);
         }
-        if (listener != null) listener.showFunction();
         robotIds.add(BaseApplication.getInstance().getUid());
         ArrayList<String> targetUsers = userIds;
         targetUsers.removeAll(robotIds);
-        adjustViewHeight(targetUsers.size() > 6);
         setDisplayingUI(true);
         initAndUpdateChannelType();
         if (conversationType.equals(ConversationType.BURN)) {
@@ -106,7 +104,9 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         } else {
             setViewInfo(createAlertContentByUidList(new ArrayList<String>()));
         }
+        if (listener != null) listener.showFunction();
         recyclerGridAdapter.setContactUserList(targetUsers);
+        adjustViewHeight(targetUsers.size() > 6);
     }
 
     public ArrayList<String> getSelectedUser() {
@@ -138,10 +138,12 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         memberListView.post(new Runnable() {
             @Override
             public void run() {
-                View itemView = gridLayoutManager.getChildAt(0);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) memberListView.getLayoutParams();
                 if (heightForSure) {
-                    layoutParams.height = itemView.getHeight() * 2;
+                    View itemView = gridLayoutManager.getChildAt(0);
+                    if (itemView != null) {
+                        layoutParams.height = itemView.getHeight() * 2;
+                    }
                 } else {
                     layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
                 }

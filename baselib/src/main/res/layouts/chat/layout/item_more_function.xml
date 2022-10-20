@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp"
+    android:orientation="vertical">
+
+    <com.inspur.emmcloud.baselib.widget.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sl_bg"
+        android:background="@drawable/bg_function_corner">
+
+        <ImageView
+            android:id="@+id/iv_function"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </com.inspur.emmcloud.baselib.widget.SquareLayout>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:ellipsize="end"
+        android:lines="2"
+        android:layout_marginTop="6dp"
+        android:textColor="?attr/color_99_66"
+        android:textSize="10sp" />
+</LinearLayout>

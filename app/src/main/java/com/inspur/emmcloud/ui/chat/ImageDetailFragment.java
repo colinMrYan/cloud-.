@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
+import com.inspur.emmcloud.basemodule.bean.ImageOperateMoreEvent;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -47,6 +50,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -156,6 +160,14 @@ public class ImageDetailFragment extends Fragment {
             public void onClick(View v) {
                 EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
                 EventBus.getDefault().post(eventMessage);
+            }
+        });
+        mImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ImageOperateMoreEvent event =new ImageOperateMoreEvent(Constant.EVENTBUS_TAG_ON_PHOTO_LONG);
+                EventBus.getDefault().post(event);
+                return true;
             }
         });
         mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListener() {
@@ -280,9 +292,9 @@ public class ImageDetailFragment extends Fragment {
 
     private void showImageResouce() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.default_image_dark)
+                .showImageOnFail(R.drawable.default_image_dark)
+                .showImageOnLoading(R.drawable.default_image_dark)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
@@ -318,7 +330,7 @@ public class ImageDetailFragment extends Fragment {
                             mImageView.setImage(bitmap);
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            mImageView.setImage(R.drawable.default_image);
+                            mImageView.setImage(R.drawable.default_image_dark);
                         }
 
                     }
@@ -326,7 +338,7 @@ public class ImageDetailFragment extends Fragment {
                 mImageView.setImage(new FileBitmapDecoderFactory(path), previewDrawable);
             } catch (Exception e) {
                 e.printStackTrace();
-                mImageView.setImage(R.drawable.default_image);
+                mImageView.setImage(R.drawable.default_image_dark);
             }
         } else {
             ImageLoader.getInstance().loadImage(mImageUrl, options,
@@ -334,7 +346,7 @@ public class ImageDetailFragment extends Fragment {
                         @Override
                         public void onLoadingStarted(String imageUri, View view) {
                             if (getActivity() != null) {
-                                mImageView.setImage(R.drawable.default_image);
+                                mImageView.setImage(R.drawable.default_image_dark);
                                 progressBar.setVisibility(View.VISIBLE);
                             }
                         }
@@ -343,7 +355,7 @@ public class ImageDetailFragment extends Fragment {
                         public void onLoadingFailed(String imageUri, View view,
                                                     FailReason failReason) {
                             if (getActivity() != null) {
-                                mImageView.setImage(R.drawable.default_image);
+                                mImageView.setImage(R.drawable.default_image_dark);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -387,9 +399,9 @@ public class ImageDetailFragment extends Fragment {
         String url = rawUrl == null ? mImageUrl : rawUrl;
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
+                .showImageForEmptyUri(R.drawable.default_image_dark)
+                .showImageOnFail(R.drawable.default_image_dark)
+                .showImageOnLoading(R.drawable.default_image_dark)
                 .imageScaleType(ImageScaleType.NONE)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
@@ -436,7 +448,14 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        AppUtils.refreshMedia(BaseApplication.getInstance(), savedImagePath);
+        ContentResolver cr = getContext().getContentResolver();
+        // 支持各机型 图片刷到相册
+        try {
+            String insertImage = MediaStore.Images.Media.insertImage(cr, savedImagePath, System.currentTimeMillis() + ".png", null);
+            AppUtils.refreshMediaInSystemStorage(getContext(), insertImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface DownLoadProgressRefreshListener {

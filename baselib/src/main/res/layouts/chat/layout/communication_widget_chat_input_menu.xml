@@ -1,12 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/text_ll_color_nor"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shape_corner_eb_33"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_toLeftOf="@+id/iv_reply_close"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="?attr/color_99_66"
+                android:textSize="@dimen/content_moresmaller_textsize" />
+
+            <ImageView
+                android:id="@+id/iv_reply_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:onClick="onClick"
+                android:paddingLeft="14dp"
+                android:paddingTop="2dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="2dp"
+                android:src="?attr/ic_chat_close_reply" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -133,7 +174,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="274dp"
                 android:background="?attr/color_bg_common"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
                     android:id="@+id/viewpager_layout"

@@ -1,4 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="video_record_take_photo">拍照</string>
+    <string name="video_record_take_video">錄像</string>
+    <string name="video_record_event_evt_mic_cannot_use">麥克風打開失敗，請檢查權限</string>
+    <string name="video_record_event_evt_camera_cannot_use">攝像頭打開失敗，請檢查權限</string>
+    <string name="video_record_complete_fail_tip">錄製失敗，原因：</string>
+
     <string name="ps_camera_roll">圖片和視頻</string>
     <string name="ps_camera_roll_num">%1$s (%2$d)</string>
     <string name="ps_cancel">取消</string>

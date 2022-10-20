@@ -25,11 +25,11 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox;
 public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
         ImagePicker.OnImageSelectedListener, View.OnClickListener {
 
-    public static final String ISORIGIN = "isOrigin";
+    public static final String ORIGIN_TAG = "isOrigin";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     protected static final int REQ_IMAGE_EDIT = 1;
     private int encodingType = 0;
-    private boolean isOrigin; // 是否选中原图
+    private boolean selectOriginImg; // 是否选中原图
     private SuperCheckBox mCbCheck; // 是否选中当前图片的CheckBox
     private Button editBtn; // 原图
     private TextView OKText; // 确认图片的选择
@@ -40,7 +40,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isOrigin = getIntent().getBooleanExtra(ImagePreviewActivity.ISORIGIN,
+        selectOriginImg = getIntent().getBooleanExtra(ImagePreviewActivity.ORIGIN_TAG,
                 false);
         imagePicker.addOnImageSelectedListener(this);
         OKText = (TextView) topBar.findViewById(R.id.tv_ok);
@@ -69,8 +69,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             }
         });
         originCheck.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
-        originCheck.setChecked(isOrigin);
-        setEditBtnStatus(!isOrigin);
+        originCheck.setChecked(selectOriginImg);
+        setEditBtnStatus(!selectOriginImg);
         // 初始化当前页面的状态
         onImageSelected(0, null, true);
         ImageItem item = mImageItems.get(mCurrentPosition);
@@ -123,8 +123,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
         originCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                isOrigin = b;
-                setEditBtnStatus(!isOrigin);
+                selectOriginImg = b;
+                setEditBtnStatus(!selectOriginImg);
             }
         });
     }
@@ -157,12 +157,12 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             Intent intent = new Intent();
             intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                     imagePicker.getSelectedImages());
-            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+            intent.putExtra(ImagePreviewActivity.ORIGIN_TAG, selectOriginImg);
             setResult(ImagePicker.RESULT_CODE_ITEMS, intent);
             finish();
         } else if (id == R.id.ibt_back) {
             Intent intent = new Intent();
-            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+            intent.putExtra(ImagePreviewActivity.ORIGIN_TAG, selectOriginImg);
             setResult(ImagePicker.RESULT_CODE_BACK, intent);
             finish();
         }
@@ -171,7 +171,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+        intent.putExtra(ImagePreviewActivity.ORIGIN_TAG, selectOriginImg);
         setResult(ImagePicker.RESULT_CODE_BACK, intent);
         finish();
         super.onBackPressed();

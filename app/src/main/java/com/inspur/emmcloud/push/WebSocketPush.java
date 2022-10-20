@@ -134,7 +134,6 @@ public class WebSocketPush {
      * @param isForceReconnect 强制重连
      */
     public void startWebSocket(final boolean isForceReconnect) {
-        // TODO Auto-generated method stub
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
@@ -340,7 +339,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 isWebsocketConnecting = false;
                 LogUtils.debug(TAG, "连接失败");
                 if (arg0[0] != null) {
@@ -360,7 +358,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 isWebsocketConnecting = true;
                 LogUtils.debug(TAG, "正在连接");
             }
@@ -369,7 +366,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
@@ -385,7 +381,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
@@ -412,7 +407,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 LogUtils.debug(TAG, "message:" + arg0[0].toString());
                 String content = arg0[0].toString();
                 Intent intent = new Intent("com.inspur.msg");
@@ -425,7 +419,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 try {
                     LogUtils.debug(TAG, "arg0[0].toString()=" + arg0[0].toString());
                     WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
@@ -492,6 +485,26 @@ public class WebSocketPush {
                                             SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_RECALL_MESSAGE, wsCommand);
                                             EventBus.getDefault().post(eventMessage);
                                             break;
+                                        case "client.chat.channel.group.silent.open":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_ENABLE_SILENT, wsCommand));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        case "client.chat.channel.group.silent.close":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_DISABLE_SILENT, wsCommand));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        case "client.chat.channel.group.administrator.add":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD, wsCommand.getParams()));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        case "client.chat.channel.group.administrator.remove":
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_ADMINISTRATOR_REMOVE, wsCommand.getParams()));
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
+                                            WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
                                         case "client.chat.channel.group.member.add":
                                         case "client.chat.channel.group.member.remove":
                                         case "client.chat.channel.group.create":
@@ -499,10 +512,11 @@ public class WebSocketPush {
                                         case "client.chat.channel.group.name.update":
                                         case "client.chat.channel.group.member.quit":
                                         case "client.chat.channel.group.member.join":
-                                            SimpleEventMessage eventMessageGroupConversationChanged = new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand);
-                                            EventBus.getDefault().post(eventMessageGroupConversationChanged);
+                                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED, wsCommand));
                                             //接收到消息后告知服务端 此处复用了音视频通话的发送接口
                                             WSAPIService.getInstance().sendReceiveStartVoiceAndVideoCallMessageSuccess(wsPushContent.getTracer());
+                                            break;
+                                        default:
                                             break;
                                     }
 
@@ -514,6 +528,8 @@ public class WebSocketPush {
                                     SimpleEventMessage eventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_COMMAND_BATCH_MESSAGE, wsCommandBatch);
                                     EventBus.getDefault().post(eventMessage);
                                 }
+                                break;
+                            default:
                                 break;
 
                         }
@@ -527,7 +543,6 @@ public class WebSocketPush {
 
             @Override
             public void call(Object... arg0) {
-                // TODO Auto-generated method stub
                 isWSStatusConnectedV1 = false;
                 isWebsocketConnecting = false;
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);

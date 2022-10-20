@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="record_color_ff3030">#FF3030</color>
+    <color name="cloud_record_button_take_photo_background_color">#a1ffffff</color>
+    <color name="cloud_video_outer_bg">#66ffffff</color>
+
+    <color name="player_default_progress_color">#FF4081</color>
+    <color name="player_default_progress_background_color">#BBBBBB</color>
+    <color name="player_biz_audio_progress_second">#66ffffff</color>
     <!--PictureSelector-->
     <color name="ps_color_grey">#393a3e</color>
     <color name="ps_color_black">#000000</color>

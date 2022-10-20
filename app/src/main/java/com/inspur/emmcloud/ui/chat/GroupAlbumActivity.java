@@ -87,9 +87,9 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
-                bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
-                bundle.putString(ImagePagerActivity.EXTRA_CHANNEL_ID, cid);
-                bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
+                bundle.putInt(ImagePagerNewActivity.EXTRA_IMAGE_INDEX, position);
+                bundle.putString(ImagePagerNewActivity.EXTRA_CHANNEL_ID, cid);
+                bundle.putStringArrayList(ImagePagerNewActivity.EXTRA_IMAGE_URLS, imgUrlList);
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
@@ -97,7 +97,8 @@ public class GroupAlbumActivity extends BaseActivity {
                 } else {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
-                    IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerActivity.class, bundle);
+                    bundle.putBoolean(ImagePagerNewActivity.PHOTO_SHOW_MORE, true);
+                    IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerNewActivity.class, bundle);
                 }
             }
         });

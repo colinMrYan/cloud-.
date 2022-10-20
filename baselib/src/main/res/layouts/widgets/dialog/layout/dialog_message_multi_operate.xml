@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@+id/ll_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?attr/color_tran90_1b_ff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_transmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_transmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/transmit_operate"
+                android:textColor="?attr/text_color_e6_1a"
+                android:textSize="14sp" />
+
+            <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                android:id="@+id/gv_transmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="5"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:scrollbars="none" />
+
+            <View
+                android:id="@+id/line_transmit"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="?attr/color_33_d1"
+                android:layout_marginLeft="16dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants">
+
+            <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                android:id="@+id/gv_function"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="5"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:scrollbars="none" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/line_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="?attr/color_33_d1" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/cancel"
+            android:textColor="?attr/text_color_e6_1a"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -12,6 +12,8 @@ import com.inspur.emmcloud.componentservice.download.ProgressCallback;
 import com.inspur.emmcloud.componentservice.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.componentservice.volume.VolumeFileUploadService;
+import com.inspur.emmcloud.widget.filemanager.FileUtil;
+import com.inspur.emmcloud.widget.filemanager.bean.FileType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -151,7 +153,22 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
 
             }
         });
-        volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), getFilePath(chatFileUploadInfo.getMessage()));
+        // 视频上传时特殊处理，原有文件上传逻辑不变
+        String localFile; // 源文件路径
+        if (Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(chatFileUploadInfo.getMessage().getType())) {
+            // 视频文件上传逻辑：图片，视频
+            String fileName = getVolumeFileUploadTokenResult.getFileName();
+            if (fileName.endsWith(".png") || fileName.endsWith(".gif")
+                    || fileName.endsWith(".jpeg") || fileName.endsWith(".jpg") || fileName.equals(".dng")) {
+                localFile = chatFileUploadInfo.getMessage().getMsgContentMediaVideo().getImagePath();
+            } else {
+                localFile = chatFileUploadInfo.getMessage().getMsgContentMediaVideo().getMedia();
+            }
+        } else {
+            // 原有文件上传逻辑
+            localFile = getFilePath(chatFileUploadInfo.getMessage());
+        }
+        volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(), localFile);
     }
 
     /**
@@ -175,6 +192,60 @@ public class ChatFileUploadManagerUtils extends APIInterfaceInstance {
         if (filePath != null) {
             File file = new File(filePath);
             apiService.getFileUploadToken(file.getName(), chatFileUploadInfo);
+        } else {
+            callbackFail(chatFileUploadInfo);
+        }
+    }
+
+    /**
+     * 视频分为图片上传和视频上传
+     * 每个文件上传分为两步
+     * 1.获取文件上传token
+     * 2.选择服务端给定的上传服务进行上传
+     *
+     * @param message
+     * @param callback
+     */
+    public void uploadVideoImageFile(Message message, ProgressCallback callback) {
+        if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            if (callback != null) {
+                callback.onFail();
+            }
+            return;
+        }
+        ChatFileUploadInfo chatFileUploadInfo = new ChatFileUploadInfo(message, callback);
+        // 保
+        chatFileUploadInfoList.add(chatFileUploadInfo);
+        String imagePath = message.getMsgContentMediaVideo().getImagePath();
+        if (imagePath != null) {
+            File file = new File(imagePath);
+            apiService.getFileUploadToken(file.getName(), chatFileUploadInfo);
+        } else {
+            callbackFail(chatFileUploadInfo);
+        }
+    }
+
+    /**
+     * 视频分为图片上传和视频上传
+     * 每个文件上传分为两步
+     * 1.获取文件上传token
+     * 2.选择服务端给定的上传服务进行上传
+     *
+     * @param message
+     * @param callback
+     */
+    public void uploadVideoFile(Message message, ProgressCallback callback) {
+        if (!NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            if (callback != null) {
+                callback.onFail();
+            }
+            return;
+        }
+        ChatFileUploadInfo chatFileUploadInfo = new ChatFileUploadInfo(message, callback);
+        chatFileUploadInfoList.add(chatFileUploadInfo);
+        String videoPath = message.getMsgContentMediaVideo().getMedia();
+        if (videoPath != null) {
+            apiService.getFileUploadToken(message.getMsgContentMediaVideo().getName(), chatFileUploadInfo);
         } else {
             callbackFail(chatFileUploadInfo);
         }
