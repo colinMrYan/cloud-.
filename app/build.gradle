@@ -61,11 +61,7 @@ android {
         versionName "5.2.0-beta.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-//            abiFilters "armeabi-v7a", "x86", 'arm64-v8a'
-            // 64位包
-//            abiFilters 'arm64-v8a'
-            // 32位包
-            abiFilters "armeabi-v7a"
+            abiFilters "armeabi-v7a", "x86", 'arm64-v8a'
         }
         multiDexEnabled true
         javaCompileOptions {
@@ -115,13 +111,9 @@ android {
     splits {
         abi {
             reset()
-//            enable true
+            enable true
             universalApk true  // If true, also generate a universal APK
-//            include "armeabi-v7a", "x86", "arm64-v8a"
-            // 64位包
-//            include "arm64-v8a"
-            // 32位包
-            include "armeabi-v7a"
+            include "armeabi-v7a", "x86", "arm64-v8a"
         }
     }
     // applicationVariants are e.g. debug, release
@@ -148,42 +140,6 @@ android {
             ) {
                 task.enabled = false
             }
-
-            //检查arm64中比v7a中少的文件
-//            if (task.name=='transformNativeLibsWithMergeJniLibsForDebug') {
-//                task.doFirst {
-//                    println("==========================================================")
-//                    def v7a = []
-//                    def v7aPath = []
-//                    def arm64 = []
-//                    it.inputs.files.each { file ->
-//                        if (file.absolutePath.contains("\\jni")) {
-//                            if (file.absolutePath.contains("armeabi-v7a")) {
-//                                v7aPath.add(file.absolutePath)
-//                                v7a.add(file.name)
-//                            }
-//                            if (file.absolutePath.contains("arm64-v8a")) {
-//                                arm64.add(file.name)
-//                            }
-//                        }
-//                    }
-//                    println("v7a size: ${v7a.size()}")
-//                    println("arm64 size: ${arm64.size()}")
-//                    println("so in v7a, but not in arm64:")
-//                    v7a.each { name ->
-//                        if(!arm64.contains(name)) {
-//                            v7aPath.each { path ->
-//                                if (path.contains(name)) {
-//                                    println(path)
-//                                    return false
-//                                }
-//                            }
-//                            println(name)
-//                        }
-//                    }
-//                    println("==========================================================")
-//                }
-//            }
         }
     }
 }
