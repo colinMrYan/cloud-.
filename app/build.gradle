@@ -13,6 +13,7 @@ import com.android.build.OutputFile
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
+// 需要分包（64位和32位）的话改成true；
 def enableSeparateBuildPerCPUArchitecture = false
 
 /**
@@ -111,7 +112,7 @@ android {
     splits {
         abi {
             reset()
-            enable true
+            enable enableSeparateBuildPerCPUArchitecture
             universalApk true  // If true, also generate a universal APK
             include "armeabi-v7a", "x86", "arm64-v8a"
         }
