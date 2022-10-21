@@ -237,6 +237,9 @@ public class BarCodeService extends ImpPlugin {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ImpFragment.BARCODE_SERVER__SCAN_REQUEST && resultCode == Activity.RESULT_OK) {
             String result = data.getStringExtra("msg");
+            // 替换JS换行符号
+            result = result.replace("\n", "\\n");
+            result = result.replace("\r", "\\r");
             jsCallback(functName, result);
         }
     }
