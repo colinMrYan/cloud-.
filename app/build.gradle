@@ -13,7 +13,7 @@ import com.android.build.OutputFile
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-// 需要分包（64位和32位）的话改成true；
+// 默认32位Apk,需要64位Apk的话改成true；
 def enableSeparateBuildPerCPUArchitecture = false
 
 /**
@@ -46,7 +46,7 @@ android {
     if (isDebug) {
         splits.abi.enable = false
         splits.density.enable = false
-    }else {
+    } else {
         apply from: "../node_modules/react-native/react.gradle"
         apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
         apply from: 'tinkerpatch.gradle'
@@ -113,8 +113,12 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk true  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86", "arm64-v8a"
+            universalApk true
+            if (enableSeparateBuildPerCPUArchitecture) {
+                include 'arm64-v8a'
+            } else {
+                include "armeabi-v7a", "x86", "arm64-v8a"
+            }
         }
     }
     // applicationVariants are e.g. debug, release
