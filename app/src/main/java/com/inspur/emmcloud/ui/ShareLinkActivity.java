@@ -98,6 +98,8 @@ public class ShareLinkActivity extends BaseActivity {
                     finish();
                 }
                 break;
+            default:
+                break;
         }
     }
 
