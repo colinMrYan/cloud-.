@@ -107,17 +107,26 @@ class MarkDownParser {
             if (isNewLine) {
                 if (queue.nextLine() != null)
                     handleQuotaRelevant(queue, true);
-                removeNextBlankLine(queue);
+                // 富文本换行丢失问题修复
+//                removeNextBlankLine(queue);
             } else {
-                while (queue.nextLine() != null && !removeNextBlankLine(queue)) {
+                // 富文本换行丢失问题修复
+//                while (queue.nextLine() != null && !removeNextBlankLine(queue)) {
+                while (queue.nextLine() != null) {
                     //jason修改处
+                    //防止闪退
                     if (tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
                             tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
                         break;
                     }
-                    if (handleQuotaRelevant(queue, false)) break;
+                    try {
+                        if (handleQuotaRelevant(queue, false)) break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                removeNextBlankLine(queue);
+                // 富文本换行丢失问题修复
+//                removeNextBlankLine(queue);
             }
             // 解析style
             if (tagHandler.gap(queue.currLine()) || tagHandler.quota(queue.currLine()) || tagHandler.ol(queue.currLine()) ||
