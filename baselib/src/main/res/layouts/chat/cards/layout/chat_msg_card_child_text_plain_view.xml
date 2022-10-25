@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingMultiplier="1.1"
         android:padding="10dp"
         android:textSize="16sp" />
 </com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>

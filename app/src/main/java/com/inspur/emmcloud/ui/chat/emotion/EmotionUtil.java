@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.ui.chat.emotion;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.text.Spannable;
 import android.text.style.ImageSpan;
 
+import com.amazonaws.mobile.auth.core.signin.ui.DisplayUtils;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.widget.ChatInputEdit;
@@ -71,6 +73,7 @@ public class EmotionUtil {
 
     private static final Map<Pattern, Integer> emoticons = new HashMap<>();
     private static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
+    private ArrayList<EmotionSpan> spans = new ArrayList<>();
 
     public EmotionUtil(Context context) {
         this.context = context;
@@ -164,9 +167,12 @@ public class EmotionUtil {
                     hasChanges = true;
 //                    spannable.setSpan(new CenterAlignImageSpan(context, entry.getValue(), 2), matcher.start(), matcher.end(),
 //                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    EmotionSpan span = new EmotionSpan(context, entry.getValue(),
-                            (int) (textSize * 1.4f), (int) (textSize * 1.4f));
-                    span.setTranslateY(2);
+                    EmotionSpan span = new EmotionSpan(
+                            context,
+                            entry.getValue(),
+                            (int) (textSize * 1.4),
+                            (int) (textSize * 1.4));
+                    span.setTranslateY(1);
                     spannable.setSpan(span,
                             matcher.start(), matcher.end(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -180,6 +186,73 @@ public class EmotionUtil {
         Spannable spannable = spannableFactory.newSpannable(text);
         addSmiles(context, spannable, textSize);
         return spannable;
+    }
+
+    public Spannable addSelectedSmiles(Context context, Spannable spannable, int start, int end, int selectedColor, float textSize, float lineSpacing, int lineStart) {
+        for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
+            Matcher matcher = entry.getKey().matcher(spannable);
+            while (matcher.find()) {
+                if (matcher.start() < start) {
+                    continue;
+                }
+                if (matcher.end() > end) {
+                    break;
+                }
+                boolean set = true;
+                for (ImageSpan span : spannable.getSpans(matcher.start(), matcher.end(), ImageSpan.class)) {
+                    span.getDrawable().mutate().setColorFilter(selectedColor, PorterDuff.Mode.DST_OVER);
+                    if (spannable.getSpanStart(span) >= matcher.start()
+                            && spannable.getSpanEnd(span) <= matcher.end())
+                        spannable.removeSpan(span);
+                    else {
+                        set = false;
+                        break;
+                    }
+                }
+                if (set) {
+                    EmotionSpan selectedSmilesSpan = new EmotionSpan(
+                            context,
+                            entry.getValue(),
+                            (int) (textSize * 1.4),
+                            (int) (textSize * 1.4),
+                            selectedColor,
+                            lineSpacing,
+                            matcher.start() >= lineStart);
+                    selectedSmilesSpan.setTranslateY(1);
+                    selectedSmilesSpan.getDrawable().mutate().setColorFilter(selectedColor, PorterDuff.Mode.DST_OVER);
+                    spans.add(selectedSmilesSpan);
+                    spannable.setSpan(selectedSmilesSpan,
+                            matcher.start(), matcher.end(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+        return spannable;
+    }
+
+    /**
+     * 选中后表情的选中状态
+     *
+     * @param spannable     spannable
+     * @param start         选中开始的位置
+     * @param end           选中结束的位置
+     * @param selectedColor 选中颜色
+     * @param textSize      文本size
+     * @param lineSpacing   行间距
+     * @param lineStart     最后一行开始角标
+     * @return
+     */
+    public Spannable getSelectedSmiledText(Spannable spannable, int start, int end, int selectedColor, float textSize, float lineSpacing, int lineStart) {
+        addSelectedSmiles(context, spannable, start, end, selectedColor, textSize, lineSpacing, lineStart);
+        return spannable;
+    }
+
+    public boolean removeSelectedSmilesSpan(Spannable spannable) {
+        for (EmotionSpan span : spans) {
+            spannable.removeSpan(span);
+        }
+        spans.removeAll(spans);
+        return true;
     }
 
     public boolean containsKey(String key) {
@@ -196,6 +269,7 @@ public class EmotionUtil {
 
     /**
      * 获取所有表情资源
+     *
      * @return
      */
     public List<String> getExpressionRes() {

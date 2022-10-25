@@ -772,11 +772,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 public void run() {
                     if (clickCount == 1) {
                         v.callOnClick();
-                    } else if (clickCount == 2) {
+                    } else if (clickCount > 1) {
                         mTabHost.notifyCommunicationDoubleClick();
                     }
                     handler.removeCallbacksAndMessages(null);
-                    clickCount = 0;
+                    clickCount--;
                 }
             }, timeout);
         }

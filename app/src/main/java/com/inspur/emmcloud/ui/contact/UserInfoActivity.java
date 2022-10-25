@@ -8,12 +8,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -47,6 +49,9 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerNewActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuItem;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
+import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
@@ -64,7 +69,7 @@ import butterknife.ButterKnife;
  */
 
 @Route(path = Constant.AROUTER_CLASS_CONTACT_USERINFO)
-public class UserInfoActivity extends BaseActivity {
+public class UserInfoActivity extends BaseActivity implements View.OnLongClickListener {
 
     private static final String USER_UID = "uid";
     public static final String ORG_ID = "org_id";
@@ -118,6 +123,7 @@ public class UserInfoActivity extends BaseActivity {
 
     private ContactUser contactUser;
     private String parentUid;
+    private MessageMenuPopupWindow mPopupWindowList;
 
     @Override
     public void onCreate() {
@@ -206,6 +212,7 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(mail)) {
             mailLayout.setVisibility(View.VISIBLE);
             mailText.setText(mail);
+            mailLayout.setOnLongClickListener(this);
         } else {
             mailLayout.setVisibility(View.GONE);
         }
@@ -213,6 +220,7 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(phoneNum)) {
             contactLayout.setVisibility(View.VISIBLE);
             phoneNumText.setText(phoneNum);
+            contactLayout.setOnLongClickListener(this);
         } else {
             contactLayout.setVisibility(View.GONE);
         }
@@ -220,6 +228,7 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(telStr)) {
             telLayout.setVisibility(View.VISIBLE);
             telText.setText(telStr);
+            telLayout.setOnLongClickListener(this);
         } else {
             telLayout.setVisibility(View.GONE);
         }
@@ -451,5 +460,53 @@ public class UserInfoActivity extends BaseActivity {
                     });
         }
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_user_telephone:
+                showCopyDialog(telText, contactUser.getTel());
+                break;
+            case R.id.rl_user_contact:
+                showCopyDialog(phoneNumText, contactUser.getMobile());
+                break;
+            case R.id.ll_user_mail:
+                showCopyDialog(mailText, contactUser.getEmail());
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * 长按复制popup
+     *
+     * @param v
+     * @param content
+     */
+    private void showCopyDialog(View v, final String content) {
+        if (mPopupWindowList == null) {
+            mPopupWindowList = new MessageMenuPopupWindow(this);
+        }
+        List<String> list = new ArrayList<>();
+        list.add(getString(R.string.chat_long_click_copy));
+        mPopupWindowList.setAnchorView(v);
+        mPopupWindowList.setItemData(list);
+        mPopupWindowList.setModal(true);
+        mPopupWindowList.show();
+        mPopupWindowList.setOnItemClickListener(new MessageMenuPopupWindow.PopItemClickListener() {
+            @Override
+            public void onPopItemClick(MessageMenuItem item) {
+                AppUtils.copyContentToPasteBoard(UserInfoActivity.this, content);
+                mPopupWindowList.hide();
+            }
+        });
+//        mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                AppUtils.copyContentToPasteBoard(UserInfoActivity.this, content);
+//                mPopupWindowList.hide();
+//            }
+//        });
     }
 }

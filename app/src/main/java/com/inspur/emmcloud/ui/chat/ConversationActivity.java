@@ -81,6 +81,11 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
+import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuItem;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
@@ -105,6 +110,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
+import com.inspur.emmcloud.ui.chat.selectabletext.SelectableTextHelper;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -219,6 +225,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
     private MessageMenuPopupWindow mPopupWindowList; //仿微信长按处理
+    private SelectableTextHelper lastSelectableTextHelper; //自由选取文本
+
 
     private UIMessage backUiMessage = null;
     private UserOrientedConversationHelper userOrientedConversationHelper;
@@ -233,6 +241,15 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onCreate() {
         super.onCreate();
         handleMessage();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (lastSelectableTextHelper != null) {
+            lastSelectableTextHelper.resetInfoAndHideSelectView();
+            lastSelectableTextHelper = null;
+        }
     }
 
     private void handleMessage() {
@@ -422,6 +439,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         } else {
             chatInputMenu.setIsGroup(false, "");
         }
+        chatInputMenu.setEmoOrAddClickListener(new ECMChatInputMenu.OnEmoOrAddClickListener() {
+            @Override
+            public void onClickListener() {
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                }
+            }
+        });
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
             @Override
@@ -742,10 +767,40 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (mediaVoiceReRecognizerPop != null && mediaVoiceReRecognizerPop.isShowing()) {
                     mediaVoiceReRecognizerPop.dismiss();
                 }
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                    lastSelectableTextHelper = null;
+                }
+            }
+
+            @Override
+            public void onTxtItemLongClick(View view, UIMessage uiMessage, SelectableTextHelper selectableTextHelper) {
+                if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
+                    backUiMessage = uiMessage;
+                    List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
+                    if (operationIdList.size() > 0) {
+                        showMessageOperationDlg(operationIdList, uiMessage, view);
+                    }
+                }
+
+                if (lastSelectableTextHelper != null && lastSelectableTextHelper != selectableTextHelper) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                }
+                lastSelectableTextHelper = selectableTextHelper;
+
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.setPopupWindow(mPopupWindowList);
+                    lastSelectableTextHelper.showSelectAll();
+                }
             }
 
             @Override
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                    lastSelectableTextHelper = null;
+                }
+
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
                     backUiMessage = uiMessage;
                     List<Integer> operationIdList = getMessageOperationIdList(uiMessage);
@@ -759,8 +814,11 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                //TODO:Tilll
-//                if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                    lastSelectableTextHelper = null;
+                }
+
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && (uiMessage.getSendStatus() == 1 || uiMessage.getSendStatus() == 2)) {
                     ConversationActivity.this.onCardItemClick(ConversationActivity.this, view, uiMessage);
                 } else if (!StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
@@ -771,6 +829,11 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
+                if (lastSelectableTextHelper != null) {
+                    lastSelectableTextHelper.resetInfoAndHideSelectView();
+                    lastSelectableTextHelper = null;
+                }
+
                 if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom()) && uiMessage.getSendStatus() == 1) {
                     Message message = uiMessage.getMessage();
                     switch (message.getType()) {
@@ -1864,6 +1927,10 @@ public class ConversationActivity extends ConversationBaseActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
+        if (lastSelectableTextHelper != null) {
+            lastSelectableTextHelper.destroy();
+            lastSelectableTextHelper = null;
+        }
         chatInputMenu.releaseVoiceInput();
         EventBus.getDefault().unregister(this);
     }
@@ -1957,9 +2024,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), message);
                 adapter.notifyDataSetChanged();
             }
-
         }
-
     }
 
     //接收到websocket发过来的消息，推送消息触发此方法
@@ -2522,56 +2587,85 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         mPopupWindowList.setAnchorView(messageView);
         mPopupWindowList.setItemData(operationList);
-        mPopupWindowList.setModal(true);
-        mPopupWindowList.show();
+        if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(uiMessage.getMessage().getType())) {
+            mPopupWindowList.setModal(false);
+        } else {
+            mPopupWindowList.setModal(true);
+            mPopupWindowList.show();
+        }
         mPopupWindowList.setOnItemClickListener(new MessageMenuPopupWindow.PopItemClickListener() {
             @Override
-            public void onPopItemClick(int position) {
+            public void onPopItemClick(MessageMenuItem item) {
                 String content;
                 content = uiMessage2Content(uiMessage);
                 if (StringUtils.isBlank(content)) {
                     content = "";
                 }
-                switch (operationIdList.get(position)) {
-                    case R.string.chat_long_click_copy:
-                        copyToClipboard(ConversationActivity.this, content);
-                        break;
-                    case R.string.chat_long_click_transmit:
-                        shareMessageToFriends(ConversationActivity.this, uiMessage);
-                        break;
-                    case R.string.chat_long_click_schedule:
-                        addTextToSchedule(content);
-                        break;
-                    case R.string.chat_long_click_copy_text:
-                        copyToClipboard(ConversationActivity.this, content);
-                        break;
-                    case R.string.chat_long_click_reply:
-                        replyMessage(uiMessage.getMessage());
-                        break;
-                    case R.string.chat_long_click_recall:
-                        requestToRecallMessage(uiMessage.getMessage());
-                        break;
-                    case R.string.voice_to_word:
-                        recognizerMediaVoiceMessage(uiMessage, messageView);
-                        setVoiceUnPack(ConversationActivity.this, uiMessage.getMessage());
-                        uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAY_STOP);
-                        refreshAdapterItem(uiMessage);
-                        break;
-                    case R.string.chat_resend_message:
-                        resendMessage(uiMessage);
-                        break;
-                    case R.string.delete:
-                        if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-                            removeSendFailMessage(uiMessage);
-                        } else {
-                            //recallSendingMessage(uiMessage);
+                if (item.text.equals(getString(R.string.chat_long_click_checkall))) {
+                    if (lastSelectableTextHelper != null) {
+                        lastSelectableTextHelper.showSelectAll();
+                        return;
+                    }
+                } else if (item.text.equals(getString(R.string.chat_long_click_copy))) {
+                    if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(uiMessage.getMessage().getType())) {
+                        if (lastSelectableTextHelper != null) {
+                            copyToClipboard(ConversationActivity.this, lastSelectableTextHelper.getSelectionInfo().mSelectionContent);
                         }
-                        break;
-                    case R.string.chat_long_click_multiple:
-                        changeViewByMultipleSelect(true);
-                        adapter.getSelectedMessages().add(uiMessage);
-                        break;
+                    } else {
+                        copyToClipboard(ConversationActivity.this, content);
+                    }
+                } else if (item.text.equals(getString(R.string.chat_long_click_transmit))) {
+                    if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(uiMessage.getMessage().getType())) {
+                        //复制转发文本
+                        if (lastSelectableTextHelper != null) {
+                            MsgContentTextPlain plain = uiMessage.getMessage().getMsgContentTextPlain();
+                            plain.setText(lastSelectableTextHelper.getSelectionInfo().mSelectionContent);
+                            UIMessage message = uiMessage;
+                            message.getMessage().setContent(plain.toString());
+                            shareMessageToFriends(ConversationActivity.this, message);
+                        }
+                    } else {
+                        shareMessageToFriends(ConversationActivity.this, uiMessage);
+                    }
+                } else if (item.text.equals(getString(R.string.chat_long_click_schedule))) {
+                    addTextToSchedule(content);
+                } else if (item.text.equals(getString(R.string.chat_long_click_copy_text))) {
+                    copyToClipboard(ConversationActivity.this, content);
+                } else if (item.text.equals(getString(R.string.chat_long_click_reply))) {
+                    replyMessage(uiMessage.getMessage());
+                } else if (item.text.equals(getString(R.string.chat_long_click_recall))) {
+                    requestToRecallMessage(uiMessage.getMessage());
+                } else if (item.text.equals(getString(R.string.voice_to_word))) {
+                    recognizerMediaVoiceMessage(uiMessage, messageView);
+                    setVoiceUnPack(ConversationActivity.this, uiMessage.getMessage());
+                    uiMessage.setVoicePlayState(DisplayMediaVoiceMsg.VOICE_PLAY_STOP);
+                    refreshAdapterItem(uiMessage);
+                } else if (item.text.equals(getString(R.string.chat_resend_message))) {
+                    resendMessage(uiMessage);
+                } else if (item.text.equals(getString(R.string.delete))) {
+                    if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
+                        removeSendFailMessage(uiMessage);
+                        if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(uiMessage.getMessage().getType())) {
+                            if (lastSelectableTextHelper != null) {
+                                lastSelectableTextHelper.destroy();
+                                return;
+                            }
+                        }
+                    } else {
+                        //recallSendingMessage(uiMessage);
+                    }
+                } else if (item.text.equals(getString(R.string.chat_long_click_multiple))) {
+                    changeViewByMultipleSelect(true);
+                    adapter.getSelectedMessages().add(uiMessage);
                 }
+
+                if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(uiMessage.getMessage().getType())) {
+                    if (lastSelectableTextHelper != null) {
+                        lastSelectableTextHelper.resetInfoAndHideSelectView();
+                        return;
+                    }
+                }
+
                 mPopupWindowList.hide();
             }
         });

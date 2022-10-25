@@ -375,27 +375,50 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         return count;
     }
 
-
     public void notifyCommunicationDoubleClick() {
         if (mRecyclerView == null || !(mRecyclerView.getLayoutManager() instanceof LinearLayoutManager)) {
             return;
         }
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+        mShouldScroll = false;
+//        int dndPosition = -1;
+        //向下判断是否有未读消息，有跳出滑动到对应位置
         for (int i = firstVisibleItem + 1; i < uiConversationList.size(); i++) {
             UIConversation uiConversation = uiConversationList.get(i);
             if (uiConversation.getUnReadCount() > 0) {
-                smoothMoveToPosition(mRecyclerView, i);
-                return;
+//                if (!uiConversation.getConversation().isDnd()) {
+                    smoothMoveToPosition(mRecyclerView, i);
+//                    dndPosition = -1;
+                    return;
+//                }
+//                if (dndPosition == -1) {
+//                    dndPosition = i;
+//                }
             }
         }
+        //从0开始判断是否有未读消息，有跳出滑动到对应位置
         for (int i = 0; i <= firstVisibleItem; i++) {
             UIConversation uiConversation = uiConversationList.get(i);
             if (uiConversation.getUnReadCount() > 0) {
+//                if (!uiConversation.getConversation().isDnd()) {
                 smoothMoveToPosition(mRecyclerView, i);
+//                    dndPosition = -1;
                 return;
+//                }
+//                if (dndPosition == -1) {
+//                    dndPosition = i;
+//                }
             }
         }
+
+        //跳转到免打扰的消息
+//        if (dndPosition != -1) {
+//            smoothMoveToPosition(mRecyclerView, dndPosition);
+//            dndPosition = -1;
+//            return;
+//        }
+
         smoothMoveToPosition(mRecyclerView, 0);
     }
 
@@ -410,10 +433,23 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         });
     }
 
+    public boolean ismShouldScroll() {
+        return mShouldScroll;
+    }
+
+    public void setmShouldScroll(boolean mShouldScroll) {
+        this.mShouldScroll = mShouldScroll;
+    }
+
+    public int getmToPosition() {
+        return mToPosition;
+    }
+
     /**
      * 目标项是否在最后一个可见项之后
      */
     private boolean mShouldScroll;
+
     /**
      * 记录目标项位置
      */
@@ -425,7 +461,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
      * @param mRecyclerView
      * @param position
      */
-    private void smoothMoveToPosition(RecyclerView mRecyclerView, final int position) {
+    public void smoothMoveToPosition(RecyclerView mRecyclerView, final int position) {
         // 第一个可见位置
         int firstItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(0));
         // 最后一个可见位置

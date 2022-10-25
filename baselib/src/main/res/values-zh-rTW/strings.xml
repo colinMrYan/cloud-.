@@ -373,6 +373,7 @@
     <string name="chat_long_click_multiple">多選</string>
     <string name="chat_long_click_transmit">轉發</string>
     <string name="transmit_operate">轉發給</string>
+    <string name="chat_long_click_checkall">全選</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一條消息</string>
     <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>

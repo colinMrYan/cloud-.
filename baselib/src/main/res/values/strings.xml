@@ -377,6 +377,7 @@
     <string name="chat_long_click_multiple">多选</string>
     <string name="chat_long_click_transmit">转发</string>
     <string name="transmit_operate">转发给</string>
+    <string name="chat_long_click_checkall">全选</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
@@ -1114,7 +1115,7 @@
     <string name="notification_system_guide">由于手机系统限制，你可能无法及时收到消息通知，请完成此项设置以解决该问题</string>
     <string name="notification_system_setting_title">消息通知系统设置</string>
     <string name="caring_switch">字体大小</string>
-    <string name="caring_switch_tip">需要云+重启后才能生效</string>
+    <string name="caring_switch_tip">需要&appname;重启后才能生效</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
     <string name="notification_switch_open_setting">系统中的&appname;消息通知已关闭，前往打开？</string>
 
@@ -1214,7 +1215,7 @@
     <string name="stream_not_support">不能分享这种格式的视频</string>
     <string name="no_notification_and_power">检测到系统通知未打开并且系统限制云+后台运行，请打开系统通知并且将云+放入省电优化白名单！！</string>
     <string name="no_notification">检测到系统通知未打开，请打开系统通知！！</string>
-    <string name="no_power_save">检测到限制云+后台运行，请将云+放入省电优化白名单！！</string>
+    <string name="no_power_save">检测到限制&appname;后台运行，请将&appname;放入省电优化白名单！！</string>
 
     <string name="comment_count">消息回复 (%1$d)</string>
     <!--日历字符串资源开始-->

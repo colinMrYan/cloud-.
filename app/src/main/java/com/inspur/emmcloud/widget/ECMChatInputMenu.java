@@ -203,6 +203,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private boolean displayingWhisperOrBurnView = false;
     private boolean isDisplayReplyView = false; // 回复消息的回复布局是否展示
     private String messageReplyID = ""; // 回复消息的消息ID
+    private OnEmoOrAddClickListener mOnEmoOrAddClickListener;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -1298,6 +1299,14 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
+    public interface OnEmoOrAddClickListener {
+        void onClickListener();
+    }
+
+    public void setEmoOrAddClickListener(OnEmoOrAddClickListener onEmoOrAddClickListener) {
+        mOnEmoOrAddClickListener = onEmoOrAddClickListener;
+    }
+
     @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img, R.id.voice_input_language,
             R.id.voice_input_clear, R.id.voice_input_send, R.id.emotion_btn, R.id.emotion_delete, R.id.iv_reply_close})
     public void onClick(View view) {
@@ -1331,6 +1340,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 inputEdit.setText("");
                 break;
             case R.id.add_btn:
+                if (mOnEmoOrAddClickListener != null) {
+                    mOnEmoOrAddClickListener.onClickListener();
+                }
                 if (addMenuLayout.isShown()) {
                     if (viewpagerLayout.getVisibility() == View.VISIBLE) {
                         setOtherLayoutHeightLock(true);
@@ -1353,6 +1365,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.emotion_btn:
                 handleEmotionStatus();
+                if (mOnEmoOrAddClickListener != null) {
+                    mOnEmoOrAddClickListener.onClickListener();
+                }
                 break;
             case R.id.voice_input_close_img:
 //                inputEdit.setVisibility(VISIBLE);
