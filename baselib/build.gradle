@@ -166,4 +166,7 @@ dependencies {
     api deps.support.constraint
     api deps.Glide
     api deps.mmkv
+    // 引入腾讯x5浏览器
+    api deps.txTbx5
+
 }

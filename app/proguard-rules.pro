@@ -30,3 +30,15 @@
 
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
+}
+
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}

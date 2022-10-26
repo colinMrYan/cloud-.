@@ -13,6 +13,10 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
 import com.umeng.socialize.UMShareAPI;
+import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tencent.smtt.sdk.QbSdk;
+
+import java.util.HashMap;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
 public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
@@ -24,6 +28,8 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     @Override
     public void onCreate() {
         super.onCreate();
+        boolean isWebAutoRotate = false;
+        initX5SDK();
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);
@@ -75,5 +81,12 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     public ImpFragment getFragment() {
         if (fragment != null) return fragment;
         return null;
+    }
+
+    private void initX5SDK(){
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
     }
 }

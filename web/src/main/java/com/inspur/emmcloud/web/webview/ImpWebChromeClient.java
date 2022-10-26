@@ -23,12 +23,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.GeolocationPermissions;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
+
+//import android.webkit.GeolocationPermissions;
+import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
+
+import com.tencent.smtt.export.external.interfaces.JsPromptResult;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
@@ -38,6 +40,8 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebView;
 
 import java.util.List;
 
@@ -57,7 +61,7 @@ public class ImpWebChromeClient extends WebChromeClient {
     private ImpWebView mWebView;
     private View customView;
     private FrameLayout fullscreenContainer;
-    private WebChromeClient.CustomViewCallback customViewCallback;
+    private CustomViewCallback customViewCallback;
 //    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     public ImpWebChromeClient(Context context, ImpWebView webView, FrameLayout frameLayout) {
@@ -66,8 +70,7 @@ public class ImpWebChromeClient extends WebChromeClient {
         this.mWebView = webView;
     }
 
-    @Override
-    public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+    public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissionsCallback callback) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permissions.LOCATION, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {

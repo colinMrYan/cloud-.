@@ -14,12 +14,12 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.DownloadListener;
+import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.CookieManager;
+
 import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -298,14 +298,15 @@ public class ImpWebView extends WebView {
         settings.setDisplayZoomControls(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+//            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
         }
     }
 
     /* 页面效果设置 */
     private void setPageStyle() {
         //设置自适应屏幕
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         // 支持自动加载图片
         settings.setLoadsImagesAutomatically(true);
         settings.setAllowFileAccess(true);
