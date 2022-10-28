@@ -23,14 +23,8 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.AppException;
-import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.UrlParseUtils;
 import com.inspur.emmcloud.web.bean.WebFileDownloadBean;
@@ -305,6 +299,10 @@ public class FileTransferService extends ImpPlugin {
         fileSize = JSONUtils.getLong(jsonObject, "fileSize", 0);
         createTime = JSONUtils.getString(jsonObject, "createTime", "");
         fileId = JSONUtils.getString(jsonObject, "fileId", "");
+        if (!jsonObject.isNull("headers")) {
+            headerObj = JSONUtils.getString(jsonObject, "headers", null);
+//            headerObj = headerJsonObject.toString();
+        }
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
@@ -576,8 +574,9 @@ public class FileTransferService extends ImpPlugin {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
             if (!jsonObject.isNull("headers")) {
-                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
-                headerObj = headerJsonObject.toString();
+//                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
+//                headerObj = headerJsonObject.toString();
+                headerObj = JSONUtils.getString(jsonObject, "headers", null);
             }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
