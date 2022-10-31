@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react": "17.0.2",
+    "react": "18.1.0",
     "react-native": ">=0.63.0",
     "react-native-navigation": "^6.0.2",
     "react-native-picker": ">4.3.7",
