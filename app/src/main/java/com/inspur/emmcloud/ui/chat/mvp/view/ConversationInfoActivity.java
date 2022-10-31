@@ -481,7 +481,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public void deleteGroupSuccess() {
-        ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
+//        ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
+        ConversationCacheUtils.updateConversationState(MyApplication.getInstance(), uiConversation.getId(), "REMOVED");
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
         intent.putExtra("operate", 1);
