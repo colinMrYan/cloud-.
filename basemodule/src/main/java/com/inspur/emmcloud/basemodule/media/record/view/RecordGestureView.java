@@ -1,10 +1,9 @@
 package com.inspur.emmcloud.basemodule.media.record.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;

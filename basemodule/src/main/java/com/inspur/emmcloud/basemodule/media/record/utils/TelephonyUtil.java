@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.basemodule.media.record.utils;
 
 import android.app.Service;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 

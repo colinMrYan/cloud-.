@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;

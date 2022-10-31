@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.servcieimpl;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.inspur.emmcloud.basemodule.media.selector.config.SelectMimeType;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;

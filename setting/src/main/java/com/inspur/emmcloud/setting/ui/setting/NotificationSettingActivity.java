@@ -3,9 +3,9 @@ package com.inspur.emmcloud.setting.ui.setting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.SwitchCompat;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 

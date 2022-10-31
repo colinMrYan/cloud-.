@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.basemodule.push;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.huawei.hms.api.ConnectionResult;
 import com.huawei.hms.api.HuaweiApiClient;

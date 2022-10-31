@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,7 +24,6 @@ import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.SquareLayout;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationSendMultiAdapter;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.basemodule.media.selector.basic;
 
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 /**
  * @author：luck

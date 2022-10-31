@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.basemodule.media.selector.adapter.holder;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;

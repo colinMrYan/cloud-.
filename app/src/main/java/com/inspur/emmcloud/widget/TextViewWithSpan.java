@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;

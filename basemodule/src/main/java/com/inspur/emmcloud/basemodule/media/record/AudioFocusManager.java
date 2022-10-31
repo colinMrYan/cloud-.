@@ -2,8 +2,8 @@ package com.inspur.emmcloud.basemodule.media.record;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 

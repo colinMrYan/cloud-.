@@ -1,15 +1,13 @@
 package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -27,7 +25,6 @@ import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.provider.PreferencesProvider;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;

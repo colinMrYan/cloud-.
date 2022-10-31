@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.basemodule.media.record;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.inspur.emmcloud.basemodule.media.record.view.RecordModeView;
 import com.tencent.rtmp.TXLiveConstants;

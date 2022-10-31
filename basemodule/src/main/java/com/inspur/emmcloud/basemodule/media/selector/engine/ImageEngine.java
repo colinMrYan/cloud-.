@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.media.selector.engine;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bumptech.glide.request.RequestListener;

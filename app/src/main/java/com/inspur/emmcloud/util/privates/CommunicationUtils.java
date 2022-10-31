@@ -3,7 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +33,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
-import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
@@ -52,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**

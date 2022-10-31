@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;

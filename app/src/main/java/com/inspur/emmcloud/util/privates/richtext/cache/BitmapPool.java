@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.util.privates.richtext.cache;
 
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 
 import com.inspur.emmcloud.util.privates.richtext.drawable.DrawableSizeHolder;
 import com.inspur.emmcloud.util.privates.richtext.ext.Debug;

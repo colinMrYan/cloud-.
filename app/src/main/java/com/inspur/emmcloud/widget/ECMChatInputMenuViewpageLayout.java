@@ -2,7 +2,7 @@ package com.inspur.emmcloud.widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,6 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
-import com.inspur.emmcloud.ui.chat.mvp.adapter.ConversationMembersHeadAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

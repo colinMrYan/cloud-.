@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.web.plugin.photo.loader;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 import android.widget.ImageView;
 
 /**

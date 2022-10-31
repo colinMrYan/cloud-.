@@ -4,8 +4,8 @@ package com.inspur.emmcloud.basemodule.media.selector.config;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 //import androidx.annotation.NonNull;
 //import androidx.annotation.Nullable;

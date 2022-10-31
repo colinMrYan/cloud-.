@@ -5,8 +5,8 @@ import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +30,8 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.io.File;

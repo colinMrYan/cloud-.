@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.basemodule.media.selector.demo;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

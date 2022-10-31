@@ -10,7 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Telephony;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 

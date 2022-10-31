@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.basemodule.media.record.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.BarHide;

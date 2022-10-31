@@ -3,8 +3,8 @@ package com.inspur.emmcloud.basemodule.media.selector.basic;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.inspur.emmcloud.basemodule.media.selector.config.PictureConfig;
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;

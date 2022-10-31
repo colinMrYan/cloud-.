@@ -72,7 +72,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
             service.startWebSocket(false);
         }
         SoLoader.init(this, false);//ReactNative相关初始化
-        initHotfix();
+//        initHotfix();
         registerPhoneRecognizeReceiver();
     }
 

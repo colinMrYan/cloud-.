@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.ColorInt;
-import android.support.v4.util.Pair;
+import androidx.annotation.ColorInt;
+import androidx.core.util.Pair;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.privates.richtext.callback.Callback;

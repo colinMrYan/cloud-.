@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.baselib.router;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.applicationlike.IApplicationLike;

@@ -2,13 +2,11 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,35 +16,24 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.engine.LoadPath;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
-import com.inspur.emmcloud.basemodule.media.player.model.SuperPlayerModel;
 import com.inspur.emmcloud.basemodule.media.selector.demo.GlideEngine;
 import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
 
 /**
  * DisplayMediaVideoMsg

@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;

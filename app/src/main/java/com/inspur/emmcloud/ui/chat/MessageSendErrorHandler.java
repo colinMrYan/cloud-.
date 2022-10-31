@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;

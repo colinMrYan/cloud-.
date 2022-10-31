@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.baselib.widget.CommonCircleIndicator;
 
-import android.support.annotation.AnimatorRes;
-import android.support.annotation.DrawableRes;
+import androidx.annotation.AnimatorRes;
+import androidx.annotation.DrawableRes;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 

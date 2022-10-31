@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;

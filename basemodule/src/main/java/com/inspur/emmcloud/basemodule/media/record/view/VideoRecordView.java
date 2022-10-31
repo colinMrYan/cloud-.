@@ -1,23 +1,17 @@
 package com.inspur.emmcloud.basemodule.media.record.view;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
+
+import androidx.fragment.app.FragmentActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.record.AudioFocusManager;
 import com.inspur.emmcloud.basemodule.media.record.VideoRecordConfig;

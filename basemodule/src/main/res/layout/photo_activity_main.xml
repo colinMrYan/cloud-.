@@ -861,7 +861,7 @@
             android:layout_alignBottom="@+id/recycler"
             android:background="@color/app_color_white" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,7 +2,7 @@ package com.inspur.emmcloud.basemodule.media.selector.animators;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 /**

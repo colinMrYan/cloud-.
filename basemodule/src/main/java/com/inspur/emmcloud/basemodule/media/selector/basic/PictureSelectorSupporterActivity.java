@@ -3,10 +3,10 @@ package com.inspur.emmcloud.basemodule.media.selector.basic;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.media.selector.PictureSelectorFragment;

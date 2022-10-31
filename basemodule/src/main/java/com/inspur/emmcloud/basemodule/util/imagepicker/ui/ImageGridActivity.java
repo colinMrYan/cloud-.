@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;

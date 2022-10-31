@@ -6,12 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -22,21 +21,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
-import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.bean.chat.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
 
 
 /**

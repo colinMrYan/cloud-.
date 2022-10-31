@@ -6,9 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -27,7 +27,6 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -35,7 +34,6 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import java.util.List;
 
 import static com.inspur.emmcloud.basemodule.ui.BaseActivity.THEME_DARK;
-import static com.inspur.emmcloud.basemodule.util.protocol.ProtocolUtil.PREF_PROTOCOL_DLG_AGREED;
 
 public abstract class BaseFragmentActivity extends FragmentActivity {
 

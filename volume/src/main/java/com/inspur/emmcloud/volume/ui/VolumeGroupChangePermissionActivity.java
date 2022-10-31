@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.volume.ui;
 
 import android.content.res.ColorStateList;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.SwitchCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;

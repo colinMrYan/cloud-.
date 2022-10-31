@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.media.selector.language;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.basemodule.media.selector.utils.SpUtils;

@@ -15,7 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  * Created by libaochao on 2019/10/8.
  */
 
-public class BallView extends android.support.v7.widget.AppCompatTextView {
+public class BallView extends androidx.appcompat.widget.AppCompatTextView {
     Paint paint;
     int radius = 30;
     Listener listener;

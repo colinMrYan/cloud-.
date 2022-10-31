@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.ui.chat.mvp.presenter;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.alibaba.android.arouter.utils.TextUtils;
 import com.inspur.emmcloud.MyApplication;

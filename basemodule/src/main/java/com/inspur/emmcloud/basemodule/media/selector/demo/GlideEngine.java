@@ -3,8 +3,8 @@ package com.inspur.emmcloud.basemodule.media.selector.demo;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -21,13 +21,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.basemodule.R;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.media.selector.engine.ImageEngine;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnCallbackListener;
 import com.inspur.emmcloud.basemodule.media.selector.utils.ActivityCompatHelper;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 
 /**
  * @author：luck

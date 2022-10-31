@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.ui.chat.mvp.view;
 
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;

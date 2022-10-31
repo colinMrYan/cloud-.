@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.basemodule.media.selector.adapter.holder;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

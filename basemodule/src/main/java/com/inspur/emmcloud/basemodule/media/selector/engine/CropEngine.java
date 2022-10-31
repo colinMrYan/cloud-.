@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.media.selector.engine;
 
 //import androidx.fragment.app.Fragment;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.inspur.emmcloud.basemodule.media.selector.config.Crop;
 import com.inspur.emmcloud.basemodule.media.selector.config.CustomIntentKey;

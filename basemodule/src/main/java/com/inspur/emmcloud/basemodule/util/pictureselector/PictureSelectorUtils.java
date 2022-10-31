@@ -3,12 +3,11 @@ package com.inspur.emmcloud.basemodule.util.pictureselector;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.media.luban.Luban;
 import com.inspur.emmcloud.basemodule.media.luban.OnNewCompressListener;
 import com.inspur.emmcloud.basemodule.media.luban.OnRenameListener;

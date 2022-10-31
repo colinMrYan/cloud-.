@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.basemodule.media.record;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;

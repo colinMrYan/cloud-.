@@ -2,7 +2,7 @@ package com.inspur.emmcloud.basemodule.media.selector.style;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.AnimRes;
+import androidx.annotation.AnimRes;
 
 import com.inspur.emmcloud.basemodule.R;
 

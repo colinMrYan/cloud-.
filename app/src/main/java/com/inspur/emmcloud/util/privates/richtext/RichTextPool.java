@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.util.privates.richtext;
 
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 

@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.basemodule.media.selector.basic;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.View;
-
 public interface IPagerAdapterLifecycle {
     /**绑定到界面windows
      * onAttached

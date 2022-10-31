@@ -2,7 +2,7 @@ package com.inspur.emmcloud.mail.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.view.View;
 
 import com.inspur.emmcloud.baselib.router.Router;

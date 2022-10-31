@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.basemodule.media.selector.interfaces;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 //import androidx.recyclerview.widget.RecyclerView;

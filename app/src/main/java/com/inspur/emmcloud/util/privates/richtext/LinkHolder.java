@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.util.privates.richtext;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /**
  * Created by zhou on 2016/11/17.

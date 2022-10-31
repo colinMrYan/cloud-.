@@ -14,7 +14,7 @@ android {
             abiFilters "armeabi-v7a", "x86", 'arm64-v8a'
         }
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
@@ -148,7 +148,7 @@ dependencies {
     androidTestApi(deps.support.test.runner) {
         exclude module: 'support-annotations'
     }
-    androidTestApi('com.android.support.test:rules:0.5') {
+    androidTestApi('androidx.test:rules:1.1.1') {
         exclude module: 'support-annotations'
     }
     api deps.ARouter.arouter_api

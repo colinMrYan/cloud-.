@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.mvp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class BasePresenter<V extends BaseView> {
     protected V mView;
