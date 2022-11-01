@@ -146,7 +146,7 @@ buildscript {
             }
             url "http://mvn.cloud.alipay.com/nexus/content/repositories/releases/"
         }
-        maven { url 'maven.aliyun.com/repository/public/google/' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         jcenter()
         mavenCentral()
         google()
@@ -173,7 +173,7 @@ allprojects {
             }
             url "http://mvn.cloud.alipay.com/nexus/content/repositories/releases/"
         }
-        maven { url 'maven.aliyun.com/repository/public/google/' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url "https://jitpack.io" } // PhotoView
         mavenCentral()
         mavenLocal()
