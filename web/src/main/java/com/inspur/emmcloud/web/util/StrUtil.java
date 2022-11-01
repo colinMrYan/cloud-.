@@ -77,4 +77,30 @@ public class StrUtil {
         return urlString;
     }
 
+
+    /**
+     * 对中文字符进行UTF-8编码
+     *
+     * @param source 要转义的字符串
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static String tranformStyle(String source){
+        char[] arr = source.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            char temp = arr[i];
+            if (isChinese(temp)) {
+                try {
+                    sb.append(URLEncoder.encode("" + temp, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            sb.append(arr[i]);
+        }
+        return sb.toString();
+    }
+
 }

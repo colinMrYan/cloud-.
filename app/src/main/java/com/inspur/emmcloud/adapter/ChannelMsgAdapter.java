@@ -78,8 +78,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_msg_card_parent_view, viewGroup, false);
-        ViewHolder holder = new ViewHolder(view, mItemClickListener);
-        return holder;
+        return  new ViewHolder(view, mItemClickListener);
     }
 
     @Override
