@@ -8,6 +8,7 @@ buildscript {
 //            'supportLibrary': '28.0.0',
             'androidPlugin' : '4.2.1',
             'androidTools'  : '30.0.3',
+            'supportLibVersion' : "28.0.0"
     ]
 
     ext.deps = [

@@ -47,6 +47,9 @@ android {
         splits.abi.enable = false
         splits.density.enable = false
     } else {
+        project.ext.react = [
+                entryFile: "index.js"
+        ]
         apply from: "../node_modules/react-native/react.gradle"
         apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
     }
@@ -166,6 +169,7 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
+    implementation "com.android.support:appcompat-v7:${versions.supportLibVersion}"
 
     implementation deps.react
     // React Naive Components

@@ -7,5 +7,5 @@
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 import Discover from './react-native/discover';
-
+import App from '../App';
 AppRegistry.registerComponent('discover', () => Discover);
