@@ -54,9 +54,9 @@ buildscript {
 //            ],
 
             butterknife         : [
-                    'butterknife'         : 'com.jakewharton:butterknife:8.8.1',
-                    'butterknife_compiler': 'com.jakewharton:butterknife-compiler:8.8.1',
-                    'gradle_plugin'       : 'com.jakewharton:butterknife-gradle-plugin:8.4.0'
+                    'butterknife'         : 'com.jakewharton:butterknife:10.2.3',
+                    'butterknife_compiler': 'com.jakewharton:butterknife-compiler:10.2.3',
+                    'gradle_plugin'       : 'com.jakewharton:butterknife-gradle-plugin:10.2.3'
             ],
 //            report : [
 //                    'anno' : 'osp.leobert.android:ReportNotation:1.0.0',
@@ -65,7 +65,7 @@ buildscript {
             gson                : 'com.google.code.gson:gson:2.8.2',
             fastjson            : 'com.alibaba:fastjson:1.2.24',
             qmui                : 'com.qmuiteam:qmui:1.0.4',
-            react               : 'com.facebook.react:react-native:+',
+//            react               : 'com.facebook.react:react-native:+',
             commonsLang3        : 'org.apache.commons:commons-lang3:3.5',
             amapLocation        : 'com.amap.api:location:4.6.0',
             baiduMapLocation    : 'com.baidu.mapapi:location:6.13',
@@ -178,7 +178,7 @@ allprojects {
         }
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/node_modules/react-native/android"
+//            url "$rootDir/node_modules/react-native/android"
         }
         maven { url "https://jitpack.io" } // PhotoView
         google()

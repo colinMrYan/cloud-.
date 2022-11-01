@@ -47,8 +47,8 @@ android {
         splits.abi.enable = false
         splits.density.enable = false
     } else {
-        apply from: "../node_modules/react-native/react.gradle"
-        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+//        apply from: "../node_modules/react-native/react.gradle"
+//        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
     }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
@@ -167,13 +167,13 @@ dependencies {
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
 
-    implementation deps.react
+//    implementation deps.react
     // React Naive Components
-    implementation project(':react-native-smart-swipe-refresh-layout')
-    implementation project(':react-native-picker')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-navigation')
+//    implementation project(':react-native-smart-swipe-refresh-layout')
+//    implementation project(':react-native-picker')
+//    implementation project(':react-native-svg')
+//    implementation project(':react-native-vector-icons')
+//    implementation project(':react-native-navigation')
 }
 
 //class BuildTimeListener implements TaskExecutionListener,BuildListener{
