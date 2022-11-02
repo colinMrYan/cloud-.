@@ -119,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp">
 
-                        <androidx.appcompat.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/open_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -327,7 +327,7 @@
                             android:layout_height="40dp"
                             android:background="?attr/text_ll_color_nor">
 
-                            <androidx.appcompat.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/pop_third_title_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -390,7 +390,7 @@
                             android:layout_height="40dp"
                             android:background="?attr/text_ll_color_nor">
 
-                            <androidx.appcompat.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/pop_second_title_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"

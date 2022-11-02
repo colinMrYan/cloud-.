@@ -99,11 +99,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp">
 
-                <androidx.appcompat.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/title_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="15dp"></androidx.appcompat.widget.RecyclerView>
+                    android:paddingLeft="15dp"></androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
 
             <View

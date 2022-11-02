@@ -32,7 +32,7 @@
             android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 
-    <androidx.appcompat.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/app_center_recomand_recycleview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

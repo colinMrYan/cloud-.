@@ -54,7 +54,7 @@
         android:layout_below="@id/rl_header"
         android:background="?attr/content_bg_ff_00">
 
-        <androidx.appcompat.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_album"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

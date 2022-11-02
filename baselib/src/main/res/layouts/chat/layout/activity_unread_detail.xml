@@ -9,7 +9,7 @@
 
     <include layout="@layout/include_common_header_layout" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/unread_detail_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,13 +37,13 @@
             android:layout_height="wrap_content"
             />
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
     <View
         style="@style/divide_style"
         android:layout_marginBottom="5dp"/>
 
-    <androidx.core.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/unread_detail_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

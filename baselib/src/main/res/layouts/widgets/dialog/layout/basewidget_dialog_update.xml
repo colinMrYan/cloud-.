@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
 
-    <androidx.core.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager_update_content"
         android:layout_width="wrap_content"
         android:layout_height="288dp"

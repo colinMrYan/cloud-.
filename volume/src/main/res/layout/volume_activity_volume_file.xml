@@ -183,7 +183,7 @@
         android:textSize="16sp"
         android:visibility="gone" />
 
-    <androidx.core.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -244,7 +244,7 @@
                     android:background="?attr/color_list_divider" />
             </RelativeLayout>
 
-            <androidx.appcompat.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lv_file"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -289,7 +289,7 @@
                     app:cus_radius="4dp" />
             </LinearLayout>
         </RelativeLayout>
-    </androidx.core.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/rl_bottom_all_action"

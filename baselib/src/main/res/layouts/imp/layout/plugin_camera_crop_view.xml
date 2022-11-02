@@ -27,7 +27,7 @@
 
     </com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.CropView>
 
-    <androidx.appcompat.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_radio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

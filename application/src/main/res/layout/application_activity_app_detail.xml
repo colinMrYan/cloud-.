@@ -195,7 +195,7 @@
                 android:visibility="gone" />
 
 
-            <androidx.appcompat.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/intr_app_img_list"
                 android:layout_width="match_parent"
                 android:layout_height="380dp"
@@ -212,7 +212,7 @@
                 android:background="?attr/color_list_divider"
                 android:visibility="gone" />
 
-            <androidx.core.view.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/app_detail_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

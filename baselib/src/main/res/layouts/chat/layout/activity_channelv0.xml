@@ -62,7 +62,7 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <androidx.core.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -87,7 +87,7 @@
 
         </RelativeLayout>
 
-    </androidx.core.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.inspur.emmcloud.widget.ECMChatInputMenuV0
         android:id="@+id/chat_input_menu"

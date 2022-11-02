@@ -118,7 +118,7 @@
                     android:textSize="17sp" />
             </RelativeLayout>
 
-            <androidx.appcompat.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_group_message_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

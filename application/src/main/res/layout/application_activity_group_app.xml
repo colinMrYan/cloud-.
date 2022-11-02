@@ -35,7 +35,7 @@
 
     </RelativeLayout>
 
-    <androidx.appcompat.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_group_app"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
