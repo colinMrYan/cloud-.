@@ -74,7 +74,7 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.core.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -145,7 +145,7 @@
         </RelativeLayout>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.core.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/mention_layout"

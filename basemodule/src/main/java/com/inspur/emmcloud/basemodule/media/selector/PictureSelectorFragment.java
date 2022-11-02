@@ -8,7 +8,7 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

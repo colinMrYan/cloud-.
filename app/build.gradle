@@ -169,7 +169,7 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
-    implementation "com.android.support:appcompat-v7:${versions.supportLibVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 
     implementation deps.react
     // React Naive Components
