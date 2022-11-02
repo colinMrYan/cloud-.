@@ -1,11 +1,6 @@
 package com.inspur.emmcloud.schedule.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +10,12 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.google.android.material.tabs.TabLayout;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -58,7 +58,7 @@ import butterknife.OnClick;
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment {
+public class ScheduleHomeFragment extends BaseFragment implements TabLayout.BaseOnTabSelectedListener {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
@@ -243,25 +243,7 @@ public class ScheduleHomeFragment extends BaseFragment {
             updateTabLayoutTextStatus(tab, (i == 0));
             tabLayout.addTab(tab);
         }
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                final int position = tab.getPosition();
-                viewPager.setCurrentItem(position);
-                dateText.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
-                todayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
-                updateTabLayoutTextStatus(tab, true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                updateTabLayoutTextStatus(tab, false);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+        tabLayout.addOnTabSelectedListener(this);
 
     }
 
@@ -394,4 +376,24 @@ public class ScheduleHomeFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        final int position = tab.getPosition();
+        viewPager.setCurrentItem(position);
+        dateText.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+        todayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+        updateTabLayoutTextStatus(tab, true);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+        updateTabLayoutTextStatus(tab, false);
+
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
 }
