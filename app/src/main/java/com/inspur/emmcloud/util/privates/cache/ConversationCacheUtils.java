@@ -213,11 +213,9 @@ public class ConversationCacheUtils {
     }
 
     /**
-     * 设置是否免打扰
+     * 设置聊天状态
      *
-     * @param context
-     * @param id
-     * @param state
+     * @param state conversation state 字段
      */
     public static void updateConversationState(Context context, String id, String state) {
         try {

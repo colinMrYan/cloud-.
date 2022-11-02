@@ -960,7 +960,7 @@
     <string name="dummy_button">Dummy Button</string>
 
     <string name="recall_reedit">重新编辑</string>
-
+    <string name="setting_feed_back_contact_hint">在此输入联系方式</string>
 
     <!-- 拖动listview -->
     <string name="select_remove_mode">Remove modes</string>
@@ -1218,6 +1218,8 @@
     <string name="no_power_save">检测到限制&appname;后台运行，请将&appname;放入省电优化白名单！！</string>
 
     <string name="comment_count">消息回复 (%1$d)</string>
+
+    <string name="dissolve_tip">无法在已解散的群聊中发送消息</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>
