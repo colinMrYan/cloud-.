@@ -343,7 +343,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_view_setting_voice_2_word"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -378,7 +378,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_view_setting_native_rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -413,7 +413,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_view_setting_web_rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -450,7 +450,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_view_setting_self_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -487,7 +487,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_view_setting_experience_upgrade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

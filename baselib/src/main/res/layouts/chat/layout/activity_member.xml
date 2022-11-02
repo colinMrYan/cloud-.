@@ -70,7 +70,7 @@
         android:background="?attr/color_bg_common_00"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.appcompat.widget.RecyclerView
             android:id="@+id/recyclerview_voice_communication_select_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -3,9 +3,9 @@
 buildscript {
     ext.versions = [
             'minSdk'        : 21,
-            'targetSdk'     : 30,
-            'compileSdk'    : 30,
-            'androidPlugin' : '3.2.1',
+            'targetSdk'     : 28,
+            'compileSdk'    : 28,
+            'androidPlugin' : '3.4.1',
             'androidTools'  : '28.0.3',
             'supportLibVersion' : "28.0.0",
             'kotlin_version'    : '1.3.21',
@@ -59,7 +59,7 @@ buildscript {
             butterknife         : [
                     'butterknife'         : 'com.jakewharton:butterknife:8.8.1',
                     'butterknife_compiler': 'com.jakewharton:butterknife-compiler:8.8.1',
-                    'gradle_plugin'       : 'com.jakewharton:butterknife-gradle-plugin:8.4.0'
+                    'gradle_plugin'       : 'com.jakewharton:butterknife-gradle-plugin:9.0.0-rc2'
             ],
 //            report : [
 //                    'anno' : 'osp.leobert.android:ReportNotation:1.0.0',
@@ -68,7 +68,7 @@ buildscript {
             gson                : 'com.google.code.gson:gson:2.8.2',
             fastjson            : 'com.alibaba:fastjson:1.2.24',
             qmui                : 'com.qmuiteam:qmui:1.0.4',
-            react               : 'com.facebook.react:react-native:0.58.0',
+            react               : 'com.facebook.react:react-native:0.60.0',
             commonsLang3        : 'org.apache.commons:commons-lang3:3.5',
             amapLocation        : 'com.amap.api:location:4.6.0',
             baiduMapLocation    : 'com.baidu.mapapi:location:6.13',
@@ -186,6 +186,10 @@ allprojects {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/node_modules/react-native/android"
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/node_modules/jsc-android/dist")
         }
         google()
 

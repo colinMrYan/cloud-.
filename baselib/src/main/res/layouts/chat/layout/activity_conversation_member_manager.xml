@@ -126,7 +126,7 @@
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_member_manager_forbidden"
                 android:layout_width="51dp"
                 android:layout_height="31dp"

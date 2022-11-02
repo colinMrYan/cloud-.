@@ -387,7 +387,7 @@
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <android.support.v7.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_conversation_sticky"
                     android:layout_width="51dp"
                     android:layout_height="31dp"
@@ -423,7 +423,7 @@
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <android.support.v7.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_conversation_mute_notification"
                     android:layout_width="51dp"
                     android:layout_height="31dp"
@@ -460,7 +460,7 @@
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <android.support.v7.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_conversation_show"
                     android:layout_width="51dp"
                     android:layout_height="31dp"

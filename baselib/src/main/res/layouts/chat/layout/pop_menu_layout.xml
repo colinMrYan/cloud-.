@@ -19,7 +19,7 @@
         app:bl_strokeColor="?attr/color_stroke_46_aa"
         app:bl_strokeWidth="0.5px">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.appcompat.widget.RecyclerView
             android:id="@+id/pop_menu_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

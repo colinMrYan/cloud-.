@@ -62,7 +62,7 @@
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_setting_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

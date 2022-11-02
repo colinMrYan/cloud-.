@@ -73,13 +73,13 @@
             android:layout_marginTop="60dp"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/recyclerview_voice_communication_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/recyclerview_voice_communication_second"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,14 +105,14 @@
                 android:textColor="?attr/text_color_e1"
                 android:textSize="13dp" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/recyclerview_voice_communication_memebers_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:overScrollMode="never" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/recyclerview_voice_communication_memebers_second"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

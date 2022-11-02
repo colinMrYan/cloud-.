@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "react": "^16.6.3",
-    "react-native": "^0.58.0",
+    "react": "^16.8.6",
+    "react-native": "^0.60.0",
     "react-native-navigation": "^6.1.2",
     "react-native-picker": "^4.3.7",
     "react-native-smart-pull-to-refresh-listview": "^1.6.11-beta.2",
-    "react-native-svg": "^13.4.0",
+    "react-native-svg": "^9.13.6",
     "react-native-vector-icons": "^9.2.0"
   }
 }

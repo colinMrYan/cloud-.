@@ -249,7 +249,7 @@
                                 android:textColor="?attr/text_color_e1"
                                 android:textSize="14sp" />
 
-                            <android.support.v7.widget.SwitchCompat
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/sv_encryption_action"
                                 android:layout_width="wrap_content"
                                 android:layout_height="51dp"
@@ -283,7 +283,7 @@
                                 android:textColor="?attr/text_color_e1"
                                 android:textSize="14sp" />
 
-                            <android.support.v7.widget.SwitchCompat
+                            <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/sv_signature_action"
                                 android:layout_width="wrap_content"
                                 android:layout_height="51dp"

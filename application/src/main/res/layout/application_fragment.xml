@@ -96,7 +96,7 @@
         android:paddingTop="4dp"
         android:visibility="gone">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.appcompat.widget.RecyclerView
             android:id="@+id/my_app_recommend_app_wiget_recyclerview"
             android:layout_width="wrap_content"
             android:layout_height="48dp" />

@@ -79,7 +79,7 @@
             android:textColor="@color/header_text_e1"
             android:textSize="16sp" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_origin"
             style="@style/SuperCheckboxTheme"
             android:layout_width="wrap_content"

@@ -44,7 +44,7 @@
                 android:background="?attr/text_ll_color_nor"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.CardView
+                <androidx.appcompat.widget.CardView
                     android:id="@+id/card_view_group_summary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.appcompat.widget.CardView>
 
                 <RelativeLayout
                     android:id="@+id/rl_member"
@@ -320,7 +320,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/sv_stick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -349,7 +349,7 @@
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/sv_dnd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

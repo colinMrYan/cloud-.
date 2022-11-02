@@ -20,7 +20,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/rcv_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/ll_title">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.appcompat.widget.RecyclerView
                 android:id="@+id/rcv_file"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

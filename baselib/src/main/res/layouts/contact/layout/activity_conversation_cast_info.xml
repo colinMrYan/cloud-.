@@ -132,7 +132,7 @@
                 android:textColor="?attr/text_color_e1"
                 android:textSize="@dimen/content_title_textsize" />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sv_stick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
