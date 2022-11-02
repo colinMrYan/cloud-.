@@ -193,7 +193,7 @@ public class GestureLoginActivity extends BaseActivity implements NotSupportLand
         if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
             return;
         }
-        cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.FingerprintIdentifyListener() {
+        cloudFingerprintIdentify.startIdentify(5, new BaseFingerprint.IdentifyListener() {
             @Override
             public void onSucceed() {
                 // 验证成功，自动结束指纹识别

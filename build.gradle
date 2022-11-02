@@ -57,8 +57,8 @@ buildscript {
 //            ],
 
             butterknife         : [
-                    'butterknife'         : 'com.jakewharton:butterknife:8.8.1',
-                    'butterknife_compiler': 'com.jakewharton:butterknife-compiler:8.8.1',
+                    'butterknife'         : 'com.jakewharton:butterknife:10.2.3',
+                    'butterknife_compiler': 'com.jakewharton:butterknife-compiler:10.2.3',
                     'gradle_plugin'       : 'com.jakewharton:butterknife-gradle-plugin:9.0.0-rc2'
             ],
 //            report : [
@@ -116,9 +116,9 @@ buildscript {
                     'jpush': 'cn.jiguang.sdk:jpush:3.3.2',
                     'jcore': 'cn.jiguang.sdk:jcore:2.0.1'],
             ical4j              : 'org.mnode.ical4j:ical4j:2.0.1',
-            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
+            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.6',
             wechatOpenSdk       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+',
-            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
+//            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
             S3                  : [
                     'aws_android_sdk_s3'           : 'com.amazonaws:aws-android-sdk-s3:2.15.2',
                     'aws_android_sdk_core'         : 'com.amazonaws:aws-android-sdk-core:2.15.2',
