@@ -45,7 +45,8 @@ import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
-import com.reactnativenavigation.bridge.NavigationReactPackage;
+// todo AndroidX
+//import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 import java.io.File;
 
@@ -215,8 +216,8 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 .addPackage(new AuthorizationManagerPackage())
                 .addPackage(new SvgPackage())
                 .addPackage(new VectorIconsPackage())
-                .addPackage(new NavigationReactPackage())
-                .setJSMainModuleName("index.android")
+//                .addPackage(new NavigationReactPackage())
+//                .setJSMainModuleName("index.android")
                 .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)

@@ -67,7 +67,7 @@ import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.tinkerpatch.sdk.TinkerPatch;
+//import com.tinkerpatch.sdk.TinkerPatch;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,7 +108,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     public void onCreate() {
         if (!AppUtils.isApkDebugable(this)) {
             try {
-                TinkerPatch.with().fetchPatchUpdate(true);
+//                TinkerPatch.with().fetchPatchUpdate(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

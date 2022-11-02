@@ -29,7 +29,8 @@ import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
-import com.reactnativenavigation.bridge.NavigationReactPackage;
+// todo AndroidX
+//import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 
 /**
@@ -73,14 +74,14 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getActivity().getApplication())
                 .setCurrentActivity(getActivity())
-                .setJSMainModuleName("index.android")
+//                .setJSMainModuleName("index.android")
                 .setJSBundleFile(reactCurrentFilePath + "/index.android.bundle")
                 .addPackage(new MainReactPackage())
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .addPackage(new PickerViewPackage())
                 .addPackage(new SvgPackage())
-                .addPackage(new NavigationReactPackage())
+//                .addPackage(new NavigationReactPackage())
                 .addPackage(new VectorIconsPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)

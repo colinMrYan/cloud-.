@@ -19,9 +19,10 @@ import com.inspur.emmcloud.basemodule.util.systool.PhoneReceiver;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.tencent.tinker.entry.ApplicationLike;
-import com.tinkerpatch.sdk.TinkerPatch;
-import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
+//todo AndroidX
+//import com.tencent.tinker.entry.ApplicationLike;
+//import com.tinkerpatch.sdk.TinkerPatch;
+//import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
             );
         }
     };
-    private ApplicationLike tinkerApplicationLike;
+//    private ApplicationLike tinkerApplicationLike;
 
     public void onCreate() {
         super.onCreate();
@@ -79,30 +80,30 @@ public class MyApplication extends BaseApplication implements ReactApplication {
     /**
      * 需要确保至少对主进程跟patch进程初始化 TinkerPatch
      */
-    private void initHotfix() {
-        // 我们可以从这里获得Tinker加载过程的信息
-        if (!AppUtils.isApkDebugable(BaseApplication.getInstance())) {
-            tinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
-            // 初始化TinkerPatch SDK
-            TinkerPatch.init(
-                    tinkerApplicationLike
-//                new TinkerPatch.Builder(tinkerApplicationLike)
-//                    .requestLoader(new OkHttp3Loader())
-//                    .build()
-            )
-                    .reflectPatchLibrary()
-                    .setPatchRollbackOnScreenOff(true)
-                    .setPatchRestartOnSrceenOff(true)
-                    .setFetchPatchIntervalByHours(3)
-            ;
-            // 获取当前的补丁版本
-            Log.d("zhang", "Current patch version is " + TinkerPatch.with().getPatchVersion());
-
-            // fetchPatchUpdateAndPollWithInterval 与 fetchPatchUpdate(false)
-            // 不同的是，会通过handler的方式去轮询
-            TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
-        }
-    }
+//    private void initHotfix() {
+//        // 我们可以从这里获得Tinker加载过程的信息
+//        if (!AppUtils.isApkDebugable(BaseApplication.getInstance())) {
+//            tinkerApplicationLike = TinkerPatchApplicationLike.getTinkerPatchApplicationLike();
+//            // 初始化TinkerPatch SDK
+//            TinkerPatch.init(
+//                    tinkerApplicationLike
+////                new TinkerPatch.Builder(tinkerApplicationLike)
+////                    .requestLoader(new OkHttp3Loader())
+////                    .build()
+//            )
+//                    .reflectPatchLibrary()
+//                    .setPatchRollbackOnScreenOff(true)
+//                    .setPatchRestartOnSrceenOff(true)
+//                    .setFetchPatchIntervalByHours(3)
+//            ;
+//            // 获取当前的补丁版本
+//            Log.d("zhang", "Current patch version is " + TinkerPatch.with().getPatchVersion());
+//
+//            // fetchPatchUpdateAndPollWithInterval 与 fetchPatchUpdate(false)
+//            // 不同的是，会通过handler的方式去轮询
+//            TinkerPatch.with().fetchPatchUpdateAndPollWithInterval();
+//        }
+//    }
 
 
     private void registerPhoneRecognizeReceiver() {
