@@ -1,13 +1,14 @@
 package com.inspur.emmcloud.schedule.ui.task;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.schedule.R;
 import com.inspur.emmcloud.schedule.adapter.AllTaskFragmentAdapter;
@@ -21,7 +22,7 @@ import java.util.List;
  * 工作主页面下任务页面
  */
 
-public class TaskFragment extends BaseFragment {
+public class TaskFragment extends BaseFragment implements TabLayout.BaseOnTabSelectedListener {
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -115,27 +116,7 @@ public class TaskFragment extends BaseFragment {
         tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_focused), false);
         tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.schedule_task_done), false);
 
-        tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(final TabLayout.Tab tab) {
-                //带“全部”代码
-                taskViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                //带“全部”代码
-//                int position = tab.getPosition();
-//                if(position == 0){
-//                    taskViewPager.setCurrentItem(position + 1);
-//                }
-//                taskViewPager.setCurrentItem(tab.getPosition());
-            }
-        });
+        tabLayoutSchedule.addOnTabSelectedListener(this);
 
         taskViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -211,5 +192,21 @@ public class TaskFragment extends BaseFragment {
             return tabLayoutSchedule.getChildAt(i).isSelected();
         }
         return false;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        //带“全部”代码
+        taskViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }

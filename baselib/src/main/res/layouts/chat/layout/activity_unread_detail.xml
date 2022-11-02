@@ -27,12 +27,12 @@
         app:tabTextAppearance="@style/XYLinkTabLayoutTextStyle"
         app:tabTextColor="?attr/text_color_e1" >
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />

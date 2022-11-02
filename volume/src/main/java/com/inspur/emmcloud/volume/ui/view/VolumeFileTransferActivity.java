@@ -1,13 +1,14 @@
 package com.inspur.emmcloud.volume.ui.view;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.TabLayoutUtil;
 import com.inspur.emmcloud.componentservice.volume.VolumeFile;
@@ -28,7 +29,7 @@ import butterknife.OnClick;
  *
  * @author zhangyj.lc
  */
-public class VolumeFileTransferActivity extends BaseMvpActivity implements VolumeFileTransferFragment.SelectCallBack {
+public class VolumeFileTransferActivity extends BaseMvpActivity implements VolumeFileTransferFragment.SelectCallBack, TabLayout.BaseOnTabSelectedListener {
 
     @BindView(R2.id.ibt_back)
     ImageButton backBtn;
@@ -72,23 +73,7 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                currentIndex = tab.getPosition();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                list.get(tab.getPosition()).clickHeaderLeft();
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        tabLayout.addOnTabSelectedListener(this);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -163,5 +148,21 @@ public class VolumeFileTransferActivity extends BaseMvpActivity implements Volum
 
     public TextView getHeaderRightTv() {
         return headerRightTv;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewPager.setCurrentItem(tab.getPosition());
+        currentIndex = tab.getPosition();
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+        list.get(tab.getPosition()).clickHeaderLeft();
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }

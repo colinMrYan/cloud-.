@@ -3,10 +3,6 @@ package com.inspur.emmcloud.schedule.ui.meeting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
+
+import com.google.android.material.tabs.TabLayout;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
@@ -53,7 +54,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MeetingRoomInfoActivity extends BaseActivity {
+public class MeetingRoomInfoActivity extends BaseActivity implements TabLayout.BaseOnTabSelectedListener {
 
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_INFO = 1;
@@ -113,25 +114,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab().setText(tabTitleList.get(i)), i == 0);
         }
         setTabLayoutWidth();
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                if (viewPager != null) {
-                    viewPager.setCurrentItem(position);
-                    currentPagerIndex = position;
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     private List<String> getTabTitleList() {
@@ -454,6 +437,25 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             loadingDlg.show();
             apiService.deleteMeeting(meeting);
         }
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        int position = tab.getPosition();
+        if (viewPager != null) {
+            viewPager.setCurrentItem(position);
+            currentPagerIndex = position;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 
 
