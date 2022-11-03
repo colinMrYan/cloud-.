@@ -1,5 +1,5 @@
-include ':app', ':baselib', ':basemodule', ':componentservice', ':login', ':web', ':news', ':webex',':mail',':schedule', ':application', ':setting', ':volume'
 //apply from: file("$rootDir/node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app', ':baselib', ':basemodule', ':componentservice', ':login', ':web', ':news', ':webex',':mail',':schedule', ':application', ':setting', ':volume'
 
 // React Native Components
 include ':react-native-smart-swipe-refresh-layout'
