@@ -273,16 +273,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
                         tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
                     }
-                    if (tabBean != null) {
-                        tabBean.setTabId(mainTabResultList.get(i).getUri());
-                        tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
-                    }
+                    tabBean.setTabId(mainTabResultList.get(i).getUri());
+                    tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
                 }
             }
         }
-        if (tabBeans != null) {
-            showTabs(tabBeans);
-        }
+        showTabs(tabBeans);
     }
 
 
