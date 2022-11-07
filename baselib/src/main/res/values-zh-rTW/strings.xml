@@ -82,7 +82,7 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
 
-    <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到特定版本</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到最新版本</font>]]></Data></string>
     <string name="choose">選擇</string>
     <string name="file_type">檔案類型</string>
     <string name="app_update_prepare">準備下載</string>
