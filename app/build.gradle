@@ -179,9 +179,9 @@ dependencies {
 //    implementation project(':react-native-vector-icons')
 //    implementation project(':react-native-navigation')
     //无需引入tinker的任何库,使用tinkerpatch sdk即可
-    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
-        changing = true
-    }
+//    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
+//        changing = true
+//    }
 }
 
 //class BuildTimeListener implements TaskExecutionListener,BuildListener{

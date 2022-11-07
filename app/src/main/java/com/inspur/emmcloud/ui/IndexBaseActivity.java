@@ -67,7 +67,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.tinkerpatch.sdk.TinkerPatch;
+//import com.tinkerpatch.sdk.TinkerPatch;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -106,13 +106,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onCreate() {
-        if (!AppUtils.isApkDebugable(this)) {
-            try {
-                TinkerPatch.with().fetchPatchUpdate(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (!AppUtils.isApkDebugable(this)) {
+//            try {
+//                TinkerPatch.with().fetchPatchUpdate(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();
