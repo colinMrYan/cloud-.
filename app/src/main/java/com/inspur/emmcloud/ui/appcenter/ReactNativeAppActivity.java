@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.beefe.picker.PickerViewPackage;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactRootView;
-import com.facebook.react.common.LifecycleState;
-import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
-import com.facebook.react.shell.MainReactPackage;
-import com.horcrux.svg.SvgPackage;
+//import com.beefe.picker.PickerViewPackage;
+//import com.facebook.react.ReactInstanceManager;
+//import com.facebook.react.ReactRootView;
+//import com.facebook.react.common.LifecycleState;
+//import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+//import com.facebook.react.shell.MainReactPackage;
+//import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -43,9 +43,9 @@ import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 // todo AndroidX
+//import com.oblador.vectoricons.VectorIconsPackage;
+//import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 //import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 import java.io.File;
@@ -54,8 +54,10 @@ import java.io.File;
  * Created by yufuchang on 2017/3/15.
  */
 @Route(path = Constant.AROUTER_CLASS_APPCENTER_REACT_NATIVE)
-public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
-    private ReactInstanceManager mReactInstanceManager;
+public class ReactNativeAppActivity extends BaseActivity {
+
+//public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
+//    private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeAppScheme = "";
     private String reactAppFilePath;
@@ -126,7 +128,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mReactInstanceManager.onActivityResult(ReactNativeAppActivity.this, requestCode, resultCode, data);
+//        mReactInstanceManager.onActivityResult(ReactNativeAppActivity.this, requestCode, resultCode, data);
     }
 
     /**
@@ -206,27 +208,27 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             ToastUtils.show(ReactNativeAppActivity.this, getString(R.string.react_native_app_open_failed));
             finish();
         }
-        ReactRootView mReactRootView = new ReactRootView(this);
-        mReactInstanceManager = ReactInstanceManager.builder()
-                .setApplication(getApplication())
-                .setCurrentActivity(ReactNativeAppActivity.this)
-                .addPackage(new MainReactPackage())
-                .addPackage(new RCTSwipeRefreshLayoutPackage())
-                .addPackage(new PickerViewPackage())
-                .addPackage(new AuthorizationManagerPackage())
-                .addPackage(new SvgPackage())
-                .addPackage(new VectorIconsPackage())
-//                .addPackage(new NavigationReactPackage())
+//        ReactRootView mReactRootView = new ReactRootView(this);
+//        mReactInstanceManager = ReactInstanceManager.builder()
+//                .setApplication(getApplication())
+//                .setCurrentActivity(ReactNativeAppActivity.this)
+//                .addPackage(new MainReactPackage())
+////                .addPackage(new RCTSwipeRefreshLayoutPackage())
+////                .addPackage(new PickerViewPackage())
+////                .addPackage(new AuthorizationManagerPackage())
+////                .addPackage(new SvgPackage())
+////                .addPackage(new VectorIconsPackage())
+////                .addPackage(new NavigationReactPackage())
 //                .setJSMainModuleName("index.android")
-                .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
-                .setUseDeveloperSupport(BuildConfig.DEBUG)
-                .setInitialLifecycleState(LifecycleState.RESUMED)
-                .build();
-        StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
-        AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        Bundle bundle = createInitBundle();
-        mReactRootView.startReactApplication(mReactInstanceManager, androidBundleBean.getMainComponent(), bundle);
-        setContentView(mReactRootView);
+//                .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
+//                .setUseDeveloperSupport(BuildConfig.DEBUG)
+//                .setInitialLifecycleState(LifecycleState.RESUMED)
+//                .build();
+//        StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
+//        AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
+//        Bundle bundle = createInitBundle();
+//        mReactRootView.startReactApplication(mReactInstanceManager, androidBundleBean.getMainComponent(), bundle);
+//        setContentView(mReactRootView);
         if (loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
@@ -271,15 +273,15 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         /**
          * 增加RN路径上的约定参数
          */
-        if (!StringUtils.isBlank(rnAppParams)) {
-            String[] rnParams = rnAppParams.split("&");
-            ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
-            for (int i = 0; i < rnParams.length; i++) {
-                String[] signleArgs = rnParams[i].split("=");
-                map.putString(signleArgs[0], signleArgs[1]);
-            }
-            bundle.putSerializable("params", map);
-        }
+//        if (!StringUtils.isBlank(rnAppParams)) {
+//            String[] rnParams = rnAppParams.split("&");
+//            ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
+//            for (int i = 0; i < rnParams.length; i++) {
+//                String[] signleArgs = rnParams[i].split("=");
+//                map.putString(signleArgs[0], signleArgs[1]);
+//            }
+//            bundle.putSerializable("params", map);
+//        }
         return bundle;
     }
 
@@ -292,10 +294,10 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         return "jiguang";
     }
 
-    @Override
-    public void invokeDefaultOnBackPressed() {
-        super.onBackPressed();
-    }
+//    @Override
+//    public void invokeDefaultOnBackPressed() {
+//        super.onBackPressed();
+//    }
 
 
     /**

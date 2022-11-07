@@ -2,24 +2,22 @@ package com.inspur.emmcloud;
 
 import android.content.IntentFilter;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
-import com.beefe.picker.PickerViewPackage;
-import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
-import com.horcrux.svg.SvgPackage;
+//import com.beefe.picker.PickerViewPackage;
+//import com.facebook.react.ReactApplication;
+//import com.facebook.react.ReactNativeHost;
+//import com.facebook.react.ReactPackage;
+//import com.facebook.react.shell.MainReactPackage;
+//import com.facebook.soloader.SoLoader;
+//import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.PhoneReceiver;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
-import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-//todo AndroidX
+//import com.inspur.reactnative.AuthorizationManagerPackage;
+//import com.oblador.vectoricons.VectorIconsPackage;
 //import com.tencent.tinker.entry.ApplicationLike;
 //import com.tinkerpatch.sdk.TinkerPatch;
 //import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
@@ -31,29 +29,47 @@ import java.util.List;
 /**
  * Application class
  */
-public class MyApplication extends BaseApplication implements ReactApplication {
+public class MyApplication extends BaseApplication {
 
     private boolean mInited = false;
     /**
      * ReactNative相关代码
      */
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.facebook.react.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            return Arrays.asList(
-                    new MainReactPackage(),
-                    new AuthorizationManagerPackage(),
-                    new PickerViewPackage(),
-                    new SvgPackage(),
-                    new VectorIconsPackage()
-            );
-        }
-    };
+//    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+//        @Override
+//        public boolean getUseDeveloperSupport() {
+//            return com.facebook.react.BuildConfig.DEBUG;
+//        }
+//
+//        @Override
+//        protected List<ReactPackage> getPackages() {
+//            return Arrays.asList(
+//                    new MainReactPackage(),
+//                    new AuthorizationManagerPackage(),
+//                    new PickerViewPackage(),
+//                    new SvgPackage(),
+//                    new VectorIconsPackage()
+//            );
+//        }
+//    };
+//    private ApplicationLike tinkerApplicationLike;
+//    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+//        @Override
+//        public boolean getUseDeveloperSupport() {
+//            return com.facebook.react.BuildConfig.DEBUG;
+//        }
+//
+//        @Override
+//        protected List<ReactPackage> getPackages() {
+//            return Arrays.asList(
+//                    new MainReactPackage(),
+//                    new AuthorizationManagerPackage(),
+//                    new PickerViewPackage(),
+//                    new SvgPackage(),
+//                    new VectorIconsPackage()
+//            );
+//        }
+//    };
 //    private ApplicationLike tinkerApplicationLike;
 
     public void onCreate() {
@@ -72,7 +88,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
             CommunicationService service = router.getService(CommunicationService.class);
             service.startWebSocket(false);
         }
-        SoLoader.init(this, false);//ReactNative相关初始化
+//        SoLoader.init(this, false);//ReactNative相关初始化
 //        initHotfix();
         registerPhoneRecognizeReceiver();
     }
@@ -109,7 +125,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
     private void registerPhoneRecognizeReceiver() {
         IntentFilter intentFilterPhone = new IntentFilter();
         intentFilterPhone.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
+//        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
     }
 
     /**
@@ -117,10 +133,10 @@ public class MyApplication extends BaseApplication implements ReactApplication {
      *
      * @return
      */
-    @Override
-    public ReactNativeHost getReactNativeHost() {
-        return mReactNativeHost;
-    }
+//    @Override
+//    public ReactNativeHost getReactNativeHost() {
+//        return mReactNativeHost;
+//    }
 
     @Override
     public String getIntentClassRouterAfterLogin() {

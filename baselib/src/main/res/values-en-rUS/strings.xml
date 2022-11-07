@@ -28,6 +28,7 @@
     <string name="downloading_package">Please wait a minute while downloading</string>
     <string name="not_set">Not Set</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
+    <string name="rn_unsupport_version">The new version no longer maintains the ReactNative application, please downgrade the version</string>
 
     <string name="prompt">Info</string>
     <string name="nothing">Nothing </string>

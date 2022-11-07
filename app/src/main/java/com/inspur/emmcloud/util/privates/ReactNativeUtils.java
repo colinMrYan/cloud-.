@@ -13,7 +13,7 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.ui.find.FindFragment;
+//import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.io.File;
@@ -74,7 +74,7 @@ public class ReactNativeUtils {
         if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
             //删除current和temp目录，重新解压assets下的zip
             resetReactNative();
-            FindFragment.hasUpdated = true;
+//            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             //拷贝temp下的current到app内部current目录下
             File file = new File(reactNatviveTempPath);
@@ -86,7 +86,7 @@ public class ReactNativeUtils {
             } else {
                 ReactNativeFlow.initReactNative(context, uid);
             }
-            FindFragment.hasUpdated = true;
+//            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             LogUtils.YfcDebug("Forword");
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
@@ -95,7 +95,7 @@ public class ReactNativeUtils {
             //发生了未知错误，下载state为0
             //同Reset的情况，删除current和temp目录，重新解压assets下的zip
             resetReactNative();
-            FindFragment.hasUpdated = true;
+//            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
         }

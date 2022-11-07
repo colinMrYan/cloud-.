@@ -12,7 +12,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.ui.find.FindFragment;
+//import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.reactnative.bean.ReactNativeUpdateBean;
 
 import java.io.File;
@@ -157,7 +157,7 @@ public class ReactNativeFlow {
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
 //            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());//隔半小时检查更新逻辑相关
-            FindFragment.hasUpdated = true;
+//            FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } else {
