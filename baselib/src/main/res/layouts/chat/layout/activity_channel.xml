@@ -203,6 +203,26 @@
             android:textSize="17sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/dissolve_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/text_ll_color_nor"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:text="@string/dissolve_tip"
+            android:textColor="?attr/text_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
     <!--    后续单独封装通用布局-->
     <LinearLayout
         android:id="@+id/bottom_bar"

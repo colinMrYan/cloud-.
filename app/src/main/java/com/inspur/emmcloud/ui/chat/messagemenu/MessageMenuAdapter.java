@@ -36,12 +36,12 @@ public class MessageMenuAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, @SuppressLint("RecyclerView") final int i) {
         PopAdapterViewHolder holder = (PopAdapterViewHolder) viewHolder;
-        MessageMenuItem item = dataList.get(i);
+        final MessageMenuItem item = dataList.get(i);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mPopItemClickListener != null){
-                    mPopItemClickListener.onPopItemClick(i);
+                    mPopItemClickListener.onPopItemClick(item);
                 }
             }
         });

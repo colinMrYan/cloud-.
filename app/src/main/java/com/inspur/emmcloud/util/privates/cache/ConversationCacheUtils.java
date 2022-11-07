@@ -212,6 +212,20 @@ public class ConversationCacheUtils {
         }
     }
 
+    /**
+     * 设置聊天状态
+     *
+     * @param state conversation state 字段
+     */
+    public static void updateConversationState(Context context, String id, String state) {
+        try {
+            DbCacheUtils.getDb(context).update(Conversation.class, WhereBuilder.b("id", "=", id), new KeyValue("state", state));
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 删除会话

@@ -3,14 +3,14 @@
 <!ENTITY appname "云+">
 ]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
-    <string name="app_name">Cloud+</string>
+    <string name="app_name">&appname;</string>
     <string name="app_name_beiqi">Cloud+</string>
     <string name="app_name_chinatower">ChinaTower</string>
-    <string name="app_name_kailuanyunjia">Cloud+</string>
+    <string name="app_name_kailuanyunjia">&appname;</string>
     <string name="reclick_to_desktop">Clicking again will exit the application</string>
     <string name="Network_Mobile">Connected to Cellular</string>
     <string name="Network_WIFI">Connected to WIFI</string>
-    <string name="send_to_app">Send to Cloud+</string>
+    <string name="send_to_app">Send to &appname;</string>
     <string name="ok">OK</string>
     <string name="ok_number">OK(%d)</string>
     <string name="send_more_select_limit_warning">Select up to 9 people/groups</string>
@@ -28,6 +28,7 @@
     <string name="downloading_package">Please wait a minute while downloading</string>
     <string name="not_set">Not Set</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
+    <string name="rn_unsupport_version">The new version no longer maintains the ReactNative application, please downgrade the version</string>
 
     <string name="prompt">Info</string>
     <string name="nothing">Nothing </string>
@@ -366,6 +367,7 @@
     <string name="chat_long_click_multiple">Multiple selection</string>
     <string name="chat_long_click_transmit">Forward</string>
     <string name="transmit_operate">Forward to</string>
+    <string name="chat_long_click_checkall">CheckAll</string>
     <string name="chat_long_click_recall">Recall</string>
     <string name="chat_info_message_status_recall">%1$s recalled a message</string>
     <string name="recall_fail_for_timeout">You cannot recall a sent message after two minutes.</string>
@@ -538,8 +540,8 @@
 
 
     <string name="invite_friend_invite_text">Invite a friend</string>
-    <string name="invite_friend_code">Scan QR code to install  Cloud+ directly</string>
-    <string name="invite_friend_recommend">推荐【Cloud+】给好友</string>
+    <string name="invite_friend_code">Scan QR code to install &appname; directly</string>
+    <string name="invite_friend_recommend">推荐【&appname;】给好友</string>
     <string name="settings">Settings</string>
     <string name="settings_protect">Protected</string>
     <string name="settings_clear_cache">Clear Cache</string>
@@ -597,7 +599,7 @@
     <string name="modify_user_password">Passwords do not match, make sure</string>
     <string name="modify_user_password_success">Password changed successfully, please login</string>
     <string name="modify_user_password_fail">Retry</string>
-    <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
+    <string name="modify_first_use">This is the first time you use the &appname;, the inspur passes is set password to login next time</string>
     <string name="setting_update_this_time_hint">Update</string>
     <string name="setting_update_wifi_download_package_hint">The package has been automatically downloaded under WiFi</string>
 

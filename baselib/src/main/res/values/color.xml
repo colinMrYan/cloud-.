@@ -31,6 +31,9 @@
     <color name="bg_my_card">#36A5F6</color>
     <color name="bg_other_card">#ECEEF2</color>
     <color name="search_contact_header_bg">#F2F2F2</color>
+
+    <color name="cursor_handle_color">#0d7aff</color>
+    <color name="selected_blue">#afe1f4</color>
     <!-- 导航栏原来色值#1596d2 -->
 
     <color name="mark_down_url_read">#551a8b</color>

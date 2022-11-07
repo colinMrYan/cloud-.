@@ -83,7 +83,7 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">短信登录</string>
 
-    <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到特定版本</font>]]></Data></string>
     <string name="choose">选择</string>
     <string name="file_type">文件类型</string>
     <string name="app_update_prepare">正在下载</string>
@@ -377,6 +377,7 @@
     <string name="chat_long_click_multiple">多选</string>
     <string name="chat_long_click_transmit">转发</string>
     <string name="transmit_operate">转发给</string>
+    <string name="chat_long_click_checkall">全选</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一条消息</string>
     <string name="recall_fail_for_timeout">发送时间超过2分钟的消息，不能被撤回。</string>
@@ -846,6 +847,7 @@
     <string name="function_net_look_error_detail">查看异常信息</string>
     <string name="not_set">未设置</string>
     <string name="app_is_lastest_version">当前已是最新版本</string>
+    <string name="rn_unsupport_version">"新版本不再维护ReactNative应用，请降级版本</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
@@ -959,7 +961,7 @@
     <string name="dummy_button">Dummy Button</string>
 
     <string name="recall_reedit">重新编辑</string>
-
+    <string name="setting_feed_back_contact_hint">在此输入联系方式</string>
 
     <!-- 拖动listview -->
     <string name="select_remove_mode">Remove modes</string>
@@ -1114,7 +1116,7 @@
     <string name="notification_system_guide">由于手机系统限制，你可能无法及时收到消息通知，请完成此项设置以解决该问题</string>
     <string name="notification_system_setting_title">消息通知系统设置</string>
     <string name="caring_switch">字体大小</string>
-    <string name="caring_switch_tip">需要云+重启后才能生效</string>
+    <string name="caring_switch_tip">需要&appname;重启后才能生效</string>
     <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
     <string name="notification_switch_open_setting">系统中的&appname;消息通知已关闭，前往打开？</string>
 
@@ -1214,9 +1216,11 @@
     <string name="stream_not_support">不能分享这种格式的视频</string>
     <string name="no_notification_and_power">检测到系统通知未打开并且系统限制云+后台运行，请打开系统通知并且将云+放入省电优化白名单！！</string>
     <string name="no_notification">检测到系统通知未打开，请打开系统通知！！</string>
-    <string name="no_power_save">检测到限制云+后台运行，请将云+放入省电优化白名单！！</string>
+    <string name="no_power_save">检测到限制&appname;后台运行，请将&appname;放入省电优化白名单！！</string>
 
     <string name="comment_count">消息回复 (%1$d)</string>
+
+    <string name="dissolve_tip">无法在已解散的群聊中发送消息</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

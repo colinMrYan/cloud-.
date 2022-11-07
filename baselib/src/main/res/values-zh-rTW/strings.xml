@@ -26,6 +26,7 @@
     <string name="re_login">重新登入</string>
     <string name="not_set">未設置</string>
     <string name="app_is_lastest_version">當前已是最新版本</string>
+    <string name="rn_unsupport_version">新版本不再維護ReactNative應用，請降級版本</string>
 
     <string name="update_fail">更新失敗</string>
     <string name="downloading_package">下載中，請稍候....</string>
@@ -81,7 +82,7 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
 
-    <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到最新版本</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到特定版本</font>]]></Data></string>
     <string name="choose">選擇</string>
     <string name="file_type">檔案類型</string>
     <string name="app_update_prepare">準備下載</string>
@@ -373,6 +374,7 @@
     <string name="chat_long_click_multiple">多選</string>
     <string name="chat_long_click_transmit">轉發</string>
     <string name="transmit_operate">轉發給</string>
+    <string name="chat_long_click_checkall">全選</string>
     <string name="chat_long_click_recall">撤回</string>
     <string name="chat_info_message_status_recall">%1$s撤回了一條消息</string>
     <string name="recall_fail_for_timeout">發送時間超過2分鐘的消息，不能被撤回。</string>

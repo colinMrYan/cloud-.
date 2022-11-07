@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -269,6 +270,16 @@ public class CommunicationFragment extends BaseFragment {
     private void initRecycleView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         conversionRecycleView.setLayoutManager(linearLayoutManager);
+        //在onCreate中设置滚动监听事件
+        conversionRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (conversationAdapter.ismShouldScroll() && RecyclerView.SCROLL_STATE_IDLE == newState) {
+                    conversationAdapter.setmShouldScroll(false);
+                    conversationAdapter.smoothMoveToPosition(recyclerView, conversationAdapter.getmToPosition());
+                }
+            }
+        });
         conversationAdapter = new ConversationAdapter(getActivity(), displayUIConversationList);
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
@@ -1071,6 +1082,9 @@ public class CommunicationFragment extends BaseFragment {
                     channelRefreshId = "";
                 if (!command.getFromUid().equals(MyApplication.getInstance().getUid())) {
                     channelRefreshId = command.getChannel();
+                }
+                if (command.getAction().equals("client.chat.channel.group.dismiss")) {
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE, command));
                 }
                 getConversationList();
                 getMessage();

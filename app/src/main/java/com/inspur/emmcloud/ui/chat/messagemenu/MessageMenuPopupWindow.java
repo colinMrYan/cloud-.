@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -21,9 +22,21 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.FileDownloadManager;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
 
 
 /**
@@ -49,6 +62,7 @@ public class MessageMenuPopupWindow {
     private MessageMenuAdapter mPopViewAdapter;
     private BubbleLayout mBubbleLayout;
     private int mDeviceWidth, mDeviceHeight;
+    private List<String> stringListData;
 
     public MessageMenuPopupWindow(Context mContext) {
         if (mContext == null) {
@@ -74,7 +88,16 @@ public class MessageMenuPopupWindow {
     }
 
     public void setItemData(List<String> stringListData) {
-        mItemData = new ArrayList<>();
+        this.stringListData = stringListData;
+        addItemData(stringListData);
+    }
+
+    private void addItemData(List<String> stringListData) {
+        if (mItemData == null) {
+            mItemData = new ArrayList<>();
+        } else {
+            mItemData.clear();
+        }
         for (String text : stringListData) {
             if (text.equals(mContext.getString(R.string.chat_resend_message))) {
                 mItemData.add(new MessageMenuItem(R.drawable.message_menu_resend, text));
@@ -94,6 +117,8 @@ public class MessageMenuPopupWindow {
                 mItemData.add(new MessageMenuItem(R.drawable.message_menu_translate, text));
             } else if (text.equals(mContext.getString(R.string.chat_long_click_recall))) {
                 mItemData.add(new MessageMenuItem(R.drawable.message_menu_revoke, text));
+            } else if (text.equals(mContext.getString(R.string.chat_long_click_checkall))) {
+                mItemData.add(new MessageMenuItem(R.drawable.message_menu_all, text));
             }
         }
     }
@@ -135,8 +160,38 @@ public class MessageMenuPopupWindow {
         }
     }
 
+    /**
+     * 全选状态下不要全选选项
+     */
+    public void setSelectedAll() {
+        if (mPopViewAdapter!= null) {
+            stringListData.remove(mContext.getString(R.string.chat_long_click_checkall));
+            addItemData(stringListData);
+            mPopViewAdapter.notifyDataSetChanged();
+        }
+//        List<Integer> operationIdList = new ArrayList<>();
+//        operationIdList.add(R.string.chat_long_click_copy);
+//        operationIdList.add(R.string.chat_long_click_transmit);
+    }
+
+    /**
+     * 非全选状态下需要全选选项
+     */
+    public void setSelectedNotAll() {
+        if (mPopViewAdapter!= null) {
+            stringListData.remove(mContext.getString(R.string.chat_long_click_checkall));
+            stringListData.add(2, mContext.getString(R.string.chat_long_click_checkall));
+            addItemData(stringListData);
+            mPopViewAdapter.notifyDataSetChanged();
+        }
+//        List<Integer> operationIdList = new ArrayList<>();
+//        operationIdList.add(R.string.chat_long_click_copy);
+//        operationIdList.add(R.string.chat_long_click_transmit);
+//        operationIdList.add(R.string.chat_long_click_checkall);
+    }
+
     public interface PopItemClickListener {
-        void onPopItemClick(int position);
+        void onPopItemClick(MessageMenuItem item);
     }
 
     /**

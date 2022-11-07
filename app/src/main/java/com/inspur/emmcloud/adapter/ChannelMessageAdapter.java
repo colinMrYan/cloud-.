@@ -46,6 +46,7 @@ import com.inspur.emmcloud.ui.chat.DisplayServiceCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
+import com.inspur.emmcloud.ui.chat.selectabletext.SelectableTextHelper;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -232,13 +233,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         View cardContentView = null;
         boolean bottomViewUsed;
         if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
-            String type = message.getType();
+            final String type = message.getType();
+            SelectableTextHelper mSelectableTextHelper = null;
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_WHISPER:
                 case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     cardContentView = DisplayTxtPlainMsg.getView(context,
                             message);
+                    mSelectableTextHelper = new SelectableTextHelper.Builder((TextView) cardContentView.findViewById(R.id.tv_content))
+                            .setSelectedColor(context.getResources().getColor(R.color.selected_blue))
+                            .setCursorHandleSizeInDp(20)
+                            .setCursorHandleColor(context.getResources().getColor(R.color.cursor_handle_color))
+                            .build();
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     cardContentView = DisplayTxtMarkdownMsg.getView(context,
@@ -287,10 +294,15 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                     break;
             }
+            final SelectableTextHelper finalMSelectableTextHelper = mSelectableTextHelper;
             cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (mItemClickListener != null) {
+                        if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(type)){
+                            mItemClickListener.onTxtItemLongClick(view, uiMessage , finalMSelectableTextHelper);
+                            return true;
+                        }
                         mItemClickListener.onCardItemLongClick(view, uiMessage);
                     }
                     return true;
@@ -566,6 +578,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     public interface MyItemClickListener {
 
         boolean onCardItemLongClick(View view, UIMessage uiMessage);
+
+        //SelectableText
+        void onTxtItemLongClick(View view, UIMessage uiMessage, SelectableTextHelper selectableTextHelper);
 
         void onCardItemClick(View view, UIMessage uiMessage);
 

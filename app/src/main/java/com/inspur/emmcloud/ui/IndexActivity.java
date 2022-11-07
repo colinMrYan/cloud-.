@@ -197,7 +197,7 @@ public class IndexActivity extends IndexBaseActivity {
 
         getAllRobotInfo();
         getAllChannelGroup();
-        updateReactNative();  //从服务端获取显示tab
+//        updateReactNative();  //移除RN服务
         getMyAppRecommendWidgets();
     }
 
