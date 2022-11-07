@@ -63,7 +63,7 @@ import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.find.FindFragment;
+//import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
@@ -251,12 +251,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     break;
                             }
                             break;
+                            // 隐藏RN支持
                         case Constant.APP_TAB_TYPE_RN:
-                            switch (mainTabResult.getUri()) {
-                                case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
-                                    break;
-                            }
+                            ToastUtils.show(getString(R.string.rn_unsupport_version));
+//                            switch (mainTabResult.getUri()) {
+//                                case Constant.APP_TAB_BAR_RN_FIND:
+//                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
+//                                    break;
+//                            }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
                             router = Router.getInstance();
@@ -271,12 +273,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
                         tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
                     }
-                    tabBean.setTabId(mainTabResultList.get(i).getUri());
-                    tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
+                    if (tabBean != null) {
+                        tabBean.setTabId(mainTabResultList.get(i).getUri());
+                        tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
+                    }
                 }
             }
         }
-        showTabs(tabBeans);
+        if (tabBeans != null) {
+            showTabs(tabBeans);
+        }
     }
 
 

@@ -46,11 +46,12 @@ android {
     if (isDebug) {
         splits.abi.enable = false
         splits.density.enable = false
-    } else {
-        apply from: "../node_modules/react-native/react.gradle"
-        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
-        apply from: 'tinkerpatch.gradle'
     }
+//    else {
+//        apply from: "../node_modules/react-native/react.gradle"
+//        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+//        apply from: 'tinkerpatch.gradle'
+//    }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
@@ -169,13 +170,14 @@ dependencies {
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
 
-    implementation deps.react
+    // 移除RN服务支持
+//    implementation deps.react
     // React Naive Components
-    implementation project(':react-native-smart-swipe-refresh-layout')
-    implementation project(':react-native-picker')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-navigation')
+//    implementation project(':react-native-smart-swipe-refresh-layout')
+//    implementation project(':react-native-picker')
+//    implementation project(':react-native-svg')
+//    implementation project(':react-native-vector-icons')
+//    implementation project(':react-native-navigation')
     //无需引入tinker的任何库,使用tinkerpatch sdk即可
     implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
         changing = true
