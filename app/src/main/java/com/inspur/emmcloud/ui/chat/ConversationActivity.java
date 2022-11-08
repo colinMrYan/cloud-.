@@ -2335,7 +2335,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                         operationIdList.add(R.string.chat_long_click_copy);
                         operationIdList.add(R.string.chat_long_click_transmit);
                         operationIdList.add(R.string.chat_long_click_multiple);
-                        operationIdList.add(R.string.chat_long_click_reply);
+                        // 已解散的群无法回复
+                        if (!"REMOVED".equals(conversation.getState())) {
+                            operationIdList.add(R.string.chat_long_click_reply);
+                        }
                         if (TabAndAppExistUtils.isTabExist(this, Constant.APP_TAB_BAR_WORK)) {
                             operationIdList.add(R.string.chat_long_click_schedule);
                         }
@@ -2714,6 +2717,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         } else {
             chatInputMenu.setVisibility(View.VISIBLE);
             silentLayout.setVisibility(View.GONE);
+        }
+        if ("REMOVED".equals(conversation.getState())) {
+            silentLayout.setVisibility(View.GONE);
+            chatInputMenu.setVisibility(View.GONE);
+            dissolveLayout.setVisibility(View.VISIBLE);
         }
     }
 

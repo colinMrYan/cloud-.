@@ -250,6 +250,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             conversationQRLayout.setVisibility(View.GONE);
             conversationQuitLayout.setVisibility(View.GONE);
             conversationMemberManagerLayout.setVisibility(View.GONE);
+            muteNotificationLayout.setVisibility(View.GONE);
 
         }
     }
@@ -270,6 +271,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 finish();
                 break;
             case R.id.rl_conversation_name:
+                if ("REMOVED".equals(uiConversation.getState())) {
+                    return;
+                }
                 if (uiConversation == null) {
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
                     return;

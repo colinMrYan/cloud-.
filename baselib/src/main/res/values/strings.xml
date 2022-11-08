@@ -362,7 +362,7 @@
     <string name="transfer_group">群主转让</string>
     <string name="transfer_group_tip">确定将群主转让给%1$s？</string>
     <string name="quit_group_warning_text">确定要退出群组？</string>
-    <string name="dismiss_group_warning_text">解散群组后，将会删除群内所有的聊天记录和文件等信息</string>
+    <string name="dismiss_group_warning_text">确定要解散群组？</string>
     <string name="add_same_group_warning_text">已存在相同人员群组，是否继续建群？</string>
     <string name="chat_stick_on_top">置顶</string>
     <string name="chat_remove">隐藏</string>
