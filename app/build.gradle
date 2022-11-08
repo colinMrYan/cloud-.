@@ -46,27 +46,29 @@ android {
     if (isDebug) {
         splits.abi.enable = false
         splits.density.enable = false
-    } else {
-        apply from: "../node_modules/react-native/react.gradle"
-        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
-        apply from: 'tinkerpatch.gradle'
     }
+//    else {
+//        apply from: "../node_modules/react-native/react.gradle"
+//        apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+//        apply from: 'tinkerpatch.gradle'
+//    }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
 //        versionCode 128 升级更新以version为判断依据
-        versionCode 189
+        versionCode 192
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
 //        versionName "4.8.19"
-        versionName "5.3.0-beta.1"
+        versionName "5.2.1-beta.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            if (enableSeparateBuildPerCPUArchitecture) {
-                abiFilters 'arm64-v8a'
-            } else {
-                abiFilters "armeabi-v7a", "x86"
-            }
+//            if (enableSeparateBuildPerCPUArchitecture) {
+//                abiFilters 'arm64-v8a'
+//            } else {
+//                abiFilters "armeabi-v7a", "x86"
+//            }
+            abiFilters "armeabi-v7a", 'arm64-v8a'
         }
         multiDexEnabled true
         javaCompileOptions {
@@ -113,18 +115,18 @@ android {
         }
     }
 
-    splits {
-        abi {
-            reset()
-            enable enableSeparateBuildPerCPUArchitecture
-            universalApk false
-            if (enableSeparateBuildPerCPUArchitecture) {
-                include 'arm64-v8a'
-            } else {
-                include "armeabi-v7a", "x86"
-            }
-        }
-    }
+//    splits {
+//        abi {
+//            reset()
+//            enable enableSeparateBuildPerCPUArchitecture
+//            universalApk false
+//            if (enableSeparateBuildPerCPUArchitecture) {
+//                include 'arm64-v8a'
+//            } else {
+//                include "armeabi-v7a", "x86"
+//            }
+//        }
+//    }
     // applicationVariants are e.g. debug, release
     //android studio对于jni调用及运行闪退无法加载库的问题解决方案
     applicationVariants.all { variant ->
@@ -168,17 +170,18 @@ dependencies {
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
 
-    implementation deps.react
+    // 移除RN服务支持
+//    implementation deps.react
     // React Naive Components
-    implementation project(':react-native-smart-swipe-refresh-layout')
-    implementation project(':react-native-picker')
-    implementation project(':react-native-svg')
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-navigation')
+//    implementation project(':react-native-smart-swipe-refresh-layout')
+//    implementation project(':react-native-picker')
+//    implementation project(':react-native-svg')
+//    implementation project(':react-native-vector-icons')
+//    implementation project(':react-native-navigation')
     //无需引入tinker的任何库,使用tinkerpatch sdk即可
-    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
-        changing = true
-    }
+//    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
+//        changing = true
+//    }
 }
 
 //class BuildTimeListener implements TaskExecutionListener,BuildListener{

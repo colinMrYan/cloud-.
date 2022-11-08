@@ -434,8 +434,7 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + StringUtils.encodeURIComponent(path);
-        return url;
+        return  getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + StringUtils.encodeURIComponent(path);
     }
 
     /**

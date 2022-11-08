@@ -83,7 +83,7 @@
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">短信登录</string>
 
-    <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到最新版本</font>]]></Data></string>
+    <string name="tab_not_support_tips">%1$s功能已改版，请<Data><![CDATA[<font color=\'#0F7BCA\'>升级到特定版本</font>]]></Data></string>
     <string name="choose">选择</string>
     <string name="file_type">文件类型</string>
     <string name="app_update_prepare">正在下载</string>
@@ -847,6 +847,7 @@
     <string name="function_net_look_error_detail">查看异常信息</string>
     <string name="not_set">未设置</string>
     <string name="app_is_lastest_version">当前已是最新版本</string>
+    <string name="rn_unsupport_version">"新版本不再维护ReactNative应用，请降级版本</string>
 
     <!--电源白名单-->
     <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
@@ -960,7 +961,7 @@
     <string name="dummy_button">Dummy Button</string>
 
     <string name="recall_reedit">重新编辑</string>
-
+    <string name="setting_feed_back_contact_hint">在此输入联系方式</string>
 
     <!-- 拖动listview -->
     <string name="select_remove_mode">Remove modes</string>
@@ -1218,6 +1219,8 @@
     <string name="no_power_save">检测到限制&appname;后台运行，请将&appname;放入省电优化白名单！！</string>
 
     <string name="comment_count">消息回复 (%1$d)</string>
+
+    <string name="dissolve_tip">无法在已解散的群聊中发送消息</string>
     <!--日历字符串资源开始-->
     <string-array name="lunar_first_of_month">
         <item>春节</item>

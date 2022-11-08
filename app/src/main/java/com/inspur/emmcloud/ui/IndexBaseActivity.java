@@ -63,11 +63,11 @@ import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.find.FindFragment;
+//import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.tinkerpatch.sdk.TinkerPatch;
+//import com.tinkerpatch.sdk.TinkerPatch;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -106,13 +106,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onCreate() {
-        if (!AppUtils.isApkDebugable(this)) {
-            try {
-                TinkerPatch.with().fetchPatchUpdate(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (!AppUtils.isApkDebugable(this)) {
+//            try {
+//                TinkerPatch.with().fetchPatchUpdate(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();
@@ -251,12 +251,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     break;
                             }
                             break;
+                            // 隐藏RN支持
                         case Constant.APP_TAB_TYPE_RN:
-                            switch (mainTabResult.getUri()) {
-                                case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
-                                    break;
-                            }
+                            ToastUtils.show(getString(R.string.rn_unsupport_version));
+//                            switch (mainTabResult.getUri()) {
+//                                case Constant.APP_TAB_BAR_RN_FIND:
+//                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
+//                                    break;
+//                            }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
                             router = Router.getInstance();

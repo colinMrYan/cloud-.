@@ -1411,6 +1411,8 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getConversationListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("include", conversationType);
+        // 获取被删除的群组（已解散）
+        params.addParameter("include", "removed_group");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override

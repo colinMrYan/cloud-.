@@ -1,11 +1,15 @@
 package com.inspur.emmcloud.web.plugin.photo;
 
+import static android.Manifest.permission.CAMERA;
 import static com.inspur.emmcloud.web.ui.ImpFragment.SELECTOR_SERVICE_GALLERY_REQUEST;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.view.View;
 
@@ -28,6 +32,9 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.selector.FileSelectorService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
@@ -71,7 +78,21 @@ public class PhotoService extends ImpPlugin {
         if ("selectAndUpload".equals(action)) {
             selectAndUpload();
         } else if ("takePhotoAndUpload".equals(action)) {
-            takePhotoAndUpload();
+            if (checkPermission()) {
+                takePhotoAndUpload();
+            } else {
+                PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.CAMERA, new PermissionRequestCallback() {
+                    @Override
+                    public void onPermissionRequestSuccess(List<String> permissions) {
+                        takePhotoAndUpload();
+                    }
+
+                    @Override
+                    public void onPermissionRequestFail(List<String> permissions) {
+                        ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+                    }
+                });
+            }
         } else if ("viewImage".equals(action)) {
             viewImage();
         } else if ("savePhoto".equals(action)) {
@@ -119,6 +140,10 @@ public class PhotoService extends ImpPlugin {
         intent.putStringArrayListExtra(ImageGalleryActivity.EXTRA_IMAGE_THUMB_URLS, imageThumbnailUrlList);
         intent.putExtra(ImageGalleryActivity.EXTRA_IMAGE_INDEX, imageIndex);
         getActivity().startActivity(intent);
+    }
+
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(getActivity(), CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void savePhotoToGallery(JSONObject paramsObject) {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class GetAllRobotsResult {
 
-    private ArrayList<Robot> robotList = new ArrayList<Robot>();
+    private ArrayList<Robot> robotList = new ArrayList<>();
 
     public GetAllRobotsResult(String response) {
         try {

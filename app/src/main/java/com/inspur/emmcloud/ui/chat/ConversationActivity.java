@@ -214,6 +214,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     @BindView(R.id.silent_layout)
     LinearLayout silentLayout;
 
+    @BindView(R.id.dissolve_layout)
+    LinearLayout dissolveLayout;
+
     @BindView(R.id.btn_conversation_unread)
     CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
@@ -523,7 +526,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 inputMenuClick(type);
             }
         });
-        updateSilentState();
+        // 先判断群是否已解散
+        if ("REMOVED".equals(conversation.getState())) {
+            updateDissolveLayout();
+        } else {
+            updateSilentState();
+        }
     }
 
     /**
@@ -1795,6 +1803,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                 conversation.setSilent(false);
                 updateSilentState();
                 break;
+            case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE:
+                // 群解散后不可发送消息，保留消息记录
+                conversation.setState("REMOVED");
+                updateDissolveLayout();
+                break;
             case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:
                 String addJsonParam = (String) simpleEventMessage.getMessageObj();
                 try {
@@ -2701,6 +2714,19 @@ public class ConversationActivity extends ConversationBaseActivity {
         } else {
             chatInputMenu.setVisibility(View.VISIBLE);
             silentLayout.setVisibility(View.GONE);
+        }
+    }
+
+    // 群解散布局是否可见
+    private void updateDissolveLayout() {
+        if ("REMOVED".equals(conversation.getState())) {
+            silentLayout.setVisibility(View.GONE);
+            chatInputMenu.setVisibility(View.GONE);
+            dissolveLayout.setVisibility(View.VISIBLE);
+        } else {
+            chatInputMenu.setVisibility(View.VISIBLE);
+            silentLayout.setVisibility(View.GONE);
+            dissolveLayout.setVisibility(View.GONE);
         }
     }
 

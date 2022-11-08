@@ -65,7 +65,7 @@ buildscript {
             gson                : 'com.google.code.gson:gson:2.8.2',
             fastjson            : 'com.alibaba:fastjson:1.2.24',
             qmui                : 'com.qmuiteam:qmui:1.0.4',
-            react               : 'com.facebook.react:react-native:+',
+//            react               : 'com.facebook.react:react-native:0.46.4',
             commonsLang3        : 'org.apache.commons:commons-lang3:3.5',
             amapLocation        : 'com.amap.api:location:4.6.0',
             baiduMapLocation    : 'com.baidu.mapapi:location:6.13',
@@ -87,7 +87,7 @@ buildscript {
             ShortcutBadger      : 'me.leolin:ShortcutBadger:1.1.19@aar',
             RecordWave          : 'com.github.CarGuo:RecordWave:v1.1.8',
             mp3spi              : 'com.googlecode.soundlibs:mp3spi:1.9.5.4',
-            Mp3Converter        : 'com.github.Jay-Goo:Mp3Converter:v0.0.3',
+            Mp3Converter        : 'com.github.Jay-Goo:Mp3Converter:0.0.33',
             commonsCodec        : 'commons-codec:commons-codec:20041127.091804',
             oss                 : 'com.aliyun.dpa:oss-android-sdk:2.9.1',
             protobuf            : 'com.google.protobuf:protobuf-java:3.5.1',
@@ -179,10 +179,10 @@ allprojects {
             dirs 'libs'
             dirs project(':basemodule').file('libs')
         }
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/node_modules/react-native/android"
-        }
+//        maven {
+//            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+//            url "$rootDir/node_modules/react-native/android"
+//        }
         maven { url "https://jitpack.io" } // PhotoView
         google()
 

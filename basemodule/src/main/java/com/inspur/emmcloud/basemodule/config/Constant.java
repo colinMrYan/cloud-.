@@ -127,6 +127,7 @@ public class Constant {
     //频道消息发生变化
     public static final String EVENTBUS_TAG_CONVERSATION_MESSAGE_DATA_CHANGED = "tag_conversation_message_data_changed";
     public static final String EVENTBUS_TAG_GROUP_CONVERSATION_CHANGED = "tag_group_conversation_data_changed";
+    public static final String EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE = "tag_group_conversation_dissolve";
     public static final String EVENTBUS_TAG_MULTI_MESSAGE_SEND = "tag_multi_message_send";
     public static final String EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE = "tag_websocket_status_remove";
     public static final String EVENTBUS_TAG_SET_CHANNEL_MESSAGE_READ = "tag_set_channel_message_read";
@@ -140,6 +141,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SERVICE_CHANNEL_UPDATE = "tag_update_service_channel";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_MEMBERS = "tag_update_channel_members";
     public static final String EVENTBUS_TAG_QUIT_CHANNEL_GROUP = "tag_quit_channel_group";
+    public static final String EVENTBUS_TAG_DISSOLVE_CHANNEL_GROUP = "tag_dissolve_channel_group";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
     public static final String EVENTBUS_TAG_NET_STATE_CHANGE = "tag_net_state_change";

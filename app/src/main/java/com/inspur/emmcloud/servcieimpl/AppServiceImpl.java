@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppBadgeUtils;
@@ -12,7 +14,7 @@ import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.TabAndAppExistUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.app.CommonCallBack;
-import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+//import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
@@ -38,7 +40,8 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public void startReactNativeApp(Activity activity, Bundle bundle) {
-        IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
+        ToastUtils.show(activity.getString(R.string.rn_unsupport_version));
+//        IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
     }
 
     @Override

@@ -65,13 +65,14 @@ public class ApplicationUriUtils {
                 }
                 break;
             case 5:
-                Bundle bundle = new Bundle();
-                bundle.putString("ecc-app-react-native", uri);
-                Router router = Router.getInstance();
-                if (router.getService(AppService.class) != null) {
-                    AppService service = router.getService(AppService.class);
-                    service.startReactNativeApp(activity, bundle);
-                }
+//                Bundle bundle = new Bundle();
+//                bundle.putString("ecc-app-react-native", uri);
+//                Router router = Router.getInstance();
+//                if (router.getService(AppService.class) != null) {
+//                    AppService service = router.getService(AppService.class);
+//                    service.startReactNativeApp(activity, bundle);
+//                }
+                ToastUtils.show("新版本不再维护ReactNative应用，请使用定制版本");
                 break;
             case 7:
                 OfflineAppUtil.handleOfflineWeb(activity, app);

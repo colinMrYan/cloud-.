@@ -91,6 +91,8 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
                             message.getMsgContentComment().getMentionsMap()).toString();
                     text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);
                     break;
+                default:
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

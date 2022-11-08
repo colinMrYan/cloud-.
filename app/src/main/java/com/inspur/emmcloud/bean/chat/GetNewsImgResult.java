@@ -2,9 +2,6 @@ package com.inspur.emmcloud.bean.chat;
 
 
 public class GetNewsImgResult {
-
-    private static final String TAG = "GetNewsImgResult";
-
     private String imgMsgBody = "";
 
     public GetNewsImgResult(String response) {

@@ -389,8 +389,15 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             PreferencesUtils.putString(activity, "userRealName", name);
             PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
             PreferencesUtils.putString(activity, "myInfo", myInfo);
-            PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
-                    getMyInfoResult.getHasPassord());
+            // 广水项目隐藏首次登录设置密码的操作
+            if (getMyInfoResult.getDefaultEnterprise().getId().equals("919455")) {
+                PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
+                        true);
+            } else {
+                PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
+                        getMyInfoResult.getHasPassord());
+            }
+
             ((BaseApplication) activity.getApplicationContext())
                     .setUid(getMyInfoResult.getID());
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();

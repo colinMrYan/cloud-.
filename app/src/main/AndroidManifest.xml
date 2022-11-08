@@ -530,11 +530,11 @@
             android:name=".ui.find.trip.TripInfoActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind" />
-        <activity
-            android:name=".ui.appcenter.ReactNativeAppActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize" />
+<!--        <activity-->
+<!--            android:name=".ui.appcenter.ReactNativeAppActivity"-->
+<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
+<!--            android:screenOrientation="behind"-->
+<!--            android:windowSoftInputMode="adjustResize" />-->
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:resizeableActivity="true"

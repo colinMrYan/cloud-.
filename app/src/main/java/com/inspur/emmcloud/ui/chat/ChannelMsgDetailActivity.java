@@ -301,12 +301,15 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      * 控件的点击逻辑
      **/
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                onBackPressed();
-                break;
-            default:
-                break;
+//        switch (v.getId()) {
+//            case R.id.ibt_back:
+//                onBackPressed();
+//                break;
+//            default:
+//                break;
+//        }
+        if (v.getId() == R.id.ibt_back) {
+            onBackPressed();
         }
     }
 
