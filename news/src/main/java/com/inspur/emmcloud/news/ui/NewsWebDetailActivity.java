@@ -20,12 +20,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.DownloadListener;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import com.tencent.smtt.sdk.DownloadListener;
+
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
+import com.tencent.smtt.sdk.WebSettings;
+
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -206,7 +208,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         WebSettings webSettings = webView.getSettings();
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webSettings.setMixedContentMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
         //初始化WebView字体的大小
         textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, APP_NEWS_TEXT_SIZE, MyAppWebConfig.NORMAL);
@@ -276,16 +278,15 @@ public class NewsWebDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
                 webContentLayout.setVisibility(View.GONE);
                 loadErrorLayout.setVisibility(View.VISIBLE);
             }
 
-
             @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
+            public void onReceivedError(WebView webView, WebResourceRequest webResourceRequest, WebResourceError webResourceError) {
+                super.onReceivedError(webView, webResourceRequest, webResourceError);
                 webContentLayout.setVisibility(View.GONE);
                 loadErrorLayout.setVisibility(View.VISIBLE);
             }
@@ -345,7 +346,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         settings.setDisplayZoomControls(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setMixedContentMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
     }
 

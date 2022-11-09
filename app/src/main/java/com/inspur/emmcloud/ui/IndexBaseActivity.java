@@ -10,13 +10,13 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.webkit.WebView;
+import com.tencent.smtt.sdk.WebView;
+
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;

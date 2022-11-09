@@ -26,10 +26,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ParseHtmlUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.web.R;
@@ -299,7 +296,7 @@ public class ImpWebView extends WebView {
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+            settings.setMixedContentMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
     }
 

@@ -41,6 +41,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.tencent.mmkv.MMKV;
+import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.ugc.TXUGCBase;
 import com.tencent.smtt.sdk.QbSdk;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -48,6 +49,7 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -699,6 +701,11 @@ public abstract class BaseApplication extends MultiDexApplication {
 
             }
         });
+        // 在调用TBS初始化、创建WebView之前进行如下配置
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
     }
 
     /*******************设置登录后跳转的路由*************************************/

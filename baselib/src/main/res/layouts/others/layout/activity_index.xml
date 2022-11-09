@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <WebView
+        <com.tencent.smtt.sdk.WebView
             android:id="@+id/preload_webview"
             android:layout_width="match_parent"
             android:layout_height="1px"
