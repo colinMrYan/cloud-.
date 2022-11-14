@@ -57,9 +57,8 @@ public class EmmPhoneReceiver extends BroadcastReceiver {
         //第四步：这一步很重要，那就是给应用添加权限。android.permission.READ_PHONE_STATE
 //            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
 //            telephonyManager.listen(new EmmPhoneStateLinstener(), PhoneStateListener.LISTEN_CALL_STATE);
-        // 推测 telephonyManager.listen 导致部分手机注册监听数超过限制会崩溃
-        // 且listener没实际用到，暂时注掉，添加日志服务，判断崩溃是否和注册listen有关
-//            PVCollectModelCacheUtils.saveCollectModel("EmmPhoneReceiver: onReceive", "telephonyManager.listen");
+//         推测 telephonyManager.listen 导致部分手机注册监听数超过限制会崩溃
+//         且listener没实际用到，暂时注掉，添加日志服务，判断崩溃是否和注册listen有关
 
 //            telephonyManager.listen(emmPhoneStateLinstener, PhoneStateListener.LISTEN_CALL_STATE);
 //        }
