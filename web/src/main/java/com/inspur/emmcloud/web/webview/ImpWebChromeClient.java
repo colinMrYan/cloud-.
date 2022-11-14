@@ -24,9 +24,10 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import androidx.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;

@@ -174,7 +174,6 @@
     <string name="select_all">全选</string>
     <string name="skip">跳过</string>
     <string name="go_setting">去设置</string>
-    <string name="setting_feed_back_contact_hint">在此输入联系方式</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
