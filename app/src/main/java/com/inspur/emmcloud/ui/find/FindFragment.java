@@ -29,7 +29,6 @@ import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 //import com.oblador.vectoricons.VectorIconsPackage;
 //import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
-// todo AndroidX
 //import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 

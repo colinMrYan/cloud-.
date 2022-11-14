@@ -106,13 +106,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     public void onCreate() {
-        if (!AppUtils.isApkDebugable(this)) {
-            try {
+//        if (!AppUtils.isApkDebugable(this)) {
+//            try {
 //                TinkerPatch.with().fetchPatchUpdate(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();

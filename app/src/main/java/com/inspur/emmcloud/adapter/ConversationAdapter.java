@@ -81,8 +81,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             return new ViewHolder(VIEW_HEADER, adapterListener);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_view, parent, false);
-            ViewHolder holder = new ViewHolder(view, adapterListener);
-            return holder;
+            return  new ViewHolder(view, adapterListener);
         }
     }
 

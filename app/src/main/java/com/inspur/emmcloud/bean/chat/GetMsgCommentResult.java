@@ -7,7 +7,7 @@ import java.util.List;
 
 public class GetMsgCommentResult {
 
-    private List<Comment> commentList = new ArrayList<Comment>();
+    private List<Comment> commentList = new ArrayList<>();
 
     public GetMsgCommentResult(String response) {
 

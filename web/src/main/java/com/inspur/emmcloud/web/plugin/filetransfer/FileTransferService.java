@@ -122,25 +122,48 @@ public class FileTransferService extends ImpPlugin {
             switch (msg.what) {
                 //下载中
                 case 0:
-                    progressBar.setProgress(progress);
-                    if (totalSize <= 0) {
-                        ratioText.setText(getFragmentContext().getString(Res.getStringID("has_downloaded"))
-                                + setFormat(downloadSize));
+                    if (needShowProgress) {
+                        if (progressBar != null){
+                            progressBar.setProgress(progress);
+                        }
+                        if (totalSize <= 0) {
+                            if (ratioText != null){
+                                ratioText.setText(getFragmentContext().getString(Res.getStringID("has_downloaded"))
+                                        + setFormat(downloadSize));
+                            }
+                        } else {
+                            String text = progress + "%" + "," + "  "
+                                    + setFormat(downloadSize) + "/"
+                                    + setFormat(totalSize);
+                            if (ratioText != null) {
+                                ratioText.setText(text);
+                            }
+                            if (saveFileCallBack != null) {
+                                try {
+                                    JSONObject json = new JSONObject();
+                                    json.put("state", 1);
+                                    JSONObject result = new JSONObject();
+                                    result.put("progress", progress);
+                                    json.put("result", result);
+                                    jsCallback(saveFileCallBack, json);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     } else {
-                        String text = progress + "%" + "," + "  "
-                                + setFormat(downloadSize) + "/"
-                                + setFormat(totalSize);
-                        ratioText.setText(text);
-                        if (saveFileCallBack != null) {
-                            try {
-                                JSONObject json = new JSONObject();
-                                json.put("state", 1);
-                                JSONObject result = new JSONObject();
-                                result.put("progress", progress);
-                                json.put("result", result);
-                                jsCallback(saveFileCallBack, json);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        if (totalSize > 0) {
+                            if (saveFileCallBack != null) {
+                                try {
+                                    JSONObject json = new JSONObject();
+                                    json.put("state", 1);
+                                    JSONObject result = new JSONObject();
+                                    result.put("progress", progress);
+                                    json.put("result", result);
+                                    jsCallback(saveFileCallBack, json);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -237,6 +260,7 @@ public class FileTransferService extends ImpPlugin {
     private String fileId; // 文件ID
     private String createTime; // 文件创建时间
     private boolean isUploadingFile = false;
+    private boolean needShowProgress = true;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -299,6 +323,11 @@ public class FileTransferService extends ImpPlugin {
         fileSize = JSONUtils.getLong(jsonObject, "fileSize", 0);
         createTime = JSONUtils.getString(jsonObject, "createTime", "");
         fileId = JSONUtils.getString(jsonObject, "fileId", "");
+        if (!jsonObject.isNull("headers")) {
+            headerObj = JSONUtils.getString(jsonObject, "headers", null);
+//            headerObj = headerJsonObject.toString();
+        }
+        needShowProgress = JSONUtils.getBoolean(jsonObject, "showProgress", true);
         try {
             JSONObject jsonObjectParam = new JSONObject();
             jsonObject.put("url", downloadUrl);
@@ -570,8 +599,12 @@ public class FileTransferService extends ImpPlugin {
                 downloadFailCB = jsonObject.getString("errorCallback");
             }
             if (!jsonObject.isNull("headers")) {
-                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
-                headerObj = headerJsonObject.toString();
+//                JSONObject headerJsonObject = JSONUtils.getJSONObject(jsonObject, "headers", null);
+//                headerObj = headerJsonObject.toString();
+                headerObj = JSONUtils.getString(jsonObject, "headers", null);
+            }
+            if (!jsonObject.isNull("showProgress")) {
+                needShowProgress = JSONUtils.getBoolean(jsonObject, "showProgress", true);
             }
 //            filepath = "/IMP-Cloud/download/";
             filepath = FilePathUtils.BASE_PATH;
@@ -602,7 +635,7 @@ public class FileTransferService extends ImpPlugin {
         }
 
         downloadUrl = downloadUrl.trim();
-        downloadUrl = StrUtil.changeUrl(downloadUrl);
+        downloadUrl = StrUtil.tranformStyle(downloadUrl);
         // 返回ID的应用则跳转到本地下载页面，否则执行原有逻辑
         if (TextUtils.isEmpty(fileId)) {
             showDownloadStatus();
@@ -732,7 +765,8 @@ public class FileTransferService extends ImpPlugin {
     //显示下载进度框
     private void showDownloadStatus() {
         // TODO Auto-generated method stub
-        stopConn = false;
+        if (needShowProgress) {
+            stopConn = false;
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
                 .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress"), null);
@@ -766,9 +800,10 @@ public class FileTransferService extends ImpPlugin {
                                 }
                             }
                         }).create();
-        fileDownloadDlg.getWindow().setBackgroundDrawableResource(
-                android.R.color.transparent);
-        fileDownloadDlg.show();
+            fileDownloadDlg.getWindow().setBackgroundDrawableResource(
+                    android.R.color.transparent);
+            fileDownloadDlg.show();
+        }
         // 下载文件
         Thread thread = new Thread(new UpdateRunnable());
         thread.start();
@@ -799,6 +834,20 @@ public class FileTransferService extends ImpPlugin {
             String cookie = PreferencesUtils.getString(getFragmentContext(), "web_cookie", "");
             if (!StringUtils.isBlank(cookie)) {
                 urlConnection.setRequestProperty("Cookie", cookie);
+            }
+            if (!StringUtils.isEmpty(headerObj)) {
+                JSONObject header = JSONUtils.getJSONObject(headerObj);
+                if (header != null) {
+                    Iterator<String> keys = header.keys();
+                    while (keys.hasNext()) {
+                        try {
+                            String key = keys.next();
+                            urlConnection.setRequestProperty(key, header.getString(key));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
             String filename = getFileName(urlConnection, urlString);
             filename = URLDecoder.decode(filename, "UTF-8");   //防止文件名乱码
@@ -835,10 +884,7 @@ public class FileTransferService extends ImpPlugin {
                         progress = (int) (downnum * 100 / (float) length);
                         downloadSize = downnum;
                         // 更新进度
-                        if (fileDownloadDlg != null
-                                && fileDownloadDlg.isShowing()) {
-                            handler.sendEmptyMessage(0);
-                        }
+                        handler.sendEmptyMessage(0);
                     }
                 }
                 if (!stopConn) {

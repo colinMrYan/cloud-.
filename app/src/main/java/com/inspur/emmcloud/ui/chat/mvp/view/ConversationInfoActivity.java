@@ -245,6 +245,14 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationMuteNotificationSwitch.setChecked(uiConversation.isDnd());
         conversationStickySwitch.setOnCheckedChangeListener(this);
         conversationMuteNotificationSwitch.setOnCheckedChangeListener(this);
+        if ("REMOVED".equals(uiConversation.getState())) {
+            conversationMembersHeadRecyclerView.setVisibility(View.GONE);
+            conversationQRLayout.setVisibility(View.GONE);
+            conversationQuitLayout.setVisibility(View.GONE);
+            conversationMemberManagerLayout.setVisibility(View.GONE);
+            muteNotificationLayout.setVisibility(View.GONE);
+
+        }
     }
 
     public void onClick(View v) {
@@ -263,6 +271,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 finish();
                 break;
             case R.id.rl_conversation_name:
+                if ("REMOVED".equals(uiConversation.getState())) {
+                    return;
+                }
                 if (uiConversation == null) {
                     ToastUtils.show(getContext(), getString(R.string.net_request_failed));
                     return;
@@ -481,8 +492,10 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @Override
     public void deleteGroupSuccess() {
-        ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
+//        ConversationCacheUtils.deleteConversation(MyApplication.getInstance(), uiConversation.getId());
+        // 解散群组后，设置群聊state：REMOVED
+        ConversationCacheUtils.updateConversationState(MyApplication.getInstance(), uiConversation.getId(), "REMOVED");
+//        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP, uiConversation));
         Intent intent = new Intent();
         intent.putExtra("operate", 1);
         intent.putExtra(INTENT_SILENT, uiConversation.isSilent());
@@ -551,6 +564,15 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             if (uiConversation.getId().equals(conversation.getId())) {
                 uiConversation = mPresenter.getConversation(conversation.getId());
                 init();
+            }
+        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE)) {
+            // 群解散后不可发送消息，保留消息记录
+            uiConversation.setState("REMOVED");
+            if ("REMOVED".equals(uiConversation.getState())) {
+                conversationMembersHeadRecyclerView.setVisibility(View.GONE);
+                conversationQRLayout.setVisibility(View.GONE);
+                conversationQuitLayout.setVisibility(View.GONE);
+                conversationMemberManagerLayout.setVisibility(View.GONE);
             }
         }
     }

@@ -43,7 +43,6 @@ import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
 import com.inspur.reactnative.bean.ReactNativeDownloadUrlBean;
 import com.inspur.reactnative.bean.ReactNativeInstallUriBean;
-// todo AndroidX
 //import com.oblador.vectoricons.VectorIconsPackage;
 //import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 //import com.reactnativenavigation.bridge.NavigationReactPackage;

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GetChannelListResult {
     private static final String TAG = "GetSessionListResult";
-    private List<Channel> channelList = new ArrayList<Channel>();
+    private List<Channel> channelList = new ArrayList<>();
 
     public GetChannelListResult(String response) {
         try {

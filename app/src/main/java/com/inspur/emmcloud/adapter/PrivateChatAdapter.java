@@ -74,6 +74,8 @@ public class PrivateChatAdapter extends BaseAdapter {
                 case Conversation.TYPE_TRANSFER:
                     icon = "drawable://" + R.drawable.ic_file_transfer;
                     break;
+                default:
+                    break;
             }
             ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
             searchHolder.nameTextView.setText(conversation.getShowName().toString());

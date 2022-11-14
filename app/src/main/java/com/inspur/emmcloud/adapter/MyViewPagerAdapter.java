@@ -19,10 +19,6 @@ public class MyViewPagerAdapter extends PagerAdapter {
         this.titles = titles;
     }
 
-    public MyViewPagerAdapter(Context context, List<View> array) {
-        this.viewList = array;
-    }
-
     @Override
     public int getCount() {
         return viewList.size();

@@ -66,14 +66,15 @@ android {
         versionCode 200
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
 //        versionName "4.8.19"
-        versionName "5.3.0-beta.1"
+        versionName "5.3.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         ndk {
-            if (enableSeparateBuildPerCPUArchitecture) {
-                abiFilters 'arm64-v8a'
-            } else {
-                abiFilters "armeabi-v7a", "x86"
-            }
+//            if (enableSeparateBuildPerCPUArchitecture) {
+//                abiFilters 'arm64-v8a'
+//            } else {
+//                abiFilters "armeabi-v7a", "x86"
+//            }
+            abiFilters "armeabi-v7a", 'arm64-v8a'
         }
         multiDexEnabled true
         javaCompileOptions {
@@ -120,18 +121,18 @@ android {
         }
     }
 
-    splits {
-        abi {
-            reset()
-            enable enableSeparateBuildPerCPUArchitecture
-            universalApk false
-            if (enableSeparateBuildPerCPUArchitecture) {
-                include 'arm64-v8a'
-            } else {
-                include "armeabi-v7a", "x86"
-            }
-        }
-    }
+//    splits {
+//        abi {
+//            reset()
+//            enable enableSeparateBuildPerCPUArchitecture
+//            universalApk false
+//            if (enableSeparateBuildPerCPUArchitecture) {
+//                include 'arm64-v8a'
+//            } else {
+//                include "armeabi-v7a", "x86"
+//            }
+//        }
+//    }
     // applicationVariants are e.g. debug, release
     //android studio对于jni调用及运行闪退无法加载库的问题解决方案
     applicationVariants.all { variant ->

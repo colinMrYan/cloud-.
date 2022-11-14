@@ -157,7 +157,6 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
         fileSavePath = MyAppConfig.getFileDownloadByUserAndTanentDirPath() + FileUtils.getNoDuplicateFileNameInDir(MyAppConfig.getFileDownloadByUserAndTanentDirPath(), message.getMsgContentAttachmentFile().getName());
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
-        String source = APIUri.getChatFileResourceUrl(message);
         final DownloadInfo downloadInfo = DownloadInfo.message2DownloadInfo(message);
 
         List<DownloadInfo> downloadInfoList = ChatFileDownloadManager.getInstance().getAllChatFileDownloadList();
