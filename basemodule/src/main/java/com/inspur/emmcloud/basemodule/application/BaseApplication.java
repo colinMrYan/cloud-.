@@ -698,14 +698,9 @@ public abstract class BaseApplication extends MultiDexApplication {
              */
             @Override
             public void onViewInitFinished(boolean isX5) {
-
+                LogUtils.YfcDebug("use X5 web" + isX5);
             }
         });
-        // 在调用TBS初始化、创建WebView之前进行如下配置
-        HashMap map = new HashMap();
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
-        QbSdk.initTbsSettings(map);
     }
 
     /*******************设置登录后跳转的路由*************************************/

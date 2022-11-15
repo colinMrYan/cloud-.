@@ -48,10 +48,9 @@ import java.lang.reflect.Method;
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
-    public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
-            + Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
-            + " Build/FRF91) AppleWebKit/533.1 "
-            + "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
+    public static final String USERAGENT = "Mozilla/5.0 (Linux; Android "
+            + Build.VERSION.RELEASE + "; " + Build.MODEL
+            + " Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046141 Mobile Safari/537.36";
     private static final int SET_TITLE = 1;
     private static final int DIMISS_LOADING = 2;
     private static final String TAG = "ImpWebView";
