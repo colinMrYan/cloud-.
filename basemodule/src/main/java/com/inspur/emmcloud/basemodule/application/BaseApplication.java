@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -688,7 +689,6 @@ public abstract class BaseApplication extends MultiDexApplication {
         QbSdk.initX5Environment(this, new QbSdk.PreInitCallback() {
             @Override
             public void onCoreInitFinished() {
-                // 内核初始化完成，可能为系统内核，也可能为系统内核
             }
 
             /**
@@ -698,9 +698,18 @@ public abstract class BaseApplication extends MultiDexApplication {
              */
             @Override
             public void onViewInitFinished(boolean isX5) {
-                LogUtils.YfcDebug("use X5 web" + isX5);
+                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                if (!isX5) {
+                    Log.e("ByWebView", "x5内核加载失败，自动切换到系统内核");
+                } else {
+                    Log.d("ByWebView", "x5内核加载成功");
+                }
             }
         });
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
     }
 
     /*******************设置登录后跳转的路由*************************************/

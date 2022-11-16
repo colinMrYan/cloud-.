@@ -29,7 +29,6 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     public void onCreate() {
         super.onCreate();
         boolean isWebAutoRotate = false;
-        initX5SDK();
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);
@@ -81,12 +80,5 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     public ImpFragment getFragment() {
         if (fragment != null) return fragment;
         return null;
-    }
-
-    private void initX5SDK(){
-        HashMap map = new HashMap();
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
-        QbSdk.initTbsSettings(map);
     }
 }
