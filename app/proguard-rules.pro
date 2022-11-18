@@ -15,8 +15,20 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
 -keepattributes InnerClasses
 -dontoptimize
+# 腾讯x5
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}
 
 ##butterknife
 
@@ -30,15 +42,4 @@
 
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
-}
-
--dontwarn dalvik.**
--dontwarn com.tencent.smtt.**
-
--keep class com.tencent.smtt.** {
-    *;
-}
-
--keep class com.tencent.tbs.** {
-    *;
 }

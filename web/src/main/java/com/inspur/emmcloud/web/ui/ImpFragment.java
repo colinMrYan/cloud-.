@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -77,6 +78,7 @@ import com.inspur.emmcloud.web.plugin.window.OnTitleBackKeyDownListener;
 import com.inspur.emmcloud.web.plugin.window.WindowService;
 import com.inspur.emmcloud.web.webview.ImpWebView;
 import com.itheima.roundedimageview.RoundedImageView;
+import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
 

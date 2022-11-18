@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SwitchCompat;
@@ -63,6 +62,7 @@ import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.widget.DataCleanManager;
+import com.tencent.smtt.sdk.QbSdk;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -87,12 +87,16 @@ public class SettingActivity extends BaseActivity {
     RelativeLayout experienceUpgradeLayout;
     @BindView(R2.id.switch_view_setting_experience_upgrade)
     SwitchCompat experienceUpgradeSwitch;
+    @BindView(R2.id.switch_view_setting_webview)
+    SwitchCompat webviewSwitch;
     @BindView(R2.id.tv_setting_language_name)
     TextView languageNameText;
     @BindView(R2.id.iv_setting_language_flag)
     ImageView languageFlagImg;
     @BindView(R2.id.tv_setting_theme_name)
     TextView themeNameText;
+    @BindView(R2.id.tv_setting_use_webview)
+    TextView webviewText;
     @BindView(R2.id.rl_setting_switch_tablayout)
     RelativeLayout switchTabLayout;
     @BindView(R2.id.tv_setting_tab_name)
@@ -134,6 +138,12 @@ public class SettingActivity extends BaseActivity {
                     updateUserExperienceUpgradeFlag();
                 }
 
+            } else if (i == R.id.switch_view_setting_webview) {
+                if (QbSdk.isX5Core()) {
+                    QbSdk.reset(BaseApplication.getInstance());
+                    updateWebViewState();
+                }
+                PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, b);
             } else {
             }
         }
@@ -205,6 +215,9 @@ public class SettingActivity extends BaseActivity {
         setNativeAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         nativeRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        webviewText.setText(getString(R.string.settings_use_x5));
+        webviewSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        updateWebViewState();
         if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -223,6 +236,10 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() > 1 ? View.VISIBLE : View.GONE);
         tabName.setText(getTabLayoutName());
+    }
+
+    private void updateWebViewState(){
+        webviewSwitch.setChecked(QbSdk.isX5Core());
     }
 
     private String getTabLayoutName() {

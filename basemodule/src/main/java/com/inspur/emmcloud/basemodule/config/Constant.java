@@ -402,4 +402,8 @@ public class Constant {
      */
     public static final String DEFAULT_MEDIA_PACK_FOLDER = "InspurCompress";
     public static final String OUTPUT_DIR_NAME = "InspurUGC";
+
+    // 腾讯加载TBS
+    public static final String PREF_TBS_INSTALL = "tbs_installed";
+    public static final String PREF_TBS_USE_X5 = "tbs_use_X5";
 }
