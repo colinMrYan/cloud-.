@@ -30,3 +30,4 @@
 
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
+}

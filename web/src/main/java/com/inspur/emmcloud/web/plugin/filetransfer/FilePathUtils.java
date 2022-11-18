@@ -14,7 +14,7 @@ import java.io.File;
 public class FilePathUtils {
 
 
-    public static String BASE_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
+    public static String BASE_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC +
             BaseApplication.getInstance().getTanent() + "/"
             + BaseApplication.getInstance().getUid();
     public static String SDCARD_PREFIX = "sdcard:";
