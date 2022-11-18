@@ -1,5 +1,15 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
+import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
+import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
+import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
+import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -28,6 +38,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -90,10 +105,12 @@ import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVideo;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.VoiceResult;
@@ -107,6 +124,8 @@ import com.inspur.emmcloud.componentservice.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuItem;
+import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.chat.selectabletext.SelectableTextHelper;
@@ -151,16 +170,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
-
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
-import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
-import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
-import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
-import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
-import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
-import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
-import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
 
 @Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
@@ -2489,6 +2498,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 complexMessageBundle.putString(MESSAGE_CONTENT, message.getContent());
                 complexMessageBundle.putString(MESSAGE_CID, cid);
                 IntentUtils.startActivity((Activity) context, MultiMessageActivity.class, complexMessageBundle);
+                break;
             default:
                 NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context, null, true);
                 upgradeUtils.checkUpdate(true);

@@ -1,10 +1,12 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
+import static com.inspur.emmcloud.ui.chat.DisplayMediaVideoMsg.formattedTime;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -13,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -44,10 +49,6 @@ import com.tencent.rtmp.TXLiveConstants;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
-import static com.inspur.emmcloud.ui.chat.DisplayMediaVideoMsg.formattedTime;
 
 public class MultiMessageAdapter extends RecyclerView.Adapter {
 
@@ -101,6 +102,7 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
 
         }
         if (cardContentView != null) {
+            holder.contentParent.removeAllViews();
             holder.contentParent.addView(cardContentView);
         }
         holder.time.setText(TimeUtils.getChannelMsgDisplayTime(context, item.sendTime * 1000));
