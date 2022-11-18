@@ -57,10 +57,10 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
 //        versionCode 128 升级更新以version为判断依据
-        versionCode 192
+        versionCode 194
         //版本号范例：1.0.0-beta.1, 1.0.0-rc.1, 1.0.0
 //        versionName "4.8.19"
-        versionName "5.2.1"
+        versionName "5.2.2-beta.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
 //            if (enableSeparateBuildPerCPUArchitecture) {
