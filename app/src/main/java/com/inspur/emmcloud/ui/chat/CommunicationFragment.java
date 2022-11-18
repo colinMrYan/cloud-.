@@ -1079,6 +1079,7 @@ public class CommunicationFragment extends BaseFragment {
                 if (!command.getFromUid().equals(MyApplication.getInstance().getUid())) {
                     channelRefreshId = command.getChannel();
                 }
+                // 群解散
                 if (command.getAction().equals("client.chat.channel.group.dismiss")) {
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE, command));
                 }

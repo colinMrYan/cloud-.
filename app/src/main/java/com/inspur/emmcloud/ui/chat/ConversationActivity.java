@@ -12,10 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -82,6 +84,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.pictureselector.PictureSelectorUtils;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuItem;
 import com.inspur.emmcloud.ui.chat.messagemenu.MessageMenuPopupWindow;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -585,9 +588,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             for (final UIMessage uiMessagePlay : nextUIMessageList) {
                 Message messagePlay = uiMessagePlay.getMessage();
                 //找到第一条不是自己发出的，未播放过的语音消息
-                if (!messagePlay.getFromUser().equals(BaseApplication.getInstance().getUid())
-                        && messagePlay.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)
-                        && messagePlay.getLifeCycleState() == 0) {
+                if (!messagePlay.getFromUser().equals(BaseApplication.getInstance().getUid()) && messagePlay.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE) && messagePlay.getLifeCycleState() == 0) {
                     //找到未播放的消息在消息列表里的位置滑动到此消息的位置并播放
                     final int playIndex = uiMessageList.indexOf(uiMessagePlay);
                     msgListView.MoveToPosition(playIndex);
@@ -605,34 +606,29 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void showRequestSmallWindowDialog() {
-        new CustomDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(this)))
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Uri uri = Uri.parse("package:" + getPackageName());
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
-                        startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
-                    }
-                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        new CustomDialog.MessageDialogBuilder(this).setMessage(getString(R.string.permission_grant_window_alert, AppUtils.getAppName(this))).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Uri uri = Uri.parse("package:" + getPackageName());
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+                startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        })
-                .show();
+        }).show();
     }
 
     private void showRequestBackGroundDialog() {
-        new CustomDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(this)))
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
-                    }
-                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        new CustomDialog.MessageDialogBuilder(this).setMessage(getString(R.string.permission_grant_background_start, AppUtils.getAppName(this))).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -649,8 +645,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
         List<ContactUser> contactUserList = new ArrayList<>();
         contactUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(
-                DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName()));
         if (contactUser == null) {
             return null;
         }
@@ -697,21 +692,17 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                 }
                 if (userList.size() > 50) {
-                    new CustomDialog.MessageDialogBuilder(this)
-                            .setMessage(userList.size() > 200 ? R.string.chat_send_email_max_person_tip : R.string.chat_send_email_too_many_person_tip)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    sendEmail(userList);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
+                    new CustomDialog.MessageDialogBuilder(this).setMessage(userList.size() > 200 ? R.string.chat_send_email_max_person_tip : R.string.chat_send_email_too_many_person_tip).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendEmail(userList);
+                        }
+                    }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
                 } else {
                     sendEmail(userList);
                 }
@@ -754,8 +745,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setFocusableInTouchMode(false);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
-        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(),
-                chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
+        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
         mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -847,8 +837,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("mid", message.getId());
                             bundle.putString(EXTRA_CID, message.getChannel());
-                            IntentUtils.startActivity(ConversationActivity.this,
-                                    ChannelMessageDetailActivity.class, bundle);
+                            IntentUtils.startActivity(ConversationActivity.this, ChannelMessageDetailActivity.class, bundle);
                             break;
                     }
                 }
@@ -879,9 +868,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void resendMessage(UIMessage uiMessage) {
 //        Message message = uiMessage.getMessage();
         String messageType = uiMessage.getMessage().getType();
-        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && ((messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE)
-                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE))
-                || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VIDEO))) {
+        if (!FileUtils.isFileExist(uiMessage.getMessage().getLocalPath()) && ((messageType.equals(MESSAGE_TYPE_FILE_REGULAR_FILE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) || messageType.equals(Message.MESSAGE_TYPE_MEDIA_VIDEO))) {
             ToastUtils.show(ConversationActivity.this, getString(R.string.resend_file_failed));
             return;
         }
@@ -1017,10 +1004,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     PVCollectModelCacheUtils.saveCollectModel("link", "share");
                     String content = getIntent().getExtras().getString(Constant.SHARE_LINK);
                     if (!StringUtils.isBlank(content)) {
-                        Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", "")
-                                , JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""), JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true)
-                                , JSONUtils.getString(content, "app_name", ""), JSONUtils.getString(content, "ico", ""), JSONUtils.getString(content, "app_url", ""),
-                                JSONUtils.getBoolean(content, "isHaveAPPNavbar", true));
+                        Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, JSONUtils.getString(content, "poster", ""), JSONUtils.getString(content, "title", ""), JSONUtils.getString(content, "digest", ""), JSONUtils.getString(content, "url", ""), JSONUtils.getBoolean(content, Constant.WEB_FRAGMENT_SHOW_HEADER, true), JSONUtils.getString(content, "app_name", ""), JSONUtils.getString(content, "ico", ""), JSONUtils.getString(content, "app_url", ""), JSONUtils.getBoolean(content, "isHaveAPPNavbar", true));
                         addLocalMessage(message, 0);
                         MessageSendManager.getInstance().sendMessage(message);
                     }
@@ -1054,8 +1038,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
@@ -1334,8 +1317,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             // 图库选择图片返回
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
                 if (data != null && requestCode == REQUEST_GELLARY) {
-                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
-                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                     for (int i = 0; i < imageItemList.size(); i++) {
                         String imgPath = imageItemList.get(i).path;
@@ -1391,8 +1373,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 String userOrChannelId = conversation.getId();
                 boolean isGroup = conversation.getType().equals(Conversation.TYPE_GROUP);
                 if (!isGroup) {
-                    userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(
-                            ConversationActivity.this, conversation.getName());
+                    userOrChannelId = DirectChannelUtils.getDirctChannelOtherUid(ConversationActivity.this, conversation.getName());
                 }
                 share2Conversation(userOrChannelId, isGroup, MultiMessageTransmitUtil.TYPE_SINGLE);
             }
@@ -1579,8 +1560,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Conversation.TYPE_CAST:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ConversationCastInfoActivity.class, bundle);
+                IntentUtils.startActivity(ConversationActivity.this, ConversationCastInfoActivity.class, bundle);
                 break;
             case Conversation.TYPE_TRANSFER:
                 bundle.putSerializable(ConversationCastInfoActivity.EXTRA_CID, conversation.getId());
@@ -1801,8 +1781,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE:
                 // 群解散后不可发送消息，保留消息记录
-                conversation.setState("REMOVED");
-                updateDissolveLayout();
+                WSCommand messageOjb = (WSCommand) simpleEventMessage.getMessageObj();
+                if (messageOjb.getChannel().equals(conversation.getId())) {
+                    conversation.setState("REMOVED");
+                    updateDissolveLayout();
+                }
                 break;
             case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:
                 String addJsonParam = (String) simpleEventMessage.getMessageObj();
@@ -1862,8 +1845,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
                     }
                     //本地过来的途径可能没有states
-                    if (receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid())
-                            && TextUtils.isEmpty(receivedWSMessage.getStates())) {
+                    if (receivedWSMessage.getFromUser().equals(BaseApplication.getInstance().getUid()) && TextUtils.isEmpty(receivedWSMessage.getStates())) {
                         wrapperLocalMessageStates(receivedWSMessage);
                     }
                     if (index == -1) {
@@ -1875,8 +1857,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                     } else {
                         // 本人的视频消息时添加原文件，防止再次刷新
-                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) &&
-                                BaseApplication.getInstance().getUid().equals(receivedWSMessage.getFromUser())) {
+                        if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VIDEO) && BaseApplication.getInstance().getUid().equals(receivedWSMessage.getFromUser())) {
                             receivedWSMessage.setLocalPath(uiMessageList.get(index).getMessage().getMsgContentMediaVideo().getOriginMediaPath());
                         }
                         uiMessageList.remove(index);
@@ -1971,8 +1952,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void getHistoryMessageFromLocal() {
         if (uiMessageList.size() > 0) {
-            List<Message> messageList = MessageCacheUtil.getHistoryMessageList(
-                    MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
+            List<Message> messageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage(), COUNT_EVERY_PAGE);
             uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(messageList));
             adapter.setMessageList(uiMessageList);
             adapter.notifyItemRangeInserted(0, messageList.size());
@@ -2126,21 +2106,19 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uid
      * @param multiMessageType
      */
-    private void createDirectChannel(String uid, final UIMessage uiMessage,
-                                     final int multiMessageType) {
+    private void createDirectChannel(String uid, final UIMessage uiMessage, final int multiMessageType) {
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-            new ConversationCreateUtils().createDirectConversation(this, uid,
-                    new OnCreateDirectConversationListener() {
-                        @Override
-                        public void createDirectConversationSuccess(Conversation conversation) {
-                            transmitMsg(conversation.getId(), uiMessage, multiMessageType);
-                        }
+            new ConversationCreateUtils().createDirectConversation(this, uid, new OnCreateDirectConversationListener() {
+                @Override
+                public void createDirectConversationSuccess(Conversation conversation) {
+                    transmitMsg(conversation.getId(), uiMessage, multiMessageType);
+                }
 
-                        @Override
-                        public void createDirectConversationFail() {
+                @Override
+                public void createDirectConversationFail() {
 
-                        }
-                    });
+                }
+            });
         }
     }
 
@@ -2197,8 +2175,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             MessageSendManager.getInstance().sendMessage(fakeMessage);
             ToastUtils.show(R.string.chat_message_send_success);
             // 保存最近转发到数据库
-            ConversationCacheUtils.saveRecentTransmitConversation(this, new RecentTransmitModel
-                    (fakeMessage.getChannel(), "", "", "", System.currentTimeMillis()));
+            ConversationCacheUtils.saveRecentTransmitConversation(this, new RecentTransmitModel(fakeMessage.getChannel(), "", "", "", System.currentTimeMillis()));
         } else {
             ToastUtils.show(R.string.chat_message_send_fail);
         }
@@ -2399,8 +2376,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_ATTACHMENT_CARD:
                 String uid = message.getMsgContentAttachmentCard().getUid();
                 bundle.putString("uid", uid);
-                IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
+                IntentUtils.startActivity(ConversationActivity.this, UserInfoActivity.class, bundle);
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 boolean isMyMsg = MyApplication.getInstance().getUid().equals(uiMessage.getMessage().getFromUser());
@@ -2492,8 +2468,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     bundle.putString("mid", mid);
                     bundle.putString(EXTRA_CID, message.getChannel());
-                    IntentUtils.startActivity(ConversationActivity.this,
-                            ChannelMessageDetailActivity.class, bundle);
+                    IntentUtils.startActivity(ConversationActivity.this, ChannelMessageDetailActivity.class, bundle);
                 }
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
@@ -2515,8 +2490,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 complexMessageBundle.putString(MESSAGE_CID, cid);
                 IntentUtils.startActivity((Activity) context, MultiMessageActivity.class, complexMessageBundle);
             default:
-                NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
-                        null, true);
+                NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context, null, true);
                 upgradeUtils.checkUpdate(true);
                 break;
         }
@@ -2588,8 +2562,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 仿微信长按处理
      */
-    private void showMessageOperationDlg(final List<Integer> operationIdList,
-                                         final UIMessage uiMessage, final View messageView) {
+    private void showMessageOperationDlg(final List<Integer> operationIdList, final UIMessage uiMessage, final View messageView) {
         if (mPopupWindowList == null) {
             mPopupWindowList = new MessageMenuPopupWindow(messageView.getContext());
         }
@@ -2706,8 +2679,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     private void updateSilentState() {
         String selfUid = BaseApplication.getInstance().getUid();
-        if (conversation.isSilent()
-                && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())) {
+        if (conversation.isSilent() && !conversation.getAdministratorList().contains(selfUid) && !TextUtils.equals(selfUid, conversation.getOwner())) {
             silentLayout.setVisibility(View.VISIBLE);
             chatInputMenu.setVisibility(View.GONE);
         } else {
@@ -2735,15 +2707,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     private void showInfoDlg(String info) {
-        new CustomDialog.MessageDialogBuilder(ConversationActivity.this)
-                .setMessage(info)
-                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+        new CustomDialog.MessageDialogBuilder(ConversationActivity.this).setMessage(info).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     private int getMessageIndex(Message message) {
@@ -2776,9 +2745,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String content = null;
         switch (uiMessage.getMessage().getType()) {
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
-                        uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
-                        uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
+                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(uiMessage.getMessage().getMsgContentTextMarkdown().getText(), uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
                 content = spannableString.toString();
                 if (!StringUtils.isBlank(content)) {
                     content = MarkDown.fromMarkdown(content);
@@ -2786,8 +2753,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
-                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text,
-                        uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
                 content = spannableString.toString();
                 break;
         }
@@ -2884,8 +2850,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
-        intent.setClass(context,
-                ContactSearchActivity.class);
+        intent.setClass(context, ContactSearchActivity.class);
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
         } else {
@@ -2899,11 +2864,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 转发多条消息
      */
-    private void shareMultiMessageToFriends(boolean itemByItem, Context
-            context, Set<UIMessage> uiMessages) {
+    private void shareMultiMessageToFriends(boolean itemByItem, Context context, Set<UIMessage> uiMessages) {
         Intent intent = new Intent();
-        String result = "[" + (itemByItem ? getString(R.string.multi_transfer_single) : getString(R.string.multi_transfer_all))
-                + getString(R.string.messages_count, uiMessages.size());
+        String result = "[" + (itemByItem ? getString(R.string.multi_transfer_single) : getString(R.string.multi_transfer_all)) + getString(R.string.messages_count, uiMessages.size());
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
         intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG_WITH_MESSAGE, result);
@@ -2912,8 +2875,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
-        intent.setClass(context,
-                ContactSearchActivity.class);
+        intent.setClass(context, ContactSearchActivity.class);
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
         } else {
@@ -2930,9 +2892,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             showInfoDlg(getString(R.string.recall_fail_for_timeout));
         } else if (WebSocketPush.getInstance().isSocketConnect()) {
             loadingDlg.show();
-            loadingDlg.getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
-                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            loadingDlg.getWindow().setFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM, WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
             WSAPIService.getInstance().recallMessage(message);
         } else {
             ToastUtils.show(R.string.network_exception);

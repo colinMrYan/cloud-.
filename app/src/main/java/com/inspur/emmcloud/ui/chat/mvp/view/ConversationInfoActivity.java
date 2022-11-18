@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -24,6 +26,7 @@ import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseMvpActivity;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.CommunicationSearchMessagesActivity;
@@ -567,12 +570,15 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             }
         } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE)) {
             // 群解散后不可发送消息，保留消息记录
-            uiConversation.setState("REMOVED");
-            if ("REMOVED".equals(uiConversation.getState())) {
-                conversationMembersHeadRecyclerView.setVisibility(View.GONE);
-                conversationQRLayout.setVisibility(View.GONE);
-                conversationQuitLayout.setVisibility(View.GONE);
-                conversationMemberManagerLayout.setVisibility(View.GONE);
+            WSCommand messageOjb = (WSCommand) eventMessage.getMessageObj();
+            if (messageOjb.getChannel().equals(uiConversation.getId())) {
+                uiConversation.setState("REMOVED");
+                if ("REMOVED".equals(uiConversation.getState())) {
+                    conversationMembersHeadRecyclerView.setVisibility(View.GONE);
+                    conversationQRLayout.setVisibility(View.GONE);
+                    conversationQuitLayout.setVisibility(View.GONE);
+                    conversationMemberManagerLayout.setVisibility(View.GONE);
+                }
             }
         }
     }
