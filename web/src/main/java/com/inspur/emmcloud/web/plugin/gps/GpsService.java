@@ -69,23 +69,10 @@ public class GpsService extends ImpPlugin implements
     // 上传地址
     private String uploadUri;
     private boolean requestingUri = false;
-    private Timer uploadTimer = new Timer();
+    private Timer uploadTimer;
     private boolean uploadTrace = false;
 
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            if (uploadUri == null) {
-                uploadMapLocationList.clear();
-                if (uploadTimer != null) {
-                    uploadTimer.cancel();
-                    uploadTimer.purge();
-                }
-                return;
-            }
-            requestUploadLocations();
-        }
-    };
+    private TimerTask timerTask;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -228,9 +215,23 @@ public class GpsService extends ImpPlugin implements
                     if (uploadTrace && uploadUri != null) {
                         open();
                         startLocation();
-                        if (uploadTimer != null) {
-                            uploadTimer.schedule(timerTask, 0, 4000);
-                        }
+                        uploadTimer = new Timer();
+                        timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (uploadUri == null) {
+                                    uploadMapLocationList.clear();
+                                    if (uploadTimer != null) {
+                                        uploadTimer.cancel();
+                                        uploadTimer.purge();
+                                    }
+                                    return;
+                                }
+                                requestUploadLocations();
+                            }
+                        };
+                        uploadTimer.schedule(timerTask, 0, 4000);
+
                     } else {
                         closeUploadPosition();
                     }
@@ -265,10 +266,12 @@ public class GpsService extends ImpPlugin implements
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
             mlocationClient.onDestroy();
-            mlocationClient = null;
+        }
+        if (aMapLocationList !=null){
+            aMapLocationList.clear();
         }
         if (uploadMapLocationList != null) {
-            uploadMapLocationList = null;
+            uploadMapLocationList.clear();
         }
     }
 
@@ -456,6 +459,9 @@ public class GpsService extends ImpPlugin implements
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
+        if (timerTask != null) {
+            timerTask.run();
+        }
     }
 
     @Override
@@ -516,9 +522,9 @@ public class GpsService extends ImpPlugin implements
                 }
 
             }
-            aMapLocationList = null;
+//            aMapLocationList = null;
             locationCount = 0;
-            // 绑定监听状态
+            // 绑定监听状态s
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("longitude", longtitude);
@@ -547,7 +553,7 @@ public class GpsService extends ImpPlugin implements
                 String locationList = uploadMapLocationList.get("locations");
                 if (locationList != null) {
                     positionList = JSONUtils.JSONArray2List(locationList, new ArrayList<String>());
-                    if (!positionList.isEmpty()) {
+                    if (positionList != null) {
                         positionList.add(jsonObject.toString());
                     }
                 }
