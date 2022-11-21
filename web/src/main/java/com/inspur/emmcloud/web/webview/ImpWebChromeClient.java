@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -371,24 +372,27 @@ public class ImpWebChromeClient extends WebChromeClient {
                                      ValueCallback<Uri[]> filePathCallback,
                                      FileChooserParams fileChooserParams) {
         mUploadCallbackAboveL = filePathCallback;
-        // 针对广水添加相机和相册选项
-        showFileChooser();
+        if ("919455".equals(BaseApplication.getInstance().getCurrentEnterprise().getId())) {
+            // 针对广水添加相机和相册选项
+            showFileChooser();
+        } else {
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            String type = "*/*";
+            if (fileChooserParams != null
+                    && fileChooserParams.getAcceptTypes() != null
+                    && fileChooserParams.getAcceptTypes().length > 0) {
+                if (!TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
+                    type = fileChooserParams.getAcceptTypes()[0];
+                }
+            }
+            i.setType(type);
+
+            if (mWebView.getImpCallBackInterface() != null) {
+                mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+            }
+        }
         return true;
-//        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-//        i.addCategory(Intent.CATEGORY_OPENABLE);
-//        String type = "*/*";
-//        if (fileChooserParams != null
-//                && fileChooserParams.getAcceptTypes() != null
-//                && fileChooserParams.getAcceptTypes().length > 0) {
-//            if (!TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
-//                type = fileChooserParams.getAcceptTypes()[0];
-//            }
-//        }
-//        i.setType(type);
-//
-//        if (mWebView.getImpCallBackInterface() != null) {
-//            mWebView.getImpCallBackInterface().onStartActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
-//        }
     }
 
     private boolean checkPermission() {
