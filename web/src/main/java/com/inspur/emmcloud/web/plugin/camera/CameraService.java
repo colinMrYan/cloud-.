@@ -175,7 +175,7 @@ public class CameraService extends ImpPlugin {
                         "encodingType");
                 switch (JSONUtils.getInt(optionsObj, "flashMode", 0)) {
                     case 0:
-                        parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
                         break;
                     case 1:
                         parm_flash_mode = Camera.Parameters.FLASH_MODE_TORCH;
@@ -184,7 +184,7 @@ public class CameraService extends ImpPlugin {
                         parm_flash_mode = Camera.Parameters.FLASH_MODE_ON;
                         break;
                     case 3:
-                        parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
                         break;
                 }
                 if (!optionsObj.isNull("watermark")) {
