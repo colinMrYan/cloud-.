@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
+
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -389,7 +390,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
             PreferencesUtils.putString(activity, "myInfo", myInfo);
             // 广水项目隐藏首次登录设置密码的操作
-            if (getMyInfoResult.getDefaultEnterprise().getId().equals("919455")) {
+            if (getMyInfoResult.getDefaultEnterprise() != null && "919455".equals(getMyInfoResult.getDefaultEnterprise().getId())) {
                 PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
                         true);
             } else {
