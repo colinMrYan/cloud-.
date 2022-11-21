@@ -1,18 +1,13 @@
 package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -25,7 +20,6 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
@@ -40,25 +34,20 @@ import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.TBSLoadUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.tencent.mmkv.MMKV;
-import com.tencent.smtt.export.external.TbsCoreSettings;
-import com.tencent.smtt.sdk.TbsDownloader;
-import com.tencent.smtt.sdk.TbsListener;
 import com.tencent.ugc.TXUGCBase;
-import com.tencent.smtt.sdk.QbSdk;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,7 +91,8 @@ public abstract class BaseApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initWithoutUserInfo();
-//        needDownloadTbs();
+        TBSLoadUtils.initTxTbx(BaseApplication.this, null);
+//        initTBS();
         if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             init();
         }
@@ -146,7 +136,6 @@ public abstract class BaseApplication extends MultiDexApplication {
 
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
-        initTxTbx();
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
@@ -691,85 +680,6 @@ public abstract class BaseApplication extends MultiDexApplication {
 
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
-    }
-
-    private void initTxTbx() {
-        // 禁用X5浏览器的话停止下载
-        if (!PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, false)) {
-            return;
-        }
-        if (TbsDownloader.needDownload(BaseApplication.this,false) && NetUtils.isNetworkConnected(this)){
-            QbSdk.reset(BaseApplication.this);
-            //手动开始下载，此时需要先判定网络是否符合要求
-            TbsDownloader.startDownload(BaseApplication.this);
-        }
-        QbSdk.setDownloadWithoutWifi(true);
-        HashMap map = new HashMap();
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
-        QbSdk.initTbsSettings(map);
-        QbSdk.setTbsListener(new TbsListener() {
-            @Override
-            public void onDownloadFinish(int i) {
-            }
-
-            @Override
-            public void onInstallFinish(int i) {
-                if (i == 200) {
-                    PreferencesUtils.putBoolean(BaseApplication.this, Constant.PREF_TBS_INSTALL, true);
-                    Log.d("ByWebView", "x5内核安装成功");
-                    new CustomDialog.MessageDialogBuilder(BaseApplication.this)
-                            .setMessage(getString(R.string.toast_restart_app))
-                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = getPackageManager()
-                                            .getLaunchIntentForPackage(BaseApplication.this.getPackageName());
-                                    PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                                    AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-                                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
-                                    System.exit(0);
-                                }
-                            }).show();
-                }
-            }
-
-            @Override
-            public void onDownloadProgress(int i) {
-            }
-        });
-        QbSdk.initX5Environment(this, new QbSdk.PreInitCallback() {
-            @Override
-            public void onCoreInitFinished() {
-            }
-
-            /**
-             * 预初始化结束
-             * 由于X5内核体积较大，需要依赖网络动态下发，所以当内核不存在的时候，默认会回调false，此时将会使用系统内核代替
-             * @param isX5 是否使用X5内核
-             */
-            @Override
-            public void onViewInitFinished(boolean isX5) {
-                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                if (isX5) {
-                    Log.d("ByWebView", "x5内核加载成功");
-                } else {
-                    // 首次进入安装成功，但是默认使用webkit
-                    Log.e("ByWebView", "x5内核加载失败，自动切换到系统内核");
-                    if (!PreferencesUtils.getBoolean(BaseApplication.this, Constant.PREF_TBS_INSTALL) && NetUtils.isNetworkConnected(BaseApplication.this) && !TbsDownloader.isDownloading()){
-                        QbSdk.reset(BaseApplication.this);
-                        //手动开始下载，此时需要先判定网络是否符合要求
-                        TbsDownloader.startDownload(BaseApplication.this);
-                    }
-                }
-            }
-        });
     }
 
     /*******************设置登录后跳转的路由*************************************/

@@ -359,6 +359,7 @@
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>
     <string name="toast_restart_app">X5瀏覽器下載成功，需要重新啟動才能使用，重啟App？</string>
+    <string name="toast_switch_sys_webview">切換系統瀏覽器後將無法再切換回X5瀏覽器，確認使用系統瀏覽器？</string>
     <string name="dismiss_group_warning_text">解散群組後，將會删除群內所有的聊天記錄和檔案等資訊</string>
     <string name="add_same_group_warning_text">已存在相同人員群組，是否繼續建群？</string>
     <string name="quit_dismiss_group">刪除並退出</string>

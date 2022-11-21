@@ -354,6 +354,7 @@
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
     <string name="toast_restart_app">X5 browser download successful, need to restart to use, restart the App?</string>
+    <string name="toast_switch_sys_webview">After switching the system browser, I will not be able to switch back to the X5 browser, confirm the use of the system browser?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
     <string name="add_same_group_warning_text">The same person group already exists. Continue to create group?</string>
     <string name="chat_stick_on_top">Sticky on Top</string>

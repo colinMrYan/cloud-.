@@ -87,8 +87,6 @@ public class SettingActivity extends BaseActivity {
     RelativeLayout experienceUpgradeLayout;
     @BindView(R2.id.switch_view_setting_experience_upgrade)
     SwitchCompat experienceUpgradeSwitch;
-    @BindView(R2.id.switch_view_setting_webview)
-    SwitchCompat webviewSwitch;
     @BindView(R2.id.tv_setting_language_name)
     TextView languageNameText;
     @BindView(R2.id.iv_setting_language_flag)
@@ -114,7 +112,7 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        public void onCheckedChanged(CompoundButton compoundButton,final boolean b) {
             int i = compoundButton.getId();
             if (i == R.id.switch_view_setting_web_rotate) {
                 AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
@@ -138,13 +136,7 @@ public class SettingActivity extends BaseActivity {
                     updateUserExperienceUpgradeFlag();
                 }
 
-            } else if (i == R.id.switch_view_setting_webview) {
-                if (QbSdk.isX5Core()) {
-                    QbSdk.reset(BaseApplication.getInstance());
-                    updateWebViewState();
-                }
-                PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, b);
-            } else {
+            }else {
             }
         }
     };
@@ -215,9 +207,7 @@ public class SettingActivity extends BaseActivity {
         setNativeAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         nativeRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-        webviewText.setText(getString(R.string.settings_use_x5));
-        webviewSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-        updateWebViewState();
+        webviewText.setText(getString(R.string.settings_use_webkit));
         if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -236,10 +226,6 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() > 1 ? View.VISIBLE : View.GONE);
         tabName.setText(getTabLayoutName());
-    }
-
-    private void updateWebViewState(){
-        webviewSwitch.setChecked(QbSdk.isX5Core());
     }
 
     private String getTabLayoutName() {
@@ -377,8 +363,32 @@ public class SettingActivity extends BaseActivity {
             IntentUtils.startActivity(SettingActivity.this, TextSizeSettingActivity.class);
         } else if (i == R.id.rl_setting_notification_layout) {
             IntentUtils.startActivity(SettingActivity.this, NotificationSettingActivity.class);
+        }  else if (i == R.id.use_webkit) {
+            if (!PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, true) || !QbSdk.isX5Core()) {
+                ToastUtils.show(getString(R.string.settings_unable_use_x5));
+                return;
+            }
+            new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(getString(com.inspur.emmcloud.basemodule.R.string.toast_switch_sys_webview))
+                    .setNegativeButton(getString(com.inspur.emmcloud.basemodule.R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(getString(com.inspur.emmcloud.basemodule.R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (QbSdk.isX5Core()) {
+                                QbSdk.reset(BaseApplication.getInstance());
+                            }
+                            PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, false);
+                            dialog.dismiss();
+                        }
+                    }).show();
         } else {
         }
+
     }
 
     @Override

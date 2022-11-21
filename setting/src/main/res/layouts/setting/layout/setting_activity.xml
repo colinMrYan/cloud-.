@@ -553,15 +553,13 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp">
 
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_webview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_arrow_right" />
 
                     <TextView
                         android:id="@+id/tv_setting_use_webview"
