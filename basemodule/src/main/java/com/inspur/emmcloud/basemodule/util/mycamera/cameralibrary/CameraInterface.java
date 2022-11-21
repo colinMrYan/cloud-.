@@ -491,28 +491,53 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
 //
         Log.i("CJT", angle + " = " + cameraAngle + " = " + nowAngle);
-        mCamera.takePicture(null, null, new Camera.PictureCallback() {
-            @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                Matrix matrix = new Matrix();
-                if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
-                    matrix.setRotate(nowAngle);
-                } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
-                    matrix.setRotate(360 - nowAngle);
-                    matrix.postScale(-1, 1);
-                }
-
-                bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                if (callback != null) {
-                    if (nowAngle == 90 || nowAngle == 270) {
-                        callback.captureResult(bitmap, true);
-                    } else {
-                        callback.captureResult(bitmap, false);
-                    }
+        if (firstFrame_data.length > 0) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            int width = parameters.getPreviewSize().width;
+            int height = parameters.getPreviewSize().height;
+            YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+            byte[] bytes = out.toByteArray();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Matrix matrix = new Matrix();
+            if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                matrix.setRotate(nowAngle);
+            } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                matrix.setRotate(360 - nowAngle);
+                matrix.postScale(-1, 1);
+            }
+            bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            if (callback != null) {
+                if (nowAngle == 90 || nowAngle == 270) {
+                    callback.captureResult(bitmap, true);
+                } else {
+                    callback.captureResult(bitmap, false);
                 }
             }
-        });
+        } else {
+            mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] data, Camera camera) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    Matrix matrix = new Matrix();
+                    if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                        matrix.setRotate(nowAngle);
+                    } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                        matrix.setRotate(360 - nowAngle);
+                        matrix.postScale(-1, 1);
+                    }
+                    bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    if (callback != null) {
+                        if (nowAngle == 90 || nowAngle == 270) {
+                            callback.captureResult(bitmap, true);
+                        } else {
+                            callback.captureResult(bitmap, false);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     //启动录像
