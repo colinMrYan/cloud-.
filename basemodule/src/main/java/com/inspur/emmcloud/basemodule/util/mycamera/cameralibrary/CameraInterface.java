@@ -13,7 +13,6 @@ import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -74,6 +73,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
     private SensorController sensorController;
+    private String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
     /**
      * 拍照
      */
@@ -298,11 +298,12 @@ public class CameraInterface implements Camera.PreviewCallback {
 
     public void setFlashMode(String flashMode) {
         if (mCamera == null) {
+            this.flashMode = flashMode;
             return;
         }
         Camera.Parameters params = mCamera.getParameters();
-        params.setFlashMode(flashMode);
         mCamera.setParameters(params);
+        params.setFlashMode(flashMode);
     }
 
     /**
@@ -400,6 +401,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
                 }
+                // imp 回调，添加闪光灯光操作
+                mParams.setFlashMode(flashMode);
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView

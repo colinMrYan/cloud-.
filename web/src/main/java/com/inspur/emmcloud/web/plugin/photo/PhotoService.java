@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -66,6 +67,7 @@ public class PhotoService extends ImpPlugin {
     private int parm_resolution = MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE;
     private int encodingType = 0;
     private int parm_qualtity = 90;
+    private String parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
     private String parm_uploadUrl, parm_context;
     private JSONObject watermarkObj;
     private LoadingDialog loadingDlg;
@@ -331,6 +333,20 @@ public class PhotoService extends ImpPlugin {
                 parm_resolution = JSONUtils.getInt(optionsObj, "resolution", MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
                 parm_resolution = parm_resolution < MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE ? parm_resolution : MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
                 parm_qualtity = JSONUtils.getInt(optionsObj, "quality", 90);
+                switch (JSONUtils.getInt(optionsObj, "flashMode", 0)) {
+                    case 0:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
+                        break;
+                    case 1:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_TORCH;
+                        break;
+                    case 2:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_ON;
+                        break;
+                    case 3:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
+                        break;
+                }
                 this.parm_context = JSONUtils.getString(optionsObj, "context", "");
                 this.watermarkObj = JSONUtils.getJSONObject(optionsObj, "watermark", null);
             }
@@ -356,6 +372,7 @@ public class PhotoService extends ImpPlugin {
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, MyAppConfig.LOCAL_IMG_CREATE_PATH);
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, fileName);
             intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON, paramsObject.toString());
+            intent.putExtra(MyCameraActivity.EXTRA_FLASH_MODE, parm_flash_mode);
             if (getImpCallBackInterface() != null) {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.PHOTO_SERVICE_CAMERA_REQUEST);
             }
