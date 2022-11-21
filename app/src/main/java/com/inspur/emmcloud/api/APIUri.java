@@ -619,6 +619,15 @@ public class APIUri {
     }
 
     /**
+     * 群修改昵称
+     * @return 群修改昵称 url
+     */
+    public static String getGroupConversationNicknameUrl() {
+//        return getECMChatConversationBaseUrl() + "/channel/group/member/nickname";
+        return getECMChatUrl() + "/rest/channel/group/member/nickname";
+    }
+
+    /**
      * 获取转发文件
      */
     public static String getTransmitFileUrl(String channelId, String fileType) {

@@ -18,6 +18,8 @@ import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
 import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 
+import org.json.JSONArray;
+
 /**
  * DisplayTxtRichMsg
  *
@@ -30,8 +32,9 @@ public class DisplayTxtPlainMsg {
      *
      * @param context
      * @param message
+     * @param membersDetail @他人时，若群聊中有昵称，需显示他人的昵称
      */
-    public static View getView(final Context context, Message message) {
+    public static View getView(final Context context, Message message, JSONArray membersDetail) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_plain_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
@@ -53,7 +56,7 @@ public class DisplayTxtPlainMsg {
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap(), membersDetail);
         Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, contentText.getTextSize());
         contentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(

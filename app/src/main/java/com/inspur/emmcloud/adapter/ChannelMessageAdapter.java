@@ -17,6 +17,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -51,6 +53,9 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +73,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
     private String channelType;
+    private String membersDetail; // 群成员信息，包括昵称
     private ECMChatInputMenu chatInputMenu;
     private ArrayList<String> mExceptSelfMemberList = new ArrayList<>();
     private String uid = BaseApplication.getInstance().getUid();
@@ -75,11 +81,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private boolean mMultipleSelect;
 
     private Set<UIMessage> mSelectedMessages = new HashSet<>();
+    private JSONArray membersDetailArray;
 
 
-    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList, boolean isServiceCoversation) {
+    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu, ArrayList<String> memberList, boolean isServiceCoversation, String membersDetail) {
         this.context = context;
         this.channelType = channelType;
+        this.membersDetail = membersDetail;
+        membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
         this.chatInputMenu = chatInputMenu;
         this.serviceConversation = isServiceCoversation;
         List<ContactUser> totalList = ContactUserCacheUtils.getContactUserListById(memberList);
@@ -105,6 +114,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 }
             }
         });
+    }
+
+    public void updateMembersDetail(String membersDetail) {
+        this.membersDetail = membersDetail;
+        membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+        notifyDataSetChanged();
     }
 
     public void updateMemberList(ArrayList<String> memberList) {
@@ -239,7 +254,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     cardContentView = DisplayTxtPlainMsg.getView(context,
-                            message);
+                            message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
                     mSelectableTextHelper = new SelectableTextHelper.Builder((TextView) cardContentView.findViewById(R.id.tv_content))
                             .setSelectedColor(isMyMsg ? context.getResources().getColor(R.color.selected_send_msg_bg) : context.getResources().getColor(R.color.selected_receive_msg_bg))
                             .setCursorHandleSizeInDp(20)
@@ -277,7 +292,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                         // 老版
 //                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
                         // 新版回复View
-                        cardContentView = DisplayCommentNewMsg.getView(context, message);
+                        cardContentView = DisplayCommentNewMsg.getView(context, message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
                     }
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
@@ -455,11 +470,34 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      *
      * @param holder
      */
-    private void showUserName(ViewHolder holder, UIMessage UIMessage) {
-        if (channelType.equals("GROUP") && !UIMessage.getMessage().getFromUser().equals(
-                MyApplication.getInstance().getUid()) && StringUtils.isBlank(UIMessage.getMessage().getRecallFrom())) {
+    private void showUserName(ViewHolder holder, UIMessage uIMessage) {
+        if (channelType.equals("GROUP") && !uIMessage.getMessage().getFromUser().equals(
+                MyApplication.getInstance().getUid()) && StringUtils.isBlank(uIMessage.getMessage().getRecallFrom())) {
             holder.senderNameText.setVisibility(View.VISIBLE);
-            holder.senderNameText.setText(UIMessage.getSenderName());
+            String username = "";
+            if (!TextUtils.isEmpty(membersDetail)) {
+                String fromUser = uIMessage.getMessage().getFromUser();
+                for (int i = 0; i < membersDetailArray.length(); i++) {
+                    JSONObject obj = JSONUtils.getJSONObject(membersDetailArray, i, new JSONObject());
+                    if (fromUser.equals(JSONUtils.getString(obj, "user", ""))) {
+                        String nickname = JSONUtils.getString(obj, "nickname", "");
+                        if (TextUtils.isEmpty(nickname)) {
+                            username = uIMessage.getSenderName();
+                            holder.senderNameText.setText(username);
+                        } else {
+                            username = nickname;
+                            holder.senderNameText.setText(nickname);
+                        }
+                        break;
+                    }
+                }
+                if (TextUtils.isEmpty(username)) {
+                    username = uIMessage.getSenderName();
+                    holder.senderNameText.setText(username);
+                }
+            } else {
+                holder.senderNameText.setText(uIMessage.getSenderName());
+            }
         } else {
             holder.senderNameText.setVisibility(View.GONE);
         }
@@ -503,7 +541,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             @Override
             public boolean onLongClick(View v) {
                 if (channelType.equals("GROUP")) {
-                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
+                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false, null);
                 }
                 return true;
             }

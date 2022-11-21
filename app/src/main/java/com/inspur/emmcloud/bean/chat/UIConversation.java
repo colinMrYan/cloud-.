@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.bean.chat;
 
 import android.text.SpannableString;
+import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -12,6 +14,9 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ public class UIConversation implements Serializable {
     private long unReadCount = 0;
     private String content;
     private String icon = "";
+    private String membersDetail;
+    private JSONArray membersDetailArray;
 
     public UIConversation() {
     }
@@ -50,6 +57,8 @@ public class UIConversation implements Serializable {
             lastUpdate = messageList.get(messageList.size() - 1).getCreationDate();
             unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), id);
         }
+        membersDetail = conversation.getMembersDetail();
+        membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
         conversation.setLastUpdate(lastUpdate);
         setUIConversationIcon();
         setUIConversationContent();
@@ -105,11 +114,11 @@ public class UIConversation implements Serializable {
                 content = CommunicationUtils.getRecallMessageShowContent(message);
             } else {
                 if (type.equals(Conversation.TYPE_GROUP) && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
-                    fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+                    fromUserName = getMembersNickname(message);
                 }
                 switch (messageType) {
                     case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                        content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap()).toString();
+                        content = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap(), membersDetailArray).toString();
                         if (message.getMsgContentTextPlain().getMsgType().equals(Message.MESSAGE_TYPE_TEXT_BURN)) {
                             content = MyApplication.getInstance().getString(R.string.send_a_burn);
                         } else if (!message.getMsgContentTextPlain().getWhisperUsers().isEmpty()) {
@@ -123,7 +132,7 @@ public class UIConversation implements Serializable {
                         content = MyApplication.getInstance().getString(R.string.send_a_whispers);
                         break;
                     case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap());
+                        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap(), membersDetailArray);
                         content = spannableString.toString();
                         if (!StringUtils.isBlank(content)) {
                             content = MarkDown.fromMarkdown(content);
@@ -175,6 +184,40 @@ public class UIConversation implements Serializable {
                 content = MyApplication.getInstance().getString(R.string.direct_no_message);
             }
         }
+    }
+
+    public String getMembersNickname(Message message) {
+        String fromUserName = "";
+        // 需考虑群成员修改昵称case
+        if (!TextUtils.isEmpty(membersDetail)) {
+            String fromUser = message.getFromUser();
+            for (int i = 0; i < membersDetailArray.length(); i++) {
+                JSONObject obj = JSONUtils.getJSONObject(membersDetailArray, i, new JSONObject());
+                if (fromUser.equals(JSONUtils.getString(obj, "user", ""))) {
+                    String nickname = JSONUtils.getString(obj, "nickname", "");
+                    if (TextUtils.isEmpty(nickname)) {
+                        fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+                    } else {
+                        fromUserName = nickname + "：";
+                    }
+                    break;
+                }
+            }
+            if (TextUtils.isEmpty(fromUserName)) {
+                fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+            }
+        } else {
+            fromUserName = ContactUserCacheUtils.getUserName(message.getFromUser()) + "：";
+        }
+        return fromUserName;
+    }
+
+    public JSONArray getMembersDetailArray() {
+        return membersDetailArray;
+    }
+
+    public void setMembersDetailArray(JSONArray membersDetailArray) {
+        this.membersDetailArray = membersDetailArray;
     }
 
     public String getId() {

@@ -12,8 +12,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -31,12 +36,26 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
     List<String> mUidList;
     List<String> mAdministratorList;
     String mOwnerUid;
+    String membersDetail;
 
     public ConversationMembersHeadAdapter(Context context, List<String> uidList, String ownerUid, List<String> administratorList) {
         mContext = context;
         mUidList = uidList;
         mOwnerUid = ownerUid;
         mAdministratorList = administratorList;
+    }
+
+    public ConversationMembersHeadAdapter(Context context, List<String> uidList, String ownerUid, List<String> administratorList, String membersDetail) {
+        mContext = context;
+        mUidList = uidList;
+        mOwnerUid = ownerUid;
+        mAdministratorList = administratorList;
+        this.membersDetail = membersDetail;
+    }
+
+    public void updateMembersDetail(String membersDetail) {
+        this.membersDetail = membersDetail;
+        notifyDataSetChanged();
     }
 
     public void setUIUidList(List<String> uiUidList) {
@@ -86,7 +105,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         String uid;
-        String userName;
+        String userName = "";
         String userPhotoUrl;
         uid = mUidList.get(i);
         if (TYPE_DELETE_USER.equals(uid)) {
@@ -99,7 +118,26 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
             userName = mContext.getString(R.string.chat_file_transfer);
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_file_transfer);
         } else {
-            userName = ContactUserCacheUtils.getUserName(uid);
+            if (!TextUtils.isEmpty(membersDetail)) {
+                JSONArray array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+                for (int j = 0; j < array.length(); j++) {
+                    JSONObject obj = JSONUtils.getJSONObject(array, j, new JSONObject());
+                    if (uid.equals(JSONUtils.getString(obj, "user", ""))) {
+                        String nickname = JSONUtils.getString(obj, "nickname", "");
+                        if (TextUtils.isEmpty(nickname)) {
+                            userName = ContactUserCacheUtils.getUserName(uid);
+                        } else {
+                            userName = nickname;
+                        }
+                        break;
+                    }
+                }
+                if (TextUtils.isEmpty(userName)){
+                    userName = ContactUserCacheUtils.getUserName(uid);
+                }
+            } else {
+                userName = ContactUserCacheUtils.getUserName(uid);
+            }
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
         }

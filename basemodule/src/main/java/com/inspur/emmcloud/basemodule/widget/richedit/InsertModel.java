@@ -9,6 +9,7 @@ public class InsertModel {
     private String insertRule = "";
     private String insertId = "";
     private String insertContent = "";
+    private String insertNickname = ""; // @时显示昵称
     private String insertColor = "#0f7bca";
     private String insertContentId = "";
 
@@ -29,12 +30,28 @@ public class InsertModel {
         this.insertContentId = insertContentId;
     }
 
+    public InsertModel(String insertRule, String insertId, String insertContent, String insertContentId, String insertNickname) {
+        this.insertRule = insertRule;
+        this.insertContent = insertContent;
+        this.insertId = insertId;
+        this.insertContentId = insertContentId;
+        this.insertNickname = insertNickname;
+    }
+
     public String getInsertContentId() {
         return insertContentId;
     }
 
     public void setInsertContentId(String insertContentId) {
         this.insertContentId = insertContentId;
+    }
+
+    public String getInsertNickname() {
+        return insertNickname;
+    }
+
+    public void setInsertNickname(String insertNickname) {
+        this.insertNickname = insertNickname;
     }
 
     public String getInsertRule() {
@@ -81,8 +98,8 @@ public class InsertModel {
     }
 
     /*
-    * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-    */
+     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+     */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

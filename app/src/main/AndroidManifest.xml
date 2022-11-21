@@ -544,6 +544,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="behind" />
         <activity
+            android:name=".ui.chat.ConversationNicknameModifyActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="behind" />
+        <activity
             android:name=".ui.chat.ConversationMemberManagerIndexActivity"
             android:resizeableActivity="true"
             android:screenOrientation="behind" />

@@ -113,6 +113,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.chat.WSCommand;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
@@ -170,6 +171,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
+
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
+import static com.inspur.emmcloud.bean.chat.Message.MESSAGE_TYPE_FILE_REGULAR_FILE;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_ADMIN_LIST;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SELECT_OWNER;
+import static com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity.INTENT_SILENT;
+import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CID;
+import static com.inspur.emmcloud.ui.chat.MultiMessageActivity.MESSAGE_CONTENT;
+import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_MESSAGE_TYPE;
 
 @Route(path = Constant.AROUTER_CLASS_APP_CONVERSATION_V1)
 public class ConversationActivity extends ConversationBaseActivity {
@@ -754,7 +765,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setFocusableInTouchMode(false);
         ((DefaultItemAnimator) msgListView.getItemAnimator()).setSupportsChangeAnimations(false);
-        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType());
+        adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu, conversation.getMemberList(), conversation.isServiceConversationType(), conversation.getMembersDetail());
         mNonExistentUidArray = ContactUserCacheUtils.getNonexistentUidList(conversation.getMemberList());
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
@@ -845,6 +856,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                             Bundle bundle = new Bundle();
                             bundle.putString("mid", message.getId());
+                            bundle.putString("membersDetail", conversation.getMembersDetail());
                             bundle.putString(EXTRA_CID, message.getChannel());
                             IntentUtils.startActivity(ConversationActivity.this, ChannelMessageDetailActivity.class, bundle);
                             break;
@@ -1094,8 +1106,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         try {
                             String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
                             String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                            String nickname = JSONUtils.getString(jsonArray.getString(i), "nickname", null);
                             boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                            chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                            chatInputMenu.addMentions(uid, name, isInputKeyWord, nickname);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1790,10 +1803,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE:
                 // 群解散后不可发送消息，保留消息记录
-                WSCommand messageOjb = (WSCommand) simpleEventMessage.getMessageObj();
-                if (messageOjb.getChannel().equals(conversation.getId())) {
+                WSCommand messageObj = (WSCommand) simpleEventMessage.getMessageObj();
+                if (messageObj.getChannel().equals(conversation.getId())) {
                     conversation.setState("REMOVED");
                     updateDissolveLayout();
+                }
+                break;
+            case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_MEMBER_NICKNAME_UPGRADE:
+                // 群成员昵称变化，更新List
+                Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), conversation.getId());
+                if (changeConversation != null && !changeConversation.getMembersDetail().equals(conversation.getMembersDetail())) {
+                    adapter.updateMembersDetail(changeConversation.getMembersDetail());
+                    conversation.setMembersDetail(changeConversation.getMembersDetail());
                 }
                 break;
             case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:
@@ -2476,6 +2497,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         return;
                     }
                     bundle.putString("mid", mid);
+                    bundle.putString("membersDetail", conversation.getMembersDetail());
                     bundle.putString(EXTRA_CID, message.getChannel());
                     IntentUtils.startActivity(ConversationActivity.this, ChannelMessageDetailActivity.class, bundle);
                 }

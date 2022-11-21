@@ -161,6 +161,60 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_person_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="?attr/text_ll_color_nor"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_person_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:singleLine="true"
+                    android:text="@string/channel_person_name"
+                    android:textColor="?attr/text_color_e1"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_person_name_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_person_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toLeftOf="@id/iv_person_name_arrow"
+                    android:layout_toRightOf="@id/tv_person_title"
+                    android:gravity="right"
+                    android:paddingTop="8dp"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="10dp"
+                    android:singleLine="true"
+
+                    android:textColor="@color/color_text_common_level_two"
+                    android:textSize="16sp" />
+
+                <View
+                    style="@style/divide_style"
+                    android:layout_below="@id/tv_person_title" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rl_conversation_qr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

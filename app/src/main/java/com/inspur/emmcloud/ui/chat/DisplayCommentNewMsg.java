@@ -46,6 +46,7 @@ import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +62,7 @@ public class DisplayCommentNewMsg {
      * @param message
      * @return
      */
-    public static View getView(final Activity context, final Message message) {
+    public static View getView(final Activity context, final Message message, JSONArray membersDetail) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_comment_new_view, null);
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
@@ -86,7 +87,7 @@ public class DisplayCommentNewMsg {
         MsgContentComment msgContentComment = message.getMsgContentComment();
         String text = msgContentComment.getText();
 
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap());
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap(), membersDetail);
         Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, nameTv.getTextSize());
         commentContentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(
@@ -107,7 +108,14 @@ public class DisplayCommentNewMsg {
         // 获取原消息，根据原消息文字，图片，视频，文件显示不同UI
         Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), msgContentComment.getMessage());
         if (commentedMessage != null) {
-            String userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser()) + ":";
+            String userName = "";
+            if (membersDetail != null) {
+                // 获取昵称
+                userName = ChatMsgContentUtils.getUserNicknameOrName(membersDetail, commentedMessage.getFromUser()) + ":";
+            } else {
+                // 获取通讯录名称
+                userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser()) + ":";
+            }
             nameTv.setText(userName);
 //            commentTitleText.setText(getCommentTitle(context, commentedMessage, isMyMsg));
             String commentedMessageType = commentedMessage.getType();
@@ -137,7 +145,7 @@ public class DisplayCommentNewMsg {
                     originIv.setVisibility(View.GONE);
                     videoRl.setVisibility(View.GONE);
                     String originText = commentedMessage.getMsgContentTextPlain().getText();
-                    String originSpannableString = ChatMsgContentUtils.getMentions(originText, commentedMessage.getMsgContentTextPlain().getMentionsMap());
+                    String originSpannableString = ChatMsgContentUtils.getMentions(originText, commentedMessage.getMsgContentTextPlain().getMentionsMap(), membersDetail);
                     Spannable originSpan = EmotionUtil.getInstance(context).getSmiledText(originSpannableString, originTv.getTextSize());
                     originTv.setText(originSpan);
                     break;

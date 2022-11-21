@@ -116,7 +116,9 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
                 holder.sideBarLetterTv.setVisibility(View.GONE);
 //                holder.line.setVisibility(View.GONE);
             }
-            holder.userNameTv.setText(dto.getName());
+//            holder.userNameTv.setText(dto.getName());
+            // 有昵称也显示昵称
+            holder.userNameTv.setText(TextUtils.isEmpty(dto.getNickname()) ? dto.getName():dto.getName()+" ("+dto.getNickname()+") ");
             holder.ownerImg.setVisibility(TextUtils.equals(dto.getUid(), mChatOwner) ? View.VISIBLE : View.GONE);
             setUserDesc(dto, holder.userDescTv);
             String photoUrl;

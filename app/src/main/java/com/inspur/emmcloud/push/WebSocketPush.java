@@ -508,6 +508,7 @@ public class WebSocketPush {
                                         case "client.chat.channel.group.member.remove":
                                         case "client.chat.channel.group.create":
                                         case "client.chat.channel.group.dismiss":
+                                        case "client.chat.channel.group.member.nickname.update":
                                         case "client.chat.channel.group.name.update":
                                         case "client.chat.channel.group.member.quit":
                                         case "client.chat.channel.group.member.join":

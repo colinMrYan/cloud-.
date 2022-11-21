@@ -112,6 +112,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private ImageView msgContentImg;
     private TextView msgContent;
     private String cid = "";
+    private String membersDetail; // 群成员昵称
     private RelativeLayout msgDisplayLayout;
     private LayoutInflater inflater;
     private ECMChatInputMenu chatInputMenu;
@@ -164,6 +165,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout, commentListView);
         cid = getIntent().getExtras().getString("cid");
+        membersDetail = getIntent().getExtras().getString("membersDetail");
         String channelType = ConversationCacheUtils.getConversationType(MyApplication.getInstance(),
                 cid);
         if (channelType.equals("GROUP")) {
@@ -307,7 +309,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             msgContent = (TextView) msgDisplayView
                     .findViewById(R.id.content_text);
             String originText = message.getMsgContentTextPlain().getText();
-            String originSpannableString = ChatMsgContentUtils.getMentions(originText, message.getMsgContentTextPlain().getMentionsMap());
+            String originSpannableString = ChatMsgContentUtils.getMentions(originText, message.getMsgContentTextPlain().getMentionsMap(), JSONUtils.getJSONArray(membersDetail, new JSONArray()));
             Spannable originSpan = EmotionUtil.getInstance(this).getSmiledText(originSpannableString, msgContent.getTextSize());
             msgContent.setText(originSpan);
 
@@ -372,7 +374,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         String msgSendTime = TimeUtils.getDisplayTime(ChannelMessageDetailActivity.this,
                 message.getCreationDate());
         msgSendTimeText.setText(msgSendTime);
-        senderNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
+        if (!TextUtils.isEmpty(membersDetail)) {
+            senderNameText.setText(ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail, new JSONArray()), message.getFromUser()));
+        } else {
+            senderNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
+        }
     }
 
     /**
@@ -388,8 +394,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 try {
                     String uid = JSONUtils.getString(jsonArray.getString(i), "uid", null);
                     String name = JSONUtils.getString(jsonArray.getString(i), "name", null);
+                    String nickname = JSONUtils.getString(jsonArray.getString(i), "nickname", null);
                     boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                    chatInputMenu.addMentions(uid, name, isInputKeyWord);
+                    chatInputMenu.addMentions(uid, name, isInputKeyWord, nickname);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -591,10 +598,14 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             ImageView photoImg = (ImageView) convertView
                     .findViewById(R.id.msg_img);
             final Message message = commentList.get(position);
-            userNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
+            if (!TextUtils.isEmpty(membersDetail)) {
+                userNameText.setText(ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail, new JSONArray()), message.getFromUser()));
+            } else {
+                userNameText.setText(ContactUserCacheUtils.getUserName(message.getFromUser()));
+            }
             String content = message.getMsgContentComment().getText();
             contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
-            SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(content, message.getMsgContentTextPlain().getMentionsMap());
+            SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(content, message.getMsgContentTextPlain().getMentionsMap(), JSONUtils.getJSONArray(membersDetail, new JSONArray()));
             contentText.setText(spannableString);
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));

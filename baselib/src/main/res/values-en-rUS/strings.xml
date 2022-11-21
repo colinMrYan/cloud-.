@@ -186,6 +186,7 @@
     <string name="tax_ticket_info"> VAT Invoice Information</string>
     <string name="channel_group_info">Group Details</string>
     <string name="channel_group_name">Group Name</string>
+    <string name="channel_person_name">My nickname in the group</string>
     <string name="channel_group_image">Images</string>
     <string name="channel_group_file">Files</string>
     <string name="channel_group_members_name">Group Name</string>
@@ -318,6 +319,7 @@
     <string name="channel_group">Group</string>
     <string name="group_member">Members List</string>
     <string name="group_name_cannot_null">Please type group name </string>
+    <string name="group_nickname_cannot_null">Please type group nickname </string>
     <string name="channel_unknown_text">Your %1$s does not support this message. Please upgrade the latest version of %1$s.</string>
     <string name="comment_hallcomment_text">Comment:</string>
     <string name="channel_info">Channel Details</string>
@@ -334,6 +336,7 @@
     <string name="socket_close">Disconnected</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 25 characters)</string>
+    <string name="group_nickname_longth_valid">Group nickname, word overrun (no more than 16 characters)</string>
     <string name="message_create_group">Group Chat</string>
     <string name="business_card">Business Card</string>
     <string name="no_channel_album">No content</string>

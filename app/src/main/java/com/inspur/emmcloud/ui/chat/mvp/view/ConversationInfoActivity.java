@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
-
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
@@ -35,6 +37,7 @@ import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.ui.chat.ConversationMemberManagerIndexActivity;
 import com.inspur.emmcloud.ui.chat.ConversationNameModifyActivity;
 import com.inspur.emmcloud.ui.chat.ConversationQrCodeActivity;
+import com.inspur.emmcloud.ui.chat.ConversationNicknameModifyActivity;
 import com.inspur.emmcloud.ui.chat.FileTransferDetailActivity;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 import com.inspur.emmcloud.ui.chat.GroupFileActivity;
@@ -51,6 +54,8 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +75,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         , CompoundButton.OnCheckedChangeListener {
 
     public static final String EXTRA_CID = "cid";
+    public static final String EXTRA_NICKNAME = "nickname";
     public static final String MEMBER_SIZE = "member_size";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
@@ -86,6 +92,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     TextView titleTextView;
     @BindView(R.id.tv_conversation_name)
     TextView conversationNameTextView;
+    @BindView(R.id.tv_person_name)
+    TextView personNameTextView;
     @BindView(R.id.rl_more_members)
     RelativeLayout moreMembersLayout;
     @BindView(R.id.rl_conversation_mute_notification)
@@ -104,6 +112,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout conversationMemberManagerLayout;
     @BindView(R.id.rl_conversation_name)
     RelativeLayout conversationNameLayout;
+    @BindView(R.id.rl_person_name)
+    RelativeLayout personNameLayout;
     @BindView(R.id.rl_conversation_quit)
     RelativeLayout conversationQuitLayout;
     @BindView(R.id.rl_conversation_search_record)
@@ -159,9 +169,38 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             }
             titleTextView.setText(data);
             conversationNameTextView.setText(uiConversation.getName());
+            String membersDetail = uiConversation.getMembersDetail();
+            String username = "";
+            // 设置昵称
+            if (!TextUtils.isEmpty(membersDetail)) {
+                JSONArray array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+                String uid = MyApplication.getInstance().getUid();
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject obj = JSONUtils.getJSONObject(array, i, new JSONObject());
+                    if (uid.equals(JSONUtils.getString(obj, "user", ""))) {
+                        String nickname = JSONUtils.getString(obj, "nickname", "");
+                        if (TextUtils.isEmpty(nickname)) {
+                            username = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+                            personNameTextView.setText(username);
+                        } else {
+                            username = nickname;
+                            personNameTextView.setText(nickname);
+                        }
+                        break;
+                    }
+                }
+                if (TextUtils.isEmpty(username)) {
+                    username = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+                    personNameTextView.setText(username);
+                }
+            } else {
+                String userRealName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+                personNameTextView.setText(userRealName);
+            }
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
+            personNameLayout.setVisibility(View.VISIBLE);
             conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);
@@ -177,6 +216,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             conversationQRLayout.setVisibility(View.GONE);
             conversationMemberManagerLayout.setVisibility(View.GONE);
             conversationNameLayout.setVisibility(View.GONE);
+            personNameLayout.setVisibility(View.GONE);
             conversationQuitLayout.setVisibility(View.GONE);
             searchRecordLayout.setVisibility(View.GONE);
             searchRecordMarginLayout.setVisibility(View.VISIBLE);
@@ -185,7 +225,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         conversationShowSwitch.setChecked(uiConversation.isHide());
         conversationShowSwitch.setOnCheckedChangeListener(this);
         conversationShow.setVisibility(uiConversation.isHide() ? View.VISIBLE : View.GONE);
-        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, uiUidList, uiConversation.getOwner(), uiConversation.getAdministratorList());
+        channelMembersHeadAdapter = new ConversationMembersHeadAdapter(this, uiUidList, uiConversation.getOwner(), uiConversation.getAdministratorList(), uiConversation.getMembersDetail());
         Configuration configuration = getResources().getConfiguration();
         // 适配横屏头像显示
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -284,6 +324,19 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                 bundle.putString(EXTRA_CID, uiConversation.getId());
                 IntentUtils.startActivity(this,
                         ConversationNameModifyActivity.class, bundle);
+                break;
+            case R.id.rl_person_name:
+                if ("REMOVED".equals(uiConversation.getState())) {
+                    return;
+                }
+                if (uiConversation == null) {
+                    ToastUtils.show(getContext(), getString(R.string.net_request_failed));
+                    return;
+                }
+                bundle.putString(EXTRA_CID, uiConversation.getId());
+                bundle.putString(EXTRA_NICKNAME, personNameTextView.getText().toString());
+                IntentUtils.startActivity(this,
+                        ConversationNicknameModifyActivity.class, bundle);
                 break;
             case R.id.rl_conversation_qr:
                 if (uiConversation == null) {
@@ -570,8 +623,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             }
         } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE)) {
             // 群解散后不可发送消息，保留消息记录
-            WSCommand messageOjb = (WSCommand) eventMessage.getMessageObj();
-            if (messageOjb.getChannel().equals(uiConversation.getId())) {
+            WSCommand messageObj = (WSCommand) eventMessage.getMessageObj();
+            if (messageObj.getChannel().equals(uiConversation.getId())) {
                 uiConversation.setState("REMOVED");
                 if ("REMOVED".equals(uiConversation.getState())) {
                     conversationMembersHeadRecyclerView.setVisibility(View.GONE);
@@ -579,6 +632,16 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     conversationQuitLayout.setVisibility(View.GONE);
                     conversationMemberManagerLayout.setVisibility(View.GONE);
                 }
+            }
+        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_NICK_NAME)) {
+            // 修改昵称
+            String nickname = ((String) eventMessage.getMessageObj());
+            personNameTextView.setText(nickname);
+        } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_MEMBER_NICKNAME_UPGRADE)) {
+            // 群成员修改昵称，更新
+            Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), uiConversation.getId());
+            if (changeConversation != null && !changeConversation.getMembersDetail().equals(uiConversation.getMembersDetail())) {
+                channelMembersHeadAdapter.updateMembersDetail(changeConversation.getMembersDetail());
             }
         }
     }

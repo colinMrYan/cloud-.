@@ -706,6 +706,16 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public void returnUpdateConversationNicknameSuccess(Conversation conversation) {
+
+    }
+
+    @Override
+    public void returnUpdateConversationNicknameFail(String error, int errorCode) {
+
+    }
+
 
     @Override
     public void returnCreateDirectConversationSuccess(Conversation conversation) {

@@ -191,6 +191,7 @@
     <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
     <string name="channel_group_info">群详情</string>
     <string name="channel_group_name">群名称</string>
+    <string name="channel_person_name">我在群里的昵称</string>
     <string name="channel_group_image"> 群图片</string>
     <string name="channel_group_file"> 群文件</string>
     <string name="channel_group_members_name"> 群名称</string>
@@ -325,6 +326,7 @@
     <string name="chat_single_info_detail_title">聊天详情</string>
     <string name="group_member">群成员列表 </string>
     <string name="group_name_cannot_null">请输入群组名称 </string>
+    <string name="group_nickname_cannot_null">请输入昵称 </string>
     <string name="channel_unknown_text">您的%1$s暂不支持该消息，请【升级】%1$s最新版本查看</string>
     <string name="comment_hallcomment_text">评论了：</string>
     <string name="channel_info">频道详情</string>
@@ -338,6 +340,7 @@
     <string name="socket_close">已断开</string>
     <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
     <string name="group_name_longth_valid">群名称字数超限（不超过25个字符）</string>
+    <string name="group_nickname_longth_valid">昵称字数超限（不超过16个字符）</string>
     <string name="message_create_group">发起群聊</string>
     <string name="business_card">个人名片</string>
     <string name="no_channel_album">无内容</string>

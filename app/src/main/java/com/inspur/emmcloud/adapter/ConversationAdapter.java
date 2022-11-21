@@ -30,6 +30,8 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
@@ -347,11 +349,16 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                         uidList.add(uid);
                         if ((uid.equals("EVERYBODY") || BaseApplication.getInstance().getUid().equals(uid))) {
                             if (isWhisperType) {
-                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_whispers);
+
+//                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_whispers);
+                                newString = uiConversation.getMembersNickname(message) + BaseApplication.getInstance().getString(R.string.send_a_whispers);
                             } else if (Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN.equals(message.getType())) {
-                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_comment);
+//                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + BaseApplication.getInstance().getString(R.string.send_a_comment);
+                                newString = uiConversation.getMembersNickname(message) + BaseApplication.getInstance().getString(R.string.send_a_comment);
                             } else {
-                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + message.getShowContent();
+//                                newString = ContactUserCacheUtils.getUserName(message.getFromUser()) + ": " + message.getShowContent();
+                                String mentionsContent = ChatMsgContentUtils.getMentions(message.getMsgContentTextPlain().getText(), message.getMsgContentTextPlain().getMentionsMap(), uiConversation.getMembersDetailArray());
+                                newString = uiConversation.getMembersNickname(message) + mentionsContent;
                             }
                             contentStringBuilder.replace(0, contentStringBuilder.length(), newString);
                             return contentStringBuilder.toString();

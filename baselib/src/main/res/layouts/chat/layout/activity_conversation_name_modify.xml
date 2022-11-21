@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="@string/channel_group_members_name"
+            android:text="@string/channel_person_name"
             android:textColor="@color/color_text_common_level_two"
             android:textSize="15sp" />
 

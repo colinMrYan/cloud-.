@@ -803,10 +803,10 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param name
      * @param isInputKeyWord
      */
-    public void addMentions(String uid, String name, boolean isInputKeyWord) {
+    public void addMentions(String uid, String name, boolean isInputKeyWord, String nickname) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid);
+            insertModel = new InsertModel("@", (System.currentTimeMillis() - MENTIONS_BASE_TIME) + "", name, uid, nickname);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }

@@ -1570,10 +1570,11 @@ public class ChatAPIService {
 
     /**
      * 添加频道管理员
-     * @param cid 频道id
+     *
+     * @param cid            频道id
      * @param administrators 管理员列表
      */
-    public void addConversationAdministrator(final String cid, final JSONArray administrators){
+    public void addConversationAdministrator(final String cid, final JSONArray administrators) {
         final String completeUrl = APIUri.getConversationAdministrator(cid);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         try {
@@ -1615,10 +1616,11 @@ public class ChatAPIService {
 
     /**
      * 移除频道管理员
-     * @param cid 频道id
+     *
+     * @param cid            频道id
      * @param administrators 管理员列表
      */
-    public void removeConversationAdministrator(final String cid, final JSONArray administrators){
+    public void removeConversationAdministrator(final String cid, final JSONArray administrators) {
         final String completeUrl = APIUri.getConversationAdministrator(cid);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         try {
@@ -1662,9 +1664,10 @@ public class ChatAPIService {
 
     /**
      * 关闭群禁言
+     *
      * @param cid 频道id
      */
-    public void disableConversationSilent(final String cid){
+    public void disableConversationSilent(final String cid) {
         final String completeUrl = APIUri.getConversationGroupSilent(cid);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1701,9 +1704,10 @@ public class ChatAPIService {
 
     /**
      * 启用群禁言
+     *
      * @param cid 频道id
      */
-    public void enableConversationSilent(final String cid){
+    public void enableConversationSilent(final String cid) {
         final String completeUrl = APIUri.getConversationGroupSilent(cid);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -1815,6 +1819,49 @@ public class ChatAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnUpdateConversationNameFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 修改会话名称
+     *
+     * @param channelId 会话id
+     * @param nickname  昵称
+     */
+    public void updateGroupNickname(final String channelId, final String nickname) {
+        final String completeUrl = APIUri.getGroupConversationNicknameUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addBodyParameter("channelId", channelId);
+        params.addBodyParameter("nickname", nickname);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateGroupNickname(channelId, nickname);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnUpdateConversationNicknameSuccess(new Conversation(object));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateConversationNicknameFail(error, responseCode);
             }
         });
     }

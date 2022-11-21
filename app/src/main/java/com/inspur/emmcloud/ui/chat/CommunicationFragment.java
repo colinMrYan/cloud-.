@@ -1401,6 +1401,8 @@ public class CommunicationFragment extends BaseFragment {
                                 channelRefreshId = "";
                             }
                         }
+                        // 发送群成员昵称change Event，有变化则更新，无变化则不操作
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_MEMBER_NICKNAME_UPGRADE));
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -8,6 +8,7 @@ public class PersonDto {
     private String suoxie;// 姓名缩写
     private String uid; //userid
     private String pinyinFull; //全拼音
+    private String nickname; //群聊时，成员昵称
 
 
     public final String getName() {
@@ -65,6 +66,14 @@ public class PersonDto {
 
     public void setPinyinFull(String pinyinFull) {
         this.pinyinFull = pinyinFull;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     /**

@@ -78,7 +78,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_msg_card_parent_view, viewGroup, false);
-        return  new ViewHolder(view, mItemClickListener);
+        return new ViewHolder(view, mItemClickListener);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
             case "text/plain":
                 cardContentView = DisplayTxtPlainMsg.getView(context,
-                        message);
+                        message, null);
                 break;
             case "text/markdown":
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,

@@ -46,6 +46,8 @@ public class Conversation implements Serializable {
     private long lastUpdate;
     @Column(name = "members")
     private String members;
+    @Column(name = "membersDetail")
+    private String membersDetail;
     @Column(name = "administrators")
     private String administrators;
     @Column(name = "input")
@@ -91,6 +93,7 @@ public class Conversation implements Serializable {
         String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");
         this.lastUpdate = TimeUtils.UTCString2Long(UTCLastUpdate);
         this.members = JSONUtils.getString(obj, "members", "");
+        this.membersDetail = JSONUtils.getString(obj, "membersDetail", "");
         this.administrators = JSONUtils.getString(obj, "administrators", "");
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
@@ -200,6 +203,14 @@ public class Conversation implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
+    public String getMembersDetail() {
+        return membersDetail;
+    }
+
+    public void setMembersDetail(String membersDetail) {
+        this.membersDetail = membersDetail;
+    }
+
     public String getMembers() {
         return members;
     }
@@ -207,7 +218,6 @@ public class Conversation implements Serializable {
     public void setMembers(String members) {
         this.members = members;
     }
-
 
     public String getAdministrators() {
         return administrators;

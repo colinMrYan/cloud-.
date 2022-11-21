@@ -319,7 +319,9 @@ public interface APIInterface {
 
     void returnUpdateConversationNameFail(String error, int errorCode);
 
+    void returnUpdateConversationNicknameSuccess(Conversation conversation);
 
+    void returnUpdateConversationNicknameFail(String error, int errorCode);
 
     void returnCreateDirectConversationSuccess(Conversation conversation);
 

@@ -164,10 +164,17 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                         Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelId);
                         uidList = conversation.getMemberList();
+                        if (state == MENTIONS_STATE) {
+                            // @显示群成员昵称
+                            String membersDetail = conversation.getMembersDetail(); // 群昵称
+                            personDtoList = ContactUserCacheUtils.getShowMemberList(uidList, membersDetail);
+                        } else {
+                            personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
+                        }
                     } else {
                         uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelId, 0);
+                        personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                     }
-                    personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
@@ -373,13 +380,14 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                                 JSONObject jsonObject = new JSONObject();
                                 jsonObject.put("uid", MentionDto.getUid());
                                 jsonObject.put("name", MentionDto.getName());
+                                jsonObject.put("nickname", MentionDto.getNickname());
                                 jsonArray.put(jsonObject);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             intent.putExtra("searchResult", jsonArray.toString());
                             boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
-                            intent.putExtra("isInputKeyWord", isInputKeyWord);
+                            intent.putExtra(" ", isInputKeyWord);
                             setResult(RESULT_OK, intent);
                             finish();
                         } else {
@@ -616,6 +624,8 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     try {
                         jsonResult1.put("uid", selectedUserList.get(i).getUid());
                         jsonResult1.put("name", selectedUserList.get(i).getName());
+                        // @ 时添加nickname
+                        jsonResult1.put("nickname", selectedUserList.get(i).getNickname());
                         jsonArray.put(jsonResult1);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import android.text.TextUtils;
+
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -11,6 +14,7 @@ import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 
 import org.json.JSONArray;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -205,7 +209,7 @@ public class ContactUserCacheUtils {
      * @return 离职的String jsonArray
      */
     public static JSONArray getNonexistentUidList(final List<String> originUidList) {
-        if(originUidList == null){
+        if (originUidList == null) {
             return null;
         }
         Set<String> copyUidList = new HashSet<>(originUidList);
@@ -224,7 +228,7 @@ public class ContactUserCacheUtils {
             copyUidList.remove(user.getId());
         }
         JSONArray nonexistentUidList = new JSONArray();
-        for(String uid : copyUidList){
+        for (String uid : copyUidList) {
             nonexistentUidList.put(uid);
         }
         return nonexistentUidList;
@@ -258,6 +262,70 @@ public class ContactUserCacheUtils {
                 ContactUser contactUser = contactListIterator.next();
                 PersonDto personDto = new PersonDto();
                 personDto.setName(contactUser.getName());
+                personDto.setUid(contactUser.getId());
+                personDto.setSortLetters(contactUser.getPinyin().substring(0, 1));
+                personDto.setPinyinFull(contactUser.getPinyin());
+                personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(contactUser
+                        .getName()));
+                personDto.setUtype("contact");
+                unitMemberList.add(personDto);
+            }
+        }
+
+        if (robotList != null) {
+            Iterator<Robot> robotListIterator = robotList.iterator();
+            while (robotListIterator.hasNext()) {
+                Robot robot = robotListIterator.next();
+                PersonDto personDto = new PersonDto();
+                personDto.setName(robot.getName());
+                personDto.setUid(robot.getId());
+                personDto.setSortLetters(PinyinUtils.getPingYin(robot.getName()).substring(0, 1));
+                personDto.setPinyinFull(PinyinUtils.getPingYin(robot.getName()));
+                personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(robot.getName()));
+                personDto.setUtype("robot");
+                unitMemberList.add(personDto);
+            }
+        }
+
+        if (unitMemberList == null) {
+            unitMemberList = new ArrayList<PersonDto>();
+        }
+        return unitMemberList;
+
+    }
+
+    /**
+     * 通过id List获取PersonDto对象的List
+     *
+     * @param uidList
+     * @param membersDetail 群成员要显示昵称时使用
+     * @return
+     */
+    public static List<PersonDto> getShowMemberList(List<String> uidList, String membersDetail) {
+        List<ContactUser> userList = new ArrayList<>();
+        List<Robot> robotList = new ArrayList<>();
+        List<PersonDto> unitMemberList = new ArrayList<>();
+        try {
+            userList = DbCacheUtils.getDb().selector(ContactUser.class).where("id",
+                    "in", uidList).findAll();
+            robotList = DbCacheUtils.getDb().selector(Robot.class).where("id",
+                    "in", uidList).findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+
+        }
+        JSONArray membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+        if (userList != null) {
+            Iterator<ContactUser> contactListIterator = userList.iterator();
+            while (contactListIterator.hasNext()) {
+                ContactUser contactUser = contactListIterator.next();
+                PersonDto personDto = new PersonDto();
+                personDto.setName(contactUser.getName());
+                // 添加所在群聊中的成员昵称
+                if (!TextUtils.isEmpty(membersDetail)) {
+                    personDto.setNickname(ChatMsgContentUtils.getUserNickname(membersDetailArray, contactUser.getId()));
+                }
                 personDto.setUid(contactUser.getId());
                 personDto.setSortLetters(contactUser.getPinyin().substring(0, 1));
                 personDto.setPinyinFull(contactUser.getPinyin());
