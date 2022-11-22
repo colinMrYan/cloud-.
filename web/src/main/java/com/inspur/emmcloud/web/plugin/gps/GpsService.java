@@ -69,23 +69,10 @@ public class GpsService extends ImpPlugin implements
     // 上传地址
     private String uploadUri;
     private boolean requestingUri = false;
-    private Timer uploadTimer = new Timer();
+    private Timer uploadTimer;
     private boolean uploadTrace = false;
 
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            if (uploadUri == null) {
-                uploadMapLocationList.clear();
-                if (uploadTimer != null) {
-                    uploadTimer.cancel();
-                    uploadTimer.purge();
-                }
-                return;
-            }
-            requestUploadLocations();
-        }
-    };
+    private TimerTask timerTask;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -202,6 +189,9 @@ public class GpsService extends ImpPlugin implements
 
     // 上传位置信息
     private void uploadTraceInfo(JSONObject jsonObject) {
+        if (uploadMapLocationList == null) {
+            uploadMapLocationList = new HashMap<>();
+        }
         try {
             if (!jsonObject.isNull("success")) {
                 traceCallBack = jsonObject.getString("success");
@@ -221,16 +211,29 @@ public class GpsService extends ImpPlugin implements
                 uploadTraceCallback(false, "invalid parameter");
                 return;
             }
-
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
                     if (uploadTrace && uploadUri != null) {
                         open();
                         startLocation();
-                        if (uploadTimer != null) {
-                            uploadTimer.schedule(timerTask, 0, 4000);
-                        }
+                        uploadTimer = new Timer();
+                        timerTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (uploadUri == null) {
+                                    uploadMapLocationList.clear();
+                                    if (uploadTimer != null) {
+                                        uploadTimer.cancel();
+                                        uploadTimer.purge();
+                                    }
+                                    return;
+                                }
+                                requestUploadLocations();
+                            }
+                        };
+                        uploadTimer.schedule(timerTask, 500, 4000);
+
                     } else {
                         closeUploadPosition();
                     }
@@ -264,11 +267,12 @@ public class GpsService extends ImpPlugin implements
         }
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-            mlocationClient = null;
+        }
+        if (aMapLocationList !=null){
+            aMapLocationList.clear();
         }
         if (uploadMapLocationList != null) {
-            uploadMapLocationList = null;
+            uploadMapLocationList.clear();
         }
     }
 
@@ -516,9 +520,9 @@ public class GpsService extends ImpPlugin implements
                 }
 
             }
-            aMapLocationList = null;
+            aMapLocationList.clear();
             locationCount = 0;
-            // 绑定监听状态
+            // 绑定监听状态s
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("longitude", longtitude);
@@ -547,7 +551,7 @@ public class GpsService extends ImpPlugin implements
                 String locationList = uploadMapLocationList.get("locations");
                 if (locationList != null) {
                     positionList = JSONUtils.JSONArray2List(locationList, new ArrayList<String>());
-                    if (!positionList.isEmpty()) {
+                    if (positionList != null) {
                         positionList.add(jsonObject.toString());
                     }
                 }

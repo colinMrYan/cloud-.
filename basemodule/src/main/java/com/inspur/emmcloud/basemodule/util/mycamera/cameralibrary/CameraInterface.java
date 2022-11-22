@@ -13,7 +13,6 @@ import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -74,6 +73,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
     private SensorController sensorController;
+    private String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
     /**
      * 拍照
      */
@@ -298,11 +298,12 @@ public class CameraInterface implements Camera.PreviewCallback {
 
     public void setFlashMode(String flashMode) {
         if (mCamera == null) {
+            this.flashMode = flashMode;
             return;
         }
         Camera.Parameters params = mCamera.getParameters();
-        params.setFlashMode(flashMode);
         mCamera.setParameters(params);
+        params.setFlashMode(flashMode);
     }
 
     /**
@@ -400,6 +401,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
                 }
+                // imp 回调，添加闪光灯光操作
+                mParams.setFlashMode(flashMode);
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView
@@ -491,28 +494,53 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
 //
         Log.i("CJT", angle + " = " + cameraAngle + " = " + nowAngle);
-        mCamera.takePicture(null, null, new Camera.PictureCallback() {
-            @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                Matrix matrix = new Matrix();
-                if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
-                    matrix.setRotate(nowAngle);
-                } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
-                    matrix.setRotate(360 - nowAngle);
-                    matrix.postScale(-1, 1);
-                }
-
-                bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                if (callback != null) {
-                    if (nowAngle == 90 || nowAngle == 270) {
-                        callback.captureResult(bitmap, true);
-                    } else {
-                        callback.captureResult(bitmap, false);
-                    }
+        if (firstFrame_data.length > 0) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            int width = parameters.getPreviewSize().width;
+            int height = parameters.getPreviewSize().height;
+            YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+            byte[] bytes = out.toByteArray();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Matrix matrix = new Matrix();
+            if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                matrix.setRotate(nowAngle);
+            } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                matrix.setRotate(360 - nowAngle);
+                matrix.postScale(-1, 1);
+            }
+            bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            if (callback != null) {
+                if (nowAngle == 90 || nowAngle == 270) {
+                    callback.captureResult(bitmap, true);
+                } else {
+                    callback.captureResult(bitmap, false);
                 }
             }
-        });
+        } else {
+            mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] data, Camera camera) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    Matrix matrix = new Matrix();
+                    if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                        matrix.setRotate(nowAngle);
+                    } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                        matrix.setRotate(360 - nowAngle);
+                        matrix.postScale(-1, 1);
+                    }
+                    bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    if (callback != null) {
+                        if (nowAngle == 90 || nowAngle == 270) {
+                            callback.captureResult(bitmap, true);
+                        } else {
+                            callback.captureResult(bitmap, false);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     //启动录像

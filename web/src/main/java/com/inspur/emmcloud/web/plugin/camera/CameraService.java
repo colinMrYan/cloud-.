@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
@@ -86,7 +87,7 @@ public class CameraService extends ImpPlugin {
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent, color, background, align, valign;
     private int fontSize;
-
+    private String parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
     /**
      * 读取图片属性：旋转的角度
      *
@@ -172,6 +173,20 @@ public class CameraService extends ImpPlugin {
                         "targetHeight");
                 encodingType = optionsObj.getInt(
                         "encodingType");
+                switch (JSONUtils.getInt(optionsObj, "flashMode", 0)) {
+                    case 0:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
+                        break;
+                    case 1:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_TORCH;
+                        break;
+                    case 2:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_ON;
+                        break;
+                    case 3:
+                        parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
+                        break;
+                }
                 if (!optionsObj.isNull("watermark")) {
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj, "content", "");
@@ -206,6 +221,7 @@ public class CameraService extends ImpPlugin {
             intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, cameraFile.getName());
             intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE, encodingType);
             intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON, jsonObject.toString());
+            intent.putExtra(MyCameraActivity.EXTRA_FLASH_MODE, parm_flash_mode);
             intent.setClass(getFragmentContext(), MyCameraActivity.class);
             if (getImpCallBackInterface() != null) {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
