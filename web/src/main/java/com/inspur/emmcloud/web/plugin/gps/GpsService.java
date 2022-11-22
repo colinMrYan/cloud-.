@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,6 +72,7 @@ public class GpsService extends ImpPlugin implements
     private boolean uploadTrace = false;
 
     private TimerTask timerTask;
+    private String headerObj;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -144,6 +146,20 @@ public class GpsService extends ImpPlugin implements
         params.addBodyParameter("data", JSONUtils.map2Json(uploadMapLocationList));
         params.addBodyParameter("code", "0000");
         params.addBodyParameter("errMsg", "");
+        if (!StringUtils.isEmpty(headerObj)) {
+            JSONObject header = JSONUtils.getJSONObject(headerObj);
+            if (header != null) {
+                Iterator<String> keys = header.keys();
+                while (keys.hasNext()) {
+                    try {
+                        String key = keys.next();
+                        params.addHeader(key, header.getString(key));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         HttpUtils.request(getActivity(), CloudHttpMethod.POST, params, new BaseModuleAPICallback(getActivity(), uploadUri) {
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -204,6 +220,11 @@ public class GpsService extends ImpPlugin implements
             }
             if (optionsObj.has("action")) {
                 uploadTrace = optionsObj.getBoolean("action");
+            }
+            if (optionsObj.has("headers")) {
+                headerObj = JSONUtils.getString(optionsObj, "headers", null);
+            }else {
+                headerObj = null;
             }
             if (uploadTrace && StringUtils.isEmpty(uploadUri)) {
                 uploadTraceCallback(false, "invalid parameter");
