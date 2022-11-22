@@ -189,6 +189,9 @@ public class GpsService extends ImpPlugin implements
 
     // 上传位置信息
     private void uploadTraceInfo(JSONObject jsonObject) {
+        if (uploadMapLocationList == null) {
+            uploadMapLocationList = new HashMap<>();
+        }
         try {
             if (!jsonObject.isNull("success")) {
                 traceCallBack = jsonObject.getString("success");
@@ -208,7 +211,6 @@ public class GpsService extends ImpPlugin implements
                 uploadTraceCallback(false, "invalid parameter");
                 return;
             }
-
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -230,7 +232,7 @@ public class GpsService extends ImpPlugin implements
                                 requestUploadLocations();
                             }
                         };
-                        uploadTimer.schedule(timerTask, 0, 4000);
+                        uploadTimer.schedule(timerTask, 500, 4000);
 
                     } else {
                         closeUploadPosition();
@@ -265,7 +267,6 @@ public class GpsService extends ImpPlugin implements
         }
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
         }
         if (aMapLocationList !=null){
             aMapLocationList.clear();
@@ -459,9 +460,6 @@ public class GpsService extends ImpPlugin implements
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
-        if (timerTask != null) {
-            timerTask.run();
-        }
     }
 
     @Override
@@ -522,7 +520,7 @@ public class GpsService extends ImpPlugin implements
                 }
 
             }
-//            aMapLocationList = null;
+            aMapLocationList.clear();
             locationCount = 0;
             // 绑定监听状态s
             JSONObject jsonObject = new JSONObject();
