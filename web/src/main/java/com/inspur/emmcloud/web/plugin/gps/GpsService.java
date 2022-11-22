@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.web.plugin.gps;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,14 +12,13 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
@@ -139,9 +137,9 @@ public class GpsService extends ImpPlugin implements
     private void requestUploadLocations() {
         if (requestingUri) return;
         requestingUri = true;
-        RequestParams params = new RequestParams(uploadUri);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(uploadUri);
         if (!uploadMapLocationList.containsKey("uid")) {
-            uploadMapLocationList.put("uid", PreferencesUtils.getString(getActivity(), Constant.PREF_LOGIN_USERNAME, ""));
+            uploadMapLocationList.put("uid", BaseApplication.getInstance().getUid());
         }
         params.addBodyParameter("data", JSONUtils.map2Json(uploadMapLocationList));
         params.addBodyParameter("code", "0000");
