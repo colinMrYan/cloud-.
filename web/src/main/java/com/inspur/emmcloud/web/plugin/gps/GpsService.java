@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.provider.Settings;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -42,6 +43,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,7 +64,6 @@ public class GpsService extends ImpPlugin implements
     private AMapLocationClient mlocationClient;
     private String coordinateType = "";
     private List<AMapLocation> aMapLocationList = new ArrayList<>();
-    private HashMap<String, String> uploadMapLocationList = new HashMap<>();
     private int locationCount = 0;
     private int openLocationStatus = 0;//0代表初始状态，1代表点击了设置,2，代表点了设置之后已经重新定位
     // 上传地址
@@ -73,6 +74,7 @@ public class GpsService extends ImpPlugin implements
 
     private TimerTask timerTask;
     private String headerObj;
+    private TraceInfo traceInfo;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -140,12 +142,9 @@ public class GpsService extends ImpPlugin implements
         if (requestingUri) return;
         requestingUri = true;
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(uploadUri);
-        if (!uploadMapLocationList.containsKey("uid")) {
-            uploadMapLocationList.put("uid", BaseApplication.getInstance().getUid());
-        }
-        params.addBodyParameter("data", JSONUtils.map2Json(uploadMapLocationList));
         params.addBodyParameter("code", "0000");
         params.addBodyParameter("errMsg", "");
+        params.addBodyParameter("data", JSON.toJSONString(traceInfo));
         if (!StringUtils.isEmpty(headerObj)) {
             JSONObject header = JSONUtils.getJSONObject(headerObj);
             if (header != null) {
@@ -203,8 +202,10 @@ public class GpsService extends ImpPlugin implements
 
     // 上传位置信息
     private void uploadTraceInfo(JSONObject jsonObject) {
-        if (uploadMapLocationList == null) {
-            uploadMapLocationList = new HashMap<>();
+        if (traceInfo == null) {
+            traceInfo = new TraceInfo();
+        } else {
+            traceInfo.clear();
         }
         try {
             if (!jsonObject.isNull("success")) {
@@ -230,6 +231,13 @@ public class GpsService extends ImpPlugin implements
                 uploadTraceCallback(false, "invalid parameter");
                 return;
             }
+            if (!StringUtils.isEmpty(headerObj)) {
+                JSONObject header = JSONUtils.getJSONObject(headerObj);
+                if (header != null) {
+                    // 用户标识
+                    traceInfo.setUid(JSONUtils.getString(header, "userAuthorization", ""));
+                }
+            }
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.LOCATION, new PermissionRequestCallback() {
                 @Override
                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -241,7 +249,7 @@ public class GpsService extends ImpPlugin implements
                             @Override
                             public void run() {
                                 if (uploadUri == null) {
-                                    uploadMapLocationList.clear();
+                                    traceInfo.clear();
                                     if (uploadTimer != null) {
                                         uploadTimer.cancel();
                                         uploadTimer.purge();
@@ -290,8 +298,8 @@ public class GpsService extends ImpPlugin implements
         if (aMapLocationList !=null){
             aMapLocationList.clear();
         }
-        if (uploadMapLocationList != null) {
-            uploadMapLocationList.clear();
+        if (traceInfo != null) {
+            traceInfo.clear();
         }
     }
 
@@ -492,8 +500,9 @@ public class GpsService extends ImpPlugin implements
         if (aMapLocationList != null) {
             aMapLocationList = null;
         }
-        if (uploadMapLocationList != null) {
-            uploadMapLocationList = null;
+        if (traceInfo != null) {
+            traceInfo.clear();
+            traceInfo = null;
         }
         if (traceCallBack != null) {
             traceCallBack = null;
@@ -543,6 +552,7 @@ public class GpsService extends ImpPlugin implements
             locationCount = 0;
             // 绑定监听状态s
             JSONObject jsonObject = new JSONObject();
+            Map<String, Object> locationMap = new HashMap<>();
             try {
                 jsonObject.put("longitude", longtitude);
                 jsonObject.put("latitude", latitude);
@@ -554,6 +564,18 @@ public class GpsService extends ImpPlugin implements
                 jsonObject.put("street", amapLocation.getStreet());
                 jsonObject.put("streetNum", amapLocation.getStreetNum());
                 jsonObject.put("speed", amapLocation.getSpeed());
+                jsonObject.put("currentTime", System.currentTimeMillis());
+                locationMap.put("longitude", longtitude);
+                locationMap.put("latitude", latitude);
+                locationMap.put("addr", amapLocation.getAddress());
+                locationMap.put("country", amapLocation.getCountry());
+                locationMap.put("province", amapLocation.getProvince());
+                locationMap.put("city", amapLocation.getCity());
+                locationMap.put("district", amapLocation.getDistrict());
+                locationMap.put("street", amapLocation.getStreet());
+                locationMap.put("streetNum", amapLocation.getStreetNum());
+                locationMap.put("speed", amapLocation.getSpeed());
+                locationMap.put("currentTime", System.currentTimeMillis());
             } catch (Exception e) {
                 if (uploadTrace) {
                     uploadTraceCallback(false, e.getMessage());
@@ -565,16 +587,8 @@ public class GpsService extends ImpPlugin implements
             if (!uploadTrace) {
                 jsCallback(functName, jsonObject.toString());
             }
-            ArrayList<String> positionList = new ArrayList<>();
-            if (uploadMapLocationList != null) {
-                String locationList = uploadMapLocationList.get("locations");
-                if (locationList != null) {
-                    positionList = JSONUtils.JSONArray2List(locationList, new ArrayList<String>());
-                    if (positionList != null) {
-                        positionList.add(jsonObject.toString());
-                    }
-                }
-                uploadMapLocationList.put("locations", JSONUtils.toJSONArray(positionList).toString());
+            if (traceInfo != null) {
+                traceInfo.addLocation(locationMap);
             }
             // 设置回调js页面函数
             LogUtils.debug("yfcLog", "GPSLocation:" + jsonObject.toString());
