@@ -31,9 +31,6 @@
     <color name="bg_my_card">#36A5F6</color>
     <color name="bg_other_card">#ECEEF2</color>
     <color name="search_contact_header_bg">#F2F2F2</color>
-
-    <color name="cursor_handle_color">#0d7aff</color>
-    <color name="selected_blue">#afe1f4</color>
     <!-- 导航栏原来色值#1596d2 -->
 
     <color name="mark_down_url_read">#551a8b</color>
@@ -178,6 +175,15 @@
     <color name="color_bg_content_white">#FFFFFF</color>
     <!--通用背景黑色  之前的000换成333-->
     <color name="color_bg_content_black">#333333</color>
+    <!--可选择文本背景色-->
+    <color name="cursor_handle_color">#0d7aff</color>
+    <color name="selected_blue">#afe1f4</color>
+
+    <color name="selected_send_msg_bg">#66B2DFFF</color>
+    <color name="selected_send_msg_bg_dark">#66B2DFFF</color>
+    <color name="selected_receive_msg_bg">#4D3696F6</color>
+    <color name="selected_receive_msg_bg_dark">#4D3696F6</color>
+
     <!--全局-->
     <color name="color_bg_common">#F8F9FB</color>
     <color name="color_bg_common_dark">#1C1C1E</color>

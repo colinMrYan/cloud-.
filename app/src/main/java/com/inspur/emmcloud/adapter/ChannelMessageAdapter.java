@@ -241,7 +241,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = DisplayTxtPlainMsg.getView(context,
                             message);
                     mSelectableTextHelper = new SelectableTextHelper.Builder((TextView) cardContentView.findViewById(R.id.tv_content))
-                            .setSelectedColor(context.getResources().getColor(R.color.selected_blue))
+                            .setSelectedColor(isMyMsg ? context.getResources().getColor(R.color.selected_send_msg_bg) : context.getResources().getColor(R.color.selected_receive_msg_bg))
                             .setCursorHandleSizeInDp(20)
                             .setCursorHandleColor(context.getResources().getColor(R.color.cursor_handle_color))
                             .build();
@@ -298,8 +298,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 @Override
                 public boolean onLongClick(View view) {
                     if (mItemClickListener != null) {
-                        if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(type)){
-                            mItemClickListener.onTxtItemLongClick(view, uiMessage , finalMSelectableTextHelper);
+                        if (Message.MESSAGE_TYPE_TEXT_PLAIN.equals(type)) {
+                            mItemClickListener.onTxtItemLongClick(view, uiMessage, finalMSelectableTextHelper);
                             return true;
                         }
                         mItemClickListener.onCardItemLongClick(view, uiMessage);
