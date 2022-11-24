@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.TbsDownloader;
@@ -57,29 +59,12 @@ public class TBSLoadUtils {
                         downloadListener.updateInstallState();
                     }
                     Log.d("ByWebView", "x5内核安装成功");
-                    List<Activity> activityList =  ((BaseApplication) context.getApplicationContext()).getActivityList();
-                    if (!activityList.isEmpty()) {
-                        new CustomDialog.MessageDialogBuilder(activityList.get(activityList.size() - 1))
-                                .setMessage(context.getString(R.string.toast_restart_app))
-                                .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = BaseApplication.getInstance().getPackageManager()
-                                                .getLaunchIntentForPackage(BaseApplication.getInstance().getPackageName());
-                                        PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                                        AlarmManager mgr = (AlarmManager)BaseApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
-                                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
-                                        System.exit(0);
-                                    }
-                                }).show();
+                    Activity currentActivity =  ((BaseApplication) context).getActivityLifecycleCallbacks().getCurrentActivity();
+                    if (currentActivity instanceof BaseFragmentActivity) {
+                        ((BaseFragmentActivity) currentActivity).restartApp();
+                    } else {
+                        ToastUtils.show(R.string.toast_restart_app);
                     }
-
                 }
             }
 

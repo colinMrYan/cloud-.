@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.basemodule.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -21,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -174,6 +178,28 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setNavigationBarColor(ContextCompat.getColor(BaseApplication.getInstance(), color));
         }
+    }
+
+    public void restartApp() {
+        new CustomDialog.MessageDialogBuilder(this)
+                .setMessage(getString(R.string.toast_restart_app))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = BaseApplication.getInstance().getPackageManager()
+                                .getLaunchIntentForPackage(BaseApplication.getInstance().getPackageName());
+                        PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                        AlarmManager mgr = (AlarmManager) BaseApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
+                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
+                        System.exit(0);
+                    }
+                }).show();
     }
 
 
