@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Build;
-import android.webkit.ValueCallback;
+//import android.webkit.ValueCallback;
 
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.webview.ImpWebView;
+import com.tencent.smtt.sdk.ValueCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;

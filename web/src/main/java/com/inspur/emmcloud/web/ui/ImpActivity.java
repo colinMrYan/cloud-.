@@ -13,6 +13,10 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
 import com.umeng.socialize.UMShareAPI;
+import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tencent.smtt.sdk.QbSdk;
+
+import java.util.HashMap;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
 public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
@@ -24,6 +28,7 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     @Override
     public void onCreate() {
         super.onCreate();
+        boolean isWebAutoRotate = false;
         Router router = Router.getInstance();
         if (router.getService(AppService.class) != null) {
             AppService service = router.getService(AppService.class);

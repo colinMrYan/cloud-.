@@ -1,5 +1,10 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
+import static com.tencent.liteav.base.ContextUtils.getApplicationContext;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -63,6 +68,7 @@ import com.inspur.emmcloud.setting.api.SettingAPIInterfaceImpl;
 import com.inspur.emmcloud.setting.api.SettingAPIService;
 import com.inspur.emmcloud.setting.bean.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.setting.widget.DataCleanManager;
+import com.tencent.smtt.sdk.QbSdk;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -93,6 +99,8 @@ public class SettingActivity extends BaseActivity {
     ImageView languageFlagImg;
     @BindView(R2.id.tv_setting_theme_name)
     TextView themeNameText;
+    @BindView(R2.id.tv_setting_use_webview)
+    TextView webviewText;
     @BindView(R2.id.rl_setting_switch_tablayout)
     RelativeLayout switchTabLayout;
     @BindView(R2.id.tv_setting_tab_name)
@@ -110,7 +118,7 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        public void onCheckedChanged(CompoundButton compoundButton,final boolean b) {
             int i = compoundButton.getId();
             if (i == R.id.switch_view_setting_web_rotate) {
                 AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
@@ -134,7 +142,7 @@ public class SettingActivity extends BaseActivity {
                     updateUserExperienceUpgradeFlag();
                 }
 
-            } else {
+            }else {
             }
         }
     };
@@ -205,6 +213,7 @@ public class SettingActivity extends BaseActivity {
         setNativeAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         nativeRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        webviewText.setText(getString(R.string.settings_use_webkit));
         if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -360,8 +369,32 @@ public class SettingActivity extends BaseActivity {
             IntentUtils.startActivity(SettingActivity.this, TextSizeSettingActivity.class);
         } else if (i == R.id.rl_setting_notification_layout) {
             IntentUtils.startActivity(SettingActivity.this, NotificationSettingActivity.class);
+        }  else if (i == R.id.use_webkit) {
+            if (!PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, true) || !QbSdk.isX5Core()) {
+                ToastUtils.show(getString(R.string.settings_unable_use_x5));
+                return;
+            }
+            new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(getString(com.inspur.emmcloud.basemodule.R.string.toast_switch_sys_webview))
+                    .setNegativeButton(getString(com.inspur.emmcloud.basemodule.R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(getString(com.inspur.emmcloud.basemodule.R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (QbSdk.isX5Core()) {
+                                QbSdk.reset(BaseApplication.getInstance());
+                            }
+                            PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, false);
+                            dialog.dismiss();
+                        }
+                    }).show();
         } else {
         }
+
     }
 
     @Override

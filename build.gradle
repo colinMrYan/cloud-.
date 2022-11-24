@@ -119,6 +119,7 @@ buildscript {
             fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.6',
             wechatOpenSdk       : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+',
 //            fingerprintidentify : 'com.wei.android.lib:fingerprintidentify:1.2.1',
+            txTbx5              : 'com.tencent.tbs:tbssdk:44226',
             S3                  : [
                     'aws_android_sdk_s3'           : 'com.amazonaws:aws-android-sdk-s3:2.15.2',
                     'aws_android_sdk_core'         : 'com.amazonaws:aws-android-sdk-core:2.15.2',

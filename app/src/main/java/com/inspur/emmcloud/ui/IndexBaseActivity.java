@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.webkit.WebView;
+import com.tencent.smtt.sdk.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;

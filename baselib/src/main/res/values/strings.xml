@@ -362,6 +362,8 @@
     <string name="transfer_group_tip">确定将群主转让给%1$s？</string>
     <string name="quit_group_warning_text">确定要退出群组？</string>
     <string name="dismiss_group_warning_text">确定要解散群组？</string>
+    <string name="toast_restart_app">X5浏览器下载成功，需要重新启动才能使用，请重新重启App</string>
+    <string name="toast_switch_sys_webview">切换系统浏览器后将无法再切换回X5浏览器，确认使用系统浏览器？</string>
     <string name="add_same_group_warning_text">已存在相同人员群组，是否继续建群？</string>
     <string name="chat_stick_on_top">置顶</string>
     <string name="chat_remove">隐藏</string>
@@ -557,6 +559,8 @@
     <string name="settings">设置</string>
     <string name="settings_protect">已保护</string>
     <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_use_webkit">WebView使用原生内核</string>
+    <string name="settings_unable_use_x5">正在使用原生浏览器</string>
     <string name="settings_clean_imgae_attachment">清理图片及附件缓存</string>
     <string name="settings_clean_web">清理Web应用缓存</string>
     <string name="settings_clean_all">清理应用所有缓存数据</string>

@@ -37,6 +37,7 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.TBSLoadUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -75,7 +76,7 @@ public abstract class BaseApplication extends MultiDexApplication {
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
     private boolean mInited = false;
-
+    private boolean installTbsSuccess = false;
 
     /**
      * 单例获取application实例
@@ -90,6 +91,8 @@ public abstract class BaseApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         initWithoutUserInfo();
+        TBSLoadUtils.initTxTbx(BaseApplication.this, null);
+//        initTBS();
         if (PreferencesUtils.getBoolean(this, PREF_PROTOCOL_DLG_AGREED, false)) {
             init();
         }

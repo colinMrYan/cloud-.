@@ -14,22 +14,20 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.DownloadListener;
+import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.CookieManager;
+
 import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ParseHtmlUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.web.R;
@@ -51,7 +49,9 @@ import java.lang.reflect.Method;
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
-    public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
+    public static final String USERAGENT = QbSdk.isX5Core() ? "Mozilla/5.0 (Linux; Android "
+            + Build.VERSION.RELEASE + "; " + Build.MODEL
+            + " Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046141 Mobile Safari/537.36" : "Mozilla/5.0 (Linux; U; Android "
             + Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
             + " Build/FRF91) AppleWebKit/533.1 "
             + "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
@@ -298,14 +298,15 @@ public class ImpWebView extends WebView {
         settings.setDisplayZoomControls(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+//            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setMixedContentMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
     }
 
     /* 页面效果设置 */
     private void setPageStyle() {
         //设置自适应屏幕
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         // 支持自动加载图片
         settings.setLoadsImagesAutomatically(true);
         settings.setAllowFileAccess(true);

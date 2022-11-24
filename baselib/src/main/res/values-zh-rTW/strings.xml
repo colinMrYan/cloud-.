@@ -359,6 +359,8 @@
     <string name="dismiss_group">解散群組</string>
     <string name="quit_group_warning_text">確定要退出群组？</string>
     <string name="dismiss_group_warning_text">確定要解散群组？</string>
+    <string name="toast_restart_app">X5瀏覽器下載成功，需要重新啟動才能使用，重啟App？</string>
+    <string name="toast_switch_sys_webview">切換系統瀏覽器後將無法再切換回X5瀏覽器，確認使用系統瀏覽器？</string>
     <string name="add_same_group_warning_text">已存在相同人員群組，是否繼續建群？</string>
     <string name="quit_dismiss_group">刪除並退出</string>
     <string name="transfer_group">群主轉讓</string>
@@ -367,6 +369,7 @@
     <string name="chat_remove">隱藏</string>
     <string name="chat_remove_from_top">取消置頂</string>
     <string name="no_chat_content">暫無聊天內容</string>
+    <string name="settings_use_webkit">WebView使用原生內核</string>
     <string name="msg_key_search_member">請輸入關鍵字</string>
     <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
@@ -562,6 +565,7 @@
     <string name="settings">設置</string>
     <string name="settings_protect">已保護</string>
     <string name="settings_clear_cache">清除緩存</string>
+    <string name="settings_use_x5">WebView使用X5內核</string>
     <string name="settings_clean_imgae_attachment">清理圖片及附件緩存</string>
     <string name="settings_clean_web">清理Web應用緩存</string>
     <string name="settings_clean_all">清理應用所有緩存資料</string>

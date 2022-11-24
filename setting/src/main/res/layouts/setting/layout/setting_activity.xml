@@ -543,7 +543,41 @@
                         android:layout_below="@id/tv_setting_clear_cache"
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/use_webkit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_arrow_right" />
+
+                    <TextView
+                        android:id="@+id/tv_setting_use_webview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingTop="11dp"
+                        android:paddingBottom="11dp"
+                        android:text="@string/settings_use_webkit"
+                        android:textColor="?attr/text_color_e1"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5px"
+                        android:layout_below="@id/tv_setting_use_webview"
+                        android:background="?attr/color_list_divider" />
+                </RelativeLayout>
 
             </LinearLayout>
         </ScrollView>
