@@ -111,6 +111,8 @@ public class SettingActivity extends BaseActivity {
     SwitchCompat nativeRotateSwitch;
     @BindView(R2.id.phone_recognize_layout)
     RelativeLayout phoneRecognize;
+    @BindView(R2.id.use_webkit)
+    RelativeLayout webkitLayout;
     int REQUEST_CODE_CAMERA = 10002;
     Uri fileUri = null;
     private Handler handler;
@@ -214,6 +216,7 @@ public class SettingActivity extends BaseActivity {
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         nativeRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         webviewText.setText(getString(R.string.settings_use_webkit));
+        webkitLayout.setVisibility(QbSdk.isX5Core() ? View.VISIBLE : View.GONE);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat() && !LanguageManager.getInstance().isAppLanguageEnglish()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -389,6 +392,8 @@ public class SettingActivity extends BaseActivity {
                                 QbSdk.reset(BaseApplication.getInstance());
                             }
                             PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_TBS_USE_X5, false);
+                            webkitLayout.setVisibility(View.GONE);
+                            ToastUtils.show(R.string.settings_use_webkit);
                             dialog.dismiss();
                         }
                     }).show();

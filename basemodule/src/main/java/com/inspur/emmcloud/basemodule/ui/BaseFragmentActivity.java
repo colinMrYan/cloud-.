@@ -180,28 +180,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         }
     }
 
-    public void restartApp() {
-        new CustomDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.toast_restart_app))
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = BaseApplication.getInstance().getPackageManager()
-                                .getLaunchIntentForPackage(BaseApplication.getInstance().getPackageName());
-                        PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                        AlarmManager mgr = (AlarmManager) BaseApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
-                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent); // 1秒钟后重启应用
-                        System.exit(0);
-                    }
-                }).show();
-    }
-
 
     @Override
     protected void onDestroy() {

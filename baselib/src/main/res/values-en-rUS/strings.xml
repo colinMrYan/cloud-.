@@ -353,7 +353,7 @@
     <string name="quit_group">Quit Group</string>
     <string name="dismiss_group">Dismiss Group</string>
     <string name="quit_group_warning_text">Confirm to leave team?</string>
-    <string name="toast_restart_app">X5 browser download successful, need to restart to use, restart the App?</string>
+    <string name="toast_restart_app">X5 browser download is successful, need to restart to use, you can also use the native browser through the settings</string>
     <string name="toast_switch_sys_webview">After switching the system browser, I will not be able to switch back to the X5 browser, confirm the use of the system browser?</string>
     <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
     <string name="add_same_group_warning_text">The same person group already exists. Continue to create group?</string>
@@ -362,7 +362,7 @@
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
     <string name="send_email">Mail</string>
-    <string name="settings_use_webkit">WebView uses a native kernel</string>
+    <string name="settings_use_webkit">Web uses system kernel</string>
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>

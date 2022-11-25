@@ -36,7 +36,7 @@ public class TBSLoadUtils {
     public static void initTxTbx(final Context context, final TbsDownloadListener downloadListener) {
         // 禁用X5浏览器的话停止下载
         if (!PreferencesUtils.getBoolean(context, Constant.PREF_TBS_USE_X5, true)) {
-            Log.e("ByWebView","! USE_X5");
+            Log.d("ByWebView","!USE_X5");
             return;
         }
         HashMap map = new HashMap();
@@ -61,7 +61,14 @@ public class TBSLoadUtils {
                     Log.d("ByWebView", "x5内核安装成功");
                     Activity currentActivity =  ((BaseApplication) context).getActivityLifecycleCallbacks().getCurrentActivity();
                     if (currentActivity instanceof BaseFragmentActivity) {
-                        ((BaseFragmentActivity) currentActivity).restartApp();
+                        new CustomDialog.MessageDialogBuilder(currentActivity)
+                                .setMessage(currentActivity.getString(R.string.toast_restart_app))
+                                .setPositiveButton(currentActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
                     } else {
                         ToastUtils.show(R.string.toast_restart_app);
                     }
