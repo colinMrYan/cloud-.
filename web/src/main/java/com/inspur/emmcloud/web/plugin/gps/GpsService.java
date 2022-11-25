@@ -259,7 +259,7 @@ public class GpsService extends ImpPlugin implements
                                 requestUploadLocations();
                             }
                         };
-                        uploadTimer.schedule(timerTask, 500, 4000);
+                        uploadTimer.schedule(timerTask, 500, 8000);
 
                     } else {
                         closeUploadPosition();
