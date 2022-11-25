@@ -734,7 +734,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         userOrientedConversationHelper.closeUserOrientedLayout();
                     } else {
                         userOrientedConversationHelper.setChannelType(conversation.getType());
-                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList());
+                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList(), conversation.getMembersDetail());
                     }
                 }
                 break;
@@ -1812,7 +1812,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Constant.EVENTBUS_TAG_GROUP_CONVERSATION_MEMBER_NICKNAME_UPGRADE:
                 // 群成员昵称变化，更新List
                 Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), conversation.getId());
-                if (changeConversation != null && !changeConversation.getMembersDetail().equals(conversation.getMembersDetail())) {
+                if (changeConversation != null && !TextUtils.isEmpty(changeConversation.getMembersDetail()) && !changeConversation.getMembersDetail().equals(conversation.getMembersDetail())) {
                     adapter.updateMembersDetail(changeConversation.getMembersDetail());
                     conversation.setMembersDetail(changeConversation.getMembersDetail());
                 }
@@ -2812,7 +2812,15 @@ public class ConversationActivity extends ConversationBaseActivity {
 //                ChannelMessageDetailActivity.class, bundle);
 
         // 新版回复功能
-        String userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
+        String membersDetail = conversation.getMembersDetail();
+        String userName;
+        if (!TextUtils.isEmpty(membersDetail)) {
+            userName = ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail, new JSONArray())
+                    , commentedMessage.getFromUser());
+        } else {
+            userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
+        }
+//        String userName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
         String commentedMessageType = commentedMessage.getType();
         String commentContent;
         switch (commentedMessageType) {

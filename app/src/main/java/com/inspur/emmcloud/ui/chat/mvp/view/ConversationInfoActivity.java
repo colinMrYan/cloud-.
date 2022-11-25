@@ -76,6 +76,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     public static final String EXTRA_CID = "cid";
     public static final String EXTRA_NICKNAME = "nickname";
+    public static final String EXTRA_FROM_CONVERSATION = "from_conversation"; // 来自群聊->查找聊天记录
     public static final String MEMBER_SIZE = "member_size";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
@@ -386,6 +387,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     return;
                 }
                 bundle.putString(EXTRA_CID, uiConversation.getId());
+                bundle.putBoolean(EXTRA_FROM_CONVERSATION, true);
                 IntentUtils.startActivity(this, CommunicationSearchMessagesActivity.class, bundle);
                 break;
             case R.id.rl_conversation_quit:
@@ -640,7 +642,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_MEMBER_NICKNAME_UPGRADE)) {
             // 群成员修改昵称，更新
             Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), uiConversation.getId());
-            if (changeConversation != null && !changeConversation.getMembersDetail().equals(uiConversation.getMembersDetail())) {
+            if (changeConversation != null && !TextUtils.isEmpty(changeConversation.getMembersDetail()) && !changeConversation.getMembersDetail().equals(uiConversation.getMembersDetail())) {
                 channelMembersHeadAdapter.updateMembersDetail(changeConversation.getMembersDetail());
             }
         }

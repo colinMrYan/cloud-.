@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.widget.bubble.ArrowDirection;
@@ -16,6 +17,11 @@ import com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.bean.MultiMessageItem;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -36,24 +42,29 @@ public class DisplayMultiMsg {
         splitLine.setBackgroundColor(Color.parseColor(DarkUtil.isDarkTheme() ? "#404040" : "#e5e5e5"));
         StringBuilder sb = new StringBuilder();
         ArrayList<MultiMessageItem> arrayList = MultiMessageTransmitUtil.getListFromJsonStr(message.getContent());
+        // 群成员有昵称时，显示昵称，否则显示通讯录名称
+        String channelID = message.getChannel();
+        Conversation conversation = ConversationCacheUtils.getConversation(context, channelID);
+        String membersDetail = conversation.getMembersDetail();
         for (int i = 0; i < arrayList.size(); i++) {
             MultiMessageItem item = arrayList.get(i);
+            String sendUserNicknameOrName = ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail, new JSONArray()), item.sendUserId);
             switch (item.type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    sb.append(item.sendUserName).append(":").append(item.text);
+                    sb.append(item.sendUserName).append(": ").append(item.text);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.picture)).append("]");
+                    sb.append(sendUserNicknameOrName).append(": [").append(context.getResources().getString(R.string.picture)).append("]");
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.file)).append("]");
+                    sb.append(sendUserNicknameOrName).append(": [").append(context.getResources().getString(R.string.file)).append("]");
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.mession_link)).append("]");
+                    sb.append(sendUserNicknameOrName).append(": [").append(context.getResources().getString(R.string.mession_link)).append("]");
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
-                    sb.append(item.sendUserName).append(":[").append(context.getResources().getString(R.string.video)).append("]");
+                    sb.append(sendUserNicknameOrName).append(": [").append(context.getResources().getString(R.string.video)).append("]");
                     break;
                 default:
                     break;

@@ -1455,4 +1455,6 @@
 
     <string name="recent_transmit">最近转发</string>
     <string name="recent_conversation">最近聊天</string>
+
+    <string name="members_detail">"nickname":"</string>
 </resources>

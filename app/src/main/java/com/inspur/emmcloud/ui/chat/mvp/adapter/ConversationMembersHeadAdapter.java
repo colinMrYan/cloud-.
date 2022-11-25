@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.ui.chat.mvp.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;
@@ -37,6 +40,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
     List<String> mAdministratorList;
     String mOwnerUid;
     String membersDetail;
+    private JSONArray array;
 
     public ConversationMembersHeadAdapter(Context context, List<String> uidList, String ownerUid, List<String> administratorList) {
         mContext = context;
@@ -51,10 +55,12 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         mOwnerUid = ownerUid;
         mAdministratorList = administratorList;
         this.membersDetail = membersDetail;
+        array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
     }
 
     public void updateMembersDetail(String membersDetail) {
         this.membersDetail = membersDetail;
+        array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
         notifyDataSetChanged();
     }
 
@@ -119,22 +125,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_file_transfer);
         } else {
             if (!TextUtils.isEmpty(membersDetail)) {
-                JSONArray array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
-                for (int j = 0; j < array.length(); j++) {
-                    JSONObject obj = JSONUtils.getJSONObject(array, j, new JSONObject());
-                    if (uid.equals(JSONUtils.getString(obj, "user", ""))) {
-                        String nickname = JSONUtils.getString(obj, "nickname", "");
-                        if (TextUtils.isEmpty(nickname)) {
-                            userName = ContactUserCacheUtils.getUserName(uid);
-                        } else {
-                            userName = nickname;
-                        }
-                        break;
-                    }
-                }
-                if (TextUtils.isEmpty(userName)){
-                    userName = ContactUserCacheUtils.getUserName(uid);
-                }
+                userName = ChatMsgContentUtils.getUserNicknameOrName(array, uid);
             } else {
                 userName = ContactUserCacheUtils.getUserName(uid);
             }

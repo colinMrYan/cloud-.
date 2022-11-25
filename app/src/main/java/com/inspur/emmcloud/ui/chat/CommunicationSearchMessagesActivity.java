@@ -2,9 +2,12 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
@@ -30,9 +34,13 @@ import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationInfoActivity;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,6 +76,10 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     private ConversationWithMessageNum conversationFromChatContent;
     private GroupMessageSearchAdapter groupMessageSearchAdapter;
     private String searchText;
+    private boolean fromConversationInfo = false;  // 是否来自聊天详情页，查找聊天记录
+    private String membersDetail; // 聊天显示昵称时使用
+    private JSONArray membersDetailArray;
+
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -114,13 +126,20 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
             String cid = getIntent().getStringExtra(ConversationGroupInfoActivity.EXTRA_CID);
             Conversation conversation = ConversationCacheUtils.getConversation(this, cid);
             conversationFromChatContent = new ConversationWithMessageNum(conversation, 0);
-
+            // 从聊天详情打开聊天记录时，true
+            fromConversationInfo = getIntent().getBooleanExtra(ConversationInfoActivity.EXTRA_FROM_CONVERSATION, false);
         }
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         messagesDetailRecycleView.setLayoutManager(layoutManager);
         messagesDetailRecycleView.setAdapter(groupMessageSearchAdapter);
+        // 来自聊天详情页查找聊天记录时，传入membersDetail，用于显示群成员昵称
+        if (fromConversationInfo && Conversation.TYPE_GROUP.equals(conversationFromChatContent.getConversation().getType())) {
+            membersDetail = conversationFromChatContent.getConversation().getMembersDetail();
+            membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+            groupMessageSearchAdapter.setGroupMembersDetail(membersDetail);
+        }
         groupMessageSearchAdapter.setGroupMessageSearchListener(new GroupMessageSearchAdapter.GroupMessageSearchListener() {
             @Override
             public void onItemClick(UIMessage uiMessage) {
@@ -161,6 +180,17 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                         finish();
                     }
                 } else {
+                    // 如果有关键字里包含昵称，搜索昵称
+//                    if (!TextUtils.isEmpty(membersDetail)) {
+//                        if (membersDetail.contains(getString(R.string.members_detail) + keyWords)) {
+//                            for (int i = 0; i < membersDetailArray.length(); i++) {
+//                                JSONObject obj = JSONUtils.getJSONObject(membersDetailArray, i, new JSONObject());
+//                                if (JSONUtils.getString(obj, "nickname", "").contains(keyWords)) {
+//
+//                                }
+//                            }
+//                        }
+//                    }
                     searchMessagesList = MessageCacheUtil.getMessageListByKeywordAndId(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
                 }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);

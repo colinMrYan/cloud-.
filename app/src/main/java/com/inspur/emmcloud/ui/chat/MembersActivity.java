@@ -387,7 +387,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                             }
                             intent.putExtra("searchResult", jsonArray.toString());
                             boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
-                            intent.putExtra(" ", isInputKeyWord);
+                            intent.putExtra("isInputKeyWord", isInputKeyWord);
                             setResult(RESULT_OK, intent);
                             finish();
                         } else {

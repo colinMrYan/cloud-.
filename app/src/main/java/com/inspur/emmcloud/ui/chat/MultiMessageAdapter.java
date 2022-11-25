@@ -76,6 +76,8 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
 
         String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), item.sendUserId);
         ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, R.drawable.icon_photo_default);
+//        holder.nameText.setText(item.sendUserName);
+        // 有群昵称则显示群昵称
         holder.nameText.setText(item.sendUserName);
 
         View cardContentView = null;
@@ -83,6 +85,7 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
         switch (item.type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+//                cardContentView = getTextViewFromItem(item);
                 cardContentView = getTextViewFromItem(item);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:

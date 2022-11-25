@@ -1,9 +1,12 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -19,6 +23,9 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.emotion.EmotionUtil;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +42,8 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     private GroupMessageSearchListener listener;
     private String keyWords = "";
     private String keyWordsColor = "#36A5F6";
+    private String membersDetail; // 群聊时，群成员昵称
+    private JSONArray membersDetailArray;
 
     public GroupMessageSearchAdapter(Context context) {
         this.context = context;
@@ -51,7 +60,7 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     public void onBindViewHolder(@NonNull GroupMessageHolder holder, int position) {
         final UIMessage uiMessage = groupUIMessageList.get(position);
         ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
-        holder.groupMessageUserNameText.setText(groupUIMessageList.get(position).getSenderName());
+        showSenderName(uiMessage, holder);
         Spanned contentSpan = getContent(uiMessage.getMessage());
         if (contentSpan != null) {
             contentSpan = EmotionUtil.getInstance(context).getSmiledText(contentSpan, holder.groupMessageContentText.getTextSize());
@@ -69,6 +78,28 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         });
     }
 
+    // 有昵称时显示昵称，否则显示通讯录名称
+    private void showSenderName(UIMessage uiMessage, GroupMessageHolder holder) {
+        if (!TextUtils.isEmpty(membersDetail)) {
+            String fromUser = uiMessage.getMessage().getFromUser();
+            for (int j = 0; j < membersDetailArray.length(); j++) {
+                JSONObject obj = JSONUtils.getJSONObject(membersDetailArray, j, new JSONObject());
+                if (fromUser.equals(JSONUtils.getString(obj, "user", ""))) {
+                    String nickname = JSONUtils.getString(obj, "nickname", "");
+                    if (TextUtils.isEmpty(nickname)) {
+                        holder.groupMessageUserNameText.setText(uiMessage.getSenderName());
+                    } else {
+                        holder.groupMessageUserNameText.setText(nickname);
+                    }
+                    break;
+                }
+            }
+        } else {
+            holder.groupMessageUserNameText.setText(uiMessage.getSenderName());
+        }
+
+    }
+
     private Spanned getContent(Message message) {
         String type = message.getType();
         Spanned text = null;
@@ -76,19 +107,19 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
                     String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextPlain().getText(),
-                            message.getMsgContentTextPlain().getMentionsMap()).toString();
+                            message.getMsgContentTextPlain().getMentionsMap(), membersDetailArray).toString();
                     text = StringUtils.getHtmlString(textContent, keyWordsColor, keyWords);
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                     String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentTextMarkdown().getText(),
-                            message.getMsgContentTextMarkdown().getMentionsMap()).toString();
+                            message.getMsgContentTextMarkdown().getMentionsMap(), membersDetailArray).toString();
                     text = StringUtils.getHtmlString(markDownContent, keyWordsColor, keyWords);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(
                             message.getMsgContentComment().getText(),
-                            message.getMsgContentComment().getMentionsMap()).toString();
+                            message.getMsgContentComment().getMentionsMap(), membersDetailArray).toString();
                     text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);
                     break;
                 default:
@@ -109,6 +140,11 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         this.keyWords = keyWords;
         groupUIMessageList = UIMessage.MessageList2UIMessageList(groupMessageList);
         notifyDataSetChanged();
+    }
+
+    public void setGroupMembersDetail(String membersDetail) {
+        this.membersDetail = membersDetail;
+        membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
     }
 
     public void setGroupMessageSearchListener(GroupMessageSearchListener listener) {

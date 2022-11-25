@@ -1,13 +1,17 @@
 package com.inspur.emmcloud.ui.chat;
 
 import androidx.annotation.NonNull;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -27,6 +32,9 @@ import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +44,16 @@ import java.util.Set;
 public class UnReadDetailActivity extends BaseActivity {
 
     public static final String UI_MESSAGE = "uiMessage";
+    public static final String MEMBER_NICKNAME = "member_nickname";
     public static final String CONVERSATION_ALL_MEMBER = "conversationAllMember";
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private List<String> readList;
     private List<String> unReadList;
+    private JSONArray membersDetail; // 昵称列表，有昵称时显示昵称
+    private String membersDetailString;
+    private ContactService service;
 
     @Override
     public void onCreate() {
@@ -50,7 +62,10 @@ public class UnReadDetailActivity extends BaseActivity {
     }
 
     private void initListData() {
+        service = Router.getInstance().getService(ContactService.class);
         UIMessage uiMessage = (UIMessage) (getIntent().getSerializableExtra(UI_MESSAGE));
+        membersDetailString = getIntent().getStringExtra(MEMBER_NICKNAME);
+        membersDetail = JSONUtils.getJSONArray(membersDetailString, new JSONArray());
         List<String> memberList = getIntent().getStringArrayListExtra(CONVERSATION_ALL_MEMBER);
         Map<String, Set<String>> statesMap = uiMessage.getStatesMap();
         if (memberList == null || statesMap == null) {
@@ -66,14 +81,14 @@ public class UnReadDetailActivity extends BaseActivity {
         if (statesMap.get(ChannelMessageStates.SENT) != null) {
             for (String id : statesMap.get(ChannelMessageStates.SENT)) {
 //                if (memberList.contains(id)) {
-                    unReadList.add(id);
+                unReadList.add(id);
 //                }
             }
         }
         if (statesMap.get(ChannelMessageStates.DELIVERED) != null) {
             for (String id : statesMap.get(ChannelMessageStates.DELIVERED)) {
 //                if (memberList.contains(id)) {
-                    unReadList.add(id);
+                unReadList.add(id);
 //                }
             }
         }
@@ -151,7 +166,7 @@ public class UnReadDetailActivity extends BaseActivity {
         //设置布局管理器
         recyclerView.setLayoutManager(layoutManager);
         //设置为垂直布局，这也是默认的
-        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         //设置Adapter
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
@@ -162,7 +177,7 @@ public class UnReadDetailActivity extends BaseActivity {
     }
 
 
-    private static class RecyclerViewAdapter extends RecyclerView.Adapter {
+    private class RecyclerViewAdapter extends RecyclerView.Adapter {
         List<String> mList;
 
         public RecyclerViewAdapter(List<String> list) {
@@ -183,21 +198,40 @@ public class UnReadDetailActivity extends BaseActivity {
             String id = mList.get(i);
             String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), id);
             ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, R.drawable.icon_photo_default);
-            ContactService service = Router.getInstance().getService(ContactService.class);
-            if (service != null) {
-                ContactUser contactUser = service.getContactUserByUid(id);
-                if (contactUser != null) {
-                    holder.nameText.setText(contactUser.getName());
-                } else {
-                    holder.nameText.setText(id);
-                    holder.nameText.append("已注销");
+            // 有群昵称时显示昵称，否则显示通讯录名称
+            if (!TextUtils.isEmpty(membersDetailString)) {
+                for (int j = 0; j < membersDetail.length(); j++) {
+                    JSONObject obj = JSONUtils.getJSONObject(membersDetail, j, new JSONObject());
+                    if (id.equals(JSONUtils.getString(obj, "user", ""))) {
+                        String nickname = JSONUtils.getString(obj, "nickname", "");
+                        if (TextUtils.isEmpty(nickname)) {
+                            showName(holder, id);
+                        } else {
+                            holder.nameText.setText(nickname);
+                        }
+                        break;
+                    }
                 }
+            } else {
+                showName(holder, id);
             }
         }
 
         @Override
         public int getItemCount() {
             return mList == null ? 0 : mList.size();
+        }
+    }
+
+    private void showName(UnReadListViewHolder holder, String id) {
+        if (service != null) {
+            ContactUser contactUser = service.getContactUserByUid(id);
+            if (contactUser != null) {
+                holder.nameText.setText(contactUser.getName());
+            } else {
+                holder.nameText.setText(id);
+                holder.nameText.append("已注销");
+            }
         }
     }
 

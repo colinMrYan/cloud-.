@@ -1,9 +1,13 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import android.text.SpannableString;
 
+import androidx.annotation.NonNull;
+
+import android.text.SpannableString;
+import android.text.TextUtils;
+
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -16,9 +20,12 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.MessageSendManager;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 
@@ -118,6 +125,8 @@ public class MultiMessageTransmitUtil {
         Set<UIMessage> fileMessageSet = new CopyOnWriteArraySet<>();
         final int originMessageSize = messages.size();
 
+        Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), MyApplication.getInstance().getCurrentChannelCid());
+        String membersDetail = conversation.getMembersDetail();
         for (UIMessage uiMessage : messages) {
             Message message = uiMessage.getMessage();
             JSONObject messageDataJson = new JSONObject();
@@ -126,13 +135,19 @@ public class MultiMessageTransmitUtil {
                 messageDataJson.put("tmpId", message.getTmpId());
                 messageDataJson.put("parent", message.getId());
                 messageDataJson.put("sendUserId", message.getFromUser());
-                messageDataJson.put("sendUserName", uiMessage.getSenderName());
+//                messageDataJson.put("sendUserName", uiMessage.getSenderName());
+                if (!TextUtils.isEmpty(membersDetail)) {
+                    String userName = ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail,
+                            new JSONArray()), message.getFromUser());
+                    messageDataJson.put("sendUserName", userName);
+                } else {
+                    messageDataJson.put("sendUserName", uiMessage.getSenderName());
+                }
                 messageDataJson.put("sendTime", message.getCreationDate() / 1000);
                 switch (message.getType()) {
                     case Message.MESSAGE_TYPE_TEXT_PLAIN:
                         String text = message.getMsgContentTextPlain().getText();
-                        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text,
-                                message.getMsgContentTextPlain().getMentionsMap());
+                        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(text, message.getMsgContentTextPlain().getMentionsMap(), JSONUtils.getJSONArray(membersDetail, new JSONArray()));
                         messageDataJson.put("text", spannableString.toString());
                         jsonArray.put(messageDataJson);
                         break;
@@ -142,9 +157,7 @@ public class MultiMessageTransmitUtil {
                         fileMessageSet.add(uiMessage);
                         break;
                     case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                        spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
-                                message.getMsgContentTextMarkdown().getText(),
-                                message.getMsgContentTextMarkdown().getMentionsMap());
+                        spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(message.getMsgContentTextMarkdown().getText(), message.getMsgContentTextMarkdown().getMentionsMap(), JSONUtils.getJSONArray(membersDetail, new JSONArray()));
                         messageDataJson.put("text", MarkDown.fromMarkdown(spannableString.toString()));
                         jsonArray.put(messageDataJson);
                         break;
@@ -175,85 +188,83 @@ public class MultiMessageTransmitUtil {
                     final String path = message.getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) ? msgContentMediaImage.getRawMedia() : msgContentAttachmentFile.getMedia();
                     if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
                         final ChatAPIService apiService = new ChatAPIService(BaseApplication.getInstance());
-                        apiService.setAPIInterface(
-                                new APIInterfaceInstance() {
-                                    @Override
-                                    public void returnTransmitPictureSuccess(String callbackCid, String description, Message message) {
-                                        synchronized (jsonArray) {
-                                            try {
-                                                String path = JSONUtils.getString(description, "path", "");
-                                                switch (message.getType()) {
-                                                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                                                        JSONObject imageDataJson = new JSONObject();
-                                                        JSONObject thumbnailObj = new JSONObject();
-                                                        thumbnailObj.put("width", message.getMsgContentMediaImage().getThumbnailWidth());
-                                                        thumbnailObj.put("height", message.getMsgContentMediaImage().getThumbnailHeight());
-                                                        thumbnailObj.put("size", message.getMsgContentMediaImage().getThumbnailSize());
-                                                        thumbnailObj.put("media", path);
-                                                        JSONObject previewObj = new JSONObject();
-                                                        previewObj.put("width", message.getMsgContentMediaImage().getPreviewWidth());
-                                                        previewObj.put("height", message.getMsgContentMediaImage().getPreviewHeight());
-                                                        previewObj.put("size", message.getMsgContentMediaImage().getPreviewSize());
-                                                        previewObj.put("media", path);
-                                                        JSONObject rawObj = new JSONObject();
-                                                        rawObj.put("width", message.getMsgContentMediaImage().getRawWidth());
-                                                        rawObj.put("height", message.getMsgContentMediaImage().getRawHeight());
-                                                        rawObj.put("size", message.getMsgContentMediaImage().getRawSize());
-                                                        rawObj.put("media", path);
-                                                        imageDataJson.put("name", message.getMsgContentMediaImage().getName());
-                                                        imageDataJson.put("type", message.getType());
-                                                        imageDataJson.put("tmpId", message.getTmpId());
-                                                        imageDataJson.put("sendUserId", message.getFromUser());
-                                                        imageDataJson.put("sendUserName", fileMessage.getSenderName());
-                                                        imageDataJson.put("sendTime", message.getCreationDate() / 1000);
-                                                        imageDataJson.put("preview", previewObj);
-                                                        imageDataJson.put("thumbnail", thumbnailObj);
-                                                        imageDataJson.put("raw", rawObj);
-                                                        jsonArray.put(imageDataJson);
+                        apiService.setAPIInterface(new APIInterfaceInstance() {
+                            @Override
+                            public void returnTransmitPictureSuccess(String callbackCid, String description, Message message) {
+                                synchronized (jsonArray) {
+                                    try {
+                                        String path = JSONUtils.getString(description, "path", "");
+                                        switch (message.getType()) {
+                                            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                                                JSONObject imageDataJson = new JSONObject();
+                                                JSONObject thumbnailObj = new JSONObject();
+                                                thumbnailObj.put("width", message.getMsgContentMediaImage().getThumbnailWidth());
+                                                thumbnailObj.put("height", message.getMsgContentMediaImage().getThumbnailHeight());
+                                                thumbnailObj.put("size", message.getMsgContentMediaImage().getThumbnailSize());
+                                                thumbnailObj.put("media", path);
+                                                JSONObject previewObj = new JSONObject();
+                                                previewObj.put("width", message.getMsgContentMediaImage().getPreviewWidth());
+                                                previewObj.put("height", message.getMsgContentMediaImage().getPreviewHeight());
+                                                previewObj.put("size", message.getMsgContentMediaImage().getPreviewSize());
+                                                previewObj.put("media", path);
+                                                JSONObject rawObj = new JSONObject();
+                                                rawObj.put("width", message.getMsgContentMediaImage().getRawWidth());
+                                                rawObj.put("height", message.getMsgContentMediaImage().getRawHeight());
+                                                rawObj.put("size", message.getMsgContentMediaImage().getRawSize());
+                                                rawObj.put("media", path);
+                                                imageDataJson.put("name", message.getMsgContentMediaImage().getName());
+                                                imageDataJson.put("type", message.getType());
+                                                imageDataJson.put("tmpId", message.getTmpId());
+                                                imageDataJson.put("sendUserId", message.getFromUser());
+                                                imageDataJson.put("sendUserName", fileMessage.getSenderName());
+                                                imageDataJson.put("sendTime", message.getCreationDate() / 1000);
+                                                imageDataJson.put("preview", previewObj);
+                                                imageDataJson.put("thumbnail", thumbnailObj);
+                                                imageDataJson.put("raw", rawObj);
+                                                jsonArray.put(imageDataJson);
 
-                                                        break;
-                                                    case MESSAGE_TYPE_FILE_REGULAR_FILE:
-                                                        JSONObject fileDataJson = new JSONObject();
-                                                        fileDataJson.put("sendUserId", message.getFromUser());
-                                                        fileDataJson.put("sendUserName", fileMessage.getSenderName());
-                                                        fileDataJson.put("sendTime", message.getCreationDate() / 1000);
-                                                        fileDataJson.put("type", "file/regular-file");
-                                                        fileDataJson.put("category", CommunicationUtils.getChatFileCategory(message.getMsgContentAttachmentFile().getName()));
-                                                        fileDataJson.put("name", message.getMsgContentAttachmentFile().getName());
-                                                        fileDataJson.put("size", message.getMsgContentAttachmentFile().getSize());
-                                                        fileDataJson.put("media", path);
-                                                        fileDataJson.put("tmpId", message.getTmpId());
-                                                        jsonArray.put(fileDataJson);
-                                                        break;
-                                                    case MESSAGE_TYPE_MEDIA_VIDEO:
-                                                        JSONObject videoDataJson = new JSONObject();
-                                                        videoDataJson.put("sendUserId", message.getFromUser());
-                                                        videoDataJson.put("sendUserName", fileMessage.getSenderName());
-                                                        videoDataJson.put("sendTime", message.getCreationDate() / 1000);
-                                                        videoDataJson.put("type", "file/regular-file");
-                                                        Message fakeMessage = CommunicationUtils.combineLocalVideoMessageHaveContent(cid, path, message.getMsgContentMediaVideo());
-                                                        CommunicationUtils.wrapperVideoSendMessageJSONWithoutTmpId(videoDataJson, fakeMessage.getMsgContentMediaVideo());
-                                                        jsonArray.put(videoDataJson);
-                                                        break;
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                            if (jsonArray.length() == originMessageSize) {
-                                                wrapperMultiItemListener.onWrapperMultiItemFinished(jsonArray);
-                                            }
+                                                break;
+                                            case MESSAGE_TYPE_FILE_REGULAR_FILE:
+                                                JSONObject fileDataJson = new JSONObject();
+                                                fileDataJson.put("sendUserId", message.getFromUser());
+                                                fileDataJson.put("sendUserName", fileMessage.getSenderName());
+                                                fileDataJson.put("sendTime", message.getCreationDate() / 1000);
+                                                fileDataJson.put("type", "file/regular-file");
+                                                fileDataJson.put("category", CommunicationUtils.getChatFileCategory(message.getMsgContentAttachmentFile().getName()));
+                                                fileDataJson.put("name", message.getMsgContentAttachmentFile().getName());
+                                                fileDataJson.put("size", message.getMsgContentAttachmentFile().getSize());
+                                                fileDataJson.put("media", path);
+                                                fileDataJson.put("tmpId", message.getTmpId());
+                                                jsonArray.put(fileDataJson);
+                                                break;
+                                            case MESSAGE_TYPE_MEDIA_VIDEO:
+                                                JSONObject videoDataJson = new JSONObject();
+                                                videoDataJson.put("sendUserId", message.getFromUser());
+                                                videoDataJson.put("sendUserName", fileMessage.getSenderName());
+                                                videoDataJson.put("sendTime", message.getCreationDate() / 1000);
+                                                videoDataJson.put("type", "file/regular-file");
+                                                Message fakeMessage = CommunicationUtils.combineLocalVideoMessageHaveContent(cid, path, message.getMsgContentMediaVideo());
+                                                CommunicationUtils.wrapperVideoSendMessageJSONWithoutTmpId(videoDataJson, fakeMessage.getMsgContentMediaVideo());
+                                                jsonArray.put(videoDataJson);
+                                                break;
                                         }
-
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-
-                                    @Override
-                                    public void returnTransmitPictureError(String error, int errorCode) {
-                                        ToastUtils.show(R.string.chat_message_send_fail);
-                                        wrapperMultiItemListener.onWrapperMultiItemFailed();
-
+                                    if (jsonArray.length() == originMessageSize) {
+                                        wrapperMultiItemListener.onWrapperMultiItemFinished(jsonArray);
                                     }
                                 }
-                        );
+
+                            }
+
+                            @Override
+                            public void returnTransmitPictureError(String error, int errorCode) {
+                                ToastUtils.show(R.string.chat_message_send_fail);
+                                wrapperMultiItemListener.onWrapperMultiItemFailed();
+
+                            }
+                        });
 
                         String fileType = fileMessage.getMessage().getType().equals(Message.MESSAGE_TYPE_MEDIA_IMAGE) ? "image" : "regular-file";
                         apiService.transmitFile(path, fileMessage.getMessage().getChannel(), cid, fileType, fileMessage.getMessage());

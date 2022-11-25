@@ -3,10 +3,12 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,15 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +46,8 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
     private OnWhisperEventListener listener;
     private Context mContext;
     private final GridLayoutManager gridLayoutManager;
+    private String membersDetail; // 群昵称时使用
+    private JSONArray membersDetailArray;
 
     public enum ConversationType {
         STANDARD, WHISPER, BURN, REPLY
@@ -89,7 +98,15 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         return conversationType;
     }
 
-    public void showUserOrientedLayout(ArrayList<String> userIds) {
+    /**
+     * 悄悄话
+     *
+     * @param userIds       群其他成员列表
+     * @param membersDetail 展示昵称时使用
+     */
+    public void showUserOrientedLayout(ArrayList<String> userIds, String membersDetail) {
+        this.membersDetail = membersDetail;
+        membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
         ArrayList<String> robotIds = new ArrayList<>();
         for (String userId : userIds) {
             if (ContactUserCacheUtils.getContactUserByUid(userId) == null) robotIds.add(userId);
@@ -203,13 +220,27 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
         if (uids.isEmpty()) return "";
         StringBuilder nameBuilder = new StringBuilder();
         String firstUid = uids.get(0);
-        ContactUser firstContactUser = ContactUserCacheUtils.getContactUserByUid(firstUid);
-        if (firstContactUser != null) nameBuilder.append(firstContactUser.getName());
+        String firstName;
+//        ContactUser firstContactUser = ContactUserCacheUtils.getContactUserByUid(firstUid);
+//        if (firstContactUser != null) nameBuilder.append(firstName);
+        if (!TextUtils.isEmpty(membersDetail)) {
+            firstName = ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, firstUid);
+        } else {
+            firstName = ContactUserCacheUtils.getUserName(firstUid);
+        }
+        if (!TextUtils.isEmpty(firstName)) nameBuilder.append(firstName);
         if (uids.size() == 1) return nameBuilder.toString();
         uids.remove(firstUid);
+        String userName;
         for (String uid : uids) {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            if (contactUser != null) nameBuilder.append("、").append(contactUser.getName());
+            if (!TextUtils.isEmpty(membersDetail)) {
+                userName = ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, uid);
+            } else {
+                userName = ContactUserCacheUtils.getUserName(uid);
+            }
+            if (userName != null) nameBuilder.append("、").append(userName);
+//            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+//            if (contactUser != null) nameBuilder.append("、").append(contactUser.getName());
         }
         return nameBuilder.toString();
     }
@@ -258,8 +289,14 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
             final String uid = contactUserList.get(position);
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser == null) return;
-            String userName = ContactUserCacheUtils.getUserName(uid);
             String userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
+            String userName;
+            // 先获取昵称，昵称为空则显示通讯录名称
+            if (!TextUtils.isEmpty(membersDetail)) {
+                userName = ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, uid);
+            } else {
+                userName = ContactUserCacheUtils.getUserName(uid);
+            }
             holder.nameTv.setText(userName);
             holder.selectImg.setVisibility(selectedUser.contains(uid) ? View.VISIBLE : View.GONE);
             ImageDisplayUtils.getInstance().displayImageByTag(holder.headerImg, userPhotoUrl, R.drawable.icon_person_default);

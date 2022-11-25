@@ -14,8 +14,6 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Table(name = "Message", onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
@@ -30,7 +28,7 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
     public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
-//    public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "extended/selects";
+    //    public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "extended/selects";
     public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "experimental/selects";
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
@@ -146,7 +144,7 @@ public class Message implements Serializable {
         return new MsgContentExtendedActions(content);
     }
 
-    public MsgContentExtendedDecide getMsgContentExtendedDecide(){
+    public MsgContentExtendedDecide getMsgContentExtendedDecide() {
         return new MsgContentExtendedDecide(content);
     }
 
@@ -366,8 +364,8 @@ public class Message implements Serializable {
     }
 
     /*
-                         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-                         */
+     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+     */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

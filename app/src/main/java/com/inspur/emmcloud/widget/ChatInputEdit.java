@@ -305,12 +305,11 @@ public class ChatInputEdit extends EditText {
         }
 
         if (insertRule.equals("@")) {
-            insertContent = insertRule + insertContent;
-//            if (!TextUtils.isEmpty(insertModel.getInsertNickname())) {
-//                insertContent = insertRule + insertModel.getInsertNickname();
-//            } else {
-//                insertContent = insertRule + insertContent;
-//            }
+            if (!TextUtils.isEmpty(insertModel.getInsertNickname())) {
+                insertContent = insertRule + insertModel.getInsertNickname();
+            } else {
+                insertContent = insertRule + insertContent;
+            }
         } else {
             insertContent = insertRule + insertContent + insertRule;
         }

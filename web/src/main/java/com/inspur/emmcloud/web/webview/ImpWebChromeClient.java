@@ -49,6 +49,7 @@ import android.widget.FrameLayout;
 
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -372,7 +373,8 @@ public class ImpWebChromeClient extends WebChromeClient {
                                      ValueCallback<Uri[]> filePathCallback,
                                      FileChooserParams fileChooserParams) {
         mUploadCallbackAboveL = filePathCallback;
-        if ("919455".equals(BaseApplication.getInstance().getCurrentEnterprise().getId())) {
+        Enterprise currentEnterprise = BaseApplication.getInstance().getCurrentEnterprise();
+        if (currentEnterprise != null && "919455".equals(currentEnterprise.getId())) {
             // 针对广水添加相机和相册选项
             showFileChooser();
         } else {

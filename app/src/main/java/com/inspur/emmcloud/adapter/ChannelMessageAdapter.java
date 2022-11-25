@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
@@ -52,6 +53,7 @@ import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
 import com.inspur.emmcloud.ui.chat.selectabletext.SelectableTextHelper;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
@@ -421,6 +423,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     public void onClick(View v) {
                         Intent intent = new Intent(context, UnReadDetailActivity.class);
                         intent.putExtra(UnReadDetailActivity.UI_MESSAGE, uiMessage);
+                        intent.putExtra(UnReadDetailActivity.MEMBER_NICKNAME, membersDetail); // 昵称列表
                         intent.putStringArrayListExtra(UnReadDetailActivity.CONVERSATION_ALL_MEMBER, mExceptSelfMemberList);
                         context.startActivity(intent);
                     }
@@ -455,11 +458,21 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         List<ContactUser> contactUsers = ContactUserCacheUtils.getContactUserListById(uidList);
         StringBuilder nameBuilder = new StringBuilder();
         int length = Math.min(4, uidList.size());
-        nameBuilder.append(contactUsers.get(0).getName());
+        if (TextUtils.isEmpty(membersDetail)) {
+            nameBuilder.append(contactUsers.get(0).getName());
+        } else {
+            nameBuilder.append(ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, contactUsers.get(0).getId()));
+        }
+//        nameBuilder.append(contactUsers.get(0).getName());
         for (int i = 1; i < length; i++) {
             String name = "";
-            name = contactUsers.get(i).getName();
-            nameBuilder.append("、").append(name);
+            if (TextUtils.isEmpty(membersDetail)) {
+                nameBuilder.append("、").append(contactUsers.get(i).getName());
+            } else {
+                nameBuilder.append("、").append(ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, contactUsers.get(i).getId()));
+            }
+//            name = contactUsers.get(i).getName();
+//            nameBuilder.append("、").append(name);
         }
         if (uidList.size() > 4) {
             nameBuilder.append("...");
@@ -543,7 +556,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             @Override
             public boolean onLongClick(View v) {
                 if (channelType.equals("GROUP")) {
-                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false, null);
+                    chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false, holder.senderNameText.getText().toString());
                 }
                 return true;
             }
