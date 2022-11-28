@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
@@ -47,9 +48,9 @@ public class CameraInterface implements Camera.PreviewCallback {
     private Camera mCamera;
     private Camera.Parameters mParams;
     private boolean isPreviewing = false;
-    private int SELECTED_CAMERA = -1;
-    private int CAMERA_POST_POSITION = -1;
-    private int CAMERA_FRONT_POSITION = -1;
+    private int SELECTED_CAMERA = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private int CAMERA_POST_POSITION = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private int CAMERA_FRONT_POSITION = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private float screenProp = -1.0f;
     private boolean isRecorder = false;
     private MediaRecorder mediaRecorder;
@@ -73,7 +74,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
     private SensorController sensorController;
-    private String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
+    public static String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
     /**
      * 拍照
      */
@@ -297,13 +298,21 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     public void setFlashMode(String flashMode) {
-        if (mCamera == null) {
+        if (!StringUtils.isEmpty(flashMode)) {
             this.flashMode = flashMode;
+        } else {
             return;
         }
-        Camera.Parameters params = mCamera.getParameters();
-        mCamera.setParameters(params);
-        params.setFlashMode(flashMode);
+        if (mCamera == null) {
+            return;
+        }
+        try {
+            Camera.Parameters params = mCamera.getParameters();
+            params.setFlashMode(flashMode);
+            mCamera.setParameters(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -320,12 +329,6 @@ public class CameraInterface implements Camera.PreviewCallback {
             openCamera(SELECTED_CAMERA);
         }
         callback.cameraHasOpened();
-    }
-
-    private void setFlashModel() {
-        mParams = mCamera.getParameters();
-        mParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH); //设置camera参数为Torch模式
-        mCamera.setParameters(mParams);
     }
 
     private synchronized void openCamera(int id) {
@@ -401,8 +404,10 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
                 }
-                // imp 回调，添加闪光灯光操作
-                mParams.setFlashMode(flashMode);
+                // imp 回调，后置相机添加闪光灯光操作
+                if (CameraInterface.getInstance().getSELECTED_CAMERA() == 0) {
+                    mParams.setFlashMode(flashMode);
+                }
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView
@@ -805,11 +810,31 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
+    public void setFlashKeep() {
+        setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+    }
+
+    public void setFlashClose() {
+        setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+    }
+
+    public void setFlashOpen() {
+        setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+    }
+
+    public void setFlashAuto() {
+        setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+    }
+
     public void unlockFocus() {
         if (sensorController != null) {
             sensorController.unlockFocus();
         }
 
+    }
+
+    public int getSELECTED_CAMERA() {
+        return SELECTED_CAMERA;
     }
 
     void isPreview(boolean res) {

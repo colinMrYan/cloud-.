@@ -49,6 +49,9 @@
     <string name="exit">退出</string>
     <string name="open">打開</string>
     <string name="add">添加</string>
+    <string name="auto">自动</string>
+    <string name="always_lighting">常亮</string>
+    <string name="flash_light">閃光燈</string>
     <string name="update">更新</string>
     <string name="download">下載</string>
     <string name="redownload">繼續下載</string>

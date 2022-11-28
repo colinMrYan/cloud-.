@@ -67,7 +67,7 @@ public class PhotoService extends ImpPlugin {
     private int parm_resolution = MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE;
     private int encodingType = 0;
     private int parm_qualtity = 90;
-    private String parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
+    private String parm_flash_mode = "";
     private String parm_uploadUrl, parm_context;
     private JSONObject watermarkObj;
     private LoadingDialog loadingDlg;
@@ -333,7 +333,7 @@ public class PhotoService extends ImpPlugin {
                 parm_resolution = JSONUtils.getInt(optionsObj, "resolution", MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE);
                 parm_resolution = parm_resolution < MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE ? parm_resolution : MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
                 parm_qualtity = JSONUtils.getInt(optionsObj, "quality", 90);
-                switch (JSONUtils.getInt(optionsObj, "flashMode", 0)) {
+                switch (JSONUtils.getInt(optionsObj, "flashMode", 100)) {
                     case 0:
                         parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
                         break;

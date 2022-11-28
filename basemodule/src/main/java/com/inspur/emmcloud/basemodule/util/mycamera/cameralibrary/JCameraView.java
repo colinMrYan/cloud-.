@@ -19,11 +19,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.media.selector.utils.DoubleUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.RectScale;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.CaptureListener;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ClickListener;
@@ -78,6 +82,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private MediaPlayer mMediaPlayer;
     private VideoView mVideoView;
     private CameraCropView cameraCropView;
+    private ViewGroup flashControlLayout;
 
     private int layout_width;
     private float screenProp = 0f;
@@ -102,6 +107,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private float firstTouchLength = 0;
     private ErrorListener errorListener;
     private String cropJson;
+    private Boolean displaying = false;
 
     public JCameraView(Context context) {
         this(context, null);
@@ -142,13 +148,14 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mPhoto = (ImageView) view.findViewById(R.id.image_photo);
         mSwitchCamera = (ImageView) view.findViewById(R.id.image_switch);
         mSwitchCamera.setImageResource(iconSrc);
-        machine.flash(Camera.Parameters.FLASH_MODE_AUTO);
+        machine.flash(CameraInterface.flashMode);
         mCaptureLayout = (CaptureLayout) view.findViewById(R.id.capture_layout);
         mCaptureLayout.setVisibility(INVISIBLE);
         mCaptureLayout.setDuration(duration);
         mCaptureLayout.setIconSrc(iconLeft, iconRight);
         mFocusView = (FocusView) view.findViewById(R.id.fouce_view);
         cameraCropView = findViewById(R.id.camera_crop_view);
+        flashControlLayout = findViewById(R.id.flash_root);
         mVideoView.getHolder().addCallback(this);
 
         //切换摄像头
@@ -242,6 +249,69 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }
             }
         });
+        setFlashLightClickEvent();
+    }
+
+    public void setFlashLightClickEvent() {
+        if (flashControlLayout == null) return;
+        final ViewGroup menuLayout = (ViewGroup) flashControlLayout.findViewById(R.id.menu_layout);
+        ImageView menuShower = (ImageView) flashControlLayout.findViewById(R.id.multi_menu_chooser);
+        Button autoBtn = (Button) flashControlLayout.findViewById(R.id.auto_btn);
+        Button openBtn = (Button) flashControlLayout.findViewById(R.id.open_btn);
+        Button keepBtn = (Button) flashControlLayout.findViewById(R.id.open_keep_btn);
+        Button closeBtn = (Button) flashControlLayout.findViewById(R.id.close_btn);
+        menuShower.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DoubleUtils.isFastDoubleClick()) {
+                    return;
+                }
+                updateFlashLayout(menuLayout);
+            }
+        });
+        autoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraInterface.getInstance().setFlashAuto();
+                updateFlashLayout(menuLayout);
+            }
+        });
+        openBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                CameraInterface.getInstance().setFlashOpen();
+                updateFlashLayout(menuLayout);
+            }
+        });
+        keepBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                CameraInterface.getInstance().setFlashKeep();
+                updateFlashLayout(menuLayout);
+            }
+        });
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                CameraInterface.getInstance().setFlashClose();
+                updateFlashLayout(menuLayout);
+            }
+        });
+    }
+
+    private void updateFlashLayout(ViewGroup menuLayout){
+        if (displaying) {
+            menuLayout.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.ps_anim_modal_out));
+            menuLayout.setVisibility(View.GONE);
+            displaying = false;
+        } else {
+            menuLayout.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.ps_anim_modal_in));
+            menuLayout.setVisibility(View.VISIBLE);
+            displaying = true;
+        }
     }
 
     @Override

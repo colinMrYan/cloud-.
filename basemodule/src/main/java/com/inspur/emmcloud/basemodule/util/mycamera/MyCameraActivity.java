@@ -42,7 +42,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
     private boolean granted = false;
     private String photoFilePath;
     private int encodingType = 0;
-    private String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
+    private String flashMode = "";
     private String photoName;
     private String photoSaveDirectoryPath;
 
@@ -80,7 +80,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
         photoSaveDirectoryPath = getIntent().getExtras().getString(EXTRA_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
         photoName = getIntent().getExtras().getString(EXTRA_PHOTO_NAME, System.currentTimeMillis() + ".jpg");
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
-        flashMode = getIntent().getExtras().getString(EXTRA_FLASH_MODE, Camera.Parameters.FLASH_MODE_AUTO);
+        flashMode = getIntent().getExtras().getString(EXTRA_FLASH_MODE, "");
     }
 
     private void initView() {

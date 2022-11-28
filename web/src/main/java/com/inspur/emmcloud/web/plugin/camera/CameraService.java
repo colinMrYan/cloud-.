@@ -87,7 +87,7 @@ public class CameraService extends ImpPlugin {
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent, color, background, align, valign;
     private int fontSize;
-    private String parm_flash_mode = Camera.Parameters.FLASH_MODE_AUTO;
+    private String parm_flash_mode = "";
     /**
      * 读取图片属性：旋转的角度
      *
@@ -173,7 +173,7 @@ public class CameraService extends ImpPlugin {
                         "targetHeight");
                 encodingType = optionsObj.getInt(
                         "encodingType");
-                switch (JSONUtils.getInt(optionsObj, "flashMode", 0)) {
+                switch (JSONUtils.getInt(optionsObj, "flashMode", 100)) {
                     case 0:
                         parm_flash_mode = Camera.Parameters.FLASH_MODE_OFF;
                         break;
