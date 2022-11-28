@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 
 import com.inspur.emmcloud.basemodule.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.media.selector.utils.DoubleUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.RectScale;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.CaptureListener;
@@ -260,6 +261,26 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         Button openBtn = (Button) flashControlLayout.findViewById(R.id.open_btn);
         Button keepBtn = (Button) flashControlLayout.findViewById(R.id.open_keep_btn);
         Button closeBtn = (Button) flashControlLayout.findViewById(R.id.close_btn);
+        switch (CameraInterface.flashMode) {
+            case Camera.Parameters.FLASH_MODE_AUTO:
+                autoBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
+                CameraInterface.getInstance().setCurrentFlashBtn(autoBtn);
+                break;
+            case Camera.Parameters.FLASH_MODE_ON:
+                openBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
+                CameraInterface.getInstance().setCurrentFlashBtn(openBtn);
+                break;
+            case Camera.Parameters.FLASH_MODE_OFF:
+                closeBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
+                CameraInterface.getInstance().setCurrentFlashBtn(closeBtn);
+                break;
+            case Camera.Parameters.FLASH_MODE_TORCH:
+                keepBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
+                CameraInterface.getInstance().setCurrentFlashBtn(keepBtn);
+                break;
+            default:
+                break;
+        }
         menuShower.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,7 +293,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         autoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CameraInterface.getInstance().setFlashAuto();
+                CameraInterface.getInstance().setFlashAuto(v);
                 updateFlashLayout(menuLayout);
             }
         });
@@ -280,7 +301,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void onClick(View v) {
-                CameraInterface.getInstance().setFlashOpen();
+                CameraInterface.getInstance().setFlashOpen(v);
                 updateFlashLayout(menuLayout);
             }
         });
@@ -288,7 +309,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void onClick(View v) {
-                CameraInterface.getInstance().setFlashKeep();
+                CameraInterface.getInstance().setFlashKeep(v);
                 updateFlashLayout(menuLayout);
             }
         });
@@ -296,7 +317,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void onClick(View v) {
-                CameraInterface.getInstance().setFlashClose();
+                CameraInterface.getInstance().setFlashClose(v);
                 updateFlashLayout(menuLayout);
             }
         });

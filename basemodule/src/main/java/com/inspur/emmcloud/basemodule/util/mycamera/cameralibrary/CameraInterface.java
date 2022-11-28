@@ -16,11 +16,13 @@ import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
 import com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.listener.ErrorListener;
@@ -75,6 +77,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private SensorManager sm = null;
     private SensorController sensorController;
     public static String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
+    private View currentFlashBtn;
     /**
      * 拍照
      */
@@ -310,6 +313,9 @@ public class CameraInterface implements Camera.PreviewCallback {
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(flashMode);
             mCamera.setParameters(params);
+            if (currentFlashBtn != null) {
+                currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -810,20 +816,40 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    public void setFlashKeep() {
+    public void setFlashKeep(View selectedFlashBtn) {
+        if (currentFlashBtn != null){
+            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
+        }
+        currentFlashBtn = selectedFlashBtn;
         setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
     }
 
-    public void setFlashClose() {
+    public void setFlashClose(View selectedFlashBtn) {
+        if (currentFlashBtn != null){
+            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
+        }
+        currentFlashBtn = selectedFlashBtn;
         setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
     }
 
-    public void setFlashOpen() {
+    public void setFlashOpen(View selectedFlashBtn) {
+        if (currentFlashBtn != null){
+            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
+        }
+        currentFlashBtn = selectedFlashBtn;
         setFlashMode(Camera.Parameters.FLASH_MODE_ON);
     }
 
-    public void setFlashAuto() {
+    public void setFlashAuto(View selectedFlashBtn) {
+        if (currentFlashBtn != null){
+            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
+        }
+        currentFlashBtn = selectedFlashBtn;
         setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+    }
+
+    public void setCurrentFlashBtn(View currentFlashBtn) {
+        this.currentFlashBtn = currentFlashBtn;
     }
 
     public void unlockFocus() {
