@@ -39,6 +39,8 @@ import java.util.List;
 
 import static android.graphics.Bitmap.createBitmap;
 
+import androidx.annotation.Nullable;
+
 @SuppressWarnings("deprecation")
 public class CameraInterface implements Camera.PreviewCallback {
 
@@ -300,22 +302,23 @@ public class CameraInterface implements Camera.PreviewCallback {
         firstFrame_data = data;
     }
 
-    public void setFlashMode(String flashMode) {
-        if (!StringUtils.isEmpty(flashMode)) {
-            this.flashMode = flashMode;
-        } else {
-            return;
-        }
-        if (mCamera == null) {
+    public void setFlashMode(String flashMode,  @Nullable View selectedFlashBtn) {
+        if (StringUtils.isEmpty(flashMode) || mCamera == null) {
             return;
         }
         try {
             Camera.Parameters params = mCamera.getParameters();
             params.setFlashMode(flashMode);
+            // 部分摄像头不支持格式抛异常
             mCamera.setParameters(params);
+            if (currentFlashBtn != null){
+                currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
+            }
+            currentFlashBtn = selectedFlashBtn;
             if (currentFlashBtn != null) {
                 currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.text_color_dark_66));
             }
+            this.flashMode = flashMode;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -817,35 +820,19 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     public void setFlashKeep(View selectedFlashBtn) {
-        if (currentFlashBtn != null){
-            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
-        }
-        currentFlashBtn = selectedFlashBtn;
-        setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        setFlashMode(Camera.Parameters.FLASH_MODE_TORCH, selectedFlashBtn);
     }
 
     public void setFlashClose(View selectedFlashBtn) {
-        if (currentFlashBtn != null){
-            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
-        }
-        currentFlashBtn = selectedFlashBtn;
-        setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        setFlashMode(Camera.Parameters.FLASH_MODE_OFF, selectedFlashBtn);
     }
 
     public void setFlashOpen(View selectedFlashBtn) {
-        if (currentFlashBtn != null){
-            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
-        }
-        currentFlashBtn = selectedFlashBtn;
-        setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        setFlashMode(Camera.Parameters.FLASH_MODE_ON, selectedFlashBtn);
     }
 
     public void setFlashAuto(View selectedFlashBtn) {
-        if (currentFlashBtn != null){
-            currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
-        }
-        currentFlashBtn = selectedFlashBtn;
-        setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        setFlashMode(Camera.Parameters.FLASH_MODE_AUTO, selectedFlashBtn);
     }
 
     public void setCurrentFlashBtn(View currentFlashBtn) {

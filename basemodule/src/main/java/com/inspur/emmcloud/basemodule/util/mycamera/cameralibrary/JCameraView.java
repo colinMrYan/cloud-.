@@ -510,7 +510,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //设置录制质量
     public void setFlashMode(String mode) {
-        CameraInterface.getInstance().setFlashMode(mode);
+        CameraInterface.getInstance().setFlashMode(mode, null);
     }
 
     @Override
