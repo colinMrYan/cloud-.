@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
@@ -320,6 +321,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             }
             this.flashMode = flashMode;
         } catch (Exception e) {
+            ToastUtils.show(BaseApplication.getInstance().getString(R.string.unsupport_type));
             e.printStackTrace();
         }
     }
