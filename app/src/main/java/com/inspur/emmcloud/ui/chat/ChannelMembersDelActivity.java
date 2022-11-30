@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,16 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,8 @@ public class ChannelMembersDelActivity extends BaseActivity {
     private ChannelMemDelAdapter adapter;
     private ArrayList<String> memberDelUidList = new ArrayList<>();
     private boolean isRemoveMyself = true;
+    private String membersDetail = "";
+    private JSONArray membersDetailArray;
 
     @Override
     public void onCreate() {
@@ -44,6 +51,11 @@ public class ChannelMembersDelActivity extends BaseActivity {
             ((TextView) findViewById(R.id.header_text)).setText(getIntent().getStringExtra("title"));
         }
         isRemoveMyself = getIntent().getExtras().getBoolean("isRemoveMyself", true);
+        // 获取群成员昵称列表，有昵称则显示昵称，否则显示通讯录
+        membersDetail = getIntent().getExtras().getString("membersDetail", "");
+        if (!TextUtils.isEmpty(membersDetail)) {
+            membersDetailArray = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+        }
         if (isRemoveMyself) {
             memberContactUserList.remove(new ContactUser(MyApplication.getInstance().getUid()));
         }
@@ -105,17 +117,29 @@ public class ChannelMembersDelActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ContactUser contactUser = memberContactUserList.get(position);
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.channel_member_list_item, null);
-            CircleTextImageView circleImageView = (CircleTextImageView) convertView
-                    .findViewById(R.id.head);
-            ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri
-                    .getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()), R.drawable.icon_person_default);
-            ((TextView) convertView.findViewById(R.id.title))
-                    .setText(contactUser.getName());
+            CircleTextImageView circleImageView = (CircleTextImageView) convertView.findViewById(R.id.head);
+            ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()), R.drawable.icon_person_default);
+            // 有群昵称时显示昵称，否则显示通讯录名称
+            if (!TextUtils.isEmpty(membersDetail)) {
+                for (int j = 0; j < membersDetailArray.length(); j++) {
+                    JSONObject obj = JSONUtils.getJSONObject(membersDetailArray, j, new JSONObject());
+                    if (contactUser.getId().equals(JSONUtils.getString(obj, "user", ""))) {
+                        String nickname = JSONUtils.getString(obj, "nickname", "");
+                        if (TextUtils.isEmpty(nickname)) {
+                            ((TextView) convertView.findViewById(R.id.title)).setText(contactUser.getName());
+                        } else {
+                            ((TextView) convertView.findViewById(R.id.title)).setText(nickname);
+                        }
+                        break;
+                    }
+                }
+            } else {
+                ((TextView) convertView.findViewById(R.id.title)).setText(contactUser.getName());
+            }
             ((ImageView) convertView.findViewById(R.id.select_img)).setImageResource(memberDelUidList.contains(contactUser.getId()) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
             return convertView;
         }

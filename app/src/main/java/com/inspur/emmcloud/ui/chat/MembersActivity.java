@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -164,7 +167,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                         Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelId);
                         uidList = conversation.getMemberList();
-                        if (state == MENTIONS_STATE) {
+                        if (state == MENTIONS_STATE || state == GROUP_TRANSFER) {
                             // @显示群成员昵称
                             String membersDetail = conversation.getMembersDetail(); // 群昵称
                             personDtoList = ContactUserCacheUtils.getShowMemberList(uidList, membersDetail);
@@ -428,14 +431,19 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     case GROUP_TRANSFER:
                         String uId = "";
                         String uName = "";
+                        String nickName = "";
                         if (searchInputEv.getText().toString().length() > 0 || editText.getText().toString().length() > 0) {
-                            uId = filterList.get(position).getUid();
-                            uName = filterList.get(position).getName();
+                            PersonDto personDto = filterList.get(position);
+                            uId = personDto.getUid();
+                            uName = personDto.getName();
+                            nickName = personDto.getNickname();
                         } else {
-                            uId = personDtoList.get(position).getUid();
-                            uName = personDtoList.get(position).getName();
+                            PersonDto personDto = personDtoList.get(position);
+                            uId = personDto.getUid();
+                            uName = personDto.getName();
+                            nickName = personDto.getNickname();
                         }
-                        showTransferConfirmDialog(uId, uName);
+                        showTransferConfirmDialog(uId, uName, nickName);
                         break;
                     default:
                         break;
@@ -460,9 +468,9 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     }
 
     // 群主转让确认dialog
-    private void showTransferConfirmDialog(final String uId, String uName) {
+    private void showTransferConfirmDialog(final String uId, String uName, String nickName) {
         new CustomDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.transfer_group_tip, uName))
+                .setMessage(getString(R.string.transfer_group_tip, TextUtils.isEmpty(nickName) ? uName : nickName))
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -3,7 +3,9 @@ package com.inspur.emmcloud.ui.chat;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +48,10 @@ public class DisplayMediaVideoMsg {
      *
      * @param context
      */
-    public static View getView(final Activity context,
-                               final UIMessage uiMessage) {
+    public static View getView(final Activity context, final UIMessage uiMessage) {
         final Message message = uiMessage.getMessage();
-        View cardContentView = LayoutInflater.from(context).inflate(
-                R.layout.chat_msg_card_child_res_video_view, null);
-        final RoundedImageView imageView = (RoundedImageView) cardContentView
-                .findViewById(R.id.content_img);
+        View cardContentView = LayoutInflater.from(context).inflate(R.layout.chat_msg_card_child_res_video_view, null);
+        final RoundedImageView imageView = (RoundedImageView) cardContentView.findViewById(R.id.content_img);
         TextView durationTv = cardContentView.findViewById(R.id.tv_duration);
         final MsgContentMediaVideo msgContentMediaVideo = message.getMsgContentMediaVideo();
         durationTv.setText(formattedTime(msgContentMediaVideo.getVideoDuration()));
@@ -117,7 +116,7 @@ public class DisplayMediaVideoMsg {
 
     }
 
-    private static void loadVideoCover(final Context context, final ImageView imageView, final int chatImgBg, final Message message) {
+    private static void loadVideoCover(final Activity context, final ImageView imageView, final int chatImgBg, final Message message) {
         imageView.setImageResource(chatImgBg);
         BaseModuleApiService appAPIService = new BaseModuleApiService(context);
         appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {

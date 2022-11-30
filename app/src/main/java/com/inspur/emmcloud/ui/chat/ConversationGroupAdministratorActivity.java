@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -78,7 +80,7 @@ public class ConversationGroupAdministratorActivity extends BaseActivity {
     private void initList() {
         final List<String> uiUidList = getUIUidListFromDataList(mConversation.getAdministratorList());
         mConversationMembersHeadAdapter = new ConversationMembersHeadAdapter(this,
-                uiUidList, mConversation.getOwner(), new ArrayList<String>());
+                uiUidList, mConversation.getOwner(), new ArrayList<String>(), mConversation.getMembersDetail());
         Configuration configuration = getResources().getConfiguration();
         // 适配横屏头像显示
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -101,6 +103,7 @@ public class ConversationGroupAdministratorActivity extends BaseActivity {
                     intent.putExtra("memberUidList", mConversation.getAdministratorList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
+                    intent.putExtra("membersDetail", mConversation.getMembersDetail());
                     intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.remove_group_administrator));
                     startActivityForResult(intent, QEQUEST_DEL_ADMINISTRATOR);
                 } else if (ConversationMembersHeadAdapter.TYPE_ADD_USER.equals(mConversationMembersHeadAdapter.getUIUidFromIndex(i))
@@ -110,6 +113,7 @@ public class ConversationGroupAdministratorActivity extends BaseActivity {
                     intent.putExtra("memberUidList", notAdministratorList);
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
+                    intent.putExtra("membersDetail", mConversation.getMembersDetail());
                     intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.add_group_administrator));
                     startActivityForResult(intent, QEQUEST_ADD_ADMINISTRATOR);
                 } else {
