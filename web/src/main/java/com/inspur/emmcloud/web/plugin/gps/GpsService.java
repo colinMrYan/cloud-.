@@ -75,6 +75,7 @@ public class GpsService extends ImpPlugin implements
     private TimerTask timerTask;
     private String headerObj;
     private TraceInfo traceInfo;
+    private int intervalTime = 5000;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -224,9 +225,18 @@ public class GpsService extends ImpPlugin implements
             }
             if (optionsObj.has("headers")) {
                 headerObj = JSONUtils.getString(optionsObj, "headers", null);
-            }else {
+            } else {
                 headerObj = null;
             }
+            if (optionsObj.has("intervalTime")) {
+                intervalTime = JSONUtils.getInt(optionsObj, "intervalTime", 5000);
+            } else {
+                intervalTime = 5000;
+            }
+            if (intervalTime < 5000){
+                intervalTime = 5000;
+            }
+
             if (uploadTrace && StringUtils.isEmpty(uploadUri)) {
                 uploadTraceCallback(false, "invalid parameter");
                 return;
@@ -256,11 +266,10 @@ public class GpsService extends ImpPlugin implements
                                     }
                                     return;
                                 }
-                                requestUploadLocations();
+                                startLocation();
                             }
                         };
-                        uploadTimer.schedule(timerTask, 500, 10000);
-
+                        uploadTimer.schedule(timerTask, 0, intervalTime);
                     } else {
                         closeUploadPosition();
                     }
@@ -530,9 +539,7 @@ public class GpsService extends ImpPlugin implements
             aMapLocationList.add(amapLocation);
         }
         if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
-            if (!uploadTrace) {
-                mlocationClient.stopLocation();
-            }
+            mlocationClient.stopLocation();
             PVCollectModelCacheUtils.saveCollectModel("GpsService: onLocationChanged", "stopLocation");
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
@@ -586,10 +593,14 @@ public class GpsService extends ImpPlugin implements
             }
             if (!uploadTrace) {
                 jsCallback(functName, jsonObject.toString());
+            } else {
+                if (traceInfo != null) {
+                    traceInfo.getLocations().clear();
+                    traceInfo.addLocation(locationMap);
+                }
+                requestUploadLocations();
             }
-            if (traceInfo != null) {
-                traceInfo.addLocation(locationMap);
-            }
+
             // 设置回调js页面函数
             LogUtils.debug("yfcLog", "GPSLocation:" + jsonObject.toString());
             // 设置回调js页面函数

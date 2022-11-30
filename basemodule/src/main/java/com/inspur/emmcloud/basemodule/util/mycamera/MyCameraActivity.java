@@ -34,7 +34,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
     public static final String EXTRA_PHOTO_NAME = "IMAGE_NAME";
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_RECT_SCALE_JSON = "CAMERA_SCALE_JSON";
-    public static final String EXTRA_FLASH_MODE = "CAMERA_FLASH_MODE";
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     public static final int REQ_IMAGE_EDIT = 1;
     @BindView(R2.id.camera_view)
@@ -42,7 +41,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
     private boolean granted = false;
     private String photoFilePath;
     private int encodingType = 0;
-    private String flashMode = "";
     private String photoName;
     private String photoSaveDirectoryPath;
 
@@ -80,7 +78,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
         photoSaveDirectoryPath = getIntent().getExtras().getString(EXTRA_PHOTO_DIRECTORY_PATH, Environment.getExternalStorageDirectory() + "/DCIM/");
         photoName = getIntent().getExtras().getString(EXTRA_PHOTO_NAME, System.currentTimeMillis() + ".jpg");
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
-        flashMode = getIntent().getExtras().getString(EXTRA_FLASH_MODE, "");
     }
 
     private void initView() {
@@ -90,7 +87,6 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
         }
         jCameraView.setJCameraLisenter(this);
         jCameraView.setLeftClickListener(this);
-        jCameraView.setFlashMode(flashMode);
     }
 
     @Override
