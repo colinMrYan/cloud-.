@@ -681,7 +681,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         }
     }
 
-    private static void loadVideoCover(final Context context, final ImageView imageView, final int chatImgBg, final Message message) {
+    private static void loadVideoCover(final Activity context, final ImageView imageView, final int chatImgBg, final Message message) {
         imageView.setImageResource(chatImgBg);
         BaseModuleApiService appAPIService = new BaseModuleApiService(context);
         appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {

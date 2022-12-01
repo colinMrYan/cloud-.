@@ -157,7 +157,7 @@ public class DisplayCommentNewMsg {
         return cardContentView;
     }
 
-    private static void showVideoView(final Message commentedMessage, final Context context, final RoundedImageView videoIv) {
+    private static void showVideoView(final Message commentedMessage, final Activity context, final RoundedImageView videoIv) {
         MsgContentMediaVideo msgContentMediaVideo = commentedMessage.getMsgContentMediaVideo();
         final int chatImgBg = ResourceUtils.getResValueOfAttr(context, R.attr.bg_chat_img);
         String imagePath = msgContentMediaVideo.getImagePath();
@@ -238,7 +238,7 @@ public class DisplayCommentNewMsg {
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, null);
     }
 
-    private static void loadVideoCover(final Context context, final ImageView imageView, final int chatImgBg, final Message message) {
+    private static void loadVideoCover(final Activity context, final ImageView imageView, final int chatImgBg, final Message message) {
         imageView.setImageResource(chatImgBg);
         BaseModuleApiService appAPIService = new BaseModuleApiService(context);
         appAPIService.setAPIInterface(new BaseModuleAPIInterfaceInstance() {

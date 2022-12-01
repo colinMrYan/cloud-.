@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -260,6 +261,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
                     } else {
                         intent.putExtra("memberUidList", uiConversation.getMemberList());
                     }
+                    intent.putExtra("membersDetail", uiConversation.getMembersDetail());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
                     startActivityForResult(intent, QEQUEST_DEL_MEMBER);

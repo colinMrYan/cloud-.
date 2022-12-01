@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.basemodule.media.selector.demo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -143,8 +146,11 @@ public class GlideEngine implements ImageEngine {
      * @param videoPath 播放路径
      * @param imageView 承载图片ImageView
      */
-    public void loadVideoThumbnailImage(@NonNull Context context, @NonNull String videoPath, int maxWidth,
+    public void loadVideoThumbnailImage(Activity context, @NonNull String videoPath, int maxWidth,
                                         int maxHeight, @NonNull ImageView imageView, int holder, RequestListener<Drawable> requestListener) {
+        if (context == null || context.isFinishing() || context.isDestroyed()) {
+            return;
+        }
         Glide.with(context)
                 .setDefaultRequestOptions(new RequestOptions().frame(0).centerCrop())
                 .load(videoPath)
