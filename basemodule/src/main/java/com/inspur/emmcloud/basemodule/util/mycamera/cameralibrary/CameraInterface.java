@@ -13,6 +13,7 @@ import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -79,6 +80,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
     private SensorController sensorController;
+    // takePicture不使用的时候使用flashMode控制闪光逻辑
     public static String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
     private View currentFlashBtn;
     /**
@@ -303,16 +305,20 @@ public class CameraInterface implements Camera.PreviewCallback {
         firstFrame_data = data;
     }
 
-    public void setFlashMode(String flashMode,  @Nullable View selectedFlashBtn) {
+    public void setCameraFlashMode(String flashMode, @Nullable View selectedFlashBtn) {
         if (StringUtils.isEmpty(flashMode) || mCamera == null) {
             return;
         }
+        // 部分摄像头不支持格式抛异常
         try {
             Camera.Parameters params = mCamera.getParameters();
-            params.setFlashMode(flashMode);
-            // 部分摄像头不支持格式抛异常
+            if (flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH)) {
+                params.setFlashMode(flashMode);
+            } else {
+                params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            }
             mCamera.setParameters(params);
-            if (currentFlashBtn != null){
+            if (currentFlashBtn != null) {
                 currentFlashBtn.setBackgroundColor(BaseApplication.getInstance().getResources().getColor(R.color.transparent));
             }
             currentFlashBtn = selectedFlashBtn;
@@ -500,6 +506,10 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mCamera == null) {
             return;
         }
+        // 不走takepicture使用flashMode控制闪光灯逻辑
+        if (!flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH) && !flashMode.equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            CameraInterface.getInstance().turnLightOn();
+        }
         switch (cameraAngle) {
             case 90:
                 nowAngle = Math.abs(angle + cameraAngle) % 360;
@@ -511,28 +521,60 @@ public class CameraInterface implements Camera.PreviewCallback {
 //
         Log.i("CJT", angle + " = " + cameraAngle + " = " + nowAngle);
         if (firstFrame_data.length > 0) {
-            Camera.Parameters parameters = mCamera.getParameters();
-            int width = parameters.getPreviewSize().width;
-            int height = parameters.getPreviewSize().height;
-            YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
-            byte[] bytes = out.toByteArray();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Matrix matrix = new Matrix();
-            if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
-                matrix.setRotate(nowAngle);
-            } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
-                matrix.setRotate(360 - nowAngle);
-                matrix.postScale(-1, 1);
-            }
-            bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            if (callback != null) {
-                if (nowAngle == 90 || nowAngle == 270) {
-                    callback.captureResult(bitmap, true);
-                } else {
-                    callback.captureResult(bitmap, false);
+            if (flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH) || flashMode.equals(Camera.Parameters.FLASH_MODE_OFF)) {
+                Camera.Parameters parameters = mCamera.getParameters();
+                int width = parameters.getPreviewSize().width;
+                int height = parameters.getPreviewSize().height;
+                YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+                byte[] bytes = out.toByteArray();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Matrix matrix = new Matrix();
+                if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                    matrix.setRotate(nowAngle);
+                } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                    matrix.setRotate(360 - nowAngle);
+                    matrix.postScale(-1, 1);
                 }
+                bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                if (callback != null) {
+                    if (nowAngle == 90 || nowAngle == 270) {
+                        callback.captureResult(bitmap, true);
+                    } else {
+                        callback.captureResult(bitmap, false);
+                    }
+                }
+            } else {
+                // 延迟300ms，在曝光阶段拍照，否则拍不到灯光下的图片
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Camera.Parameters parameters = mCamera.getParameters();
+                        int width = parameters.getPreviewSize().width;
+                        int height = parameters.getPreviewSize().height;
+                        YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+                        byte[] bytes = out.toByteArray();
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        Matrix matrix = new Matrix();
+                        if (SELECTED_CAMERA == CAMERA_POST_POSITION) {
+                            matrix.setRotate(nowAngle);
+                        } else if (SELECTED_CAMERA == CAMERA_FRONT_POSITION) {
+                            matrix.setRotate(360 - nowAngle);
+                            matrix.postScale(-1, 1);
+                        }
+                        bitmap = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        if (callback != null) {
+                            if (nowAngle == 90 || nowAngle == 270) {
+                                callback.captureResult(bitmap, true);
+                            } else {
+                                callback.captureResult(bitmap, false);
+                            }
+                        }
+                    }
+                }, 300);
             }
         } else {
             mCamera.takePicture(null, null, new Camera.PictureCallback() {
@@ -822,19 +864,48 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     public void setFlashKeep(View selectedFlashBtn) {
-        setFlashMode(Camera.Parameters.FLASH_MODE_TORCH, selectedFlashBtn);
+        setCameraFlashMode(Camera.Parameters.FLASH_MODE_TORCH, selectedFlashBtn);
     }
 
     public void setFlashClose(View selectedFlashBtn) {
-        setFlashMode(Camera.Parameters.FLASH_MODE_OFF, selectedFlashBtn);
+        setCameraFlashMode(Camera.Parameters.FLASH_MODE_OFF, selectedFlashBtn);
     }
 
     public void setFlashOpen(View selectedFlashBtn) {
-        setFlashMode(Camera.Parameters.FLASH_MODE_ON, selectedFlashBtn);
+        setCameraFlashMode(Camera.Parameters.FLASH_MODE_ON, selectedFlashBtn);
     }
 
     public void setFlashAuto(View selectedFlashBtn) {
-        setFlashMode(Camera.Parameters.FLASH_MODE_AUTO, selectedFlashBtn);
+        setCameraFlashMode(Camera.Parameters.FLASH_MODE_AUTO, selectedFlashBtn);
+    }
+
+    /**
+     * 通过设置Camera打开闪光灯
+     */
+    public synchronized  void turnLightOn() {
+        if (mCamera == null) {
+            return;
+        }
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (parameters == null) {
+            return;
+        }
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        mCamera.setParameters(parameters);
+    }
+    /**
+     * 通过设置Camera关闭闪光灯
+     */
+    public synchronized void turnLightOff() {
+        if (mCamera == null) {
+            return;
+        }
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (parameters == null) {
+            return;
+        }
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        mCamera.setParameters(parameters);
     }
 
     public void setCurrentFlashBtn(View currentFlashBtn) {

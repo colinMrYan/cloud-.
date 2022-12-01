@@ -149,7 +149,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mPhoto = (ImageView) view.findViewById(R.id.image_photo);
         mSwitchCamera = (ImageView) view.findViewById(R.id.image_switch);
         mSwitchCamera.setImageResource(iconSrc);
-        machine.flash(CameraInterface.flashMode);
+        // 自行控制曝光逻辑
+        machine.flash(Camera.Parameters.FLASH_MODE_OFF);
         mCaptureLayout = (CaptureLayout) view.findViewById(R.id.capture_layout);
         mCaptureLayout.setVisibility(INVISIBLE);
         mCaptureLayout.setDuration(duration);
@@ -510,7 +511,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     //设置录制质量
     public void setFlashMode(String mode) {
-        CameraInterface.getInstance().setFlashMode(mode, null);
+        CameraInterface.getInstance().setCameraFlashMode(mode, null);
     }
 
     @Override

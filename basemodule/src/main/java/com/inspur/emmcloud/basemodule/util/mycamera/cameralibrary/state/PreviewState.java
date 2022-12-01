@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.basemodule.util.mycamera.cameralibrary.state;
 
 import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.os.Handler;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -52,13 +54,21 @@ class PreviewState implements State {
 
     @Override
     public void capture() {
-        CameraInterface.getInstance().takePicture(new CameraInterface.TakePictureCallback() {
+        // 打开闪光灯后能够拍照，设置延迟时间300ms使硬件灯光打开
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void captureResult(Bitmap bitmap, boolean isVertical) {
-                machine.getView().showPicture(bitmap, isVertical);
-                machine.setState(machine.getBorrowPictureState());
+            public void run() {
+                CameraInterface.getInstance().takePicture(new CameraInterface.TakePictureCallback() {
+                    @Override
+                    public void captureResult(Bitmap bitmap, boolean isVertical) {
+                        machine.getView().showPicture(bitmap, isVertical);
+                        machine.setState(machine.getBorrowPictureState());
+                        CameraInterface.getInstance().turnLightOff();
+                    }
+                });
             }
-        });
+        }, 300);
+
     }
 
     @Override
@@ -96,6 +106,6 @@ class PreviewState implements State {
 
     @Override
     public void flash(String mode) {
-        CameraInterface.getInstance().setFlashMode(mode, null);
+        CameraInterface.getInstance().setCameraFlashMode(mode, null);
     }
 }

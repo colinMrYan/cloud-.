@@ -12,9 +12,10 @@ import java.io.File;
  * 最终返回可操作的
  */
 public class FilePathUtils {
-
-
-    public static String BASE_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC +
+    public static String BASE_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC +
+            BaseApplication.getInstance().getTanent() + "/"
+            + BaseApplication.getInstance().getUid();
+    public static String BASE_SQL_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC +
             BaseApplication.getInstance().getTanent() + "/"
             + BaseApplication.getInstance().getUid();
     public static String SDCARD_PREFIX = "sdcard:";
@@ -29,6 +30,19 @@ public class FilePathUtils {
             File file = new File(BASE_PATH);
             if (!file.exists()) file.mkdirs();
             return filePath.startsWith("/") ? (BASE_PATH + filePath) : (BASE_PATH + "/" + filePath);
+        }
+    }
+
+    public static String getInternalRealPath(String filePath) {
+        if (filePath.startsWith(SDCARD_PREFIX)) {
+            String path = filePath.replace(SDCARD_PREFIX, "");
+            return path;
+        } else if (filePath.startsWith("http")) {
+            return filePath;
+        } else {
+            File file = new File(BASE_SQL_PATH);
+            if (!file.exists()) file.mkdirs();
+            return filePath.startsWith("/") ? (BASE_SQL_PATH + filePath) : (BASE_SQL_PATH + "/" + filePath);
         }
     }
 

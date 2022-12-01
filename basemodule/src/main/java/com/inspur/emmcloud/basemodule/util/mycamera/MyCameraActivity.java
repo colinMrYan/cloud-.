@@ -53,7 +53,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
             finish();
         }
         String[] permissions = new String[]{Permissions.CAMERA, Permissions.READ_EXTERNAL_STORAGE,
-                Permissions.WRITE_EXTERNAL_STORAGE};
+                Permissions.WRITE_EXTERNAL_STORAGE, Permissions.FLASHLIGHT};
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, permissions, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {

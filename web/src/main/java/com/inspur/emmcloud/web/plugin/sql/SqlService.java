@@ -394,7 +394,7 @@ public class SqlService extends ImpPlugin {
      */
     private SQLiteDatabase getSQLiteDatabase(String dbName) {
         if (StrUtil.strIsNotNull(dbName)) {
-            String dbPath = FilePathUtils.getRealPath(dbName);
+            String dbPath = FilePathUtils.getInternalRealPath(dbName);
             LogUtils.YfcDebug("数据库的真是路径：" + dbPath);
             try {
                 return getFragmentContext().openOrCreateDatabase(dbPath, Context.MODE_PRIVATE, null);

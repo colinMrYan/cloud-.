@@ -471,7 +471,7 @@ public class SettingActivity extends BaseActivity {
                             case 0:
                                 DataCleanManager.cleanApplicationData(
                                         SettingActivity.this, MyAppConfig.getFileDownloadDirPath(),
-                                        MyAppConfig.LOCAL_CACHE_PATH, MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC);
+                                        MyAppConfig.LOCAL_CACHE_PATH, MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC);
                                 ImageDisplayUtils.getInstance().clearAllCache();
                                 handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
                                 break;
@@ -514,7 +514,7 @@ public class SettingActivity extends BaseActivity {
                         String msgCachePath = MyAppConfig.getFileDownloadDirPath();
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         String offlineAppPath = MyAppConfig.LOCAL_OFFLINE_APP_PATH;
-                        String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC;
+                        String userSpacePath = MyAppConfig.LOCAL_IMP_USER_OPERATE_DIC;
                         PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_GET_OFFLINE_LAST_MID, "");
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath, offlineAppPath, userSpacePath);
