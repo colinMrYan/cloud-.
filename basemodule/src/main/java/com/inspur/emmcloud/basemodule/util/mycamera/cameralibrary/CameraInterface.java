@@ -10,6 +10,10 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -83,6 +87,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     // takePicture不使用的时候使用flashMode控制闪光逻辑
     public static String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
     private View currentFlashBtn;
+    private boolean openFlashAccordingSensorStrength = false;
     /**
      * 拍照
      */
@@ -100,19 +105,17 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-//    private SensorEventListener sensorEventListener = new SensorEventListener() {
-//        public void onSensorChanged(SensorEvent event) {
-//            if (Sensor.TYPE_ACCELEROMETER != event.sensor.getType()) {
-//                return;
-//            }
-//            float[] values = event.values;
-//            angle = AngleUtil.getSensorAngle(values[0], values[1]);
-//            rotationAnimation();
-//        }
-//
-//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-//        }
-//    };
+    private SensorEventListener sensorEventListener = new SensorEventListener() {
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+                float light_strength = event.values[0];//光线强度
+                openFlashAccordingSensorStrength = (light_strength < 50);
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
 
     //获取CameraInterface单例
     public static synchronized CameraInterface getInstance() {
@@ -836,12 +839,11 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     void registerSensorManager(Context context) {
-//        if (sm == null) {
-//            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-//        }
-//        sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager
-//                .SENSOR_DELAY_NORMAL);
-
+        if (sm == null) {
+            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        }
+        // 光线传感器
+        sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
         sensorController = SensorController.getInstance(context);
         sensorController.setCameraFocusListener(new SensorController.CameraFocusListener() {
             @Override
@@ -854,14 +856,13 @@ public class CameraInterface implements Camera.PreviewCallback {
             }
         });
         sensorController.start();
-
     }
 
     void unregisterSensorManager(Context context) {
-//        if (sm == null) {
-//            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-//        }
-//        sm.unregisterListener(sensorEventListener);
+        if (sm == null) {
+            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        }
+        sm.unregisterListener(sensorEventListener);
         if (sensorController != null) {
             sensorController.stop();
         }
@@ -894,6 +895,9 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (CameraInterface.getInstance().getSELECTED_CAMERA() != 0) {
             return;
         }
+        if (!openFlashAccordingSensorStrength) {
+            return;
+        }
         Camera.Parameters parameters = mCamera.getParameters();
         if (parameters == null) {
             return;
@@ -906,6 +910,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             e.printStackTrace();
         }
     }
+
     /**
      * 通过设置Camera关闭闪光灯
      */
