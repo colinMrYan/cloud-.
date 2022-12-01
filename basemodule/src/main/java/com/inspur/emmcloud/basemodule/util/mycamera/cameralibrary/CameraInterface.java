@@ -327,7 +327,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             }
             this.flashMode = flashMode;
         } catch (Exception e) {
-            ToastUtils.show(BaseApplication.getInstance().getString(R.string.unsupport_type));
+            ToastUtils.show(BaseApplication.getInstance().getString(R.string.unsupport_flashlight_type));
             e.printStackTrace();
         }
     }
@@ -385,6 +385,10 @@ public class CameraInterface implements Camera.PreviewCallback {
             }
         }
         doStartPreview(holder, screenProp);
+    }
+
+    public boolean usingBackCamera() {
+        return SELECTED_CAMERA == CAMERA_POST_POSITION;
     }
 
     /**
@@ -882,22 +886,35 @@ public class CameraInterface implements Camera.PreviewCallback {
     /**
      * 通过设置Camera打开闪光灯
      */
-    public synchronized  void turnLightOn() {
+    public synchronized void turnLightOn() {
         if (mCamera == null) {
+            return;
+        }
+        // 前置相机不设置
+        if (CameraInterface.getInstance().getSELECTED_CAMERA() != 0) {
             return;
         }
         Camera.Parameters parameters = mCamera.getParameters();
         if (parameters == null) {
             return;
         }
-        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-        mCamera.setParameters(parameters);
+        try {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            ToastUtils.show(BaseApplication.getInstance().getString(R.string.unsupport_flashlight_type));
+            e.printStackTrace();
+        }
     }
     /**
      * 通过设置Camera关闭闪光灯
      */
     public synchronized void turnLightOff() {
         if (mCamera == null) {
+            return;
+        }
+        // 前置相机不设置
+        if (CameraInterface.getInstance().getSELECTED_CAMERA() != 0) {
             return;
         }
         Camera.Parameters parameters = mCamera.getParameters();

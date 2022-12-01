@@ -165,6 +165,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             @Override
             public void onClick(View v) {
                 machine.switchCamera(mVideoView.getHolder(), screenProp);
+                flashControlLayout.setVisibility(CameraInterface.getInstance().usingBackCamera() ? VISIBLE : GONE);
             }
         });
         //拍照 录像

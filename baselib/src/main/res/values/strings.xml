@@ -93,6 +93,7 @@
     <string name="app_update_error">更新失败</string>
     <string name="app_update_loaded">已下载：</string>
     <string name="unsupport_type">不支持的类型</string>
+    <string name="unsupport_flashlight_type">不支持的灯光类型</string>
     <string name="no_search_term">没有更多的搜索结果</string>
     <string name="function_load_fail">加载出错，轻触屏幕重新加载</string>
     <string name="function_reload">网络诊断</string>

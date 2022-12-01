@@ -88,6 +88,7 @@
     <string name="app_update_error">Update failed</string>
     <string name="app_update_loaded">Downloaded:</string>
     <string name="unsupport_type">Unsupported Type</string>
+    <string name="unsupport_flashlight_type">Unsupported flash Type</string>
     <string name="function_load_fail">Load failed,Touch the screen to reload </string>
     <string name="function_reload">Network Diagnosis</string>
     <string name="baselib_internal_share">Internal</string>

@@ -92,6 +92,7 @@
     <string name="app_update_error">更新失敗</string>
     <string name="app_update_loaded">已下載：</string>
     <string name="unsupport_type">不支援的類型</string>
+    <string name="unsupport_flashlight_type">不支援的灯光類型</string>
     <string name="function_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="function_reload">網絡診斷</string>
     <string name="baselib_internal_share">内部分享</string>
