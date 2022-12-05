@@ -895,9 +895,13 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (CameraInterface.getInstance().getSELECTED_CAMERA() != 0) {
             return;
         }
-        if (!openFlashAccordingSensorStrength) {
-            return;
+        // 自动模式判断是否开启曝光
+        if (flashMode.equals(Camera.Parameters.FLASH_MODE_AUTO)) {
+            if (!openFlashAccordingSensorStrength) {
+                return;
+            }
         }
+
         Camera.Parameters parameters = mCamera.getParameters();
         if (parameters == null) {
             return;

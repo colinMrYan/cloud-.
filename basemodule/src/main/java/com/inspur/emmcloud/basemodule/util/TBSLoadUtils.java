@@ -59,19 +59,19 @@ public class TBSLoadUtils {
                         downloadListener.updateInstallState();
                     }
                     Log.d("ByWebView", "x5内核安装成功");
-                    Activity currentActivity =  ((BaseApplication) context).getActivityLifecycleCallbacks().getCurrentActivity();
-                    if (currentActivity instanceof BaseFragmentActivity) {
-                        new CustomDialog.MessageDialogBuilder(currentActivity)
-                                .setMessage(currentActivity.getString(R.string.toast_restart_app))
-                                .setPositiveButton(currentActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-                    } else {
-                        ToastUtils.show(R.string.toast_restart_app);
-                    }
+//                    Activity currentActivity =  ((BaseApplication) context).getActivityLifecycleCallbacks().getCurrentActivity();
+//                    if (currentActivity instanceof BaseFragmentActivity) {
+//                        new CustomDialog.MessageDialogBuilder(currentActivity)
+//                                .setMessage(currentActivity.getString(R.string.toast_restart_app))
+//                                .setPositiveButton(currentActivity.getString(R.string.ok), new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                }).show();
+//                    } else {
+//                        ToastUtils.show(R.string.toast_restart_app);
+//                    }
                 }
             }
 
