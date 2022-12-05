@@ -49,6 +49,11 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 }
             }
         }
+        // app可见时，isActive存在为false情况：
+        // 防止退出app后又快速打开app，导致count != 0，从而导致进入后isActive为false，此时isActive设置为true
+        if (!BaseApplication.getInstance().getIsActive()) {
+            BaseApplication.getInstance().setIsActive(true);
+        }
         count++;
     }
 
