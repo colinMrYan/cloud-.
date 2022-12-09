@@ -467,7 +467,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     public void run() {
                         CameraInterface.getInstance().unlockFocus();
                     }
-                }, 300);
+                }, 100);
             }
         }, isShowFocusView);
     }

@@ -14,9 +14,10 @@ public class SensorController implements SensorEventListener {
     public static final int STATUS_NONE = 0;
     public static final int STATUS_STATIC = 1;
     public static final int STATUS_MOVE = 2;
-    public static final int DELAY_DURATION = 200;
+    // 缩短自动聚焦时间间隔
+    public static final int DELAY_DURATION = 50;
     private static SensorController mInstance;
-    private final double moveIs = 1.7;
+    private final double moveIs = 0.1;
     boolean canFocus = false;
     boolean canFocusIn = false;
     boolean isFocusing = false;
@@ -24,6 +25,7 @@ public class SensorController implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private CameraFocusListener mCameraFocusListener;
+    private CameraFlashLightListener cameraFlashLightListener;
     private int mX, mY, mZ;
     private int STATUE = STATUS_NONE;
     private long lastStaticStamp = 0;
@@ -47,10 +49,15 @@ public class SensorController implements SensorEventListener {
         this.mCameraFocusListener = mCameraFocusListener;
     }
 
+    public void setCameraFlashLightListener(CameraFlashLightListener cameraFlashLightListener) {
+        this.cameraFlashLightListener = cameraFlashLightListener;
+    }
+
     public void start() {
         restParams();
         canFocus = true;
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void stop() {
@@ -64,7 +71,12 @@ public class SensorController implements SensorEventListener {
         if (event.sensor == null) {
             return;
         }
-
+        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
+            float light_strength = event.values[0];//光线强度
+            if (cameraFlashLightListener != null) {
+                cameraFlashLightListener.onChanged((light_strength < 50));
+            }
+        }
         if (isFocusing) {
             restParams();
             return;
@@ -162,5 +174,12 @@ public class SensorController implements SensorEventListener {
          * 相机对焦中
          */
         void onFocus();
+    }
+
+    public interface CameraFlashLightListener {
+        /**
+         * 相机对焦中
+         */
+        void onChanged(boolean needOpenFlash);
     }
 }

@@ -105,18 +105,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    private SensorEventListener sensorEventListener = new SensorEventListener() {
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-                float light_strength = event.values[0];//光线强度
-                openFlashAccordingSensorStrength = (light_strength < 50);
-            }
-        }
-
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
-    };
-
     //获取CameraInterface单例
     public static synchronized CameraInterface getInstance() {
         if (mCameraInterface == null) {
@@ -839,11 +827,6 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     void registerSensorManager(Context context) {
-        if (sm == null) {
-            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        }
-        // 光线传感器
-        sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_LIGHT), SensorManager.SENSOR_DELAY_NORMAL);
         sensorController = SensorController.getInstance(context);
         sensorController.setCameraFocusListener(new SensorController.CameraFocusListener() {
             @Override
@@ -855,14 +838,16 @@ public class CameraInterface implements Camera.PreviewCallback {
                 }
             }
         });
+        sensorController.setCameraFlashLightListener(new SensorController.CameraFlashLightListener() {
+            @Override
+            public void onChanged(boolean needOpenFlash) {
+                openFlashAccordingSensorStrength = needOpenFlash;
+            }
+        });
         sensorController.start();
     }
 
     void unregisterSensorManager(Context context) {
-        if (sm == null) {
-            sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        }
-        sm.unregisterListener(sensorEventListener);
         if (sensorController != null) {
             sensorController.stop();
         }
