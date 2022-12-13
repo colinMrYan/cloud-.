@@ -18,6 +18,7 @@ public class FilePathUtils {
     public static String BASE_SQL_PATH = MyAppConfig.LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC +
             BaseApplication.getInstance().getTanent() + "/"
             + BaseApplication.getInstance().getUid();
+    public static String LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC = BASE_SQL_PATH +"/image/";
     public static String SDCARD_PREFIX = "sdcard:";
 
     public static String getRealPath(String filePath) {

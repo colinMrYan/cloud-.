@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.application.maintab.MainTabMenu;
@@ -60,6 +61,9 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 break;
             case "setTitleBar":
                 displayOrHideTitleBar(paramsObject);
+                break;
+            case "getAuthorization":
+                getWindowAuthorization(paramsObject);
                 break;
             default:
                 showCallIMPMethodErrorDlg();
@@ -166,6 +170,21 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
                 jsCallback(successCall, json);
             }
         }
+    }
+
+    private void getWindowAuthorization(JSONObject paramsObject){
+        String successCall = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject json = new JSONObject();
+        try {
+            json.put("state", 1);
+            JSONObject result = new JSONObject();
+            result.put("data", BaseApplication.getInstance().getToken());
+            json.put("result", result);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        jsCallback(successCall, json);
     }
 
     private void onTitleBackKeyDown(JSONObject paramsObject) {

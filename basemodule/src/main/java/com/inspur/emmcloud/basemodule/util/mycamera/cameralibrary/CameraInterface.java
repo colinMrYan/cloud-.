@@ -501,10 +501,6 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mCamera == null) {
             return;
         }
-        // 不走takepicture使用flashMode控制闪光灯逻辑
-        if (!flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH) && !flashMode.equals(Camera.Parameters.FLASH_MODE_OFF)) {
-            CameraInterface.getInstance().turnLightOn();
-        }
         switch (cameraAngle) {
             case 90:
                 nowAngle = Math.abs(angle + cameraAngle) % 360;
@@ -516,7 +512,7 @@ public class CameraInterface implements Camera.PreviewCallback {
 //
         Log.i("CJT", angle + " = " + cameraAngle + " = " + nowAngle);
         if (firstFrame_data.length > 0) {
-            if (flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH) || flashMode.equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            if (!CameraInterface.getInstance().turnLightOn()) {
                 Camera.Parameters parameters = mCamera.getParameters();
                 int width = parameters.getPreviewSize().width;
                 int height = parameters.getPreviewSize().height;
@@ -872,32 +868,38 @@ public class CameraInterface implements Camera.PreviewCallback {
     /**
      * 通过设置Camera打开闪光灯
      */
-    public synchronized void turnLightOn() {
+    public synchronized boolean turnLightOn() {
+        boolean turnLightOn = false;
         if (mCamera == null) {
-            return;
+            return turnLightOn;
         }
         // 前置相机不设置
         if (CameraInterface.getInstance().getSELECTED_CAMERA() != 0) {
-            return;
+            return turnLightOn;
+        }
+        // 关闭曝光或者已经打开灯光，直接返回
+        if (flashMode.equals(Camera.Parameters.FLASH_MODE_OFF) || flashMode.equals(Camera.Parameters.FLASH_MODE_TORCH)) {
+            return turnLightOn;
         }
         // 自动模式判断是否开启曝光
         if (flashMode.equals(Camera.Parameters.FLASH_MODE_AUTO)) {
             if (!openFlashAccordingSensorStrength) {
-                return;
+                return turnLightOn;
             }
         }
-
         Camera.Parameters parameters = mCamera.getParameters();
         if (parameters == null) {
-            return;
+            return turnLightOn;
         }
         try {
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             mCamera.setParameters(parameters);
+            turnLightOn = true;
         } catch (Exception e) {
             ToastUtils.show(BaseApplication.getInstance().getString(R.string.unsupport_flashlight_type));
             e.printStackTrace();
         }
+        return turnLightOn;
     }
 
     /**

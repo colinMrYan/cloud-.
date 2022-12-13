@@ -109,7 +109,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
                         .putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, photoFilePath)
                         .putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType), REQ_IMAGE_EDIT
         );
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(R.anim.ps_anim_fade_in, R.anim.ps_anim_fade_out);
 
     }
 

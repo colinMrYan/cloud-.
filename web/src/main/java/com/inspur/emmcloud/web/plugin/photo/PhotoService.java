@@ -39,6 +39,7 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestM
 import com.inspur.emmcloud.componentservice.selector.FileSelectorService;
 import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -371,7 +372,7 @@ public class PhotoService extends ImpPlugin {
                 loadingDlg.show();
                 String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
                 try {
-                    File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                    File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                             .compressToFile(new File(originImagePath));
                     final String originImagefinalPath = originImgFile.getAbsolutePath();
                     new UploadPhoto(getActivity(), new UploadPhoto.OnUploadPhotoListener() {
@@ -385,7 +386,7 @@ public class PhotoService extends ImpPlugin {
                                 JSONObject contextObj = new JSONObject(result);
                                 jsonObject.put("context", contextObj);
                                 String thumbnailName = System.currentTimeMillis() + ".jpg";
-                                File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                         .compressToFile(new File(originImagefinalPath), thumbnailName);
                                 String thumbnailFilePath = thumbnailFile.getAbsolutePath();
                                 byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);
@@ -434,7 +435,7 @@ public class PhotoService extends ImpPlugin {
                     final List<String> originImagePathList = new ArrayList<>();
                     for (ImageItem imageItem : selectedList) {
                         String originImagePath = imageItem.path;
-                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                 .compressToFile(new File(originImagePath));
                         originImagePathList.add(originImgFile.getAbsolutePath());
                     }
@@ -461,7 +462,7 @@ public class PhotoService extends ImpPlugin {
                                     String imagePath = originImagePathList.get(i);
                                     File file = new File(imagePath);
                                     String thumbnailName = System.currentTimeMillis() + ".jpg";
-                                    File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    File thumbnailFile = new Compressor(getFragmentContext()).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                             .compressToFile(new File(imagePath), thumbnailName);
                                     String thumbnailFilePath = thumbnailFile.getAbsolutePath();
                                     byte[] thumbnailFileBytes = FileUtils.file2Bytes(thumbnailFilePath);

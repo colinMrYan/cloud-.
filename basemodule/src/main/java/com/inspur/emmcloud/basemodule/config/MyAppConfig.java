@@ -50,8 +50,8 @@ public class MyAppConfig {
      * 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部缓存时应当考虑清除此处
      */
     public static final String LOCAL_IMP_USER_OPERATE_DIC = BaseApplication.getInstance().getExternalCacheDir() + "/IMP-Cloud/imp/user_space/";
-    // 用户文件操作空间，所有用户文件操作不应超出这个范围，清除全部数据时应当考虑清除此处
-    public static final String LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC = BaseApplication.getInstance().getFilesDir() + "/IMP-Cloud/imp/user_space/";
+    // 用户文件操作内部存储空间，所有用户文件操作不应超出这个范围，清除全部数据时应当考虑清除此处
+    public static final String LOCAL_IMP_USER_OPERATE_INTERNAL_FILE_DIC = BaseApplication.getInstance().getExternalFilesDir(null) + "/IMP-Cloud/imp/user_space/";
     /**
      * 用户崩溃日志路径
      */

@@ -27,6 +27,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.CropImageView;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
+import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.plugin.photo.PhotoNameUtils;
 import com.inspur.emmcloud.web.ui.ImpFragment;
 
@@ -349,13 +350,13 @@ public class CameraService extends ImpPlugin {
                         String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), encodingType);
                         String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), 0, encodingType);
                         LogUtils.jasonDebug("mOriginHeightSize=" + mOriginHeightSize);
-                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                 .setCompressFormat(format).compressToFile(originImageFile, originImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
                         if (!StringUtils.isBlank(watermarkContent)) {
                             ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
                         }
-                        File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                        File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                 .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
                         String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
                         callbackData(originImgPath, thumbnailImgPath);
@@ -392,13 +393,13 @@ public class CameraService extends ImpPlugin {
                             String imgFilePath = uris[i];
                             String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), i, encodingType);
                             String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), i, encodingType);
-                            File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                     .setCompressFormat(format).compressToFile(new File(imgFilePath), originImgFileName);
                             String originImgPath = originImgFile.getAbsolutePath();
                             if (!StringUtils.isBlank(watermarkContent)) {
                                 ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
                             }
-                            File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
                                     .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
                             String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
                             originImgPaths[i] = originImgPath;
