@@ -85,7 +85,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private SensorManager sm = null;
     private SensorController sensorController;
     // takePicture不使用的时候使用flashMode控制闪光逻辑
-    public static String flashMode = Camera.Parameters.FLASH_MODE_AUTO;
+    public static String flashMode = Camera.Parameters.FLASH_MODE_OFF;
     private View currentFlashBtn;
     private boolean openFlashAccordingSensorStrength = false;
     /**
@@ -418,7 +418,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                 }
                 // imp 回调，后置相机添加闪光灯光操作
                 if (CameraInterface.getInstance().getSELECTED_CAMERA() == 0) {
-                    mParams.setFlashMode(flashMode);
+                    // 自动模式调整为点击拍照的时候判断是否打开曝光
+                    mParams.setFlashMode(flashMode.equals(Camera.Parameters.FLASH_MODE_AUTO) ? Camera.Parameters.FLASH_MODE_OFF : flashMode);
                 }
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
@@ -537,7 +538,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                     }
                 }
             } else {
-                // 延迟300ms，在曝光阶段拍照，否则拍不到灯光下的图片
+                // 延迟400ms，在曝光阶段拍照，否则拍不到灯光下的图片
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -565,7 +566,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                             }
                         }
                     }
-                }, 300);
+                }, 400);
             }
         } else {
             mCamera.takePicture(null, null, new Camera.PictureCallback() {
