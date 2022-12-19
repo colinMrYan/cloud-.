@@ -255,7 +255,12 @@ public class IndexActivity extends IndexBaseActivity {
             public void execute() {
                 Intent intent = new Intent();
                 intent.setClass(IndexActivity.this, LocationService.class);
-                startService(intent);
+                // Not allowed to start service Intent XXX : app is in background uid UidRecord
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(intent);
+                } else {
+                    startService(intent);
+                }
             }
         }).getAppConfig(); //获取整个应用的配置信息,获取完成后启动位置服务
     }

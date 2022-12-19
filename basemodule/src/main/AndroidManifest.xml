@@ -138,6 +138,8 @@
 <!--    <permission android:name="${JPUSH_PKGNAME}.permission.JOPERATE_MESSAGE" android:protectionLevel="signature"/>-->
     <permission android:name="${JPUSH_PKGNAME}.permission.JOPERATE_MESSAGE" />
     <uses-permission android:name="${JPUSH_PKGNAME}.permission.JOPERATE_MESSAGE" />
+    <!--启动前台服务权限，9.0之后要求加入权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <supports-screens
         android:anyDensity="true"

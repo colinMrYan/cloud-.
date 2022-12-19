@@ -1,7 +1,12 @@
 package com.inspur.emmcloud.service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 
@@ -35,6 +40,15 @@ public class LocationService extends Service implements AMapLocationListener {
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     private AppAPIService apiService;
+    //针对Android O，启动前台服务通知，否则报错 Context.startForegroundService() did not then call Service.startForeground()
+    public static final String CHANNEL_ID_STRING = "service_location";
+    public static final String CHANNEL_ID_NAME = "emmCloud";
+    public static final int NOTIFICATION_ID = 3;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground();
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -137,6 +151,7 @@ public class LocationService extends Service implements AMapLocationListener {
             mlocationClient.onDestroy();
             mlocationClient = null;
         }
+        stopForeground(true);
     }
 
     @Override
@@ -177,6 +192,19 @@ public class LocationService extends Service implements AMapLocationListener {
             continueLocation();
             PVCollectModelCacheUtils.saveCollectModel("LocationService: uploadPosition: else", "continueLocation");
 
+        }
+    }
+
+    void startForeground() {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
+        NotificationChannel mChannel = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(CHANNEL_ID_STRING, CHANNEL_ID_NAME,
+                    NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(mChannel);
+            Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID_STRING).build();
+            startForeground(NOTIFICATION_ID, notification);
         }
     }
 
