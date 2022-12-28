@@ -584,8 +584,7 @@ public class GpsService extends ImpPlugin implements
                 jsonObject.put("streetNum", amapLocation.getStreetNum());
                 jsonObject.put("speed", amapLocation.getSpeed());
                 jsonObject.put("currentTime", System.currentTimeMillis());
-                amapLocation.setTime(System.currentTimeMillis());
-                locationMap = createLocationMap(amapLocation, longtitude, latitude, false);
+                locationMap = createLocationMap(amapLocation, longtitude, latitude);
             } catch (Exception e) {
                 if (uploadTrace) {
                     uploadTraceCallback(false, e.getMessage());
@@ -598,11 +597,9 @@ public class GpsService extends ImpPlugin implements
                 jsCallback(functName, jsonObject.toString());
             } else {
                 if (traceInfo != null) {
-                    if (NetUtils.isNetworkConnected(getActivity())) {
-                        traceInfo.getLocations().clear();
-                        traceInfo.addLocation(locationMap);
-                        requestUploadLocations();
-                    }
+                    traceInfo.getLocations().clear();
+                    traceInfo.addLocation(locationMap);
+                    requestUploadLocations();
                 }
             }
 
@@ -615,7 +612,7 @@ public class GpsService extends ImpPlugin implements
         }
     }
 
-    private Map<String, Object> createLocationMap(AMapLocation amapLocation, String longtitude, String latitude, boolean isLocalPosition) {
+    private Map<String, Object> createLocationMap(AMapLocation amapLocation, String longtitude, String latitude) {
         Map<String, Object> locationMap = new HashMap<>();
         locationMap.put("longitude", longtitude);
         locationMap.put("latitude", latitude);
@@ -627,8 +624,7 @@ public class GpsService extends ImpPlugin implements
         locationMap.put("street", amapLocation.getStreet());
         locationMap.put("streetNum", amapLocation.getStreetNum());
         locationMap.put("speed", amapLocation.getSpeed());
-        locationMap.put("currentTime", isLocalPosition ? amapLocation.getTime() : System.currentTimeMillis());
-        locationMap.put("localLocation", isLocalPosition);
+        locationMap.put("currentTime", System.currentTimeMillis());
         return locationMap;
     }
 
