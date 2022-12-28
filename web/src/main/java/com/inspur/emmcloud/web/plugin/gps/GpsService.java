@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.media.selector.utils.DoubleUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -503,6 +504,8 @@ public class GpsService extends ImpPlugin implements
             // 设置定位回调监听
             mlocationClient.setLocationListener(this);
             mlocationClient.startLocation();
+        }else {
+            ToastUtils.show("无网络且无法GPS定位！！");
         }
 
     }
@@ -598,18 +601,8 @@ public class GpsService extends ImpPlugin implements
                     if (NetUtils.isNetworkConnected(getActivity())) {
                         traceInfo.getLocations().clear();
                         traceInfo.addLocation(locationMap);
-                        List<AMapLocation> mapLocations = getMapLocationList(getActivity());
-                        if (mapLocations.size() != 0) {
-                            for (AMapLocation localMapLocation : mapLocations) {
-                                traceInfo.addLocation(createLocationMap(localMapLocation, longtitude, latitude, true));
-                                deleteAllMapLocation(getActivity());
-                            }
-                        }
                         requestUploadLocations();
-                    } else {
-                        saveMapLocation(getActivity(), amapLocation);
                     }
-
                 }
             }
 
@@ -687,20 +680,19 @@ public class GpsService extends ImpPlugin implements
     private void uploadLocationState(JSONObject paramsObject) {
         // 解析json串获取到传递过来的参数和回调函数
         successCb = JSONUtils.getString(paramsObject, "success", "");
-        failCb = JSONUtils.getString(paramsObject, "fail", "");
         JSONObject json = new JSONObject();
         try {
             json.put("state", 1);
             json.put("status", 1);
             JSONObject result = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("useLocationService", isLocationProviderEnabled());
+            data.put("supportLocationService", isLocationProviderEnabled());
             result.put("data", data);
             json.put("result", result);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        jsCallback(traceCallBack, json);
+        jsCallback(successCb, json);
     }
 
     /**
@@ -720,51 +712,6 @@ public class GpsService extends ImpPlugin implements
             result = true;
         }
         return result;
-    }
-
-    /**
-     * 存储位置列表
-     *
-     * @param context
-     * @param aMapLocation
-     */
-    public void saveMapLocation(Context context, AMapLocation aMapLocation) {
-        try {
-            if (aMapLocation == null) {
-                return;
-            }
-            DbCacheUtils.getDb(context).saveOrUpdate(aMapLocation);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteAllMapLocation(Context context) {
-        try {
-            DbCacheUtils.getDb(context).delete(AMapLocation.class);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 获取所有位置列表
-     *
-     * @param context
-     * @return
-     */
-    public static List<AMapLocation> getMapLocationList(Context context) {
-        List<AMapLocation> aMapLocationList = null;
-        try {
-            aMapLocationList = DbCacheUtils.getDb(context).selector(AMapLocation.class).findAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (aMapLocationList == null) {
-            aMapLocationList = new ArrayList<AMapLocation>();
-        }
-        return aMapLocationList;
     }
 
     private class ComparatorValues implements Comparator<AMapLocation> {
