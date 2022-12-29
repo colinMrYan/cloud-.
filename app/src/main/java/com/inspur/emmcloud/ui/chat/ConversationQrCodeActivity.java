@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.INTENT_SHOW_MULTI_BUTTON;
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.REQUEST_CODE_SHARE;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,7 +40,7 @@ import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversationListener;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -220,7 +223,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
 
-        if (resultCode == RESULT_OK && requestCode == SHARE_LINK
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_SHARE
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
             handleShareResult(data);
         } else {
@@ -243,9 +246,10 @@ public class ConversationQrCodeActivity extends BaseActivity {
         intent.putExtra(ContactSearchFragment.EXTRA_SHOW_COMFIRM_DIALOG, true);
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
-        Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+        Intent shareIntent = new Intent(this, ConversationSendMultiActivity.class);
         shareIntent.putExtra(Constant.SHARE_CONTENT, title);
-        startActivityForResult(shareIntent, SHARE_LINK);
+        shareIntent.putExtra(INTENT_SHOW_MULTI_BUTTON, false);
+        startActivityForResult(shareIntent, REQUEST_CODE_SHARE);
     }
 
     private void handleShareResult(Intent data) {
