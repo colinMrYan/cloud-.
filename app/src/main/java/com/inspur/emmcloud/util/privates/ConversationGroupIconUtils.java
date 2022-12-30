@@ -41,7 +41,8 @@ public class ConversationGroupIconUtils {
     private int padding;
 
     private ConversationGroupIconUtils() {
-        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 45);
+//        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 45);
+        rangetWidth = DensityUtil.dip2px(MyApplication.getInstance(), 48);
         padding = DensityUtil.dip2px(MyApplication.getInstance(), 1);
     }
 
@@ -57,8 +58,7 @@ public class ConversationGroupIconUtils {
     }
 
     public void create(List<Conversation> conversationList) {
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             return;
         }
         new CreateIconTask(conversationList).execute();
@@ -68,15 +68,38 @@ public class ConversationGroupIconUtils {
         if (bitmapList == null || bitmapList.size() == 0) {
             return null;
         }
+
+        // 老版本群头像显示
+//        if (bitmapList.size() == 1) {
+//            return createOneBit(bitmapList);
+//        } else if (bitmapList.size() == 2) {
+//            return createTwoBit(bitmapList);
+//        } else if (bitmapList.size() == 3) {
+//            return createThreeBit(bitmapList);
+//        }else {
+//           return createFourBit(bitmapList);
+//        }
+        // 新版群头像最多显示9个成员头像，之前是4个
         if (bitmapList.size() == 1) {
             return createOneBit(bitmapList);
         } else if (bitmapList.size() == 2) {
-            return createTwoBit(bitmapList);
+            return createTwoBitNew(bitmapList);
         } else if (bitmapList.size() == 3) {
-            return createThreeBit(bitmapList);
+            return createThreeBitNew(bitmapList);
+        } else if (bitmapList.size() == 4) {
+            return createFourBitNew(bitmapList);
+        } else if (bitmapList.size() == 5) {
+            return createFiveBitNew(bitmapList);
+        } else if (bitmapList.size() == 6) {
+            return createSixBitNew(bitmapList);
+        } else if (bitmapList.size() == 7) {
+            return createSevenBitNew(bitmapList);
+        } else if (bitmapList.size() == 8) {
+            return createEightBitNew(bitmapList);
         } else {
-            return createFourBit(bitmapList);
+            return createNineBitNew(bitmapList);
         }
+
     }
 
     /**
@@ -103,8 +126,7 @@ public class ConversationGroupIconUtils {
     private Bitmap createTwoBit(List<Bitmap> paramList) {
 
         // 创建一个空格的bitmap
-        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth,
-                Bitmap.Config.RGB_565);
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
         Canvas localCanvas = new Canvas(canvasBitmap);
         localCanvas.drawColor(Color.WHITE);
         // 按照最终压缩比例压缩
@@ -124,6 +146,35 @@ public class ConversationGroupIconUtils {
     }
 
     /**
+     * 拼接两个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createTwoBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 3 * padding) / 2;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, padding, (rangetWidth - width) / 2, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, width + 2 * padding, (rangetWidth - width) / 2, null);
+        bit1.recycle();
+        // 重置padding
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
      * 拼接三个成员的头像
      *
      * @param paramList
@@ -133,8 +184,7 @@ public class ConversationGroupIconUtils {
     private Bitmap createThreeBit(List<Bitmap> paramList) {
 
         // 创建一个空格的bitmap
-        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth,
-                Bitmap.Config.ARGB_8888);
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.ARGB_8888);
         Canvas localCanvas = new Canvas(canvasBitmap);
         localCanvas.drawColor(Color.WHITE);
         // 按照最终压缩比例压缩
@@ -143,15 +193,40 @@ public class ConversationGroupIconUtils {
         localCanvas.drawBitmap(bit1, 0, 0, null);
         bit1.recycle();
 
-        Bitmap bit2 = zoomImage(paramList.get(1), rangetWidth / 2,
-                rangetWidth / 2);
+        Bitmap bit2 = zoomImage(paramList.get(1), rangetWidth / 2, rangetWidth / 2);
         localCanvas.drawBitmap(bit2, rangetWidth / 2 + padding, 0, null);
         bit2.recycle();
 
-        Bitmap bit3 = zoomImage(paramList.get(2), rangetWidth / 2,
-                rangetWidth / 2);
-        localCanvas.drawBitmap(bit3, rangetWidth / 2 + padding, rangetWidth / 2
-                + padding, null);
+        Bitmap bit3 = zoomImage(paramList.get(2), rangetWidth / 2, rangetWidth / 2);
+        localCanvas.drawBitmap(bit3, rangetWidth / 2 + padding, rangetWidth / 2 + padding, null);
+        bit3.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    private Bitmap createThreeBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 3 * padding) / 2;
+        // 按照最终压缩比例压缩
+        // 第一个放上面居中
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, (rangetWidth - width) / 2, padding, null);
+        bit1.recycle();
+
+        // 第二第三位于下排
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, padding, width + 2 * padding, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, width + 2 * padding, width + 2 * padding, null);
         bit3.recycle();
 
         localCanvas.save();
@@ -169,31 +244,309 @@ public class ConversationGroupIconUtils {
     private Bitmap createFourBit(List<Bitmap> paramList) {
 
         // 创建一个空格的bitmap
-        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth,
-                Bitmap.Config.RGB_565);
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
         Canvas localCanvas = new Canvas(canvasBitmap);
         localCanvas.drawColor(Color.WHITE);
         // 按照最终压缩比例压缩
-        Bitmap bit1 = zoomImage(paramList.get(0), rangetWidth / 2,
-                rangetWidth / 2);
+        Bitmap bit1 = zoomImage(paramList.get(0), rangetWidth / 2, rangetWidth / 2);
         localCanvas.drawBitmap(bit1, 0, 0, null);
         bit1.recycle();
 
-        Bitmap bit2 = zoomImage(paramList.get(1), rangetWidth / 2,
-                rangetWidth / 2);
+        Bitmap bit2 = zoomImage(paramList.get(1), rangetWidth / 2, rangetWidth / 2);
         localCanvas.drawBitmap(bit2, rangetWidth / 2 + padding, 0, null);
         bit2.recycle();
 
-        Bitmap bit3 = zoomImage(paramList.get(2), rangetWidth / 2,
-                rangetWidth / 2);
+        Bitmap bit3 = zoomImage(paramList.get(2), rangetWidth / 2, rangetWidth / 2);
         localCanvas.drawBitmap(bit3, 0, rangetWidth / 2 + padding, null);
         bit3.recycle();
 
-        Bitmap bit4 = zoomImage(paramList.get(3), rangetWidth / 2,
-                rangetWidth / 2);
-        localCanvas.drawBitmap(bit4, rangetWidth / 2 + padding, rangetWidth / 2
-                + padding, null);
+        Bitmap bit4 = zoomImage(paramList.get(3), rangetWidth / 2, rangetWidth / 2);
+        localCanvas.drawBitmap(bit4, rangetWidth / 2 + padding, rangetWidth / 2 + padding, null);
         bit4.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接四个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createFourBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 3 * padding) / 2;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, padding, padding, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, width + 2 * padding, padding, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, padding, width + 2 * padding, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, width + 2 * padding, width + 2 * padding, null);
+        bit4.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接5个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createFiveBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 4 * padding) / 3;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, (rangetWidth - 2 * width - padding) / 2, (rangetWidth - 2 * width - padding) / 2, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, (rangetWidth - 2 * width - padding) / 2 + width + padding, (rangetWidth - 2 * width - padding) / 2, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, padding, (rangetWidth - 2 * width - padding) / 2 + width + padding, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, width + 2 * padding, (rangetWidth - 2 * width - padding) / 2 + width + padding, null);
+        bit4.recycle();
+
+        Bitmap bit5 = zoomImage(paramList.get(4), width, width);
+        localCanvas.drawBitmap(bit5, 2 * width + 3 * padding, (rangetWidth - 2 * width - padding) / 2 + width + padding, null);
+        bit5.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接6个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createSixBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 4 * padding) / 3;
+        // 第一个头像距离顶部位置
+        int top = (rangetWidth - 2 * width - padding) / 2;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, padding, top, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, width + 2 * padding, top, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, 2 * width + 3 * padding, top, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, padding, width + padding + top, null);
+        bit4.recycle();
+
+        Bitmap bit5 = zoomImage(paramList.get(4), width, width);
+        localCanvas.drawBitmap(bit5, width + 2 * padding, width + padding + top, null);
+        bit5.recycle();
+
+        Bitmap bit6 = zoomImage(paramList.get(5), width, width);
+        localCanvas.drawBitmap(bit6, 2 * width + 3 * padding, width + padding + top, null);
+        bit6.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接7个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createSevenBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 4 * padding) / 3;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, (rangetWidth - width) / 2, padding, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, padding, width + 2 * padding, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, width + 2 * padding, width + 2 * padding, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, 2 * width + 3 * padding, width + 2 * padding, null);
+        bit4.recycle();
+
+        Bitmap bit5 = zoomImage(paramList.get(4), width, width);
+        localCanvas.drawBitmap(bit5, padding, 2 * width + 3 * padding, null);
+        bit5.recycle();
+
+        Bitmap bit6 = zoomImage(paramList.get(5), width, width);
+        localCanvas.drawBitmap(bit6, width + 2 * padding, 2 * width + 3 * padding, null);
+        bit6.recycle();
+
+        Bitmap bit7 = zoomImage(paramList.get(6), width, width);
+        localCanvas.drawBitmap(bit7, 2 * width + 3 * padding, 2 * width + 3 * padding, null);
+        bit7.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接8个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createEightBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 4 * padding) / 3;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, (rangetWidth - 2 * width - padding) / 2, padding, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, (rangetWidth + padding) / 2, padding, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, padding, width + 2 * padding, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, width + 2 * padding, width + 2 * padding, null);
+        bit4.recycle();
+
+        Bitmap bit5 = zoomImage(paramList.get(4), width, width);
+        localCanvas.drawBitmap(bit5, 2 * width + 3 * padding, width + 2 * padding, null);
+        bit5.recycle();
+
+        Bitmap bit6 = zoomImage(paramList.get(5), width, width);
+        localCanvas.drawBitmap(bit6, padding, 2 * width + 3 * padding, null);
+        bit6.recycle();
+
+        Bitmap bit7 = zoomImage(paramList.get(6), width, width);
+        localCanvas.drawBitmap(bit7, width + 2 * padding, 2 * width + 3 * padding, null);
+        bit7.recycle();
+
+        Bitmap bit8 = zoomImage(paramList.get(7), width, width);
+        localCanvas.drawBitmap(bit8, 2 * width + 3 * padding, 2 * width + 3 * padding, null);
+        bit8.recycle();
+
+        localCanvas.save();
+        localCanvas.restore();
+        return canvasBitmap;
+    }
+
+    /**
+     * 拼接9个成员的头像
+     *
+     * @param paramList
+     * @param context
+     * @return
+     */
+    private Bitmap createNineBitNew(List<Bitmap> paramList) {
+
+        // 创建一个空格的bitmap
+        Bitmap canvasBitmap = Bitmap.createBitmap(rangetWidth, rangetWidth, Bitmap.Config.RGB_565);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(Color.parseColor("#E6E6E6"));
+        // 每个小头像的宽高
+        int width = (rangetWidth - 4 * padding) / 3;
+        // 按照最终压缩比例压缩
+        Bitmap bit1 = zoomImage(paramList.get(0), width, width);
+        localCanvas.drawBitmap(bit1, padding, padding, null);
+        bit1.recycle();
+
+        Bitmap bit2 = zoomImage(paramList.get(1), width, width);
+        localCanvas.drawBitmap(bit2, width + 2 * padding, padding, null);
+        bit2.recycle();
+
+        Bitmap bit3 = zoomImage(paramList.get(2), width, width);
+        localCanvas.drawBitmap(bit3, 2 * width + 3 * padding, padding, null);
+        bit3.recycle();
+
+        Bitmap bit4 = zoomImage(paramList.get(3), width, width);
+        localCanvas.drawBitmap(bit4, padding, width + 2 * padding, null);
+        bit4.recycle();
+
+        Bitmap bit5 = zoomImage(paramList.get(4), width, width);
+        localCanvas.drawBitmap(bit5, width + 2 * padding, width + 2 * padding, null);
+        bit5.recycle();
+
+        Bitmap bit6 = zoomImage(paramList.get(5), width, width);
+        localCanvas.drawBitmap(bit6, 2 * width + 3 * padding, width + 2 * padding, null);
+        bit6.recycle();
+
+        Bitmap bit7 = zoomImage(paramList.get(6), width, width);
+        localCanvas.drawBitmap(bit7, padding, 2 * width + 3 * padding, null);
+        bit7.recycle();
+
+        Bitmap bit8 = zoomImage(paramList.get(7), width, width);
+        localCanvas.drawBitmap(bit8, width + 2 * padding, 2 * width + 3 * padding, null);
+        bit8.recycle();
+
+        Bitmap bit9 = zoomImage(paramList.get(8), width, width);
+        localCanvas.drawBitmap(bit9, 2 * width + 3 * padding, 2 * width + 3 * padding, null);
+        bit9.recycle();
 
         localCanvas.save();
         localCanvas.restore();
@@ -204,8 +557,7 @@ public class ConversationGroupIconUtils {
         // TODO Auto-generated method stub
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        bitmap = Bitmap.createBitmap(bitmap, width / 4, 0,
-                width / 2, height);
+        bitmap = Bitmap.createBitmap(bitmap, width / 4, 0, width / 2, height);
         return bitmap;
     }
 
@@ -220,8 +572,7 @@ public class ConversationGroupIconUtils {
      *            ：缩放后高度
      * @return
      */
-    private Bitmap zoomImage(Bitmap bgimage, double newWidth,
-                             double newHeight) {
+    private Bitmap zoomImage(Bitmap bgimage, double newWidth, double newHeight) {
         // 获取这个图片的宽和高
         float width = bgimage.getWidth();
         float height = bgimage.getHeight();
@@ -232,8 +583,7 @@ public class ConversationGroupIconUtils {
         float scaleHeight = ((float) newHeight) / height;
         // 缩放图片动作
         matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,
-                (int) height, matrix, true);
+        Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, (int) height, matrix, true);
         return bitmap;
     }
 
@@ -318,7 +668,8 @@ public class ConversationGroupIconUtils {
                         }
                         bitmapList.add(bitmap);
                     }
-                    if (bitmapList.size() == 4) {
+                    // 新版头像，最多显示9人
+                    if (bitmapList.size() == 9) {
                         break;
                     }
                 }

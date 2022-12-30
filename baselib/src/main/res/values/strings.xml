@@ -163,6 +163,7 @@
     <string name="net_request_failed">服务未能正确响应</string>
 
     <string name="mail">邮箱</string>
+    <string name="work_mail">工作邮箱</string>
     <string name="register">注册</string>
     <string name="remark">备注</string>
     <string name="copyed_to_paste_board">已复制到剪切板</string>
@@ -376,6 +377,7 @@
     <string name="chat_remove">隐藏</string>
     <string name="chat_remove_from_top">取消置顶</string>
     <string name="no_chat_content">暂无聊天内容</string>
+    <string name="no_search_content">暂无搜索结果</string>
     <string name="msg_key_search_member">请输入关键字</string>
     <string name="chat_resend_message">重新发送</string>
     <string name="chat_file_open_fail_tip">没有找到对应的程序</string>

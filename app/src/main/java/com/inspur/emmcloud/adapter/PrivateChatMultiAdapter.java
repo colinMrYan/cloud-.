@@ -79,7 +79,7 @@ public class PrivateChatMultiAdapter extends BaseAdapter {
                     icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
                     break;
                 case Conversation.TYPE_TRANSFER:
-                    icon = "drawable://" + R.drawable.ic_file_transfer;
+                    icon = "drawable://" + R.drawable.design3_icon_transfer;
                     break;
             }
             ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);

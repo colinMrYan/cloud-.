@@ -12,7 +12,7 @@
         <!--no Action Bar-->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="colorAccent">#36A5F6</item>
+        <item name="colorAccent">#2A87FF</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
 
@@ -57,6 +57,7 @@
         <item name="header_bg_search_1c">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_white</item>
+        <item name="design3_common_header">@color/header_bg_white</item>
         <item name="mine_header_bg_1c">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
@@ -115,6 +116,7 @@
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
+        <item name="design3_selector_list">@drawable/design3_selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
@@ -140,15 +142,15 @@
         <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_white</item>
-        <item name="bg_tab_app">@drawable/selector_tab_app_btn</item>
-        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn</item>
+        <item name="bg_tab_app">@drawable/design3_selector_tab_app_btn</item>
+        <item name="bg_tab_cloud_tweet">@drawable/design3_selector_tab_cloud_tweet_btn</item>
         <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
-        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn</item>
-        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn</item>
-        <item name="bg_tab_find">@drawable/selector_tab_find_btn</item>
-        <item name="bg_tab_mine">@drawable/selector_tab_more_btn</item>
-        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn</item>
-        <item name="bg_tab_work">@drawable/selector_tab_work_btn</item>
+        <item name="bg_tab_communicate">@drawable/design3_selector_tab_message_btn</item>
+        <item name="bg_tab_contact">@drawable/design3_selector_tab_contact_btn</item>
+        <item name="bg_tab_find">@drawable/design3_selector_tab_find_btn</item>
+        <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
+        <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
+        <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact</item>
         <item name="ic_add">@drawable/ic_add</item>
         <item name="ic_config">@drawable/ic_config</item>
@@ -186,6 +188,81 @@
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
+
+        <!-- UI设计第三版变量 后续逐步删除上面变量 -->
+        <item name="design3_color_theme">@color/color_bg_content_white</item>
+        <item name="design3_color_mine_card">@color/color_bg_content_white</item>
+        <item name="design3_color_mine_name">@color/color_te09</item>
+        <item name="design3_color_mine_department">@color/color_te02</item>
+        <item name="design3_color_th01">@color/color_th01</item>
+        <item name="design3_color_th02">@color/color_th02</item>
+        <item name="design3_color_th06">@color/color_th06</item>
+
+        <item name="design3_color_ne01">@color/color_ne01</item>
+        <item name="design3_color_ne02">@color/color_ne02</item>
+        <item name="design3_color_ne03">@color/color_ne03</item>
+        <item name="design3_color_ne04">@color/color_ne04</item>
+        <item name="design3_color_ne05">@color/color_ne05</item>
+        <item name="design3_color_ne06">@color/color_ne06</item>
+        <item name="design3_color_ne07">@color/color_ne07</item>
+        <item name="design3_color_ne08">@color/color_ne08</item>
+        <item name="design3_color_ne09">@color/color_ne09</item>
+        <item name="design3_color_ne10">@color/color_ne10</item>
+        <item name="design3_color_ne11">@color/color_ne11</item>
+        <item name="design3_color_ne12">@color/color_ne12</item>
+        <item name="design3_color_ne13">@color/color_ne13</item>
+        <item name="design3_color_ne14">@color/color_ne14</item>
+        <item name="design3_color_ne15">@color/color_ne15</item>
+        <item name="design3_color_ne16">@color/color_ne16</item>
+
+        <item name="design3_color_te01">@color/color_te01</item>
+        <item name="design3_color_te02">@color/color_te02</item>
+        <item name="design3_color_te03">@color/color_te03</item>
+        <item name="design3_color_te04">@color/color_te04</item>
+        <item name="design3_color_te05">@color/color_te05</item>
+        <item name="design3_color_te06">@color/color_te06</item>
+        <item name="design3_color_te07">@color/color_te07</item>
+        <item name="design3_color_te08">@color/color_te08</item>
+        <item name="design3_color_te09">@color/color_te09</item>
+
+        <item name="design3_color_focus01">@color/color_focus01</item>
+        <item name="design3_color_focus02">@color/color_focus02</item>
+        <item name="design3_color_focus03">@color/color_focus03</item>
+        <item name="design3_color_warning01">@color/color_warning01</item>
+        <item name="design3_color_warning02">@color/color_warning02</item>
+        <item name="design3_color_warning03">@color/color_warning03</item>
+        <item name="design3_color_danger01">@color/color_danger01</item>
+        <item name="design3_color_danger02">@color/color_danger02</item>
+        <item name="design3_color_danger03">@color/color_danger03</item>
+        <item name="design3_color_normal01">@color/color_normal01</item>
+        <item name="design3_color_normal02">@color/color_normal02</item>
+        <item name="design3_color_normal03">@color/color_normal03</item>
+
+        <item name="design3_color_au01">@color/color_au01</item>
+        <item name="design3_color_au02">@color/color_au02</item>
+        <item name="design3_color_overlay01">@color/color_overlay01</item>
+
+        <!--图标-->
+        <item name="design3_icon_add">@drawable/design3_light_icon_add</item>
+        <item name="design3_icon_contact">@drawable/design3_light_icon_contact</item>
+        <item name="design3_icon_search">@drawable/design3_light_icon_search</item>
+        <item name="design3_icon_mute">@drawable/design3_light_icon_mute</item>
+        <item name="design3_icon_person_default">@drawable/design3_light_icon_person_default</item>
+        <item name="design3_icon_group_default">@drawable/design3_light_icon_group_default</item>
+        <item name="design3_icon_communicate_empty">@drawable/design3_light_icon_communicate_empty</item>
+        <item name="design3_icon_search_empty">@drawable/design3_light_icon_search_empty</item>
+        <item name="design3_footer_tab_text_color">@color/design3_selector_footer_text_light</item>
+        <item name="design3_icon_clean">@drawable/design3_light_icon_clean</item>
+        <item name="design3_icon_arrow">@drawable/design3_light_icon_arrow</item>
+        <item name="design3_icon_arrow_path">@drawable/design3_light_icon_arrow_path</item>
+        <item name="design3_common_header_back">@drawable/design3_light_icon_common_back</item>
+        <item name="design3_common_header_back_without_blue">@drawable/design3_light_icon_common_back</item>
+        <item name="design3_common_header_more">@drawable/design3_light_icon_common_more</item>
+        <item name="design3_common_header_title">@color/color_te09</item>
+        <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
+        <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
+        <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+
     </style>
 
     <style name="AppTheme_1" parent="AppTheme">
@@ -195,6 +272,7 @@
         <item name="header_bg_search_1c">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_grey</item>
+        <item name="design3_common_header">@color/header_bg_grey</item>
         <item name="mine_header_bg_1c">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
@@ -253,6 +331,7 @@
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
+        <item name="design3_selector_list">@drawable/design3_selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
@@ -280,15 +359,15 @@
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_grey</item>
-        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
-        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_app">@drawable/design3_selector_tab_app_btn</item>
+        <item name="bg_tab_cloud_tweet">@drawable/design3_selector_tab_cloud_tweet_btn</item>
         <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
-        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
-        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
-        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
-        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
-        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
-        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/design3_selector_tab_message_btn</item>
+        <item name="bg_tab_contact">@drawable/design3_selector_tab_contact_btn</item>
+        <item name="bg_tab_find">@drawable/design3_selector_tab_find_btn</item>
+        <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
+        <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
+        <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_grey</item>
         <item name="ic_add">@drawable/ic_add_grey</item>
         <item name="ic_config">@drawable/ic_config_grey</item>
@@ -325,6 +404,81 @@
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
+
+        <!-- UI设计第三版变量 后续逐步删除上面变量 -->
+        <item name="design3_color_theme">@color/header_bg_grey</item>
+        <item name="design3_color_mine_card">@color/color_bg_content_white</item>
+        <item name="design3_color_mine_name">@color/color_te09</item>
+        <item name="design3_color_mine_department">@color/color_te02</item>
+
+        <item name="design3_color_th01">@color/color_th01</item>
+        <item name="design3_color_th02">@color/color_th02</item>
+        <item name="design3_color_th06">@color/color_th06</item>
+
+        <item name="design3_color_ne01">@color/color_ne01</item>
+        <item name="design3_color_ne02">@color/color_ne02</item>
+        <item name="design3_color_ne03">@color/color_ne03</item>
+        <item name="design3_color_ne04">@color/color_ne04</item>
+        <item name="design3_color_ne05">@color/color_ne05</item>
+        <item name="design3_color_ne06">@color/color_ne06</item>
+        <item name="design3_color_ne07">@color/color_ne07</item>
+        <item name="design3_color_ne08">@color/color_ne08</item>
+        <item name="design3_color_ne09">@color/color_ne09</item>
+        <item name="design3_color_ne10">@color/color_ne10</item>
+        <item name="design3_color_ne11">@color/color_ne11</item>
+        <item name="design3_color_ne12">@color/color_ne12</item>
+        <item name="design3_color_ne13">@color/color_ne13</item>
+        <item name="design3_color_ne14">@color/color_ne14</item>
+        <item name="design3_color_ne15">@color/color_ne15</item>
+        <item name="design3_color_ne16">@color/color_ne16</item>
+
+        <item name="design3_color_te01">@color/color_te01</item>
+        <item name="design3_color_te02">@color/color_te02</item>
+        <item name="design3_color_te03">@color/color_te03</item>
+        <item name="design3_color_te04">@color/color_te04</item>
+        <item name="design3_color_te05">@color/color_te05</item>
+        <item name="design3_color_te06">@color/color_te06</item>
+        <item name="design3_color_te07">@color/color_te07</item>
+        <item name="design3_color_te08">@color/color_te08</item>
+        <item name="design3_color_te09">@color/color_te09</item>
+
+        <item name="design3_color_focus01">@color/color_focus01</item>
+        <item name="design3_color_focus02">@color/color_focus02</item>
+        <item name="design3_color_focus03">@color/color_focus03</item>
+        <item name="design3_color_warning01">@color/color_warning01</item>
+        <item name="design3_color_warning02">@color/color_warning02</item>
+        <item name="design3_color_warning03">@color/color_warning03</item>
+        <item name="design3_color_danger01">@color/color_danger01</item>
+        <item name="design3_color_danger02">@color/color_danger02</item>
+        <item name="design3_color_danger03">@color/color_danger03</item>
+        <item name="design3_color_normal01">@color/color_normal01</item>
+        <item name="design3_color_normal02">@color/color_normal02</item>
+        <item name="design3_color_normal03">@color/color_normal03</item>
+
+        <item name="design3_color_au01">@color/color_au01</item>
+        <item name="design3_color_au02">@color/color_au02</item>
+        <item name="design3_color_overlay01">@color/color_overlay01</item>
+
+        <item name="design3_icon_add">@drawable/design3_light_icon_add</item>
+        <item name="design3_icon_contact">@drawable/design3_light_icon_contact</item>
+        <item name="design3_icon_search">@drawable/design3_light_icon_search</item>
+        <item name="design3_icon_mute">@drawable/design3_light_icon_mute</item>
+        <item name="design3_icon_person_default">@drawable/design3_light_icon_person_default</item>
+        <item name="design3_icon_group_default">@drawable/design3_light_icon_group_default</item>
+        <item name="design3_icon_communicate_empty">@drawable/design3_light_icon_communicate_empty</item>
+        <item name="design3_icon_search_empty">@drawable/design3_light_icon_search_empty</item>
+        <item name="design3_footer_tab_text_color">@color/design3_selector_footer_text_light</item>
+        <item name="design3_icon_clean">@drawable/design3_light_icon_clean</item>
+        <item name="design3_icon_arrow">@drawable/design3_light_icon_arrow</item>
+        <item name="design3_icon_arrow_path">@drawable/design3_light_icon_arrow_path</item>
+        <item name="design3_common_header_back">@drawable/design3_light_icon_common_back</item>
+        <item name="design3_common_header_back_without_blue">@drawable/design3_light_icon_common_back</item>
+        <item name="design3_common_header_more">@drawable/design3_light_icon_common_more</item>
+        <item name="design3_common_header_title">@color/color_te09</item>
+        <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
+        <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
+        <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+
     </style>
 
     <style name="AppTheme_2" parent="AppTheme">
@@ -334,6 +488,7 @@
         <item name="header_bg_search_1c">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_blue</item>
+        <item name="design3_common_header">@color/header_bg_blue</item>
         <item name="mine_header_bg_1c">@drawable/shape_header_bg_blue</item>
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
@@ -392,6 +547,7 @@
         <item name="color_divider_1c_dd">@color/color_list_divider</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran</item>
         <item name="selector_list">@drawable/selector_list</item>
+        <item name="design3_selector_list">@drawable/design3_selector_list</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
@@ -417,15 +573,15 @@
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
-        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
-        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_app">@drawable/design3_selector_tab_app_btn</item>
+        <item name="bg_tab_cloud_tweet">@drawable/design3_selector_tab_cloud_tweet_btn</item>
         <item name="bg_chat_img">@drawable/ic_chat_img_bg</item>
-        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
-        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
-        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
-        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
-        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
-        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/design3_selector_tab_message_btn</item>
+        <item name="bg_tab_contact">@drawable/design3_selector_tab_contact_btn</item>
+        <item name="bg_tab_find">@drawable/design3_selector_tab_find_btn</item>
+        <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
+        <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
+        <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
         <item name="ic_add">@drawable/ic_add_blue</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
@@ -463,6 +619,81 @@
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_normal</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_normal</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_normal</item>
+
+        <!-- UI设计第三版变量 后续逐步删除上面变量 -->
+        <item name="design3_color_theme">@color/header_bg_blue</item>
+        <item name="design3_color_mine_card">@color/header_bg_blue</item>
+        <item name="design3_color_mine_name">@color/color_te09_blue</item>
+        <item name="design3_color_mine_department">@color/color_mine_department_blue</item>
+
+        <item name="design3_color_th01">@color/color_th01</item>
+        <item name="design3_color_th02">@color/color_th02</item>
+        <item name="design3_color_th06">@color/color_th06</item>
+
+        <item name="design3_color_ne01">@color/color_ne01</item>
+        <item name="design3_color_ne02">@color/color_ne02</item>
+        <item name="design3_color_ne03">@color/color_ne03</item>
+        <item name="design3_color_ne04">@color/color_ne04</item>
+        <item name="design3_color_ne05">@color/color_ne05</item>
+        <item name="design3_color_ne06">@color/color_ne06</item>
+        <item name="design3_color_ne07">@color/color_ne07</item>
+        <item name="design3_color_ne08">@color/color_ne08</item>
+        <item name="design3_color_ne09">@color/color_ne09</item>
+        <item name="design3_color_ne10">@color/color_ne10</item>
+        <item name="design3_color_ne11">@color/color_ne11</item>
+        <item name="design3_color_ne12">@color/color_ne12</item>
+        <item name="design3_color_ne13">@color/color_ne13</item>
+        <item name="design3_color_ne14">@color/color_ne14</item>
+        <item name="design3_color_ne15">@color/color_ne15</item>
+        <item name="design3_color_ne16">@color/color_ne16</item>
+
+        <item name="design3_color_te01">@color/color_te01</item>
+        <item name="design3_color_te02">@color/color_te02</item>
+        <item name="design3_color_te03">@color/color_te03</item>
+        <item name="design3_color_te04">@color/color_te04</item>
+        <item name="design3_color_te05">@color/color_te05</item>
+        <item name="design3_color_te06">@color/color_te06</item>
+        <item name="design3_color_te07">@color/color_te07</item>
+        <item name="design3_color_te08">@color/color_te08</item>
+        <item name="design3_color_te09">@color/color_te09_blue</item>
+
+        <item name="design3_color_focus01">@color/color_focus01</item>
+        <item name="design3_color_focus02">@color/color_focus02</item>
+        <item name="design3_color_focus03">@color/color_focus03</item>
+        <item name="design3_color_warning01">@color/color_warning01</item>
+        <item name="design3_color_warning02">@color/color_warning02</item>
+        <item name="design3_color_warning03">@color/color_warning03</item>
+        <item name="design3_color_danger01">@color/color_danger01</item>
+        <item name="design3_color_danger02">@color/color_danger02</item>
+        <item name="design3_color_danger03">@color/color_danger03</item>
+        <item name="design3_color_normal01">@color/color_normal01</item>
+        <item name="design3_color_normal02">@color/color_normal02</item>
+        <item name="design3_color_normal03">@color/color_normal03</item>
+
+        <item name="design3_color_au01">@color/color_au01</item>
+        <item name="design3_color_au02">@color/color_au02</item>
+        <item name="design3_color_overlay01">@color/color_overlay01</item>
+
+        <item name="design3_icon_add">@drawable/design3_dark_icon_add</item>
+        <item name="design3_icon_contact">@drawable/design3_dark_icon_contact</item>
+        <item name="design3_icon_search">@drawable/design3_light_icon_search</item>
+        <item name="design3_icon_mute">@drawable/design3_light_icon_mute</item>
+        <item name="design3_icon_person_default">@drawable/design3_light_icon_person_default</item>
+        <item name="design3_icon_group_default">@drawable/design3_light_icon_group_default</item>
+        <item name="design3_icon_communicate_empty">@drawable/design3_light_icon_communicate_empty</item>
+        <item name="design3_icon_search_empty">@drawable/design3_light_icon_search_empty</item>
+        <item name="design3_footer_tab_text_color">@color/design3_selector_footer_text_light</item>
+        <item name="design3_icon_clean">@drawable/design3_light_icon_clean</item>
+        <item name="design3_icon_arrow">@drawable/design3_light_icon_arrow</item>
+        <item name="design3_icon_arrow_path">@drawable/design3_blue_icon_arrow_path</item>
+        <item name="design3_common_header_back">@drawable/design3_dark_icon_common_back</item>
+        <item name="design3_common_header_back_without_blue">@drawable/design3_light_icon_common_back</item>
+        <item name="design3_common_header_more">@drawable/design3_dark_icon_common_more</item>
+        <item name="design3_common_header_title">@color/color_te09_blue</item>
+        <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
+        <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
+        <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+
     </style>
 
     <style name="AppTheme_3" parent="AppTheme">
@@ -472,6 +703,7 @@
         <item name="header_bg_search_1c">@color/color_bg_common_dark</item>
         <item name="header_bg">@drawable/shape_header_bg_dark</item>
         <item name="header_bg_1c">@drawable/shape_header_bg_dark_1c</item>
+        <item name="design3_common_header">@color/color_ne13_dark</item>
         <item name="mine_header_bg_1c">@drawable/shape_header_bg_dark_1c</item>
         <item name="footer_bg">@drawable/footer_bg_dark</item>
         <item name="footer_bg_color">@color/footer_bg_dark</item>
@@ -529,6 +761,7 @@
         <item name="dialog_divider_e3_46">@color/color_divider_38</item>
         <item name="color_list_divider_tran">@color/color_list_divider_tran_dark</item>
         <item name="selector_list">@drawable/selector_list_dark</item>
+        <item name="design3_selector_list">@drawable/design3_selector_list_dark</item>
         <item name="selector_list_top">@drawable/selector_set_top_msg_list_dark</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
@@ -556,15 +789,15 @@
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
         <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
-        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
-        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_app">@drawable/design3_selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/design3_selector_tab_cloud_tweet_btn_grey</item>
         <item name="bg_chat_img">@drawable/ic_chat_img_bg_dark</item>
-        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
-        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
-        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
-        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
-        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
-        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/design3_selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/design3_selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/design3_selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn_grey</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_dark</item>
         <item name="ic_add">@drawable/ic_add_dark</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
@@ -601,6 +834,80 @@
         <item name="ic_chat_input_keyboards">@drawable/ic_chat_input_keyboard_dark</item>
         <item name="multi_transfer_single_icon">@drawable/multi_transfer_single_dark</item>
         <item name="multi_transfer_all_icon">@drawable/multi_transfer_all_dark</item>
+
+        <!-- UI设计第三版变量 后续逐步删除上面变量 -->
+        <item name="design3_color_theme">@color/footer_bg_dark</item>
+        <item name="design3_color_mine_card">@color/footer_bg_dark</item>
+        <item name="design3_color_mine_name">@color/color_te09_dark</item>
+        <item name="design3_color_mine_department">@color/color_te02_dark</item>
+
+        <item name="design3_color_th01">@color/color_th01_dark</item>
+        <item name="design3_color_th02">@color/color_th02_dark</item>
+        <item name="design3_color_th06">@color/color_th06_dark</item>
+
+        <item name="design3_color_ne01">@color/color_ne01_dark</item>
+        <item name="design3_color_ne02">@color/color_ne02_dark</item>
+        <item name="design3_color_ne03">@color/color_ne03_dark</item>
+        <item name="design3_color_ne04">@color/color_ne04_dark</item>
+        <item name="design3_color_ne05">@color/color_ne05_dark</item>
+        <item name="design3_color_ne06">@color/color_ne06_dark</item>
+        <item name="design3_color_ne07">@color/color_ne07_dark</item>
+        <item name="design3_color_ne08">@color/color_ne08_dark</item>
+        <item name="design3_color_ne09">@color/color_ne09_dark</item>
+        <item name="design3_color_ne10">@color/color_ne10_dark</item>
+        <item name="design3_color_ne11">@color/color_ne11_dark</item>
+        <item name="design3_color_ne12">@color/color_ne12_dark</item>
+        <item name="design3_color_ne13">@color/color_ne13_dark</item>
+        <item name="design3_color_ne14">@color/color_ne14_dark</item>
+        <item name="design3_color_ne15">@color/color_ne15_dark</item>
+        <item name="design3_color_ne16">@color/color_ne16_dark</item>
+
+        <item name="design3_color_te01">@color/color_te01_dark</item>
+        <item name="design3_color_te02">@color/color_te02_dark</item>
+        <item name="design3_color_te03">@color/color_te03_dark</item>
+        <item name="design3_color_te04">@color/color_te04_dark</item>
+        <item name="design3_color_te05">@color/color_te05_dark</item>
+        <item name="design3_color_te06">@color/color_te06_dark</item>
+        <item name="design3_color_te07">@color/color_te07_dark</item>
+        <item name="design3_color_te08">@color/color_te08_dark</item>
+        <item name="design3_color_te09">@color/color_te09_dark</item>
+
+        <item name="design3_color_focus01">@color/color_focus01_dark</item>
+        <item name="design3_color_focus02">@color/color_focus02_dark</item>
+        <item name="design3_color_focus03">@color/color_focus03_dark</item>
+        <item name="design3_color_warning01">@color/color_warning01_dark</item>
+        <item name="design3_color_warning02">@color/color_warning02_dark</item>
+        <item name="design3_color_warning03">@color/color_warning03_dark</item>
+        <item name="design3_color_danger01">@color/color_danger01_dark</item>
+        <item name="design3_color_danger02">@color/color_danger02_dark</item>
+        <item name="design3_color_danger03">@color/color_danger03_dark</item>
+        <item name="design3_color_normal01">@color/color_normal01_dark</item>
+        <item name="design3_color_normal02">@color/color_normal02_dark</item>
+        <item name="design3_color_normal03">@color/color_normal03_dark</item>
+
+        <item name="design3_color_au01">@color/color_au01_dark</item>
+        <item name="design3_color_au02">@color/color_au02_dark</item>
+        <item name="design3_color_overlay01">@color/color_overlay01_dark</item>
+
+        <item name="design3_icon_add">@drawable/design3_dark_icon_add</item>
+        <item name="design3_icon_contact">@drawable/design3_dark_icon_contact</item>
+        <item name="design3_icon_search">@drawable/design3_dark_icon_search</item>
+        <item name="design3_icon_mute">@drawable/design3_dark_icon_mute</item>
+        <item name="design3_icon_person_default">@drawable/design3_dark_icon_person_default</item>
+        <item name="design3_icon_group_default">@drawable/design3_dark_icon_group_default</item>
+        <item name="design3_icon_communicate_empty">@drawable/design3_dark_icon_communicate_empty</item>
+        <item name="design3_icon_search_empty">@drawable/design3_dark_icon_search_empty</item>
+        <item name="design3_footer_tab_text_color">@color/design3_selector_footer_text_dark</item>
+        <item name="design3_icon_clean">@drawable/design3_dark_icon_clean</item>
+        <item name="design3_icon_arrow">@drawable/design3_dark_icon_arrow</item>
+        <item name="design3_icon_arrow_path">@drawable/design3_dark_icon_arrow_path</item>
+        <item name="design3_common_header_back">@drawable/design3_dark_icon_common_back</item>
+        <item name="design3_common_header_back_without_blue">@drawable/design3_dark_icon_common_back</item>
+        <item name="design3_common_header_more">@drawable/design3_dark_icon_common_more</item>
+        <item name="design3_common_header_title">@color/color_te09_dark</item>
+        <item name="design3_icon_add_member">@drawable/design3_dark_icon_add_member</item>
+        <item name="design3_icon_delete_member">@drawable/design3_dark_icon_delete_member</item>
+        <item name="design3_icon_send_fail">@drawable/design3_dark_icon_send_fail</item>
 
     </style>
 
@@ -818,7 +1125,7 @@
 
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
-        <item name="colorAccent">#36A5F6</item>
+        <item name="colorAccent">#2A87FF</item>
         <!--设置字体颜色-->
         <item name="android:textColorPrimary">?attr/text_color</item>
     </style>
@@ -826,7 +1133,7 @@
     <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">15sp</item>
-        <item name="colorAccent">#36A5F6</item>
+        <item name="colorAccent">#2A87FF</item>
         <item name="android:background">?attr/bubble_bg_color</item>
         <item name="android:textColorAlertDialogListItem">?attr/text_color</item>
     </style>
@@ -839,7 +1146,7 @@
     </style>
 
     <style name="cus_dialog_style" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#36A5F6</item>
+        <item name="colorAccent">#2A87FF</item>
         <item name="android:background">?attr/dialog_common_bg_40</item>
         <item name="android:textSize">16dp</item>
         <item name="textColorAlertDialogListItem">?attr/text_color</item>
@@ -889,4 +1196,85 @@
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
+    <!-- 字号，字重style -->
+    <style name="TextAppearance.M3.Fs01" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs02" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs03" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs04" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs05" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs06" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs07" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs08" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs09" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.M3.Fs10" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <!-- 字号，字重style 结束-->
 </resources>

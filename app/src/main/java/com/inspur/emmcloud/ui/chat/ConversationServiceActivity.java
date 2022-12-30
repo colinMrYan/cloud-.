@@ -242,7 +242,7 @@ public class ConversationServiceActivity extends BaseActivity {
         public void onBindViewHolder(ServiceItemViewHolder holder, int arg1) {
             final ServiceChannelInfo serviceChannelInfo = conversationServiceList.get(arg1);
             if (serviceChannelInfo == null) return;
-            holder.itemImg.setBackgroundResource(R.drawable.ic_channel_service);
+            holder.itemImg.setBackgroundResource(R.drawable.design3_icon_service);
             holder.titleText.setText(serviceChannelInfo.getName());
             holder.titleDesc.setText(serviceChannelInfo.getDescription());
             holder.itemView.setOnClickListener(new View.OnClickListener() {

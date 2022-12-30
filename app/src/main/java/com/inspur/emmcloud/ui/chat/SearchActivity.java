@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.annotation.Nullable;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -95,6 +97,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     LinearLayout allPrivateChatLayout;
     @BindView(R.id.ev_search_input)
     ClearEditText searchEdit;
+    @BindView(R.id.rl_empty)
+    RelativeLayout emptyRl;
     private List<SearchModel> contactList = new ArrayList<>();
     private List<SearchModel> groupConversationList = new ArrayList<>();
     private List<Conversation> directConversationList = new ArrayList<>();
@@ -237,6 +241,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         contactAdapter.notifyDataSetChanged();
                         conversationFromChatContentAdapter.setConversationList(conversationFromChatContentResultList);//频道内消息刷新
                         conversationFromChatContentAdapter.notifyDataSetChanged();
+                        if (!StringUtils.isBlank(searchText) && groupConversationResultList.size() == 0
+                                && contactResultList.size() == 0 && directConversationResultList.size() == 0
+                                && conversationFromChatContentResultList.size() == 0) {
+                            emptyRl.setVisibility(View.VISIBLE);
+                        } else {
+                            emptyRl.setVisibility(View.GONE);
+                        }
                         break;
                     case CLEAR_DATA:
                         break;

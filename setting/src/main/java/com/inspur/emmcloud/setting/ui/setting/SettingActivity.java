@@ -37,6 +37,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.AppConfig;
@@ -95,8 +96,8 @@ public class SettingActivity extends BaseActivity {
     SwitchCompat experienceUpgradeSwitch;
     @BindView(R2.id.tv_setting_language_name)
     TextView languageNameText;
-    @BindView(R2.id.iv_setting_language_flag)
-    ImageView languageFlagImg;
+//    @BindView(R2.id.iv_setting_language_flag)
+//    ImageView languageFlagImg;
     @BindView(R2.id.tv_setting_theme_name)
     TextView themeNameText;
     @BindView(R2.id.tv_setting_use_webview)
@@ -113,6 +114,8 @@ public class SettingActivity extends BaseActivity {
     RelativeLayout phoneRecognize;
     @BindView(R2.id.use_webkit)
     RelativeLayout webkitLayout;
+    @BindView(R2.id.hv_common)
+    CommonHeaderView commonHv;
     int REQUEST_CODE_CAMERA = 10002;
     Uri fileUri = null;
     private Handler handler;
@@ -206,7 +209,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initView() {
-        setTitleText(R.string.settings);
+        commonHv.setTitle(getString(R.string.settings));
         phoneRecognize.setVisibility(AppTabUtils.hasContactPermission(BaseApplication.getInstance()) ? View.VISIBLE : View.GONE);
         loadingDlg = new LoadingDialog(this);
         apiService = new SettingAPIService(this);
@@ -311,10 +314,10 @@ public class SettingActivity extends BaseActivity {
                 id = R.drawable.zh_cn;
             }
             //设置语言国旗标志
-            languageFlagImg.setImageResource(id);
+//            languageFlagImg.setImageResource(id);
         } else {
             languageNameText.setText(getString(R.string.follow_system));
-            languageFlagImg.setImageResource(R.drawable.ic_mine_language_follow_system);
+//            languageFlagImg.setImageResource(R.drawable.ic_mine_language_follow_system);
         }
     }
 
@@ -340,7 +343,7 @@ public class SettingActivity extends BaseActivity {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         int i = v.getId();
-        if (i == R.id.ibt_back) {
+        if (i == R.id.iv_back) {
             finish();
 
         } else if (i == R.id.bt_setting_signout) {

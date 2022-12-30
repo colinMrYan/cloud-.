@@ -159,6 +159,7 @@
     <string name="net_request_failed">The server failed to respond correctly</string>
 
     <string name="mail">Email</string>
+    <string name="work_mail">Work Email</string>
     <string name="register">Register</string>
     <string name="remark">Remarks</string>
     <string name="copyed_to_paste_board">Copy to clipboard</string>
@@ -368,6 +369,7 @@
     <string name="chat_remove">Hide</string>
     <string name="chat_remove_from_top">Remove from Top</string>
     <string name="no_chat_content">No chat content</string>
+    <string name="no_search_content">No search content</string>
     <string name="send_email">Mail</string>
     <string name="settings_use_webkit">Web uses system kernel</string>
     <string name="msg_key_search_member"> Please enter key words</string>

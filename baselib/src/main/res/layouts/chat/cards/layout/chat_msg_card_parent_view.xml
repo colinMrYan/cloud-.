@@ -41,12 +41,12 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.ImageViewRound
             android:id="@+id/iv_sender_photo_left"
             android:layout_width="43dp"
             android:layout_height="43dp" />
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.ImageViewRound
             android:id="@+id/iv_sender_photo_right"
             android:layout_width="43dp"
             android:layout_height="43dp"

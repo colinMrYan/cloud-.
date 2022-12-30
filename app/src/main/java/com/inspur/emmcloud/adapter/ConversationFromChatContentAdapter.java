@@ -94,7 +94,7 @@ public class ConversationFromChatContentAdapter extends BaseAdapter {
 
         if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
             searchHolder.nameTextView.setText(BaseApplication.getInstance().getString(R.string.chat_file_transfer));
-            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.ic_file_transfer);
+            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.design3_icon_transfer);
             String string = BaseApplication.getInstance().getString(R.string.chat_contact_related_message, conversationWithNumList.get(i).getMessageNum());
             searchHolder.detailTextView.setText(string);
             searchHolder.detailTextView.setVisibility(View.VISIBLE);

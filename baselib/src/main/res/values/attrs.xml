@@ -137,6 +137,84 @@
     <attr name="color_ff_1c" format="reference|color" />
     <attr name="color_99_b3" format="reference|color" />
 
+    <!--UI第三版变量-->
+    <attr name="design3_common_header" format="reference" />
+    <attr name="design3_common_header_back" format="reference" />
+    <attr name="design3_common_header_back_without_blue" format="reference" />
+    <attr name="design3_common_header_more" format="reference" />
+    <attr name="design3_common_header_title" format="reference" />
+    <attr name="design3_color_th01" format="reference" />
+    <attr name="design3_color_th02" format="reference" />
+    <!--主题色 th03-05是渐变色，暂时不写-->
+    <attr name="design3_color_th06" format="reference" />
+    <!--中性色-->
+    <attr name="design3_color_ne01" format="reference" />
+    <attr name="design3_color_ne02" format="reference" />
+    <attr name="design3_color_ne03" format="reference" />
+    <attr name="design3_color_ne04" format="reference" />
+    <attr name="design3_color_ne05" format="reference" />
+    <attr name="design3_color_ne06" format="reference" />
+    <attr name="design3_color_ne07" format="reference" />
+    <attr name="design3_color_ne08" format="reference" />
+    <attr name="design3_color_ne09" format="reference" />
+    <attr name="design3_color_ne10" format="reference" />
+    <attr name="design3_color_ne11" format="reference" />
+    <attr name="design3_color_ne12" format="reference" />
+    <attr name="design3_color_ne13" format="reference" />
+    <attr name="design3_color_ne14" format="reference" />
+    <attr name="design3_color_ne15" format="reference" />
+    <attr name="design3_color_ne16" format="reference" />
+    <!--文字色-->
+    <attr name="design3_color_te01" format="reference" />
+    <attr name="design3_color_te02" format="reference" />
+    <attr name="design3_color_te03" format="reference" />
+    <attr name="design3_color_te04" format="reference" />
+    <attr name="design3_color_te05" format="reference" />
+    <attr name="design3_color_te06" format="reference" />
+    <attr name="design3_color_te07" format="reference" />
+    <attr name="design3_color_te08" format="reference" />
+    <attr name="design3_color_te09" format="reference" />
+    <!--功能色-->
+    <attr name="design3_color_focus01" format="reference" />
+    <attr name="design3_color_focus02" format="reference" />
+    <attr name="design3_color_focus03" format="reference" />
+    <attr name="design3_color_warning01" format="reference" />
+    <attr name="design3_color_warning02" format="reference" />
+    <attr name="design3_color_warning03" format="reference" />
+    <attr name="design3_color_danger01" format="reference" />
+    <attr name="design3_color_danger02" format="reference" />
+    <attr name="design3_color_danger03" format="reference" />
+    <attr name="design3_color_normal01" format="reference" />
+    <attr name="design3_color_normal02" format="reference" />
+    <attr name="design3_color_normal03" format="reference" />
+    <!--辅助色-->
+    <attr name="design3_color_au01" format="reference" />
+    <attr name="design3_color_au02" format="reference" />
+    <!--笼罩层-->
+    <attr name="design3_color_overlay01" format="reference" />
+
+    <attr name="design3_color_theme" format="reference" />
+    <attr name="design3_color_mine_card" format="reference" />
+    <attr name="design3_color_mine_name" format="reference" />
+    <attr name="design3_color_mine_department" format="reference" />
+    <!--图标-->
+    <attr name="design3_icon_add" format="reference" />
+    <attr name="design3_icon_contact" format="reference" />
+    <attr name="design3_icon_search" format="reference" />
+    <attr name="design3_icon_mute" format="reference" />
+    <attr name="design3_icon_person_default" format="reference" />
+    <attr name="design3_icon_group_default" format="reference" />
+    <attr name="design3_footer_tab_text_color" format="reference" />
+    <attr name="design3_icon_communicate_empty" format="reference" />
+    <attr name="design3_icon_search_empty" format="reference" />
+    <attr name="design3_selector_list" format="reference" />
+    <attr name="design3_icon_clean" format="reference" />
+    <attr name="design3_icon_arrow" format="reference" />
+    <attr name="design3_icon_arrow_path" format="reference" />
+    <attr name="design3_icon_add_member" format="reference" />
+    <attr name="design3_icon_delete_member" format="reference" />
+    <attr name="design3_icon_send_fail" format="reference" />
+
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />

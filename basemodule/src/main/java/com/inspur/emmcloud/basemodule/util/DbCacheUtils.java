@@ -10,9 +10,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.inspur.emmcloud.baselib.util.FileUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.DbManager;
@@ -37,7 +39,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(32)
+                .setDbVersion(33)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -149,7 +151,7 @@ public class DbCacheUtils {
                                 }
                             }
 
-                            if(oldVersion < 28){
+                            if (oldVersion < 28) {
                                 if (tableIsExist(db, "CardPackageBean")) {
                                     db.execNonQuery("ALTER TABLE CardPackageBean ADD COLUMN barcodeUrl TEXT DEFAULT ''");
                                 }
@@ -178,6 +180,12 @@ public class DbCacheUtils {
                                 if (tableIsExist(db, "Conversation")) {
                                     db.execNonQuery("ALTER TABLE Conversation ADD COLUMN membersDetail TEXT DEFAULT ''");
                                 }
+                            }
+
+                            if (oldVersion < 33) {
+                                // app升级时，老版本小于33则更新新版头像，老板文字头像30sp，新版改成22sp
+                                FileUtils.deleteFile(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
+                                ImageDisplayUtils.getInstance().clearAllCache();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

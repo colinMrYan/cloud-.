@@ -3,605 +3,496 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/home_common_bg"
+    android:background="?attr/design3_color_ne16"
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/include_common_header_layout" />
-
-    <RelativeLayout
+    <com.inspur.emmcloud.baselib.widget.common.CommonHeaderView
+        android:id="@+id/hv_common"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rl_header"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="0dp"
-        android:background="?attr/content_bg">
+        android:layout_height="@dimen/design3_common_header_height"/>
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hv_common">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/rl_setting_account_safe"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                <RelativeLayout
-                    android:id="@+id/rl_setting_account_safe"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_setting_account_safe"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_safe_center"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_account_safe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/setting_safe_center"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="?attr/design3_icon_arrow" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
+            </RelativeLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@+id/tv_setting_account_safe"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_setting_language"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingStart="16dp">
 
-                <RelativeLayout
-                    android:id="@+id/rl_setting_language"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/settings_language"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/settings_language"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_setting_language_flag"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:layout_toLeftOf="@+id/tv_setting_language_name"
-                        android:scaleType="fitXY" />
-
-                    <TextView
-                        android:id="@+id/tv_setting_language_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/iv_setting_language_arrow"
-                        android:gravity="right"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/follow_system"
-                        android:textColor="#888888"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_setting_language_arrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="6dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_language_name"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_switch_theme"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_setting_language_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/iv_setting_language_arrow"
+                    android:text="@string/follow_system"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te02" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/setting_mine_theme_switch"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:id="@+id/iv_setting_language_arrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
 
-
-                    <TextView
-                        android:id="@+id/tv_setting_theme_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/tv_setting_switch_theme_arrow"
-                        android:gravity="right"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:textColor="#888888"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/tv_setting_switch_theme_arrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="6dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_theme_name"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/font_size_layout"
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_switch_theme"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingStart="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_mine_theme_switch"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_font_size_set"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/caring_switch"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_setting_theme_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_setting_switch_theme_arrow"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te02" />
 
+                <ImageView
+                    android:id="@+id/tv_setting_switch_theme_arrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_font_size_set"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_switch_tablayout"
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/font_size_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_font_size_set"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/setting_mine_tab_layout"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                    android:layout_centerVertical="true"
+                    android:text="@string/caring_switch"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
 
-                    <TextView
-                        android:id="@+id/tv_setting_tab_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/tv_setting_switch_tab_arrow"
-                        android:gravity="right"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:textColor="#888888"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
 
-                    <ImageView
-                        android:id="@+id/tv_setting_switch_tab_arrow"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="6dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_tab_name"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_notification_layout"
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_switch_tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingRight="16dp"
-                    android:paddingLeft="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_mine_tab_layout"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_notification_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/notification_setting_title"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
+                <TextView
+                    android:id="@+id/tv_setting_tab_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_setting_switch_tab_arrow"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te02" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_notification_view"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
+                <ImageView
+                    android:id="@+id/tv_setting_switch_tab_arrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
 
-                <RelativeLayout
-                    android:id="@+id/phone_recognize_layout"
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@id/tv_setting_tab_name"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_notification_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_setting_notification_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/notification_setting_title"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_phone_recognize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/setting_phone_recognize"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
 
+            </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
+            <RelativeLayout
+                android:id="@+id/phone_recognize_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_phone_recognize"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_setting_phone_recognize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_phone_recognize"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                <RelativeLayout
-                    android:id="@+id/rl_setting_voice_2_word"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
+
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting_voice_2_word"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_setting_voice_2_word"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp"
-                    android:visibility="gone">
+                    android:layout_centerVertical="true"
+                    android:text="@string/voice_word_setting"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_voice_2_word"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/voice_word_setting"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_view_setting_voice_2_word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_voice_2_word"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
+            </RelativeLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_voice_2_word"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:paddingLeft="16dp">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/tv_setting_native_rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/native_page_auto_rotate"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_view_setting_native_rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
+
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/tv_setting_web_rotate"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/web_app_auto_rotate"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_native_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/native_page_auto_rotate"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_view_setting_web_rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_native_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_native_rotate"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/design3_color_ne06" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/use_webkit"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="?attr/design3_icon_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_setting_use_webview"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/settings_use_webkit"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_web_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/web_app_auto_rotate"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+            </RelativeLayout>
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_web_rotate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
+            <RelativeLayout
+                android:id="@+id/rl_setting_self_start"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_web_rotate"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/use_webkit"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_setting_self_start"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_centerVertical="true"
+                    android:text="自启动选项"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <TextView
-                        android:id="@+id/tv_setting_use_webview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/settings_use_webkit"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_use_webview"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_self_start"
-                    android:layout_width="match_parent"
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_view_setting_self_start"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:visibility="gone">
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_self_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="自启动选项"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+            </RelativeLayout>
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_self_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
+            <RelativeLayout
+                android:id="@+id/rl_setting_experience_upgrade"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:paddingLeft="16dp"
+                android:visibility="gone">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_self_start"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_setting_experience_upgrade"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_setting_experience_upgrade"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:paddingLeft="16dp"
-                    android:visibility="gone">
+                    android:layout_centerVertical="true"
+                    android:text="@string/setting_join_experience_plan"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_experience_upgrade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/setting_join_experience_plan"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switch_view_setting_experience_upgrade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        app:thumbTint="@color/white"
-                        app:track="@drawable/selector_switch_track" />
-
-                    <View
-                        android:id="@+id/v_experience_upgrade"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_experience_upgrade"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/clear_cache_layout"
-                    android:layout_width="match_parent"
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_view_setting_experience_upgrade"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    app:thumbTint="@color/white"
+                    app:track="@drawable/selector_switch_track" />
 
-                    <TextView
-                        android:id="@+id/tv_setting_clear_cache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="11dp"
-                        android:paddingBottom="11dp"
-                        android:text="@string/settings_clear_cache"
-                        android:textColor="?attr/text_color_e1"
-                        android:textSize="16sp" />
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/clear_cache_layout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/design3_selector_list"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:src="@drawable/ic_arrow_right" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5px"
-                        android:layout_below="@id/tv_setting_clear_cache"
-                        android:background="?attr/color_list_divider" />
-                </RelativeLayout>
-
-            </LinearLayout>
-        </ScrollView>
-
-        <Button
-            android:id="@+id/bt_setting_signout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginBottom="45dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="7dp"
-            android:background="@drawable/shape_volume_file_download_btn"
-            android:elevation="1dp"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:text="@string/quit_check"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
-
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_setting_clear_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/settings_clear_cache"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
 
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="?attr/design3_icon_arrow" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/bt_setting_signout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/design3_selector_list"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/quit_check"
+                android:textAppearance="@style/TextAppearance.M3.Fs04"
+                android:textColor="?attr/design3_color_te01" />
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

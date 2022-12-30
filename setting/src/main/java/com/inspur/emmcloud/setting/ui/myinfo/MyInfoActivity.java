@@ -2,7 +2,9 @@ package com.inspur.emmcloud.setting.ui.myinfo;
 
 import android.content.Intent;
 import android.os.Environment;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,7 +15,9 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
@@ -50,10 +54,8 @@ public class MyInfoActivity extends BaseActivity {
     private static final int REQUEST_CODE_SELECT_IMG = 1;
     private static final int USER_INFO_CHANGE = 10;
 
-    @BindView(R2.id.ibt_back)
-    ImageButton backBtn;
     @BindView(R2.id.iv_photo)
-    ImageView photoImg;
+    ImageViewRound photoImg;
     @BindView(R2.id.tv_name)
     TextView nameText;
     @BindView(R2.id.rl_employee_no)
@@ -96,10 +98,6 @@ public class MyInfoActivity extends BaseActivity {
         getUserProfile();
         getUserInfoConfig();
         showMyInfo();
-        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        if (currentThemeNo == Constant.APP_THEME_BLUE) {
-            backBtn.setImageResource(R.drawable.ic_back_btn_white);
-        }
     }
 
     @Override
@@ -121,6 +119,8 @@ public class MyInfoActivity extends BaseActivity {
             getMyInfoResult = new GetMyInfoResult(myInfo);
         }
         String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), getMyInfoResult.getID());
+        photoImg.setType(ImageViewRound.TYPE_ROUND);
+        photoImg.setRoundRadius(photoImg.dpTodx(8));
         ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
         if (!StringUtils.isBlank(getMyInfoResult.getName())) {
             nameText.setText(getMyInfoResult.getName());
@@ -137,7 +137,7 @@ public class MyInfoActivity extends BaseActivity {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         int id = v.getId();
-        if (id == R.id.iv_photo) {
+        if (id == R.id.iv_photo || id == R.id.rl_photo) {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 initImagePicker();
                 Intent intent = new Intent(getApplicationContext(), ImageGridActivity.class);
@@ -145,7 +145,7 @@ public class MyInfoActivity extends BaseActivity {
             } else {
                 ToastUtils.show(MyInfoActivity.this, getString(R.string.user_no_storage));
             }
-        } else if (id == R.id.ibt_back) {
+        } else if (id == R.id.iv_back) {
             finishActivity();
         }
     }

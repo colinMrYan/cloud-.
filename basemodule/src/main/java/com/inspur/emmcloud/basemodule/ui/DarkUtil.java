@@ -53,7 +53,7 @@ public class DarkUtil {
      */
     public static int getPopContainerColor() {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        return Color.parseColor(currentThemeNo != THEME_DARK ? "#FFFFFF" : "#404040");
+        return Color.parseColor(currentThemeNo != THEME_DARK ? "#FFFFFF" : "#383838");
     }
 
     /**

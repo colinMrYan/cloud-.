@@ -651,9 +651,9 @@ public class CommunicationUtils {
                 icon = "file://" + file.getAbsolutePath();
             }
         } else if (conversation.getType().equals(Conversation.TYPE_TRANSFER)) {
-            icon = "drawable://" + R.drawable.ic_file_transfer;
+            icon = "drawable://" + R.drawable.design3_icon_transfer;
         } else if (conversation.getType().equals(Conversation.TYPE_SERVICE)) {
-            icon = "drawable://" + R.drawable.ic_channel_service;
+            icon = "drawable://" + R.drawable.design3_icon_service;
         } else {
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
         }
@@ -690,9 +690,9 @@ public class CommunicationUtils {
                 icon = "file://" + file.getAbsolutePath();
             }
         } else if (bean.getType().equals(Conversation.TYPE_TRANSFER)) {
-            icon = "drawable://" + R.drawable.ic_file_transfer;
+            icon = "drawable://" + R.drawable.design3_icon_transfer;
         } else if (bean.getType().equals(SearchModel.TYPE_TRANSFER)) {
-            icon = "drawable://" + R.drawable.ic_file_transfer;
+            icon = "drawable://" + R.drawable.design3_icon_transfer;
         } else if (bean.getType().equals(SearchModel.TYPE_DIRECT)) {
             Conversation conversation = ConversationCacheUtils.getConversation(BaseApplication.getInstance(), bean.getConversationId());
             icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
@@ -712,7 +712,7 @@ public class CommunicationUtils {
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             defaultIcon = R.drawable.ic_contact_sub_struct;
         } else if (searchModel.getType().equals(SearchModel.TYPE_TRANSFER)) {
-            defaultIcon = R.drawable.ic_file_transfer;
+            defaultIcon = R.drawable.design3_icon_transfer;
         } else {
             defaultIcon = R.drawable.icon_person_default;
         }

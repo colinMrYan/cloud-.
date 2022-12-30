@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.view.KeyEvent;
@@ -16,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+
 import com.tencent.smtt.sdk.WebView;
+
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -93,8 +96,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @BindView(R.id.tip)
     TipsView tipsView;
     private long lastBackTime;
-    private TextView newMessageTipsText;
-    private RelativeLayout newMessageTipsLayout;
+//    private TextView newMessageTipsText;
+//    private RelativeLayout newMessageTipsLayout;
     private boolean batteryDialogIsShow = true;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
@@ -251,7 +254,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                     break;
                             }
                             break;
-                            // 隐藏RN支持
+                        // 隐藏RN支持
                         case Constant.APP_TAB_TYPE_RN:
                             ToastUtils.show(getString(R.string.rn_unsupport_version));
 //                            switch (mainTabResult.getUri()) {
@@ -371,7 +374,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             TabBean tabBean = tabs[i];
             String tabId = tabBean.getTabId();
             TabHost.TabSpec tab = mTabHost.newTabSpec(tabId);
-            View tabView = LayoutInflater.from(this).inflate(R.layout.tab_item_view, null);
+            View tabView = LayoutInflater.from(this).inflate(R.layout.design3_tab_item_view, null);
+//            View tabView = LayoutInflater.from(this).inflate(R.layout.tab_item_view, null);
             ImageView tabImg = tabView.findViewById(R.id.imageview);
             TextView tabText = tabView.findViewById(R.id.textview);
 //            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
@@ -387,7 +391,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             }
             tabText.setText(tabBean.getTabName());
             if (tabBean.getMainTabResult().getIcon().startsWith("http")) {
-                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg, R.drawable.ic_tab_net_unknown, R.drawable.ic_tab_net_unknown_selected);
+//                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg, R.drawable.ic_tab_unknown, R.drawable.ic_tab_unknown_selected);
+                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg, R.drawable.design3_ic_tab_unknown, R.drawable.design3_ic_tab_unknown_selected);
             } else {
                 tabImg.setImageResource(getIconFromLocalByIco(tabBean.getMainTabResult().getIcon()));
             }
@@ -458,7 +463,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         if (BaseApplication.getInstance().getBadgeFromBadgeServer() && !badgeBodyModel.isFromWebSocket()) {
             return;
         }
-        LogUtils.debug("TilllLog",  "IndexActivity 从聊天服务应用");
+        LogUtils.debug("TilllLog", "IndexActivity 从聊天服务应用");
         if (badgeBodyModel.isAppStoreExist()) {
             int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
             if (appStoreTabBarBadgeNum > 0) {
@@ -481,7 +486,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAppBadgeNumFromBadgeServer(AppBadgeModel appBadgeModel) {
-        LogUtils.debug("TilllLog",  "IndexActivity 从角标服务应用");
+        LogUtils.debug("TilllLog", "IndexActivity 从角标服务应用");
 
         //1.修改各app角标
         int appBadgeCount = getFilterAppStoreBadgeNum(appBadgeModel.getAppBadgeMap());
@@ -549,16 +554,23 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             for (int i = 0; i < mainTabResultList.size(); i++) {
                 if (mainTabResultList.get(i).getName().equals(tabName)) {
                     View tabView = mTabHost.getTabWidget().getChildAt(i);
-                    RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+//                    RelativeLayout badgeLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
                     View badgeView = tabView.findViewById(R.id.v_badge);
-                    if (number < 0) {
-                        badgeLayout.setVisibility(View.GONE);
-                        badgeView.setVisibility(View.VISIBLE);
-                    } else {
+                    RelativeLayout msgNewRl = tabView.findViewById(R.id.rl_msg_new);
+                    TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
+                    if (number == 0) {
+                        msgNewRl.setVisibility(View.GONE);
+                    } else if (number > 0) {
+                        msgNewRl.setVisibility(View.VISIBLE);
                         badgeView.setVisibility(View.GONE);
-                        badgeLayout.setVisibility((number == 0) ? View.GONE : View.VISIBLE);
-                        TextView badgeText = (TextView) tabView.findViewById(R.id.tv_badge);
-                        badgeText.setText("" + (number > 99 ? "99+" : number));
+                        badgeText.setVisibility(View.VISIBLE);
+                        badgeText.setText(number > 99 ? "99+" : ""+number);
+                    } else {
+                        // 老逻辑，number < 0 显示红点。具体场景不清楚
+                        msgNewRl.setVisibility(View.VISIBLE);
+                        badgeView.setVisibility(View.VISIBLE);
+                        badgeText.setVisibility(View.GONE);
+
                     }
                     saveTabBarBadgeNumber(tabName, number);
                 }
@@ -678,8 +690,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * @param tabView
      */
     private void handleTipsView(View tabView) {
-        newMessageTipsText = (TextView) tabView.findViewById(R.id.tv_badge);
-        newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+//        newMessageTipsText = (TextView) tabView.findViewById(R.id.tv_badge);
+//        newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
+        TextView newMessageTipsLayout = (TextView) tabView.findViewById(R.id.tv_badge);
         tipsView.attach(newMessageTipsLayout, new TipsView.Listener() {
 
             @Override

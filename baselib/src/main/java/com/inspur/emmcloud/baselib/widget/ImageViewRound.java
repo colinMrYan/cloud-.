@@ -135,13 +135,28 @@ public class ImageViewRound extends ImageView {
     private Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            return bitmapDrawable.getBitmap();
+            // 添加null判断，防止报错：IllegalArgumentException: Bitmap must be non-null
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
         }
         int w = drawable.getIntrinsicWidth();
         int h = drawable.getIntrinsicHeight();
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        // 原逻辑，w或h = 0时导致崩溃
+//        Bitmap bitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        drawable.setBounds(0, 0, w, h);
+//        drawable.draw(canvas);
+//        return bitmap;
+//         IllegalArgumentException: Bitmap must be non-null 如果仍报错，可以使用下面尝试修复此问题
+        Bitmap bitmap;
+        if (w <= 0 || h <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        } else {
+            bitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        }
         Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, w, h);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
     }

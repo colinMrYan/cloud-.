@@ -2,42 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/text_layout_selector">
+    android:background="?attr/design3_selector_list"
+    android:orientation="vertical">
 
-    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+    <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="6dp" />
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/tv_name_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/iv_arrow"
-        android:layout_toRightOf="@id/iv_icon"
-        android:textColor="?attr/text_color_e1"
-        android:textSize="16sp" />
+        android:layout_toStartOf="@+id/iv_arrow"
+        android:layout_toEndOf="@id/iv_icon"
+        android:textAppearance="@style/TextAppearance.M3.Fs04"
+        android:textColor="?attr/design3_color_te01" />
 
     <ImageView
         android:id="@+id/iv_arrow"
-        style="@style/arrow_right"
-        android:layout_alignParentRight="true"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
-        android:src="@drawable/ic_arrow_right" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:src="?attr/design3_icon_arrow" />
 
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
-        android:layout_below="@id/iv_icon"
-        android:layout_marginLeft="59dp"
-        android:background="?attr/color_list_divider" />
+        android:layout_height="0.6dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="56dp"
+        android:background="?attr/design3_color_ne06" />
+
+
 </RelativeLayout>

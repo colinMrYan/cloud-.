@@ -202,7 +202,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             uiUidList = mPresenter.getConversationUIMembersUid(uiConversation);
             conversationQRLayout.setVisibility(View.VISIBLE);
             conversationNameLayout.setVisibility(View.VISIBLE);
-            personNameLayout.setVisibility(View.VISIBLE);
+            personNameLayout.setVisibility(View.GONE);
             conversationQuitLayout.setVisibility(View.VISIBLE);
             searchRecordLayout.setVisibility(View.VISIBLE);
             searchRecordMarginLayout.setVisibility(View.GONE);

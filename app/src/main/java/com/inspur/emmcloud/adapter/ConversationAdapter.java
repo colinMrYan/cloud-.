@@ -4,9 +4,12 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +20,14 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -82,8 +87,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if (viewType == TYPE_HEADER) {
             return new ViewHolder(VIEW_HEADER, adapterListener);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_view, parent, false);
-            return  new ViewHolder(view, adapterListener);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design3_msg_item_view, parent, false);
+            return new ViewHolder(view, adapterListener);
         }
     }
 
@@ -180,15 +185,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 position--;
             }
             UIConversation uiConversation = uiConversationList.get(position);
+            holder.photoImg.setType(ImageViewRound.TYPE_ROUND);
+            holder.photoImg.setRoundRadius(holder.photoImg.dpTodx(8));
             holder.titleText.setText(uiConversation.getTitle());
             holder.timeText.setText(uiConversation.isServiceContainer() ? "" : TimeUtils.getDisplayTime(context, uiConversation.getLastUpdate()));
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? VISIBLE : GONE);
-            holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
-            if (uiConversation.getConversation().isStick()) {
-                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list_top));
-            } else {
-                holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, R.attr.selector_list));
-            }
+            // 老版置顶样式
+//            holder.mainLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(context, uiConversation.getConversation().isStick() ? R.attr.selector_list_top : R.attr.selector_list));
+            // 新版置顶样式
+            holder.topIv.setVisibility(uiConversation.getConversation().isStick() ? VISIBLE : GONE);
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
             if (isConversationTypeGroup) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
@@ -196,15 +201,15 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 if (file.exists()) {
                     holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
                 } else {
-                    holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                    holder.photoImg.setImageResource(ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_group_default));
                 }
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) { /**文件传输助手**/
                 String conversationName = context.getString(R.string.chat_file_transfer);
                 holder.titleText.setText(conversationName);
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_file_transfer);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.design3_icon_transfer);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_SERVICE)) { /**服务号入口**/
                 holder.titleText.setText(uiConversation.getTitle());
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.design3_icon_service);
             } else if (uiConversation.getConversation().getType().equals(Conversation.TYPE_CAST)) { /**机器人、服务号频道**/
                 Robot robot = RobotCacheUtils.getRobotById(context, uiConversation.getConversation().getName());
                 if (robot != null) {
@@ -212,9 +217,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 } else {
                     holder.titleText.setText(uiConversation.getConversation().getName());
                 }
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.ic_channel_service);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), R.drawable.design3_icon_service);
             } else {
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
             }
             setConversationLastMessageSendStatus(holder, uiConversation);
             setConversationContent(holder, uiConversation);
@@ -243,11 +248,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             switch (status) {
                 case Message.MESSAGE_SEND_ING:
                     holder.sendStatusImg.setVisibility(VISIBLE);
-                    holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);
+                    holder.sendStatusImg.setImageResource(R.drawable.design3_icon_sending);
                     break;
                 case Message.MESSAGE_SEND_FAIL:
                     holder.sendStatusImg.setVisibility(VISIBLE);
-                    holder.sendStatusImg.setImageResource(R.drawable.icon_message_send_fail);
+                    holder.sendStatusImg.setImageResource(R.drawable.design3_icon_send_fail);
                     break;
                 default:
                     holder.sendStatusImg.setVisibility(GONE);
@@ -392,9 +397,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             UIConversation uiConversation = uiConversationList.get(i);
             if (uiConversation.getUnReadCount() > 0) {
 //                if (!uiConversation.getConversation().isDnd()) {
-                    smoothMoveToPosition(mRecyclerView, i);
+                smoothMoveToPosition(mRecyclerView, i);
 //                    dndPosition = -1;
-                    return;
+                return;
 //                }
 //                if (dndPosition == -1) {
 //                    dndPosition = i;
@@ -506,7 +511,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private RelativeLayout mainLayout;
-        private CircleTextImageView photoImg;
+        private ImageViewRound photoImg;
         private ImageView sendStatusImg;
         private TextView contentText;
         private TextView titleText;
@@ -516,32 +521,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private ImageView dndImg;
         private AdapterListener adapterListener;
         private ImageView unreadIcon;
+        private ImageView topIv;
 
         public ViewHolder(View convertView, AdapterListener adapterListener) {
             super(convertView);
             this.adapterListener = adapterListener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            mainLayout = (RelativeLayout) convertView
-                    .findViewById(R.id.main_layout);
-            photoImg = (CircleTextImageView) convertView
-                    .findViewById(R.id.msg_img);
-            titleText = (TextView) convertView
-                    .findViewById(R.id.tv_name);
-            contentText = (TextView) convertView
-                    .findViewById(R.id.tv_content);
-            timeText = (TextView) convertView
-                    .findViewById(R.id.time_text);
-            unreadLayout = (RelativeLayout) convertView
-                    .findViewById(R.id.msg_new_layout);
-            unreadText = (TextView) convertView
-                    .findViewById(R.id.msg_new_text);
-            dndImg = (ImageView) convertView
-                    .findViewById(R.id.msg_dnd_img);
-            sendStatusImg = (ImageView) convertView
-                    .findViewById(R.id.img_sending_status);
-            unreadIcon = (ImageView) convertView
-                    .findViewById(R.id.msg_new_icon);
+            mainLayout = (RelativeLayout) convertView.findViewById(R.id.main_layout);
+            photoImg = (ImageViewRound) convertView.findViewById(R.id.msg_img);
+            titleText = (TextView) convertView.findViewById(R.id.tv_name);
+            contentText = (TextView) convertView.findViewById(R.id.tv_content);
+            timeText = (TextView) convertView.findViewById(R.id.time_text);
+            unreadLayout = (RelativeLayout) convertView.findViewById(R.id.msg_new_layout);
+            unreadText = (TextView) convertView.findViewById(R.id.msg_new_text);
+            dndImg = (ImageView) convertView.findViewById(R.id.msg_dnd_img);
+            sendStatusImg = (ImageView) convertView.findViewById(R.id.img_sending_status);
+            unreadIcon = (ImageView) convertView.findViewById(R.id.msg_new_icon);
+            topIv = (ImageView) convertView.findViewById(R.id.iv_top);
         }
 
 

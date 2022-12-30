@@ -63,7 +63,7 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/iv_user_photo"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
