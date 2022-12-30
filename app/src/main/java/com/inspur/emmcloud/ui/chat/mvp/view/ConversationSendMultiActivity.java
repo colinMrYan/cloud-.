@@ -2,9 +2,11 @@ package com.inspur.emmcloud.ui.chat.mvp.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -52,8 +54,9 @@ import static com.inspur.emmcloud.ui.chat.MultiMessageTransmitUtil.EXTRA_MULTI_M
 @Route(path = Constant.AROUTER_CLASS_CONVERSATION_SEND_MORE)
 public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationSearchPresenter> implements ConversionSearchContract.View {
 
-    static final int REQUEST_CODE_SHARE = 1;
-    static final int REQUEST_CODE_SHARE_MULTI = 2;
+    public static final int REQUEST_CODE_SHARE = 1;
+    public static final int REQUEST_CODE_SHARE_MULTI = 2;
+    public static final String INTENT_SHOW_MULTI_BUTTON = "ShowMultiButton";
     @BindView(R.id.rcv_conversation)
     RecyclerView conversionRecycleView;
     @BindView(R.id.tv_more_select)
@@ -103,6 +106,7 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
         setTitleText(R.string.baselib_share_to);
         shareContent = getIntent().getStringExtra(Constant.SHARE_CONTENT);
         mMultiMessageType = getIntent().getIntExtra(EXTRA_MULTI_MESSAGE_TYPE, MultiMessageTransmitUtil.TYPE_SINGLE);
+        selectMoreTv.setVisibility(getIntent().getBooleanExtra(INTENT_SHOW_MULTI_BUTTON, true) ? View.VISIBLE : View.GONE);
         // web应用内分享到聊天，转发多人未用到，暂时留着，也可删掉web相关代码
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

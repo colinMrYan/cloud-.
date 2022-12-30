@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.ui;
 
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.INTENT_SHOW_MULTI_BUTTON;
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.REQUEST_CODE_SHARE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -33,7 +36,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -278,10 +281,10 @@ public class ShareFilesActivity extends BaseActivity {
             String shareManyPictures = getResources().getString(isImageUriList(uriList) ? R.string.baselib_share_many_picture : R.string.baselib_share_many_files, uriList.size());
             String fileType = isImageUriList(uriList) ? getString(R.string.baselib_share_image) : getString(R.string.baselib_share_file);
             String shareContent = fileType + " " + firstFileName + (uriList.size() > 1 ? shareManyPictures : "");
-            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            Intent shareIntent = new Intent(this, ConversationSendMultiActivity.class);
             shareIntent.putExtra(Constant.SHARE_CONTENT, shareContent);
-
-            startActivityForResult(shareIntent, SHARE_FROM_RECENT_CHAT);
+            shareIntent.putExtra(INTENT_SHOW_MULTI_BUTTON, false);
+            startActivityForResult(shareIntent, REQUEST_CODE_SHARE);
         }
     }
 
@@ -363,7 +366,7 @@ public class ShareFilesActivity extends BaseActivity {
                     e.printStackTrace();
                     ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
                 }
-            } else if (requestCode == SHARE_FROM_RECENT_CHAT) {
+            } else if (requestCode == REQUEST_CODE_SHARE) {
                 SearchModel searchModel = (SearchModel) data.getSerializableExtra("searchModel");
                 if (searchModel != null) {
                     String userOrChannelId = searchModel.getId();
