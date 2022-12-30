@@ -121,9 +121,9 @@
     <color name="grey_f6f6f6">#f6f6f6</color>
     <color name="grey_a5a5a5">#777777</color>
     <color name="red_f4333c">#F4333C</color>
-    <color name="color_list_divider">#dddddd</color>
+    <color name="color_list_divider">#e6e6e6</color>
     <color name="color_list_divider_tran">#99dddddd</color>
-    <color name="color_list_divider_dark">#464646</color>
+    <color name="color_list_divider_dark">#292929</color>
     <color name="color_divider_38">#383838</color>
     <color name="color_list_divider_tran_dark">#99ebedf0</color>
     <color name="colorPrimary">#3F51B5</color>

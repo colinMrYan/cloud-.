@@ -1140,6 +1140,8 @@
     <string name="left_unread">&#160; unread</string>
     <string name="all_read">all read</string>
     <string name="unread_detail_title">Message recipients list</string>
+    <string name="all_member_read">All members have read</string>
+    <string name="all_member_unread">All members unread</string>
     <string name="pull_badge_fail">Network connection failed or request timed out, please refresh later</string>
     <string name="root_toast">current mobile phone is root. Please pay attention to protect your account security</string>
     <string name="network_change_tip">The network environment has changed, currently:</string>

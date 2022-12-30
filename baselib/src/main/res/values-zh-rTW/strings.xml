@@ -1152,6 +1152,8 @@
     <string name="left_unread">人未讀</string>
     <string name="all_read">全部已讀</string>
     <string name="unread_detail_title">消息接收人清單</string>
+    <string name="all_member_read">全部成員已讀</string>
+    <string name="all_member_unread">全部成員未讀</string>
     <string name="pull_badge_fail">網絡連接失敗或請求超時，請稍後下拉重繪……</string>
 
     <string name="root_toast">&appnameTW;提醒您，當前手機已root，請注意保護你的帳號安全</string>

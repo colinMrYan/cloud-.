@@ -4,28 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="?attr/content_bg"
+    android:background="?attr/design3_color_ne16"
     android:orientation="vertical">
 
-    <include layout="@layout/include_common_header_layout" />
+    <com.inspur.emmcloud.baselib.widget.common.CommonHeaderView
+        android:id="@+id/hv_common"
+        android:layout_width="match_parent"
+        android:layout_height="44dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/unread_detail_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="?attr/text_ll_color_nor"
+        android:background="?attr/design3_color_ne13"
         app:tabBackground="@color/transparent"
         app:tabRippleColor="@color/transparent"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
         app:tabGravity="fill"
         app:tabIndicator="@drawable/xylink_main_indicator"
-        app:tabIndicatorColor="@color/color_text_link"
+        app:tabIndicatorColor="?attr/design3_color_th01"
         app:tabIndicatorHeight="3dp"
-        app:tabSelectedTextColor="@color/color_text_link"
-        app:tabTextAppearance="@style/XYLinkTabLayoutTextStyle"
-        app:tabTextColor="?attr/text_color_e1" >
+        app:tabSelectedTextColor="?attr/design3_color_th01"
+        app:tabTextAppearance="@style/TextAppearance.M3.Fs07"
+        app:tabTextColor="?attr/design3_color_te02" >
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -41,13 +44,12 @@
 
     <View
         style="@style/divide_style"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="8dp"/>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/unread_detail_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_bg_common"
         android:overScrollMode="never" />
 
 </LinearLayout>

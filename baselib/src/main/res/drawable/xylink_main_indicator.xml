@@ -6,8 +6,14 @@
             <size
                 android:width="68dp"
                 android:height="3dp" />
-            <corners android:radius="3dp" />
-            <solid android:color="@color/color_text_link" />
+            <corners android:radius="2dp" />
+<!--            <solid android:color="@color/color_text_link" />-->
+            <gradient
+                android:startColor="#52A0FD"
+                android:endColor="#3B82FF"
+                android:angle="135"
+
+                />
         </shape>
     </item>
 </layer-list>

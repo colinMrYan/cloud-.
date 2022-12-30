@@ -8,13 +8,14 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -22,7 +23,8 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
@@ -59,6 +61,13 @@ public class UnReadDetailActivity extends BaseActivity {
     public void onCreate() {
         initListData();
         initView();
+    }
+
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.iv_back) {
+            finish();
+        }
     }
 
     private void initListData() {
@@ -108,19 +117,12 @@ public class UnReadDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        TextView tv_top_title = (TextView) findViewById(R.id.header_text);
-        tv_top_title.setVisibility(View.VISIBLE);
-        tv_top_title.setText(getResources().getString(R.string.unread_detail_title));
-        View ll_top_back = findViewById(R.id.ibt_back);
-        ll_top_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                finish();
-            }
-        });
+        CommonHeaderView commonHv = findViewById(R.id.hv_common);
+        commonHv.setTitle(getResources().getString(R.string.unread_detail_title));
+
         mTabLayout = findViewById(R.id.unread_detail_tabLayout);
-        mTabLayout.getTabAt(0).setText(getResources().getString(R.string.unread) + "·" + unReadList.size());
-        mTabLayout.getTabAt(1).setText(getResources().getString(R.string.read) + (readList.size() > 0 ? ("·" + readList.size()) : ""));
+        mTabLayout.getTabAt(0).setText(getResources().getString(R.string.unread) + "(" + unReadList.size() + ")");
+        mTabLayout.getTabAt(1).setText(getResources().getString(R.string.read) + (readList.size() > 0 ? ("(" + readList.size() + ")") : ""));
         mViewPager = findViewById(R.id.unread_detail_viewpager);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -141,8 +143,8 @@ public class UnReadDetailActivity extends BaseActivity {
 
     private void initViewPager() {
         List<View> views = new ArrayList<>();
-        views.add(getRecyclerView(unReadList));
-        views.add(getRecyclerView(readList));
+        views.add(unReadList.size() > 0 ? getRecyclerView(unReadList) : getNoDataView(true));
+        views.add(readList.size() > 0 ? getRecyclerView(readList) : getNoDataView(false));
         mViewPager.setAdapter(new AdapterViewpager(views));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -170,10 +172,18 @@ public class UnReadDetailActivity extends BaseActivity {
         //设置Adapter
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-
-        dividerItemDecoration.setDrawable(getResources().getDrawable(ResourceUtils.getResValueOfAttr(this, R.attr.drawable_list_divider)));
+        dividerItemDecoration.setDrawable(getResources().getDrawable(ResourceUtils.getResValueOfAttr(this, R.attr.design3_drawable_list_divider)));
         recyclerView.addItemDecoration(dividerItemDecoration);
         return recyclerView;
+    }
+
+    private View getNoDataView(boolean unread) {
+        RelativeLayout noDataView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.unread_detail_nodata, mViewPager, false);
+        ImageView noDataImage = noDataView.findViewById(R.id.unread_detail_no_data_image);
+        TextView noDataText = noDataView.findViewById(R.id.unread_detail_no_data_text);
+        noDataImage.setImageResource(unread ? R.drawable.unread_detail_all_read : R.drawable.unread_detail_all_unread);
+        noDataText.setText(getString(unread ? R.string.all_member_read : R.string.all_member_unread));
+        return noDataView;
     }
 
 
@@ -198,6 +208,8 @@ public class UnReadDetailActivity extends BaseActivity {
             String id = mList.get(i);
             String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), id);
             ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, R.drawable.icon_photo_default);
+            holder.headerImage.setType(ImageViewRound.TYPE_ROUND);
+            holder.headerImage.setRoundRadius(holder.headerImage.dpTodx(6));
             // 有群昵称时显示昵称，否则显示通讯录名称
             if (!TextUtils.isEmpty(membersDetailString)) {
                 for (int j = 0; j < membersDetail.length(); j++) {
@@ -238,7 +250,7 @@ public class UnReadDetailActivity extends BaseActivity {
 
     static class UnReadListViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        CircleTextImageView headerImage;
+        ImageViewRound headerImage;
         TextView nameText;
 
         public UnReadListViewHolder(@NonNull View itemView) {
