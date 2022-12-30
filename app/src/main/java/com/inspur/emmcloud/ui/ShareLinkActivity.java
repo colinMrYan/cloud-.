@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.ui;
 
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.INTENT_SHOW_MULTI_BUTTON;
+import static com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity.REQUEST_CODE_SHARE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +27,7 @@ import com.inspur.emmcloud.componentservice.communication.OnCreateDirectConversa
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSearchActivity;
+import com.inspur.emmcloud.ui.chat.mvp.view.ConversationSendMultiActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -137,9 +140,10 @@ public class ShareLinkActivity extends BaseActivity {
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             startActivityForResult(intent, SHARE_LINK);
         } else {
-            Intent shareIntent = new Intent(this, ConversationSearchActivity.class);
+            Intent shareIntent = new Intent(this, ConversationSendMultiActivity.class);
+            shareIntent.putExtra(INTENT_SHOW_MULTI_BUTTON, false);
             shareIntent.putExtra(Constant.SHARE_CONTENT, title);
-            startActivityForResult(shareIntent, SHARE_LINK);
+            startActivityForResult(shareIntent, REQUEST_CODE_SHARE);
         }
     }
 
@@ -192,7 +196,7 @@ public class ShareLinkActivity extends BaseActivity {
                 finish();
             }
         } else {
-            if (resultCode == RESULT_OK && requestCode == SHARE_LINK
+            if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_SHARE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 handleShareResult(data);
             } else {

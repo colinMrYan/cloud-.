@@ -20,7 +20,9 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.media.selector.utils.DoubleUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
@@ -95,6 +97,9 @@ public class GpsService extends ImpPlugin implements
             case "uploadTrace":
                 uploadTraceInfo(paramsObject);
                 break;
+            case "supportLocationService":
+                uploadLocationState(paramsObject);
+                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
@@ -114,8 +119,10 @@ public class GpsService extends ImpPlugin implements
      */
     private void open() {
         // 通过系统服务，取得LocationManager对象
-        locationManager = (LocationManager) (getFragmentContext()
-                .getSystemService(Context.LOCATION_SERVICE));
+        if (locationManager == null) {
+            locationManager = (LocationManager) (getFragmentContext()
+                    .getSystemService(Context.LOCATION_SERVICE));
+        }
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -233,7 +240,7 @@ public class GpsService extends ImpPlugin implements
             } else {
                 intervalTime = 5000;
             }
-            if (intervalTime < 5000){
+            if (intervalTime < 5000) {
                 intervalTime = 5000;
             }
 
@@ -304,7 +311,7 @@ public class GpsService extends ImpPlugin implements
         if (mlocationClient != null) {
             mlocationClient.stopLocation();
         }
-        if (aMapLocationList !=null){
+        if (aMapLocationList != null) {
             aMapLocationList.clear();
         }
         if (traceInfo != null) {
@@ -478,24 +485,29 @@ public class GpsService extends ImpPlugin implements
      * 初始化定位
      */
     private void startLocation() {
-        if (aMapLocationList == null) {
-            aMapLocationList = new ArrayList<>();
+        if (isLocationProviderEnabled()) {
+            if (aMapLocationList == null) {
+                aMapLocationList = new ArrayList<>();
+            }
+            aMapLocationList.clear();
+            locationCount = 0;
+            if (mlocationClient == null) {
+                // 初始化定位，
+                mlocationClient = new AMapLocationClient(getFragmentContext());
+            }
+            // 初始化定位参数 默认连续定位
+            AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+            mLocationOption.setInterval(1000);
+            // 设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            mLocationOption.setWifiScan(true);
+            // 设置定位回调监听
+            mlocationClient.setLocationListener(this);
+            mlocationClient.startLocation();
+        }else {
+            ToastUtils.show("无网络且无法GPS定位！！");
         }
-        aMapLocationList.clear();
-        locationCount = 0;
-        if (mlocationClient == null) {
-            // 初始化定位，
-            mlocationClient = new AMapLocationClient(getFragmentContext());
-        }
-        // 初始化定位参数 默认连续定位
-        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setInterval(1000);
-        // 设置定位参数
-        mlocationClient.setLocationOption(mLocationOption);
-        mLocationOption.setWifiScan(true);
-        // 设置定位回调监听
-        mlocationClient.setLocationListener(this);
-        mlocationClient.startLocation();
+
     }
 
     @Override
@@ -559,7 +571,7 @@ public class GpsService extends ImpPlugin implements
             locationCount = 0;
             // 绑定监听状态s
             JSONObject jsonObject = new JSONObject();
-            Map<String, Object> locationMap = new HashMap<>();
+            Map<String, Object> locationMap = null;
             try {
                 jsonObject.put("longitude", longtitude);
                 jsonObject.put("latitude", latitude);
@@ -572,17 +584,7 @@ public class GpsService extends ImpPlugin implements
                 jsonObject.put("streetNum", amapLocation.getStreetNum());
                 jsonObject.put("speed", amapLocation.getSpeed());
                 jsonObject.put("currentTime", System.currentTimeMillis());
-                locationMap.put("longitude", longtitude);
-                locationMap.put("latitude", latitude);
-                locationMap.put("addr", amapLocation.getAddress());
-                locationMap.put("country", amapLocation.getCountry());
-                locationMap.put("province", amapLocation.getProvince());
-                locationMap.put("city", amapLocation.getCity());
-                locationMap.put("district", amapLocation.getDistrict());
-                locationMap.put("street", amapLocation.getStreet());
-                locationMap.put("streetNum", amapLocation.getStreetNum());
-                locationMap.put("speed", amapLocation.getSpeed());
-                locationMap.put("currentTime", System.currentTimeMillis());
+                locationMap = createLocationMap(amapLocation, longtitude, latitude);
             } catch (Exception e) {
                 if (uploadTrace) {
                     uploadTraceCallback(false, e.getMessage());
@@ -597,8 +599,8 @@ public class GpsService extends ImpPlugin implements
                 if (traceInfo != null) {
                     traceInfo.getLocations().clear();
                     traceInfo.addLocation(locationMap);
+                    requestUploadLocations();
                 }
-                requestUploadLocations();
             }
 
             // 设置回调js页面函数
@@ -608,6 +610,22 @@ public class GpsService extends ImpPlugin implements
                 GpsService.this.onDestroy();
             }
         }
+    }
+
+    private Map<String, Object> createLocationMap(AMapLocation amapLocation, String longtitude, String latitude) {
+        Map<String, Object> locationMap = new HashMap<>();
+        locationMap.put("longitude", longtitude);
+        locationMap.put("latitude", latitude);
+        locationMap.put("addr", amapLocation.getAddress());
+        locationMap.put("country", amapLocation.getCountry());
+        locationMap.put("province", amapLocation.getProvince());
+        locationMap.put("city", amapLocation.getCity());
+        locationMap.put("district", amapLocation.getDistrict());
+        locationMap.put("street", amapLocation.getStreet());
+        locationMap.put("streetNum", amapLocation.getStreetNum());
+        locationMap.put("speed", amapLocation.getSpeed());
+        locationMap.put("currentTime", System.currentTimeMillis());
+        return locationMap;
     }
 
     /**
@@ -638,8 +656,10 @@ public class GpsService extends ImpPlugin implements
      */
     private void close() {
         // 通过系统服务，取得LocationManager对象
-        locationManager = (LocationManager) (getFragmentContext()
-                .getSystemService(Context.LOCATION_SERVICE));
+        if (locationManager == null) {
+            locationManager = (LocationManager) (getFragmentContext()
+                    .getSystemService(Context.LOCATION_SERVICE));
+        }
         // 判断GPS模块是否开启，如果已经开启了
         if (locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -651,6 +671,43 @@ public class GpsService extends ImpPlugin implements
             // 弹出Toast
             ToastUtils.show(this.getFragmentContext(), R.string.web_gps_closed);
         }
+    }
+
+    private void uploadLocationState(JSONObject paramsObject) {
+        // 解析json串获取到传递过来的参数和回调函数
+        successCb = JSONUtils.getString(paramsObject, "success", "");
+        JSONObject json = new JSONObject();
+        try {
+            json.put("state", 1);
+            json.put("status", 1);
+            JSONObject result = new JSONObject();
+            JSONObject data = new JSONObject();
+            data.put("supportLocationService", isLocationProviderEnabled());
+            result.put("data", data);
+            json.put("result", result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        jsCallback(successCb, json);
+    }
+
+    /**
+     * 判断是否开启了GPS或网络定位开关
+     *
+     * @return
+     */
+    public boolean isLocationProviderEnabled() {
+        boolean result = false;
+        if (locationManager == null) {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        }
+        if (locationManager == null) {
+            return result;
+        }
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            result = true;
+        }
+        return result;
     }
 
     private class ComparatorValues implements Comparator<AMapLocation> {

@@ -46,9 +46,11 @@ public class ShareUtil {
                 if (searchModel.getType().equals(SearchModel.TYPE_USER) && searchModel.getId().equals(BaseApplication.getInstance().getUid())) {
                     ToastUtils.show(R.string.do_not_select_yourself);
                 } else {
-                    if (isWebShare) {
+                    if (isWebShare && context instanceof ConversationSearchActivity) {
                         ((ConversationSearchActivity) activity).handleShareResult();
-                    } else {
+                    } else if(isWebShare && context instanceof ConversationSendMultiActivity){
+                        ((ConversationSendMultiActivity) activity).handleShareResult();
+                    }else {
                         Intent intent = new Intent();
                         intent.putExtra("searchModel", searchModel);
                         intent.putExtra(EXTRA_MULTI_MESSAGE_TYPE, multiMessageType);

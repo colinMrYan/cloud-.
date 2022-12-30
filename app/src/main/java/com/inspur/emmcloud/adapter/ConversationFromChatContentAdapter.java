@@ -12,6 +12,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
 import com.inspur.emmcloud.bean.chat.SearchHolder;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.util.privates.ConversationOrContactGetIconUtil;
@@ -91,7 +92,14 @@ public class ConversationFromChatContentAdapter extends BaseAdapter {
             searchHolder.detailTextView.setText(string);
             searchHolder.detailTextView.setVisibility(View.VISIBLE);
         }
-
+        if (conversation != null && (conversation.getType().equals(Conversation.TYPE_CAST))) {
+            UIConversation uiConversation = new UIConversation(conversation);
+            searchHolder.nameTextView.setText(uiConversation.getTitle());
+            ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, uiConversation.getIcon(), R.drawable.icon_person_default);
+            String string = BaseApplication.getInstance().getString(R.string.chat_contact_related_message, conversationWithNumList.get(i).getMessageNum());
+            searchHolder.detailTextView.setText(string);
+            searchHolder.detailTextView.setVisibility(View.VISIBLE);
+        }
         if (conversation != null && (conversation.getType().equals(Conversation.TYPE_TRANSFER))) {
             searchHolder.nameTextView.setText(BaseApplication.getInstance().getString(R.string.chat_file_transfer));
             ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, conversation.getAvatar(), R.drawable.design3_icon_transfer);
