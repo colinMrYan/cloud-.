@@ -171,9 +171,6 @@ public class UnReadDetailActivity extends BaseActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         //设置Adapter
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(ResourceUtils.getResValueOfAttr(this, R.attr.design3_drawable_list_divider)));
-        recyclerView.addItemDecoration(dividerItemDecoration);
         return recyclerView;
     }
 
