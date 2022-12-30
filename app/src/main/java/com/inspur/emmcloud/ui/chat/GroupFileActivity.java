@@ -530,7 +530,7 @@ public class GroupFileActivity extends BaseActivity {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.file_item_view, null);
+                convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.chat_file_item_view, null);
                 holder.fileImg = convertView.findViewById(R.id.file_type_img);
                 holder.fileNameText = convertView.findViewById(R.id.tv_file_name);
                 holder.fileSizeText = convertView.findViewById(R.id.tv_file_size);

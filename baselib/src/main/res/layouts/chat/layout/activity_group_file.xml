@@ -59,7 +59,7 @@
             android:layout_alignParentRight="true"
             android:onClick="onClick"
             android:paddingTop="12dp"
-            android:paddingRight="12dp"
+            android:paddingRight="16dp"
             android:paddingBottom="12dp"
             android:text="@string/file_filter"
             android:textColor="@color/color_text_tip"
@@ -75,6 +75,7 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="7dp"
         android:layout_above="@+id/rl_bottom_all_action"
         android:layout_below="@id/rl_order_by"
         android:background="?attr/content_bg">
