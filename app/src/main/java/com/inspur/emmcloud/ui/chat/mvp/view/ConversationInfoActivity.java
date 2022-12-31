@@ -23,6 +23,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -90,8 +91,6 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 
     @BindView(R.id.rv_conversation_members_head)
     NoScrollGridView conversationMembersHeadRecyclerView;
-    @BindView(R.id.tv_title)
-    TextView titleTextView;
     @BindView(R.id.tv_conversation_name)
     TextView conversationNameTextView;
     @BindView(R.id.tv_person_name)
@@ -126,6 +125,8 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     RelativeLayout conversationReportRl;
     @BindView(R.id.rl_conversation_show)
     RelativeLayout conversationShow;
+    @BindView(R.id.hv_common)
+    CommonHeaderView commonHeaderView;
 
     private Conversation uiConversation;
     private ConversationMembersHeadAdapter channelMembersHeadAdapter;
@@ -169,7 +170,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
             } else {
                 mUserGroupType = GROUP_TYPE_MEMBER;
             }
-            titleTextView.setText(data);
+            commonHeaderView.setTitle(data);
             conversationNameTextView.setText(uiConversation.getName());
             String membersDetail = uiConversation.getMembersDetail();
             String username = "";
@@ -212,7 +213,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
         } else if (uiConversation.getType().equals(Conversation.TYPE_DIRECT) || uiConversation.getType().equals(Conversation.TYPE_TRANSFER)) {
             mUserGroupType = GROUP_TYPE_MEMBER;
             uiUidList = mPresenter.getConversationSingleChatUIMembersUid(uiConversation);
-            titleTextView.setText(R.string.chat_single_info_detail_title);
+            commonHeaderView.setTitle(getString(R.string.chat_single_info_detail_title));
             ((TextView) findViewById(R.id.tv_conversation_files_title)).setText(R.string.file);
             ((TextView) findViewById(R.id.tv_conversation_images)).setText(R.string.channel_single_chat_images);
             conversationQRLayout.setVisibility(View.GONE);
@@ -305,7 +306,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
 //        refreshMyConversation();
         Bundle bundle = new Bundle();
         switch (v.getId()) {
-            case R.id.ibt_back:
+            case R.id.iv_back:
                 if (conversationNameChanged) {
                     Intent intent = new Intent();
                     intent.putExtra("operate", 0);
@@ -525,7 +526,7 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Override
     public void changeConversationTitle(int memberSize) {
         String data = getString(R.string.chat_group_info_detail_title, uiConversation.getMemberList().size());
-        titleTextView.setText(data);
+        commonHeaderView.setTitle(data);
     }
 
     @Override
