@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/design3_color_ne13">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="56dp"
         android:orientation="horizontal">
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.ImageViewRound
             android:id="@+id/unread_detail_header"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/unread_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/text_color_e1"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
+            android:textColor="?attr/design3_color_te01"
+            android:textAppearance="@style/TextAppearance.M3.Fs04"
+            android:layout_marginStart="12dp"
             android:layout_gravity="center_vertical"/>
+
     </LinearLayout>
-</FrameLayout>
+    <View
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginStart="68dp"
+        android:background="?attr/design3_color_ne06"
+        />
+</RelativeLayout>

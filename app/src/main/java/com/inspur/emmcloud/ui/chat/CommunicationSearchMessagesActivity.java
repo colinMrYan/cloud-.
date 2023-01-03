@@ -117,7 +117,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 searchModelNameText.setText(showData);
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) {
                 staticNameText.setText(getString(R.string.chat_file_transfer));
-                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, conversationFromChatContent.getConversation().getAvatar(), R.drawable.ic_file_transfer);
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, conversationFromChatContent.getConversation().getAvatar(), R.drawable.design3_icon_transfer);
                 String showData = getString(R.string.chat_search_related_messages, "“" + getString(R.string.chat_file_transfer) + "”");
                 searchModelNameText.setText(showData);
             }

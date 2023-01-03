@@ -30,6 +30,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -94,7 +95,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnLongClickLi
     @BindView(R.id.tv_user_phone_num)
     TextView phoneNumText;
     @BindView(R.id.iv_user_photo)
-    ImageView photoImg;
+    ImageViewRound photoImg;
     @BindView(R.id.tv_user_name)
     TextView nameText;
     @BindView(R.id.tv_user_duty)
@@ -253,6 +254,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnLongClickLi
         } else {
             dutyText.setVisibility(View.GONE);
         }
+        photoImg.setType(ImageViewRound.TYPE_ROUND);
+        photoImg.setRoundRadius(photoImg.dpTodx(8));
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
 //        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);

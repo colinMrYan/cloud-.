@@ -16,6 +16,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -41,6 +43,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
     String mOwnerUid;
     String membersDetail;
     private JSONArray array;
+    private boolean darkTheme;
 
     public ConversationMembersHeadAdapter(Context context, List<String> uidList, String ownerUid, List<String> administratorList) {
         mContext = context;
@@ -56,6 +59,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         mAdministratorList = administratorList;
         this.membersDetail = membersDetail;
         array = JSONUtils.getJSONArray(membersDetail, new JSONArray());
+        darkTheme = DarkUtil.isDarkTheme();
     }
 
     public void updateMembersDetail(String membersDetail) {
@@ -114,15 +118,25 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
         String userName = "";
         String userPhotoUrl;
         uid = mUidList.get(i);
+        holder.headImage.setType(ImageViewRound.TYPE_ROUND);
+        holder.headImage.setRoundRadius(holder.headImage.dpTodx(8));
         if (TYPE_DELETE_USER.equals(uid)) {
             userName = "";
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_delete_channel_member);
+            if (darkTheme) {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.design3_dark_icon_delete_member);
+            } else {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.design3_light_icon_delete_member);
+            }
         } else if (TYPE_ADD_USER.equals(uid)) {
             userName = "";
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_add_channel_member);
+            if (darkTheme) {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.design3_dark_icon_add_member);
+            } else {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.design3_light_icon_add_member);
+            }
         } else if (TYPE_FILE_TRANSFER.equals(uid)) {
             userName = mContext.getString(R.string.chat_file_transfer);
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.ic_file_transfer);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, null, R.drawable.design3_icon_transfer);
         } else {
             if (!TextUtils.isEmpty(membersDetail)) {
                 userName = ChatMsgContentUtils.getUserNicknameOrName(array, uid);
@@ -130,7 +144,11 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
                 userName = ContactUserCacheUtils.getUserName(uid);
             }
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.icon_person_default);
+            if (darkTheme) {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.design3_dark_icon_person_default);
+            } else {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, userPhotoUrl, R.drawable.design3_light_icon_person_default);
+            }
         }
         holder.ownerTagImage.setVisibility(TextUtils.equals(uid, mOwnerUid) && getCount() > 2 ? View.VISIBLE : View.GONE);
         holder.administratorTagImage.setVisibility((mAdministratorList != null && mAdministratorList.contains(uid) && getCount() > 2 && !TextUtils.equals(uid, mOwnerUid)) ?
@@ -142,7 +160,7 @@ public class ConversationMembersHeadAdapter extends BaseAdapter {
 
     /***/
     class ViewHolder {
-        private ImageView headImage;
+        private ImageViewRound headImage;
         private TextView nameTv;
         private View itemView;
         private View ownerTagImage;

@@ -87,13 +87,13 @@ public class UIConversation implements Serializable {
                 icon = conversation.getAvatar();
                 break;
             case Conversation.TYPE_TRANSFER:
-                icon = "drawable//" + R.drawable.ic_file_transfer;
+                icon = "drawable//" + R.drawable.design3_icon_transfer;
                 break;
             case Conversation.TYPE_SERVICE:
-                icon = "drawable//" + R.drawable.ic_channel_service;
+                icon = "drawable//" + R.drawable.design3_icon_service;
                 break;
             default:
-                icon = "drawable//" + R.drawable.icon_channel_group_default;
+                icon = "drawable//" + R.drawable.design3_dark_icon_group_default;
                 break;
         }
     }

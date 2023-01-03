@@ -3,7 +3,9 @@ package com.inspur.emmcloud.setting.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +25,13 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -313,7 +317,7 @@ public class MoreFragment extends BaseFragment {
             View view = new View(getActivity());
             int height = groupPosition > 0 ? DensityUtil.dip2px(BaseApplication.getInstance(), 10) : 0;
             view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
-            view.setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), ResourceUtils.getResValueOfAttr(getActivity(), R.attr.content_bg)));
+            view.setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_color_ne16)));
             return view;
         }
 
@@ -323,12 +327,14 @@ public class MoreFragment extends BaseFragment {
             MineLayoutItem layoutItem = (MineLayoutItem) getChild(groupPosition, childPosition);
             if (layoutItem.getId().equals("my_personalInfo_function")) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.setting_mine_my_info_card_fragment, null);
-                ImageView photoImg = convertView.findViewById(R.id.iv_photo);
+                ImageViewRound photoImg = convertView.findViewById(R.id.iv_photo);
                 TextView nameText = convertView.findViewById(R.id.tv_name);
                 TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
                 String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), BaseApplication.getInstance().getUid());
                 //String photoUri = APIUri.getUserIconUrl(getActivity(), BaseApplication.getInstance().getUid());
-                ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
+                photoImg.setType(ImageViewRound.TYPE_ROUND);
+                photoImg.setRoundRadius(photoImg.dpTodx(8));
+                ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_person_default));
                 String userName =
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
                 nameText.setText(userName);
@@ -338,46 +344,47 @@ public class MoreFragment extends BaseFragment {
                 final List<MineLayoutItem> mineLayoutItemList = getUserCardMenusResult.getMineLayoutItemList();
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
-                convertView.findViewById(R.id.ll_my_info).setOnClickListener(myClickListener);
-                Drawable drawable = null;
+                convertView.findViewById(R.id.rl_content).setOnClickListener(myClickListener);
+//                Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
                     enterpriseText.setOnClickListener(myClickListener);
-                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), drawableId);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+//                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
+//                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), drawableId);
+//                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
-                enterpriseText.setCompoundDrawables(null, null, drawable, null);
+//                enterpriseText.setCompoundDrawables(null, null, drawable, null);
             } else {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.setting_mine_common_item_view_fragment, null);
                 View lineView = convertView.findViewById(R.id.line);
-//                lineView.setVisibility(
-//                        (childPosition == getChildrenCount(groupPosition) - 1) ? View.INVISIBLE : View.VISIBLE);
+                lineView.setVisibility(
+                        (childPosition == getChildrenCount(groupPosition) - 1) ? View.INVISIBLE : View.VISIBLE);
                 setViewByLayoutItem(convertView, layoutItem);
             }
             return convertView;
         }
 
         private void setViewByLayoutItem(View convertView, MineLayoutItem layoutItem) {
-            CircleTextImageView iconImg = convertView.findViewById(R.id.iv_icon);
+            ImageView iconImg = convertView.findViewById(R.id.iv_icon);
             TextView titleText = convertView.findViewById(R.id.tv_name_tips);
             titleText.setText(layoutItem.getTitle(LanguageManager.getInstance().getCurrentAppLanguage()));
             String iconUrl = getIconUrl(layoutItem.getIco());
-            ImageDisplayUtils.getInstance().displayImage(iconImg, iconUrl, R.drawable.ic_mine_item_default);
+            ImageDisplayUtils.getInstance().displayImage(iconImg, iconUrl, R.drawable.design3_icon_about);
         }
 
         private void setUserCardMenuLayout(LinearLayout userCardMenuLayout, List<MineLayoutItem> mineLayoutItemList) {
             for (final MineLayoutItem mineLayoutItem : mineLayoutItemList) {
                 ImageButton menuImgBtn = new ImageButton(getActivity());
                 menuImgBtn.setBackground(null);
-                int height = DensityUtil.dip2px(BaseApplication.getInstance(), 42);
-                int width = DensityUtil.dip2px(BaseApplication.getInstance(), 48);
-                int paddingLeft = DensityUtil.dip2px(BaseApplication.getInstance(), 8);
-                int paddingTop = DensityUtil.dip2px(BaseApplication.getInstance(), 10);
+                int height = DensityUtil.dip2px(BaseApplication.getInstance(), 24);
+                int width = DensityUtil.dip2px(BaseApplication.getInstance(), 24);
+                int paddingLeft = DensityUtil.dip2px(BaseApplication.getInstance(), 16);
+//                int paddingTop = DensityUtil.dip2px(BaseApplication.getInstance(), 10);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-                menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
+                layoutParams.rightMargin = paddingLeft;
                 menuImgBtn.setLayoutParams(layoutParams);
-                menuImgBtn.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
-                int tintColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
+                menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
+//                menuImgBtn.setPadding(paddingLeft, 0, paddingLeft, 0);
+                int tintColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_color_te09);
                 menuImgBtn.setColorFilter(getContext().getResources().getColor(tintColor));
                 menuImgBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -399,21 +406,36 @@ public class MoreFragment extends BaseFragment {
             if (!icon.startsWith("http")) {
                 switch (icon.toLowerCase()) {
                     case "personcenter_setting":
-                        icon = "drawable://" + R.drawable.ic_mine_setting;
+                        icon = "drawable://" + R.drawable.design3_icon_setting;
                         break;
                     case "personcenter_cardbox":
-                        icon = "drawable://" + R.drawable.ic_mine_wallet;
+                        icon = "drawable://" + R.drawable.design3_icon_card;
                         break;
                     case "personcenter_feedback":
-                        icon = "drawable://" + R.drawable.ic_mine_feedback;
+                        icon = "drawable://" + R.drawable.design3_icon_feedback;
                         break;
                     case "personcenter_customerservice":
-                        icon = "drawable://" + R.drawable.ic_mine_customer;
+                        icon = "drawable://" + R.drawable.design3_icon_customer;
                         break;
                     case "personcenter_aboutus":
-                        icon = "drawable://" + R.drawable.ic_mine_about;
+                        icon = "drawable://" + R.drawable.design3_icon_about;
                         // icon="drawable://"+AppUtils.getAppIconRes(MyApplication.getInstance());
                         break;
+                }
+            } else {
+                // 目前收藏，钱包，积分功能都没，图标由服务提供，暂时客户端写死
+                if (icon.contains("wallet")) {
+                    icon = "drawable://" + R.drawable.design3_icon_wallet;
+                } else if (icon.contains("integral")) {
+                    icon = "drawable://" + R.drawable.design3_icon_integral;
+                } else if (icon.contains("favorite")) {
+                    icon = "drawable://" + R.drawable.design3_icon_collect;
+                } else if (icon.contains("qr@2x")) {
+                    icon = "drawable://" + R.drawable.design3_icon_qr_code;
+                } else if (icon.contains("b_card@2x")) {
+                    icon = "drawable://" + R.drawable.design3_dark_icon_card;
+                } else {
+                    icon = "drawable://" + R.drawable.design3_icon_about;
                 }
             }
             return icon;
@@ -432,7 +454,7 @@ public class MoreFragment extends BaseFragment {
             if (i == R.id.tv_enterprise) {
                 IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
 
-            } else if (i == R.id.ll_my_info) {
+            } else if (i == R.id.rl_content) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), MyInfoActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);

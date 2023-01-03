@@ -71,7 +71,7 @@ public class Message implements Serializable {
     @Column(name = "isWaitingSendRetry")
     private boolean isWaitingSendRetry = false;
     @Column(name = "recallFrom")
-    private String recallFrom = "";
+    private String recallFrom = ""; // 撤回
     @Column(name = "lifeCycleState")
     private int lifeCycleState = 0;//0未拆包，1已经拆包
     @Column(name = "states")

@@ -8,10 +8,12 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -148,6 +150,7 @@ public class CommunicationFragment extends BaseFragment {
     private CheckingNetStateUtils checkingNetStateUtils;
     private String channelRefreshId = "";
     private PopupWindowList mPopupWindowList;
+    private View longClickConversationItem;
 
 
     @Override
@@ -201,6 +204,15 @@ public class CommunicationFragment extends BaseFragment {
         checkingNetStateUtils.getNetStateResult(5);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // 条目长按事件置为false，不置为false从后台进入列表，条目会显示错乱
+        if (longClickConversationItem != null) {
+            longClickConversationItem.setSelected(false);
+        }
+    }
+
     private void initView() {
         // TODO Auto-generated method stub
         apiService = new ChatAPIService(getActivity());
@@ -227,7 +239,7 @@ public class CommunicationFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.more_function_list_img, R.id.contact_img, R.id.tv_search_contact})
+    @OnClick({R.id.more_function_list_img, R.id.contact_img, R.id.ll_search_contact})
     public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.more_function_list_img:
@@ -243,7 +255,7 @@ public class CommunicationFragment extends BaseFragment {
                         ContactSearchActivity.class, bundle);
                 PVCollectModelCacheUtils.saveCollectModel("contact", "communicate");
                 break;
-            case R.id.tv_search_contact:
+            case R.id.ll_search_contact:
                 IntentUtils.startActivity(getActivity(), SearchActivity.class);
                 break;
         }
@@ -349,6 +361,7 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void showConversationOperationDlg(final UIConversation uiConversation, View conversationView) {
         if (uiConversation.isServiceContainer()) return;
+        this.longClickConversationItem = conversationView;
         if (mPopupWindowList == null) {
             mPopupWindowList = new PopupWindowList(conversationView.getContext());
         }
@@ -441,9 +454,9 @@ public class CommunicationFragment extends BaseFragment {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
         List<MenuItem> menuItemList = new ArrayList<>();
         if (AppTabUtils.hasContactPermission(getActivity())) {
-            menuItemList.add(new MenuItem(R.drawable.ic_message_menu_creat_group_black, 1, getActivity().getString(R.string.message_create_group)));
+            menuItemList.add(new MenuItem(R.drawable.design3_icon_group_chat, 1, getActivity().getString(R.string.message_create_group)));
         }
-        menuItemList.add(new MenuItem(R.drawable.ic_message_menu_scan_black, 2, getString(R.string.sweep)));
+        menuItemList.add(new MenuItem(R.drawable.design3_icon_scan, 2, getString(R.string.sweep)));
         dropPopMenu.setMenuList(menuItemList);
         dropPopMenu.show(headerFunctionOptionImg);
         dropPopMenu.setOnItemClickListener(new DropPopMenu.OnItemClickListener() {
@@ -515,13 +528,13 @@ public class CommunicationFragment extends BaseFragment {
     private void sortConversationList(final Conversation changedConversation) {
         // TODO Auto-generated method stub
         Observable.create(new ObservableOnSubscribe<List<UIConversation>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<UIConversation>> emitter) throws Exception {
-                List<UIConversation> uiConversationList = getUIConversationList(changedConversation);
-                Collections.sort(uiConversationList, new UIConversation().new SortComparator());
-                emitter.onNext(uiConversationList);
-            }
-        }).subscribeOn(Schedulers.io())
+                    @Override
+                    public void subscribe(ObservableEmitter<List<UIConversation>> emitter) throws Exception {
+                        List<UIConversation> uiConversationList = getUIConversationList(changedConversation);
+                        Collections.sort(uiConversationList, new UIConversation().new SortComparator());
+                        emitter.onNext(uiConversationList);
+                    }
+                }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<UIConversation>>() {
                     @Override
@@ -637,31 +650,31 @@ public class CommunicationFragment extends BaseFragment {
             MessageSendManager.getInstance().resendMessageAfterWSOnline();
         } else {
             Observable.create(new ObservableOnSubscribe<Boolean>() {
-                @Override
-                public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
-                    boolean hasMessageInCurrentChannel = false;
-                    if (messageList != null && messageList.size() > 0) {
+                        @Override
+                        public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                            boolean hasMessageInCurrentChannel = false;
+                            if (messageList != null && messageList.size() > 0) {
 
-                        //将当前所处频道的消息存为已读
-                        if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
-                            for (Message message : messageList) {
-                                if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
-                                    message.setRead(Message.MESSAGE_READ);
-                                    hasMessageInCurrentChannel = true;
+                                //将当前所处频道的消息存为已读
+                                if (!StringUtils.isBlank(MyApplication.getInstance().getCurrentChannelCid())) {
+                                    for (Message message : messageList) {
+                                        if (message.getChannel().equals(MyApplication.getInstance().getCurrentChannelCid())) {
+                                            message.setRead(Message.MESSAGE_READ);
+                                            hasMessageInCurrentChannel = true;
+                                        }
+                                    }
+                                }
+
+                                MessageCacheUtil.handleRealMessage(getActivity(), messageList, null, "", false);// 获取的消息需要缓存
+                                if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
+                                    for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
+                                        MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
+                                    }
                                 }
                             }
+                            emitter.onNext(hasMessageInCurrentChannel);
                         }
-
-                        MessageCacheUtil.handleRealMessage(getActivity(), messageList, null, "", false);// 获取的消息需要缓存
-                        if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
-                            for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
-                                MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
-                            }
-                        }
-                    }
-                    emitter.onNext(hasMessageInCurrentChannel);
-                }
-            }).subscribeOn(Schedulers.io())
+                    }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Boolean>() {
                         @Override
@@ -775,39 +788,39 @@ public class CommunicationFragment extends BaseFragment {
      */
     private void handCommandBatch(final WSCommandBatch wsCommandBatch) {
         Observable.create(new ObservableOnSubscribe<List<Message>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Message>> emitter) throws Exception {
-                List<WSCommand> wsCommandList = wsCommandBatch.getWsCommandList();
-                List<WSCommand> recallMessageWsCommandList = new ArrayList<>();
-                List<String> recallMessageMidList = new ArrayList<>();
-                List<Message> recallMessageMidListForCurrentChannel = new ArrayList<>();
-                for (WSCommand wsCommand : wsCommandList) {
-                    if (wsCommand.getAction().equals("client.chat.message.recall")) {
-                        recallMessageWsCommandList.add(wsCommand);
-                        String recallMessageParams = wsCommand.getParams();
-                        String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
-                        recallMessageMidList.add(mid);
-                    }
-                }
-                List<Message> recallMessageList = MessageCacheUtil.getMessageListWithNoRecall(BaseApplication.getInstance(), recallMessageMidList);
-                for (Message message : recallMessageList) {
-                    for (WSCommand wsCommand : wsCommandList) {
-                        String recallMessageParams = wsCommand.getParams();
-                        String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
-                        if (message.getId().equals(mid)) {
-                            message.setRecallFrom(wsCommand.getFrom());
-                            message.setRead(Message.MESSAGE_READ);
-                            break;
+                    @Override
+                    public void subscribe(ObservableEmitter<List<Message>> emitter) throws Exception {
+                        List<WSCommand> wsCommandList = wsCommandBatch.getWsCommandList();
+                        List<WSCommand> recallMessageWsCommandList = new ArrayList<>();
+                        List<String> recallMessageMidList = new ArrayList<>();
+                        List<Message> recallMessageMidListForCurrentChannel = new ArrayList<>();
+                        for (WSCommand wsCommand : wsCommandList) {
+                            if (wsCommand.getAction().equals("client.chat.message.recall")) {
+                                recallMessageWsCommandList.add(wsCommand);
+                                String recallMessageParams = wsCommand.getParams();
+                                String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
+                                recallMessageMidList.add(mid);
+                            }
                         }
+                        List<Message> recallMessageList = MessageCacheUtil.getMessageListWithNoRecall(BaseApplication.getInstance(), recallMessageMidList);
+                        for (Message message : recallMessageList) {
+                            for (WSCommand wsCommand : wsCommandList) {
+                                String recallMessageParams = wsCommand.getParams();
+                                String mid = JSONUtils.getString(recallMessageParams, "messageId", "");
+                                if (message.getId().equals(mid)) {
+                                    message.setRecallFrom(wsCommand.getFrom());
+                                    message.setRead(Message.MESSAGE_READ);
+                                    break;
+                                }
+                            }
+                            if (message.getChannel().equals(BaseApplication.getInstance().getCurrentChannelCid())) {
+                                recallMessageMidListForCurrentChannel.add(message);
+                            }
+                        }
+                        MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), recallMessageList);
+                        emitter.onNext(recallMessageMidListForCurrentChannel);
                     }
-                    if (message.getChannel().equals(BaseApplication.getInstance().getCurrentChannelCid())) {
-                        recallMessageMidListForCurrentChannel.add(message);
-                    }
-                }
-                MessageCacheUtil.saveMessageList(BaseApplication.getInstance(), recallMessageList);
-                emitter.onNext(recallMessageMidListForCurrentChannel);
-            }
-        }).subscribeOn(Schedulers.io())
+                }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Message>>() {
                     @Override
@@ -1214,13 +1227,13 @@ public class CommunicationFragment extends BaseFragment {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 //获取最近消息由于消息经常会比较多，所以此处采用线程中解析数据
                 Observable.create(new ObservableOnSubscribe<GetRecentMessageListResult>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<GetRecentMessageListResult> emitter) throws Exception {
-                        String content = eventMessage.getContent();
-                        GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
-                        emitter.onNext(getRecentMessageListResult);
-                    }
-                })
+                            @Override
+                            public void subscribe(ObservableEmitter<GetRecentMessageListResult> emitter) throws Exception {
+                                String content = eventMessage.getContent();
+                                GetRecentMessageListResult getRecentMessageListResult = new GetRecentMessageListResult(content);
+                                emitter.onNext(getRecentMessageListResult);
+                            }
+                        })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<GetRecentMessageListResult>() {
@@ -1353,40 +1366,40 @@ public class CommunicationFragment extends BaseFragment {
 
     private void cacheConversationList(final GetConversationListResult getConversationListResult) {
         Observable.create(new ObservableOnSubscribe<List<Conversation>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Conversation>> emitter) throws Exception {
-                List<Conversation> conversationList = getConversationListResult.getConversationList();
-                //创建服务号保存到本地
-                Conversation serviceConversation = new Conversation();
-                serviceConversation.setType(Conversation.TYPE_SERVICE);
-                serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
-                serviceConversation.setAvatar("drawable://" + R.drawable.ic_channel_service);
-                serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
-                serviceConversation.setCreationDate(1653840000000L);
-                serviceConversation.setLastUpdate(1653840000000L);
+                    @Override
+                    public void subscribe(ObservableEmitter<List<Conversation>> emitter) throws Exception {
+                        List<Conversation> conversationList = getConversationListResult.getConversationList();
+                        //创建服务号保存到本地
+                        Conversation serviceConversation = new Conversation();
+                        serviceConversation.setType(Conversation.TYPE_SERVICE);
+                        serviceConversation.setId(ConversationCacheUtils.serviceConversationId);
+                        serviceConversation.setAvatar("drawable://" + R.drawable.design3_icon_transfer);
+                        serviceConversation.setShowName(getContext().getString(R.string.address_servicenum_text));
+                        serviceConversation.setCreationDate(1653840000000L);
+                        serviceConversation.setLastUpdate(1653840000000L);
 
-                conversationList.add(serviceConversation);
-                List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-                //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
-                for (Conversation conversation : conversationList) {
-                    int index = cacheConversationList.indexOf(conversation);
-                    if (index != -1) {
-                        conversation.setHide(cacheConversationList.get(index).isHide());
+                        conversationList.add(serviceConversation);
+                        List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+                        //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
+                        for (Conversation conversation : conversationList) {
+                            int index = cacheConversationList.indexOf(conversation);
+                            if (index != -1) {
+                                conversation.setHide(cacheConversationList.get(index).isHide());
+                            }
+                        }
+                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+                        //服务端和本地数据取交集
+                        List<Conversation> intersectionConversationList = new ArrayList<>();
+                        intersectionConversationList.addAll(conversationList);
+                        intersectionConversationList.retainAll(cacheConversationList);
+                        cacheConversationList.removeAll(intersectionConversationList);
+                        ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
+                        if (isGroupIconCreate) {
+                            conversationList.removeAll(intersectionConversationList);
+                        }
+                        emitter.onNext(conversationList);
                     }
-                }
-                ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
-                //服务端和本地数据取交集
-                List<Conversation> intersectionConversationList = new ArrayList<>();
-                intersectionConversationList.addAll(conversationList);
-                intersectionConversationList.retainAll(cacheConversationList);
-                cacheConversationList.removeAll(intersectionConversationList);
-                ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
-                if (isGroupIconCreate) {
-                    conversationList.removeAll(intersectionConversationList);
-                }
-                emitter.onNext(conversationList);
-            }
-        })
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<List<Conversation>>() {

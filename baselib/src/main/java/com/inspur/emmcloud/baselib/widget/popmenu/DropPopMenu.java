@@ -108,7 +108,8 @@ public class DropPopMenu {
         mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mPopupWindow.setFocusable(true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setElevation(8);
+//        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setOnDismissListener(new PopOnDismissListener());
 
         mDropPopLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -125,7 +126,7 @@ public class DropPopMenu {
         mListView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT
                 , LinearLayout.LayoutParams.WRAP_CONTENT));
         int currentThemeNo = PreferencesUtils.getInt(mContext, "app_theme_num_v1", 0);
-        mListView.setDivider(new ColorDrawable(Color.parseColor(currentThemeNo != 3 ? "#e3e3e3" : "#464646")));
+        mListView.setDivider(new ColorDrawable(Color.parseColor("#666666")));
         mListView.setDividerHeight(1);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -220,7 +221,7 @@ public class DropPopMenu {
 
     public void show(final View parent) {
         mBtnView = parent;
-        setBackgroundAlpha(0.8f);
+//        setBackgroundAlpha(0.8f);
         mDropPopLayout.requestFocus();
 
         mIsShowAtUp = false;
@@ -395,7 +396,7 @@ public class DropPopMenu {
     private class PopOnDismissListener implements PopupWindow.OnDismissListener {
         @Override
         public void onDismiss() {
-            setBackgroundAlpha(1f);
+//            setBackgroundAlpha(1f);
             if (mOnDismissListener != null) {
                 mOnDismissListener.onDismiss();
             }

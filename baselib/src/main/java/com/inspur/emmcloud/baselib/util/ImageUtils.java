@@ -781,7 +781,9 @@ public class ImageUtils {
         textView.setWidth(height);
         textView.setHeight(height);
         textView.setBackgroundColor(Color.parseColor("#3596f7"));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.dip2px(context, 30));
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.dip2px(context, 30));
+        // 修改默认头像文字size为22，之前30
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DensityUtil.dip2px(context, 22));
         textView.setIncludeFontPadding(false);
         textView.setTextColor(Color.WHITE);
         textView.setGravity(Gravity.CENTER);

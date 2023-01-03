@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/mine_header_bg_1c">
+    android:background="?attr/design3_color_mine_card">
+
+    <com.inspur.emmcloud.baselib.widget.ImageViewRound
+        android:id="@+id/iv_photo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginBottom="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/design3_light_icon_person_default" />
 
     <LinearLayout
-        android:id="@+id/ll_my_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="10dp"
-        android:orientation="vertical"
-        android:paddingTop="21dp"
-        android:paddingBottom="21dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:paddingLeft="21dp"
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?attr/mine_my_info_card_name_color"
-                android:textSize="24sp" />
-
-            <TextView
-                android:paddingLeft="21dp"
-                android:id="@+id/tv_enterprise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_name"
-                android:layout_marginTop="4dp"
-                android:drawableRight="@drawable/basemodule_drop_down_black"
-                android:drawablePadding="3dp"
-                android:paddingRight="20dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:paddingBottom="20dp"
-                android:textColor="?attr/mine_my_info_card_enterprise_color"
-                android:textSize="13sp" />
-
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
-                android:id="@+id/iv_photo"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="21dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:src="@drawable/icon_photo_default" />
-        </RelativeLayout>
+        android:layout_alignTop="@+id/iv_photo"
+        android:layout_alignBottom="@+id/iv_photo"
+        android:layout_toEndOf="@+id/iv_photo"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_user_card_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:paddingRight="13dp"></LinearLayout>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.M3.Fs02"
+                android:textColor="?attr/design3_color_mine_name" />
+
+            <LinearLayout
+                android:id="@+id/ll_user_card_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_enterprise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="?attr/design3_icon_arrow_path"
+            android:drawablePadding="3dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:textAppearance="@style/TextAppearance.M3.Fs05"
+            android:textColor="?attr/design3_color_mine_department" />
     </LinearLayout>
+
 </RelativeLayout>
 
 

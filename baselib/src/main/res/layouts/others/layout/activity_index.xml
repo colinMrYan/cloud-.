@@ -30,7 +30,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/footer_bg">
+            android:background="?attr/design3_color_ne12">
 
             <RelativeLayout
                 android:layout_width="match_parent"

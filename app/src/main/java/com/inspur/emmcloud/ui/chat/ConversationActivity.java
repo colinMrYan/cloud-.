@@ -80,6 +80,7 @@ import com.inspur.emmcloud.basemodule.media.selector.engine.CompressFileEngine;
 import com.inspur.emmcloud.basemodule.media.selector.entity.LocalMedia;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnKeyValueResultCallbackListener;
 import com.inspur.emmcloud.basemodule.media.selector.utils.SdkVersionUtils;
+import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
@@ -236,8 +237,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     @BindView(R.id.dissolve_layout)
     LinearLayout dissolveLayout;
 
-    @BindView(R.id.btn_conversation_unread)
-    CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -359,27 +358,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-//    private void setUnReadMessageCount() {
-//        if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
-//            final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-////            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-//            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-//            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
-//                    uiMessageList.clear();
-//                    uiMessageList.addAll(unReadMessageUIList);
-//                    adapter.setMessageList(uiMessageList);
-//                    adapter.notifyDataSetChanged();
-//                    msgListView.MoveToPosition(0);
-//                    unreadRoundBtn.setVisibility(View.GONE);
-//                    msgListView.scrollToPosition(0);
-//                }
-//            });
-//        }
-//    }
-
     private void showMessageList() {
         int position = -1;
         List<Message> cacheMessageList;
@@ -441,7 +419,11 @@ public class ConversationActivity extends ConversationBaseActivity {
             robotPhotoImg.setVisibility(View.VISIBLE);
             headerText.setVisibility(View.GONE);
             String iconUrl = DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), conversation.getName());
-            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.icon_person_default);
+            if (DarkUtil.isDarkTheme()) {
+                ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.design3_dark_icon_person_default);
+            } else {
+                ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.design3_light_icon_person_default);
+            }
         } else {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
@@ -1814,7 +1796,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), conversation.getId());
                 if (changeConversation != null && !TextUtils.isEmpty(changeConversation.getMembersDetail()) && !changeConversation.getMembersDetail().equals(conversation.getMembersDetail())) {
                     adapter.updateMembersDetail(changeConversation.getMembersDetail());
-                    conversation.setMembersDetail(changeConversation.getMembersDetail());
+//                    conversation.setMembersDetail(changeConversation.getMembersDetail());
                 }
                 break;
             case Constant.EVENTBUS_TAG_ADMINISTRATOR_ADD:

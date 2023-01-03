@@ -49,8 +49,8 @@ public class DropPopLayout extends LinearLayout {
 
         mTriangleDownIndicatorView = new TriangleIndicatorView(getContext());
         mTriangleDownIndicatorView.setOrientation(false);
-        int currentThemeNo = PreferencesUtils.getInt(getContext(), "app_theme_num_v1", 0);
-        setTriangleIndicatorViewColor(currentThemeNo == 3 ? Color.parseColor("#404040") : Color.WHITE);
+        // 顶部三角view背景色
+        setTriangleIndicatorViewColor(Color.parseColor("#4D4D4D"));
         mTriangleUpIndicatorView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT
                 , LayoutParams.WRAP_CONTENT));
         addView(mTriangleDownIndicatorView);

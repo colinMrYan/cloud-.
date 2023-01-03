@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+
 import androidx.annotation.Nullable;
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,6 +49,7 @@ public class PopupWindowList {
         }
         this.mContext = mContext;
         setHeightWidth();
+
     }
 
     public static void setBackgroundAlpha(Activity activity, float bgAlpha) {
@@ -100,8 +103,12 @@ public class PopupWindowList {
     public void hide() {
         if (isShowing()) {
             mPopupWindow.dismiss();
-            if (mContext != null)
-                setBackgroundAlpha((Activity) mContext, 1f);
+            if (mAnchorView != null) {
+                mAnchorView.setSelected(false);
+            }
+            // 新版不需要背景
+//            if (mContext != null)
+//                setBackgroundAlpha((Activity) mContext, 1f);
         }
     }
 
@@ -125,8 +132,10 @@ public class PopupWindowList {
         if (mItemData == null) {
             throw new IllegalArgumentException("please fill ListView Data");
         }
+        mAnchorView.setSelected(true);
         mPopView = new ListView(mContext);
         mPopView.setBackgroundColor(DarkUtil.getPopContainerColor());
+//        mPopView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_corner_6dp));
         mPopView.setVerticalScrollBarEnabled(false);
         mPopView.setDivider(null);
         PopAdapter adapter = new PopAdapter(mContext, mItemData);
@@ -157,14 +166,18 @@ public class PopupWindowList {
         }
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(mModal);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
-        if (mContext != null)
-            setBackgroundAlpha((Activity) mContext, 0.6f);
+        mPopupWindow.setElevation(8);
+//        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
+//        if (mContext != null)
+//            setBackgroundAlpha((Activity) mContext, 0.6f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                if (mContext != null) {
-                    setBackgroundAlpha((Activity) mContext, 1f);
+//                if (mContext != null) {
+//                    setBackgroundAlpha((Activity) mContext, 1f);
+//                }
+                if (mAnchorView != null) {
+                    mAnchorView.setSelected(false);
                 }
             }
         });

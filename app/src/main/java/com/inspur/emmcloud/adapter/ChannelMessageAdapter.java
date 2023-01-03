@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ChannelMessageStates;
 import com.inspur.emmcloud.basemodule.media.selector.dialog.RemindDialog;
@@ -34,6 +36,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.Design3DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentNewMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
@@ -73,6 +76,7 @@ import java.util.Set;
 public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAdapter.ViewHolder> {
 
     private static final Integer MAX_MULTI_SELECT_COUNT = 100;
+    private boolean darkTheme;
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
@@ -100,6 +104,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             mExceptSelfMemberList.add(contact.getId());
         }
         mExceptSelfMemberList.remove(uid);
+        darkTheme = DarkUtil.isDarkTheme();
 
         this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -155,7 +160,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_msg_card_parent_view, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.design3_chat_msg_card_parent_view, viewGroup, false);
         ViewHolder holder = new ViewHolder(view, mItemClickListener);
         return holder;
     }
@@ -200,11 +205,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 holder.sendFailImg.setVisibility(View.VISIBLE);
                 holder.sendingLoadingView.setVisibility(View.GONE);
             } else {
-                boolean isMyMsg = uiMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
-                holder.sendStatusLayout.setVisibility(isMyMsg ? (mMultipleSelect ? View.GONE : View.INVISIBLE) : View.GONE);
-                RelativeLayout.LayoutParams cardLayoutParams = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
-                cardLayoutParams.leftMargin = DensityUtil.dip2px(mMultipleSelect ? 15 : 5);
-                holder.cardLayout.setLayoutParams(cardLayoutParams);
+                holder.sendStatusLayout.setVisibility(View.GONE);
             }
             holder.sendStatusLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -225,6 +226,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     private void showCardLayout(final ViewHolder holder, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
+        final String type = message.getType();
         boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
@@ -234,16 +236,100 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         params.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
         if (StringUtils.isBlank(message.getRecallFrom())) {
             params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
+            // 动态设置气泡左右间距，包括多选场景，图片或视频场景，其他场景
+            boolean isPhotoOrVideo = Message.MESSAGE_TYPE_MEDIA_IMAGE.equals(type) || Message.MESSAGE_TYPE_MEDIA_VIDEO.equals(type);
+            if (mMultipleSelect) {
+                // 多选时，计算间距，原则是保持会话宽度不变，特殊场景是消息发送失败或发送中需要额外设置失败/发送中图标宽度20dp
+                if (isPhotoOrVideo) {
+                    if (isMyMsg) {
+                        params.leftMargin = DensityUtil.dip2px(10);
+                        params.rightMargin = DensityUtil.dip2px(10);
+                    } else {
+                        params.leftMargin = DensityUtil.dip2px(10);
+                        // 原右边距-右移距离 = 50-28
+                        params.rightMargin = DensityUtil.dip2px(22);
+                    }
+                } else {
+                    if (uiMessage.getSendStatus() == 1) {
+                        if (isMyMsg) {
+                            params.leftMargin = DensityUtil.dip2px(10);
+                            params.rightMargin = DensityUtil.dip2px(5);
+                        } else {
+                            params.leftMargin = DensityUtil.dip2px(5);
+                            // 原右边距-右移距离 = 50-28
+                            params.rightMargin = DensityUtil.dip2px(22);
+                        }
+                    } else {
+                        if (isMyMsg) {
+                            // 消息发送中或失败，右气泡的左边距置为0，原来为10dp
+                            params.leftMargin = 0;
+                            params.rightMargin = DensityUtil.dip2px(5);
+                        } else {
+                            params.leftMargin = DensityUtil.dip2px(5);
+                            // 原右边距-右移距离 = 50-28
+                            params.rightMargin = DensityUtil.dip2px(22);
+                        }
+                    }
+                }
+            } else {
+                //  左气泡：距离右边距10dp+头像，左边距5dp
+                //  右气泡：距离右边距5dp，左边距10dp+头像
+                //	图片、视频：距离10dp 因为没有气泡三角
+                if (isPhotoOrVideo) {
+                    if (isMyMsg) {
+                        params.leftMargin = DensityUtil.dip2px(50);
+                        params.rightMargin = DensityUtil.dip2px(10);
+                    } else {
+                        params.leftMargin = DensityUtil.dip2px(10);
+                        params.rightMargin = DensityUtil.dip2px(50);
+                    }
+                } else {
+                    if (uiMessage.getSendStatus() == 1) {
+                        if (isMyMsg) {
+                            params.leftMargin = DensityUtil.dip2px(50);
+                            params.rightMargin = DensityUtil.dip2px(5);
+                        } else {
+                            params.leftMargin = DensityUtil.dip2px(5);
+                            params.rightMargin = DensityUtil.dip2px(50);
+                        }
+                    } else {
+                        if (isMyMsg) {
+                            // 消息发送中或失败view自身margin 5dp，右气泡的左边距比正常小20dp，
+                            params.leftMargin = DensityUtil.dip2px(25);
+                            params.rightMargin = DensityUtil.dip2px(5);
+                        } else {
+                            params.leftMargin = DensityUtil.dip2px(5);
+                            params.rightMargin = DensityUtil.dip2px(50);
+                        }
+                    }
+                }
+            }
+            // 动态设置消息布局左右边距，多选时，左气泡去掉左边距
+            if (mMultipleSelect) {
+                if (isMyMsg) {
+                    if (uiMessage.getSendStatus() == 1) {
+                        holder.msgSendContentRl.setPadding(DensityUtil.dip2px(12), 0, DensityUtil.dip2px(12), 0);
+                    } else {
+                        // 消息发送失败或发送中，左间距原来为12dp置为0，右边距原来为12dp置为 15-12 = 3
+                        holder.msgSendContentRl.setPadding(0, 0, DensityUtil.dip2px(9), 0);
+                    }
+                } else {
+                    holder.msgSendContentRl.setPadding(0, 0, DensityUtil.dip2px(12), 0);
+                }
+            } else {
+                holder.msgSendContentRl.setPadding(DensityUtil.dip2px(12), 0, DensityUtil.dip2px(12), 0);
+            }
         } else {
             params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         }
         holder.cardParentLayout.setLayoutParams(params);
         holder.checkbox.setVisibility(mMultipleSelect ? View.VISIBLE : View.GONE);
         if (supportMultiSelect(uiMessage)) {
-            holder.checkbox.setImageResource(mSelectedMessages.contains(uiMessage) ? R.drawable.ic_select_yes :
-                    (DarkUtil.isDarkTheme() ? R.drawable.ic_select_no_dark : R.drawable.ic_select_no));
+            holder.checkbox.setImageResource(mSelectedMessages.contains(uiMessage) ?
+                    (darkTheme ? R.drawable.design3_dark_icon_chat_check : R.drawable.design3_light_icon_chat_check) :
+                    (darkTheme ? R.drawable.design3_dark_icon_chat_uncheck : R.drawable.design3_light_icon_chat_uncheck));
         } else {
-            holder.checkbox.setImageResource(DarkUtil.isDarkTheme() ? R.drawable.ic_not_select_dark : R.drawable.ic_not_select);
+            holder.checkbox.setImageResource(darkTheme ? R.drawable.design3_dark_icon_chat_check_disable : R.drawable.design3_light_icon_chat_check_disable);
         }
 
         holder.cardLayout.removeAllViewsInLayout();
@@ -251,13 +337,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         View cardContentView = null;
         boolean bottomViewUsed;
         if (StringUtils.isBlank(uiMessage.getMessage().getRecallFrom())) {
-            final String type = message.getType();
             SelectableTextHelper mSelectableTextHelper = null;
             switch (type) {
                 case Message.MESSAGE_TYPE_TEXT_WHISPER:
                 case Message.MESSAGE_TYPE_TEXT_BURN:
                 case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                    cardContentView = DisplayTxtPlainMsg.getView(context,
+                    cardContentView = Design3DisplayTxtPlainMsg.getView(context,
                             message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
                     mSelectableTextHelper = new SelectableTextHelper.Builder((TextView) cardContentView.findViewById(R.id.tv_content))
                             .setSelectedColor(isMyMsg ? context.getResources().getColor(R.color.selected_send_msg_bg) : context.getResources().getColor(R.color.selected_receive_msg_bg))
@@ -461,7 +546,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         if (TextUtils.isEmpty(membersDetail)) {
             nameBuilder.append(contactUsers.get(0).getName());
         } else {
-            nameBuilder.append(ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, contactUsers.get(0).getId()));
+            if (contactUsers.size() > 0) {
+                nameBuilder.append(ChatMsgContentUtils.getUserNicknameOrName(membersDetailArray, contactUsers.get(0).getId()));
+            }
         }
 //        nameBuilder.append(contactUsers.get(0).getName());
         for (int i = 1; i < length; i++) {
@@ -527,7 +614,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         final String fromUser = UImessage.getMessage().getFromUser();
         boolean isMyMsg = MyApplication.getInstance().getUid().equals(fromUser);
         if (StringUtils.isBlank(UImessage.getMessage().getRecallFrom())) {
-            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : (mMultipleSelect ? View.GONE : View.INVISIBLE));
+            holder.senderPhotoImgRight.setType(ImageViewRound.TYPE_ROUND);
+            holder.senderPhotoImgRight.setRoundRadius(holder.senderPhotoImgRight.dpTodx(6));
+            holder.senderPhotoImgRight.setVisibility(isMyMsg ? View.VISIBLE : (View.GONE));
+            holder.senderPhotoImgLeft.setType(ImageViewRound.TYPE_ROUND);
+            holder.senderPhotoImgLeft.setRoundRadius(holder.senderPhotoImgLeft.dpTodx(6));
             holder.senderPhotoImgLeft.setVisibility(isMyMsg ? View.GONE : View.VISIBLE);
         } else {
             holder.senderPhotoImgRight.setVisibility(View.GONE);
@@ -536,7 +627,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         ImageView senderPhotoImg = isMyMsg ? holder.senderPhotoImgRight : holder.senderPhotoImgLeft;
         ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
-                UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
+                UImessage.getSenderPhotoUrl(), darkTheme ? R.drawable.design3_dark_icon_person_default :
+                        R.drawable.design3_light_icon_person_default);
         senderPhotoImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -647,8 +739,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public RelativeLayout cardLayout;
         public TextView senderNameText;
-        public ImageView senderPhotoImgLeft;
-        public ImageView senderPhotoImgRight;
+        public ImageViewRound senderPhotoImgLeft;
+        public ImageViewRound senderPhotoImgRight;
         public RelativeLayout sendStatusLayout;
         public ImageView sendFailImg;
         public CustomLoadingView sendingLoadingView;
@@ -656,6 +748,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public TextView bottomInfoTypeLeft;
         public TextView bottomInfoTypeRight;
         public RelativeLayout cardParentLayout;
+        public RelativeLayout msgSendContentRl;
         public ImageView checkbox;
         private MyItemClickListener mListener;
         public TextView unreadText;
@@ -670,9 +763,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             cardLayout.setOnClickListener(this);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
-            senderPhotoImgLeft = (ImageView) view
+            senderPhotoImgLeft = (ImageViewRound) view
                     .findViewById(R.id.iv_sender_photo_left);
-            senderPhotoImgRight = (ImageView) view
+            senderPhotoImgRight = (ImageViewRound) view
                     .findViewById(R.id.iv_sender_photo_right);
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
@@ -686,6 +779,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             unreadText = (TextView) view
                     .findViewById(R.id.chat_msg_unread_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+            msgSendContentRl = (RelativeLayout) view.findViewById(R.id.chat_msg_send_content);
             checkbox = view.findViewById(R.id.chat_msg_checkbox);
             itemView.setOnClickListener(this);
 
@@ -723,14 +817,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         if (mMultipleSelect) {
             if (supportMultiSelect(uiMessage)) {
                 if (mSelectedMessages.contains(uiMessage)) {
-                    checkbox.setImageResource(R.drawable.ic_select_no);
+                    checkbox.setImageResource(darkTheme ? R.drawable.design3_dark_icon_chat_uncheck : R.drawable.design3_light_icon_chat_uncheck);
                     mSelectedMessages.remove(uiMessage);
                 } else {
                     if (mSelectedMessages.size() >= MAX_MULTI_SELECT_COUNT) {
                         RemindDialog.buildDialog(context, context.getString(R.string.multi_select_max_tip, MAX_MULTI_SELECT_COUNT + "")).show();
                         return true;
                     }
-                    checkbox.setImageResource(R.drawable.ic_select_yes);
+                    checkbox.setImageResource(darkTheme ? R.drawable.design3_dark_icon_chat_check : R.drawable.design3_light_icon_chat_check);
                     mSelectedMessages.add(uiMessage);
                 }
             }

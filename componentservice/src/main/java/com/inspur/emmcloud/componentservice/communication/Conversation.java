@@ -93,7 +93,8 @@ public class Conversation implements Serializable {
         String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");
         this.lastUpdate = TimeUtils.UTCString2Long(UTCLastUpdate);
         this.members = JSONUtils.getString(obj, "members", "");
-        this.membersDetail = JSONUtils.getString(obj, "membersDetail", "");
+        // 云+公版暂不支持群聊显示昵称，membersDetail暂时隐藏
+//        this.membersDetail = JSONUtils.getString(obj, "membersDetail", "");
         this.administrators = JSONUtils.getString(obj, "administrators", "");
         this.input = JSONUtils.getString(obj, "input", "");
         this.dnd = JSONUtils.getBoolean(obj, "dnd", false);

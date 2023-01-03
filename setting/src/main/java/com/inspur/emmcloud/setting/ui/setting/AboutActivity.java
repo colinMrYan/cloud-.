@@ -13,6 +13,8 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -46,26 +48,39 @@ public class AboutActivity extends BaseActivity {
     private static final int DONOT_UPGRADE = 12;
     @BindView(R2.id.tv_app_version)
     TextView appVersionText;
+    @BindView(R2.id.tv_app_name)
+    TextView appNameText;
     @BindView(R2.id.iv_logo)
-    ImageView logoImg;
+    ImageViewRound logoImg;
     @BindView(R2.id.rl_protocol)
     RelativeLayout protocolLayout;
     @BindView(R2.id.rl_privacy)
     RelativeLayout privacyLayout;
     @BindView(R2.id.rl_invite_friends)
     RelativeLayout inviteFriendsLayout;
+    @BindView(R2.id.hv_common)
+    CommonHeaderView commonHv;
     private Handler handler;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        String version = AppUtils.getVersion(this).replace("beta", "b");
-        appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
+        appNameText.setText(AppUtils.getAppName(this));
+        appVersionText.setText(AppUtils.getVersion(this).replace("beta", "b"));
+        logoImg.setType(ImageViewRound.TYPE_ROUND);
+        logoImg.setRoundRadius(logoImg.dpTodx(8));
         ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(BaseApplication.getInstance()), R.drawable.ic_launcher);
         protocolLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         privacyLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
+        setTitleView();
         handMessage();
+    }
+
+    private void setTitleView() {
+//        TextView titleTv = (TextView) commonHv.findViewById(R.id.tv_title);
+//        titleTv.setText(getString(R.string.setting_about_text));
+        commonHv.setTitle(getString(R.string.setting_about_text));
     }
 
     @Override
@@ -103,7 +118,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         int id = v.getId();
-        if (id == R.id.ibt_back) {
+        if (id == R.id.iv_back) {
             finish();
         } else if (id == R.id.rl_welcome) {
             Bundle bundle = new Bundle();
@@ -112,7 +127,7 @@ public class AboutActivity extends BaseActivity {
                     bundle);
         } else if (id == R.id.rl_protocol) {
 //            IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
-            openProtocol(getString(R.string.setting_about_protocol_text),SERVICE_AGREEMENT + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
+            openProtocol(getString(R.string.setting_about_protocol_text), SERVICE_AGREEMENT + LanguageManager.getInstance().getCurrentAppLanguage() + ".html");
         } else if (id == R.id.rl_check_update) {
             AppService appService = Router.getInstance().getService(AppService.class);
             if (appService != null) {
@@ -126,7 +141,7 @@ public class AboutActivity extends BaseActivity {
     }
 
 
-    private void openProtocol(String appName,String uri){
+    private void openProtocol(String appName, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
         LogUtils.jasonDebug("uri===" + uri);
