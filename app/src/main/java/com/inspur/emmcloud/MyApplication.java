@@ -125,7 +125,7 @@ public class MyApplication extends BaseApplication {
     private void registerPhoneRecognizeReceiver() {
         IntentFilter intentFilterPhone = new IntentFilter();
         intentFilterPhone.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-//        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
+        this.registerReceiver(new PhoneReceiver(), intentFilterPhone);
     }
 
     /**
