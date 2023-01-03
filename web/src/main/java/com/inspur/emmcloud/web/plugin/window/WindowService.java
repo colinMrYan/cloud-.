@@ -173,12 +173,15 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener, OnTit
     }
 
     private void getWindowAuthorization(JSONObject paramsObject){
+        JSONObject optionObj = paramsObject.optJSONObject("options");
+        String tenantId = optionObj.optString("tenantId","");
         String successCall = JSONUtils.getString(paramsObject, "success", "");
-        JSONObject json = new JSONObject();
+        boolean shouldReturnToken = tenantId.equals(BaseApplication.getInstance().getCurrentEnterprise().getId());
+            JSONObject json = new JSONObject();
         try {
-            json.put("state", 1);
+            json.put("state", shouldReturnToken ? 1 : 0);
             JSONObject result = new JSONObject();
-            result.put("data", BaseApplication.getInstance().getToken());
+            result.put("data", shouldReturnToken ? BaseApplication.getInstance().getToken() : "");
             json.put("result", result);
 
         } catch (JSONException e) {
