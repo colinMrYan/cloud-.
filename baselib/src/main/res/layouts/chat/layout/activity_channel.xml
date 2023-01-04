@@ -58,6 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.M3.Fs03"
@@ -206,8 +208,8 @@
     <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="?attr/text_ll_color_nor"
+        android:layout_height="58dp"
+        android:background="?attr/design3_color_ne12"
         android:visibility="gone">
 
         <LinearLayout
@@ -219,26 +221,21 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="7.5dp"
+                android:layout_marginTop="10dp"
                 android:src="?attr/multi_transfer_single_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:text="@string/multi_transfer_single"
-                android:textColor="?attr/text_color" />
+                android:textAppearance="@style/TextAppearance.M3.Fs10"
+                android:textColor="?attr/design3_color_te02" />
         </LinearLayout>
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:background="#e6e6e6" />
 
 
         <LinearLayout
@@ -250,19 +247,20 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="7.5dp"
+                android:layout_marginTop="10dp"
                 android:src="?attr/multi_transfer_all_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:text="@string/multi_transfer_all"
-                android:textColor="?attr/text_color" />
+                android:textAppearance="@style/TextAppearance.M3.Fs10"
+                android:textColor="?attr/design3_color_te02" />
         </LinearLayout>
     </LinearLayout>
 

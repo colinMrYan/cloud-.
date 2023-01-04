@@ -51,7 +51,7 @@ public class Design3DisplayTxtPlainMsg {
         String text = message.getMsgContentTextPlain().getText();
         if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
             text = context.getString(R.string.click_to_burn);
-            contentText.setTextColor(context.getResources().getColor(R.color.color_base_blue));
+            contentText.setTextColor(context.getResources().getColor(R.color.color_te07));
         }
         // 文本为链接时，长按时链接为高亮，在暗黑时置为透明，解决长按复制时多层背景bug
         contentText.setHighlightColor(context.getResources().getColor(isMyMsg ? R.color.transparent

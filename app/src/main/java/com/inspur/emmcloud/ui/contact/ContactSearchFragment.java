@@ -1308,7 +1308,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 photoImg.setImageResource(defaultIcon);
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            photoImg.setImageResource(R.drawable.design3_icon_contact_struct);
+            photoImg.setImageResource(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_contact_department));
         } else {
             defaultIcon = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_person_default);
             if (!searchModel.getId().equals("null")) {

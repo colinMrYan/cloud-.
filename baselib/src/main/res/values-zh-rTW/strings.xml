@@ -219,7 +219,7 @@
     <string name="report_out_of_length">您輸入的字數已經超過了限制</string>
     <string name="report_no_empty">請輸入投訴内容</string>
     <string name="channel_set_sticky">置頂聊天</string>
-    <string name="modify_group_name">群名片</string>
+    <string name="modify_group_name">群名稱</string>
     <string name="channel_single_chat_images">聊天圖片</string>
     <string name="channel_single_chat_files">文件</string>
     <string name="channel_search_more_group_members">查看全部群成員</string>

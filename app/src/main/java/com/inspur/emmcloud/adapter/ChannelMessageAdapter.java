@@ -20,6 +20,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -488,17 +489,21 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         } else if (allSize == 1) {
             holder.unreadText.setVisibility(View.VISIBLE);
             holder.unreadText.setText(context.getResources().getString(readSize == 1 ? R.string.read : R.string.unread));
-            holder.unreadText.setTextColor(Color.parseColor(readSize == 1 ? "#999999" : "#36A5F6"));
+            if (readSize == 1) {
+                holder.unreadText.setTextColor(darkTheme ? Color.parseColor("#666666") : Color.parseColor("#999999"));
+            } else {
+                holder.unreadText.setTextColor(Color.parseColor("#2A87FF"));
+            }
             holder.unreadText.setOnClickListener(null);
         } else if (allSize > 1) {
             holder.unreadText.setVisibility(View.VISIBLE);
             if (readSize >= allSize) {
                 holder.unreadText.setText(context.getResources().getString(R.string.all_read));
-                holder.unreadText.setTextColor(Color.parseColor("#999999"));
+                holder.unreadText.setTextColor(darkTheme ? Color.parseColor("#666666") : Color.parseColor("#999999"));
                 holder.unreadText.setOnClickListener(null);
             } else {
                 holder.unreadText.setText((sentSize + deliveredSize) + context.getResources().getString(R.string.left_unread));
-                holder.unreadText.setTextColor(Color.parseColor("#36A5F6"));
+                holder.unreadText.setTextColor(Color.parseColor("#2A87FF"));
                 holder.unreadText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

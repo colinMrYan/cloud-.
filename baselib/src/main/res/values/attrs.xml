@@ -92,7 +92,6 @@
     <attr name="content_bg_f6_1c" format="reference" />
     <attr name="delete_input_icon" format="reference" />
     <attr name="icon_chat_burn" format="reference" />
-    <attr name="icon_chat_input_voice" format="reference" />
     <attr name="delete_emotion_icon" format="reference" />
     <attr name="dialog_common_bg_36" format="reference" />
     <attr name="contact_struct_icon" format="reference" />
@@ -235,6 +234,7 @@
     <attr name="design3_icon_chat_input_disappear" format="reference" />
     <attr name="design3_icon_chat_input_whisper" format="reference" />
     <attr name="design3_selector_chat_menu_item" format="reference" />
+    <attr name="design3_icon_contact_department" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

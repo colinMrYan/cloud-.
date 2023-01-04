@@ -282,6 +282,7 @@
         <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
         <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
         <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
+        <item name="design3_icon_contact_department">@drawable/design3_light_icon_contact_department</item>
 
     </style>
 
@@ -358,7 +359,6 @@
         <item name="design3_drawable_list_divider">@drawable/design3_rv_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
-        <item name="icon_chat_input_voice">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
         <item name="contact_struct_icon">@drawable/design3_icon_contact_struct</item>
         <item name="contact_group_icon">@drawable/design3_icon_contact_group</item>
@@ -519,6 +519,7 @@
         <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
         <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
         <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
+        <item name="design3_icon_contact_department">@drawable/design3_light_icon_contact_department</item>
 
     </style>
 
@@ -755,7 +756,7 @@
         <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
         <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
         <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
-
+        <item name="design3_icon_contact_department">@drawable/design3_light_icon_contact_department</item>
 
     </style>
 
@@ -992,7 +993,8 @@
         <item name="design3_icon_chat_input_disappear">@drawable/design3_dark_icon_chat_input_disappear</item>
         <item name="design3_icon_chat_input_whisper">@drawable/design3_dark_icon_chat_input_whisper</item>
         <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item_dark</item>
-        
+        <item name="design3_icon_contact_department">@drawable/design3_dark_icon_contact_department</item>
+
     </style>
 
 
