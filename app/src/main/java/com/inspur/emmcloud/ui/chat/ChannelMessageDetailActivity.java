@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
+import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
+
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -37,7 +40,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
@@ -86,9 +89,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_PATH;
-import static com.inspur.emmcloud.basemodule.media.record.activity.CommunicationRecordActivity.VIDEO_THUMBNAIL_PATH;
-
 
 /**
  * 消息详情页面
@@ -105,7 +105,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private BaseAdapter commentAdapter;
     private ScrollView commentScrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CircleTextImageView senderHeadImg;
+    private ImageViewRound senderHeadImg;
     private TextView msgSendTimeText;
     private TextView countTv;
     private TextView senderNameText;
@@ -144,9 +144,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         commentList = new ArrayList<>();
         commentScrollView = (ScrollView) findViewById(R.id.scrollview);
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
+        View msgDetailLayout = inflater.inflate(R.layout.design3_msg_parent_detail,
                 null);
-        senderHeadImg = (CircleTextImageView) msgDetailLayout
+        senderHeadImg = (ImageViewRound) msgDetailLayout
                 .findViewById(R.id.sender_photo_img);
         msgSendTimeText = (TextView) msgDetailLayout
                 .findViewById(R.id.msg_send_time_text);
@@ -595,8 +595,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     .findViewById(R.id.commentdetail_time_text);
             final TextView contentText = (TextView) convertView
                     .findViewById(R.id.comment_text);
-            ImageView photoImg = (ImageView) convertView
+            ImageViewRound photoImg = (ImageViewRound) convertView
                     .findViewById(R.id.msg_img);
+            photoImg.setType(ImageViewRound.TYPE_ROUND);
+            photoImg.setRoundRadius(photoImg.dpTodx(6));
             final Message message = commentList.get(position);
             if (!TextUtils.isEmpty(membersDetail)) {
                 userNameText.setText(ChatMsgContentUtils.getUserNicknameOrName(JSONUtils.getJSONArray(membersDetail, new JSONArray()), message.getFromUser()));

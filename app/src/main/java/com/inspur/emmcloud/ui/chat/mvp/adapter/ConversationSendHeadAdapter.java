@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -44,7 +45,8 @@ public class ConversationSendHeadAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         MessageForwardMultiBean messageForwardMultiBean = conversationList.get(position);
         int defaultIcon = messageForwardMultiBean.getType().equals(Conversation.TYPE_GROUP) ?
-                com.inspur.emmcloud.basemodule.R.drawable.icon_channel_group_default : com.inspur.emmcloud.basemodule.R.drawable.icon_person_default;
+                ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_group_default) :
+                ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default);
         String imageUrl = CommunicationUtils.getHeadUrl(messageForwardMultiBean);
         ((HeadViewHolder) viewHolder).headImage.setTag(imageUrl);
         ImageDisplayUtils.getInstance().displayImageByTag(((HeadViewHolder) viewHolder).headImage, imageUrl, defaultIcon);

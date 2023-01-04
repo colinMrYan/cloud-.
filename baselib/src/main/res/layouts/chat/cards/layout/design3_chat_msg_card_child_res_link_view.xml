@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="8dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/img_news_card"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:id="@+id/rl_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_news_card">
+
+            <TextView
+                android:id="@+id/tv_news_card_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.M3.Fs04"
+                android:textColor="?attr/design3_color_te01" />
+
+            <TextView
+                android:id="@+id/tv_news_card_digest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_news_card_title"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textAppearance="@style/TextAppearance.M3.Fs08"
+                android:textColor="?attr/design3_color_te04" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view_extend"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/rl_text"
+            android:layout_marginTop="8dp"
+            android:background="?attr/design3_color_ne05"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_extend_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_extend"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:visibility="gone">
+
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
+                android:id="@+id/iv_extend_image"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_app_default" />
+
+            <TextView
+                android:id="@+id/tv_extend_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?attr/design3_color_te02"
+                android:textAppearance="@style/TextAppearance.M3.Fs09" />
+        </LinearLayout>
+    </RelativeLayout>
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>

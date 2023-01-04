@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 
@@ -40,7 +40,7 @@ public class ShareDialogForDark {
     public void show() {
         if (dialog == null) return;
         Button okBtn = dialog.findViewById(R.id.ok_btn);
-        CircleTextImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
+        ImageViewRound userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         LinearLayout bgLl = dialog.findViewById(R.id.ll_bg);
         TextView sendTv = dialog.findViewById(R.id.tv_send);
         View yView = dialog.findViewById(R.id.view_Y);

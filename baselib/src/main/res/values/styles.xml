@@ -124,8 +124,8 @@
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
-        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
-        <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="contact_struct_icon">@drawable/design3_icon_contact_struct</item>
+        <item name="contact_group_icon">@drawable/design3_icon_contact_group</item>
         <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
@@ -263,6 +263,24 @@
         <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
         <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
         <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+        <item name="design3_icon_chat_voice">@drawable/design3_light_icon_chat_voice_level3</item>
+        <item name="design3_icon_chat_voice_mine">@drawable/design3_light_icon_chat_voice_mine_level3</item>
+        <item name="design3_anim_chat_voice">@drawable/design3_chat_voice_message_play_left_light</item>
+        <item name="design3_anim_chat_voice_mine">@drawable/design3_chat_voice_message_play_right_light</item>
+        <item name="design3_icon_chat_voice_input">@drawable/design3_light_icon_chat_input_voice</item>
+        <item name="design3_icon_chat_button_emotion">@drawable/design3_light_icon_chat_button_emotion</item>
+        <item name="design3_icon_chat_input_keyboards">@drawable/design3_light_icon_chat_keyboard</item>
+        <item name="design3_icon_chat_button_add">@drawable/design3_light_icon_chat_add</item>
+        <item name="design3_icon_chat_input_gallery">@drawable/design3_light_icon_chat_input_gallery</item>
+        <item name="design3_icon_chat_input_camera">@drawable/design3_light_icon_chat_input_camera</item>
+        <item name="design3_icon_chat_input_file">@drawable/design3_light_icon_chat_input_file</item>
+        <item name="design3_icon_chat_input_voice_word">@drawable/design3_light_icon_chat_input_voice_word</item>
+        <item name="design3_icon_chat_input_mention">@drawable/design3_light_icon_chat_input_mention</item>
+        <item name="design3_icon_chat_input_call">@drawable/design3_light_icon_chat_input_voice_call</item>
+        <item name="design3_icon_chat_input_mail">@drawable/design3_light_icon_chat_input_mail</item>
+        <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
+        <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
+        <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
 
     </style>
 
@@ -341,8 +359,8 @@
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="icon_chat_input_voice">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
-        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
-        <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="contact_struct_icon">@drawable/design3_icon_contact_struct</item>
+        <item name="contact_group_icon">@drawable/design3_icon_contact_group</item>
         <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
@@ -480,6 +498,24 @@
         <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
         <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
         <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+        <item name="design3_icon_chat_voice">@drawable/design3_light_icon_chat_voice_level3</item>
+        <item name="design3_icon_chat_voice_mine">@drawable/design3_light_icon_chat_voice_mine_level3</item>
+        <item name="design3_anim_chat_voice">@drawable/design3_chat_voice_message_play_left_light</item>
+        <item name="design3_anim_chat_voice_mine">@drawable/design3_chat_voice_message_play_right_light</item>
+        <item name="design3_icon_chat_voice_input">@drawable/design3_light_icon_chat_input_voice</item>
+        <item name="design3_icon_chat_button_emotion">@drawable/design3_light_icon_chat_button_emotion</item>
+        <item name="design3_icon_chat_input_keyboards">@drawable/design3_light_icon_chat_keyboard</item>
+        <item name="design3_icon_chat_button_add">@drawable/design3_light_icon_chat_add</item>
+        <item name="design3_icon_chat_input_gallery">@drawable/design3_light_icon_chat_input_gallery</item>
+        <item name="design3_icon_chat_input_camera">@drawable/design3_light_icon_chat_input_camera</item>
+        <item name="design3_icon_chat_input_file">@drawable/design3_light_icon_chat_input_file</item>
+        <item name="design3_icon_chat_input_voice_word">@drawable/design3_light_icon_chat_input_voice_word</item>
+        <item name="design3_icon_chat_input_mention">@drawable/design3_light_icon_chat_input_mention</item>
+        <item name="design3_icon_chat_input_call">@drawable/design3_light_icon_chat_input_voice_call</item>
+        <item name="design3_icon_chat_input_mail">@drawable/design3_light_icon_chat_input_mail</item>
+        <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
+        <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
+        <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
 
     </style>
 
@@ -556,8 +592,8 @@
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
-        <item name="contact_struct_icon">@drawable/ic_contact_struct</item>
-        <item name="contact_group_icon">@drawable/ic_contact_group</item>
+        <item name="contact_struct_icon">@drawable/design3_icon_contact_struct</item>
+        <item name="contact_group_icon">@drawable/design3_icon_contact_group</item>
         <item name="icon_upgrade">@drawable/icon_upgrade_light</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic</item>
@@ -696,6 +732,25 @@
         <item name="design3_icon_add_member">@drawable/design3_light_icon_add_member</item>
         <item name="design3_icon_delete_member">@drawable/design3_light_icon_delete_member</item>
         <item name="design3_icon_send_fail">@drawable/design3_light_icon_send_fail</item>
+        <item name="design3_icon_chat_voice">@drawable/design3_light_icon_chat_voice_level3</item>
+        <item name="design3_icon_chat_voice_mine">@drawable/design3_light_icon_chat_voice_mine_level3</item>
+        <item name="design3_anim_chat_voice">@drawable/design3_chat_voice_message_play_left_light</item>
+        <item name="design3_anim_chat_voice_mine">@drawable/design3_chat_voice_message_play_right_light</item>
+        <item name="design3_icon_chat_voice_input">@drawable/design3_light_icon_chat_input_voice</item>
+        <item name="design3_icon_chat_button_emotion">@drawable/design3_light_icon_chat_button_emotion</item>
+        <item name="design3_icon_chat_input_keyboards">@drawable/design3_light_icon_chat_keyboard</item>
+        <item name="design3_icon_chat_button_add">@drawable/design3_light_icon_chat_add</item>
+        <item name="design3_icon_chat_input_gallery">@drawable/design3_light_icon_chat_input_gallery</item>
+        <item name="design3_icon_chat_input_camera">@drawable/design3_light_icon_chat_input_camera</item>
+        <item name="design3_icon_chat_input_file">@drawable/design3_light_icon_chat_input_file</item>
+        <item name="design3_icon_chat_input_voice_word">@drawable/design3_light_icon_chat_input_voice_word</item>
+        <item name="design3_icon_chat_input_mention">@drawable/design3_light_icon_chat_input_mention</item>
+        <item name="design3_icon_chat_input_call">@drawable/design3_light_icon_chat_input_voice_call</item>
+        <item name="design3_icon_chat_input_mail">@drawable/design3_light_icon_chat_input_mail</item>
+        <item name="design3_icon_chat_input_disappear">@drawable/design3_light_icon_chat_input_disappear</item>
+        <item name="design3_icon_chat_input_whisper">@drawable/design3_light_icon_chat_input_whisper</item>
+        <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item</item>
+
 
     </style>
 
@@ -772,8 +827,8 @@
         <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>
-        <item name="contact_struct_icon">@drawable/ic_contact_struct_dark</item>
-        <item name="contact_group_icon">@drawable/ic_contact_group_dark</item>
+        <item name="contact_struct_icon">@drawable/design3_icon_contact_struct</item>
+        <item name="contact_group_icon">@drawable/design3_icon_contact_group</item>
         <item name="icon_upgrade">@drawable/icon_upgrade_dark</item>
         <item name="schedule_event_chat_ic">@drawable/schedule_event_chat_ic_dark</item>
         <item name="schedule_event_delete_ic">@drawable/schedule_event_delete_ic_dark</item>
@@ -912,7 +967,25 @@
         <item name="design3_icon_add_member">@drawable/design3_dark_icon_add_member</item>
         <item name="design3_icon_delete_member">@drawable/design3_dark_icon_delete_member</item>
         <item name="design3_icon_send_fail">@drawable/design3_dark_icon_send_fail</item>
-
+        <item name="design3_icon_chat_voice">@drawable/design3_dark_icon_chat_voice_level3</item>
+        <item name="design3_icon_chat_voice_mine">@drawable/design3_dark_icon_chat_voice_mine_level3</item>
+        <item name="design3_anim_chat_voice">@drawable/design3_chat_voice_message_play_left_dark</item>
+        <item name="design3_anim_chat_voice_mine">@drawable/design3_chat_voice_message_play_right_dark</item>
+        <item name="design3_icon_chat_voice_input">@drawable/design3_dark_icon_chat_input_voice</item>
+        <item name="design3_icon_chat_button_emotion">@drawable/design3_dark_icon_chat_button_emotion</item>
+        <item name="design3_icon_chat_input_keyboards">@drawable/design3_dark_icon_chat_keyboard</item>
+        <item name="design3_icon_chat_button_add">@drawable/design3_dark_icon_chat_add</item>
+        <item name="design3_icon_chat_input_gallery">@drawable/design3_dark_icon_chat_input_gallery</item>
+        <item name="design3_icon_chat_input_camera">@drawable/design3_dark_icon_chat_input_camera</item>
+        <item name="design3_icon_chat_input_file">@drawable/design3_dark_icon_chat_input_file</item>
+        <item name="design3_icon_chat_input_voice_word">@drawable/design3_dark_icon_chat_input_voice_word</item>
+        <item name="design3_icon_chat_input_mention">@drawable/design3_dark_icon_chat_input_mention</item>
+        <item name="design3_icon_chat_input_call">@drawable/design3_dark_icon_chat_input_voice_call</item>
+        <item name="design3_icon_chat_input_mail">@drawable/design3_dark_icon_chat_input_mail</item>
+        <item name="design3_icon_chat_input_disappear">@drawable/design3_dark_icon_chat_input_disappear</item>
+        <item name="design3_icon_chat_input_whisper">@drawable/design3_dark_icon_chat_input_whisper</item>
+        <item name="design3_selector_chat_menu_item">@drawable/design3_selector_chat_menu_item_dark</item>
+        
     </style>
 
 

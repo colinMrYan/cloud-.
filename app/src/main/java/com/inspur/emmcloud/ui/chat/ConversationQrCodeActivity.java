@@ -21,18 +21,16 @@ import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.ShareFile2OutAppUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ScanCodeJoinConversationBean;
@@ -49,7 +47,6 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.PlatformName;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
@@ -75,7 +72,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
     //二维码大小
     private final static int SHARE_QR_CODE_SIZE = 500;
     @BindView(R.id.iv_group_image)
-    CircleTextImageView groupCircleTextImageView;
+    ImageViewRound groupCircleTextImageView;
     @BindView(R.id.tv_group_name)
     TextView groupNameText;
     @BindView(R.id.iv_group_qrcode)
@@ -112,7 +109,7 @@ public class ConversationQrCodeActivity extends BaseActivity {
         if (file.exists()) {
             groupCircleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
         } else {
-            groupCircleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
+            groupCircleTextImageView.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_group_default));
         }
         getQrCodeContent();
         groupName = getIntent().getStringExtra("groupName");
@@ -164,25 +161,25 @@ public class ConversationQrCodeActivity extends BaseActivity {
         shareConversationListener = new CustomShareListener(ConversationQrCodeActivity.this);
         ShareAction shareAction = new ShareAction(ConversationQrCodeActivity.this);
         shareAction.setShareboardclickCallback(new ShareBoardlistener() {
-                    @Override
-                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
-                            shareGroupToFriends();
-                        } else {
-                            String tip = getString(R.string.chat_group_welcome_join_group);
-                            UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher);
-                            UMWeb web = new UMWeb(shareUrl);
-                            web.setThumb(thumb);
-                            web.setDescription(getString(R.string.chat_group_welcome_join_group_detail, groupName));
-                            web.setTitle(tip);
-                            new ShareAction(ConversationQrCodeActivity.this).withMedia(web)
-                                    .setPlatform(getPlatform(snsPlatform.mKeyword))
-                                    .setCallback(shareConversationListener)
-                                    .share();
-                        }
+            @Override
+            public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                if (snsPlatform.mKeyword.equals("CLOUDPLUSE")) {
+                    shareGroupToFriends();
+                } else {
+                    String tip = getString(R.string.chat_group_welcome_join_group);
+                    UMImage thumb = new UMImage(ConversationQrCodeActivity.this, R.drawable.ic_launcher);
+                    UMWeb web = new UMWeb(shareUrl);
+                    web.setThumb(thumb);
+                    web.setDescription(getString(R.string.chat_group_welcome_join_group_detail, groupName));
+                    web.setTitle(tip);
+                    new ShareAction(ConversationQrCodeActivity.this).withMedia(web)
+                            .setPlatform(getPlatform(snsPlatform.mKeyword))
+                            .setCallback(shareConversationListener)
+                            .share();
+                }
 
-                    }
-                });
+            }
+        });
 
         shareAction.addButton(getString(R.string.internal_sharing), "CLOUDPLUSE", "ic_launcher_share", "ic_launcher_share");
 //        if (AppUtils.isAvilibleByPackageName(BaseApplication.getInstance(), ShareFile2OutAppUtils.PACKAGE_WECHAT)) {

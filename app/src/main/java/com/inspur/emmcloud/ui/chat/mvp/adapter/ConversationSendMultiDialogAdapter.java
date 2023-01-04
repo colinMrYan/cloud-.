@@ -5,7 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
@@ -57,7 +58,8 @@ public class ConversationSendMultiDialogAdapter extends BaseAdapter {
         }
         MessageForwardMultiBean conversation = searchModelList.get(position);
         int defaultIcon = conversation.getType().equals(Conversation.TYPE_GROUP) ?
-                R.drawable.icon_channel_group_default : R.drawable.icon_person_default;
+                ResourceUtils.getResValueOfAttr(context, com.inspur.emmcloud.R.attr.design3_icon_group_default)
+                : ResourceUtils.getResValueOfAttr(context, com.inspur.emmcloud.R.attr.design3_icon_person_default);
         String imageUrl = CommunicationUtils.getHeadUrl(conversation);
         holder.headImage.setTag(imageUrl);
         ImageDisplayUtils.getInstance().displayImageByTag(holder.headImage, imageUrl, defaultIcon);
@@ -65,6 +67,6 @@ public class ConversationSendMultiDialogAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        private CircleTextImageView headImage;
+        private ImageViewRound headImage;
     }
 }

@@ -16,7 +16,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -121,8 +122,9 @@ public class ChannelMembersDelActivity extends BaseActivity {
             ContactUser contactUser = memberContactUserList.get(position);
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.channel_member_list_item, null);
-            CircleTextImageView circleImageView = (CircleTextImageView) convertView.findViewById(R.id.head);
-            ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()), R.drawable.icon_person_default);
+            ImageViewRound circleImageView = (ImageViewRound) convertView.findViewById(R.id.head);
+            ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri.getChannelImgUrl(MyApplication.getInstance(),
+                    contactUser.getId()), ResourceUtils.getResValueOfAttr(ChannelMembersDelActivity.this, R.attr.design3_icon_person_default));
             // 有群昵称时显示昵称，否则显示通讯录名称
             if (!TextUtils.isEmpty(membersDetail)) {
                 for (int j = 0; j < membersDetailArray.length(); j++) {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -92,7 +94,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
             startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
 
         } else if (i == R.id.rl_add_internal_attendees) {
-            if(AppTabUtils.hasContactPermission(this)){
+            if (AppTabUtils.hasContactPermission(this)) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("select_content", 2);
                 bundle.putBoolean("isMulti_select", true);
@@ -211,10 +213,13 @@ public class WebexAddAttendeesActivity extends BaseActivity {
             convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.webex_item_view_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
-            CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
+            ImageViewRound photoImg = (ImageViewRound) convertView.findViewById(R.id.iv_photo);
+            photoImg.setType(ImageViewRound.TYPE_ROUND);
+            photoImg.setRoundRadius(photoImg.dpTodx(6));
             emailText.setText(webexAttendees.getEmail());
             if (webexAttendees.getSearchModel() != null) {
-                ImageDisplayUtils.getInstance().displayImage(photoImg, BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), webexAttendees.getSearchModel().getId()), R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImage(photoImg, BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), webexAttendees.getSearchModel().getId()),
+                        ResourceUtils.getResValueOfAttr(WebexAddAttendeesActivity.this, R.attr.design3_icon_person_default));
                 emailText.setText(webexAttendees.getSearchModel().getName());
             }
             deleteImg.setOnClickListener(new View.OnClickListener() {

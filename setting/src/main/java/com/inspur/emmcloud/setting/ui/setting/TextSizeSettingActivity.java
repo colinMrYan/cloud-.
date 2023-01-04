@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -22,7 +23,7 @@ import com.inspur.emmcloud.setting.widget.TextRatingBar;
 public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFontScaleActivity {
 
     private float mFontScale = 1.0f;
-    private CircleTextImageView mHead1;
+    private ImageViewRound mHead1;
     private TextView mText1;
     private TextView mText2;
 
@@ -85,7 +86,7 @@ public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFont
         }
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), getMyInfoResult.getID());
-        ImageDisplayUtils.getInstance().displayImage(mHead1, photoUri, R.drawable.icon_photo_default);
+        ImageDisplayUtils.getInstance().displayImage(mHead1, photoUri, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
     }
 
     public void onClick(View view) {

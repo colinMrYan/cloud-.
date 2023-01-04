@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,9 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.view.ContextThemeWrapper;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -38,7 +41,7 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.baselib.widget.popmenu.MenuItem;
@@ -102,8 +105,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import io.socket.client.Socket;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 消息页面 com.inspur.emmcloud.ui.CommunicationV0Fragment
@@ -1124,7 +1125,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     static class ViewHolder {
         RelativeLayout mainLayout;
-        CircleTextImageView channelPhotoImg;
+        ImageViewRound channelPhotoImg;
         TextView channelContentText;
         TextView channelTitleText;
         TextView channelTimeText;
@@ -1169,7 +1170,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
                 holder.mainLayout = (RelativeLayout) convertView
                         .findViewById(R.id.main_layout);
-                holder.channelPhotoImg = (CircleTextImageView) convertView
+                holder.channelPhotoImg = (ImageViewRound) convertView
                         .findViewById(R.id.msg_img);
                 holder.channelTitleText = (TextView) convertView
                         .findViewById(R.id.tv_name);
@@ -1202,7 +1203,7 @@ public class CommunicationV0Fragment extends BaseFragment {
          *
          * @param channel
          */
-        private void setChannelIcon(Channel channel, CircleTextImageView channelPhotoImg) {
+        private void setChannelIcon(Channel channel, ImageViewRound channelPhotoImg) {
             // TODO Auto-generated method stub
             if (channel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
@@ -1211,13 +1212,13 @@ public class CommunicationV0Fragment extends BaseFragment {
                 if (file.exists()) {
                     channelPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
                 } else {
-                    channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
+                    channelPhotoImg.setImageResource(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_group_default));
                 }
             } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE") || channel.getType().equals("LINK")) {
-                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_person_default));
             } else {
                 channelPhotoImg.setTag("");
-                channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
+                channelPhotoImg.setImageResource(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_group_default));
             }
 
 

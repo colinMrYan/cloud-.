@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.router.Router;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
@@ -39,11 +40,11 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
 //        } else {
 //            return memberList.size() > 10 ? 10 : memberList.size();
 //        }
-        if(isOwner && AppTabUtils.hasContactPermission(context)){
+        if (isOwner && AppTabUtils.hasContactPermission(context)) {
             return memberList.size() > 9 ? 10 : memberList.size() + 2;
-        }else if(isOwner && !AppTabUtils.hasContactPermission(context)){
+        } else if (isOwner && !AppTabUtils.hasContactPermission(context)) {
             return memberList.size() > 9 ? 10 : memberList.size() + 1;
-        }else{
+        } else {
             return memberList.size() > 10 ? 10 : memberList.size();
         }
     }
@@ -61,7 +62,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view, null);
-        CircleTextImageView memberHeadImg = (CircleTextImageView) convertView
+        ImageViewRound memberHeadImg = (ImageViewRound) convertView
                 .findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView
                 .findViewById(R.id.tv_name);
@@ -89,7 +90,8 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
             }
         }
         nameText.setText(userName);
-        ImageDisplayUtils.getInstance().displayImage(memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);
+        ImageDisplayUtils.getInstance().displayImage(memberHeadImg, userPhotoUrl,
+                ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
         return convertView;
     }
 }

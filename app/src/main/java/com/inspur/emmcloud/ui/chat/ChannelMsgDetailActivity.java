@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -17,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -26,8 +27,9 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -75,7 +77,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private LoadingDialog loadingDialog;
     private ScrollView commentScrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CircleTextImageView senderHeadImg;
+    private ImageViewRound senderHeadImg;
     private TextView msgSendTimeText;
     private TextView senderNameText;
     private ImageView msgContentImg;
@@ -109,7 +111,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
                 null);
-        senderHeadImg = (CircleTextImageView) msgDetailLayout
+        senderHeadImg = (ImageViewRound) msgDetailLayout
                 .findViewById(R.id.sender_photo_img);
         msgSendTimeText = (TextView) msgDetailLayout
                 .findViewById(R.id.msg_send_time_text);
@@ -262,7 +264,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void disPlayCommonInfo() {
         //机器人进群修改处
         String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), msg.getUid());
-        ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, R.drawable.icon_photo_default);
+        ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         senderHeadImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -461,7 +463,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                     .findViewById(R.id.commentdetail_time_text);
             final TextView contentText = (TextView) convertView
                     .findViewById(R.id.comment_text);
-            ImageView photoImg = (ImageView) convertView
+            ImageViewRound photoImg = (ImageViewRound) convertView
                     .findViewById(R.id.msg_img);
             final Comment comment = commentList.get(position);
             userNameText.setText(comment.getTitle());
@@ -476,7 +478,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
             //机器人进群修改处
             String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), comment.getUid());
-            ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, ResourceUtils.getResValueOfAttr(ChannelMsgDetailActivity.this, R.attr.design3_icon_person_default));
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

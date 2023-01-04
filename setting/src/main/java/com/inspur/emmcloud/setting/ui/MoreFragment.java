@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.setting.ui;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -24,14 +24,12 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
-import com.inspur.emmcloud.basemodule.ui.DarkUtil;
 import com.inspur.emmcloud.basemodule.util.AppTabUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -62,8 +60,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 更多页面

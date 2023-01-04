@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -19,7 +20,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -74,7 +76,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     @BindView(R.id.tv_group_members)
     TextView groupMembersText;
     @BindView(R.id.iv_group_photo)
-    CircleTextImageView circleTextImageView;
+    ImageViewRound circleTextImageView;
     @BindView(R.id.tv_group_member_size)
     TextView memberSizeText;
 
@@ -198,7 +200,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         if (file.exists()) {
             circleTextImageView.setImageBitmap(ImageUtils.getBitmapByFile(file));
         } else {
-            circleTextImageView.setImageResource(R.drawable.icon_channel_group_default);
+            circleTextImageView.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_group_default));
         }
     }
 

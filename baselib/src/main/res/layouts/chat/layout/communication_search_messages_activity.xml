@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/content_bg"
+    android:background="?attr/design3_color_ne13"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_height"
-        android:background="?attr/content_bg_f6_1c">
+        android:layout_height="@dimen/search_header_height"
+        android:background="?attr/design3_color_ne13">
 
         <TextView
             android:id="@+id/tv_cancel"
+            style="@style/TextAppearance.M3.Fs05"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -21,30 +23,27 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="onClick"
-            android:paddingLeft="4dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:text="@string/cancel"
-            android:textColor="?attr/text_color_e1"
-            android:textSize="@dimen/header_function_textsize" />
+            android:textColor="?attr/design3_color_te01" />
 
         <RelativeLayout
             android:id="@+id/search_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="16dp"
             android:layout_toLeftOf="@id/tv_cancel"
-            android:background="@drawable/bg_search_contact_edit">
+            android:background="@drawable/design3_bg_search_contact">
 
             <ImageView
                 android:id="@+id/iv_search_members"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/bg_search"
-                android:tint="@color/color_text_common_level_two" />
+                android:layout_marginLeft="12dp"
+                android:src="?attr/design3_icon_search" />
 
             <TextView
                 android:id="@+id/tv_static_name"
@@ -54,39 +53,38 @@
                 android:layout_toRightOf="@id/iv_search_members"
                 android:maxWidth="120dp"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.M3.Fs08"
                 android:textColor="@color/color_text_link"
-                android:textSize="14sp" />
+                android:visibility="gone" />
 
             <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_search_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
                 android:layout_toRightOf="@id/tv_static_name"
-                android:background="?attr/common_bg_30"
-                android:drawableRight="?attr/delete_input_icon"
-                android:drawablePadding="3dp"
+                android:background="@drawable/design3_bg_search_contact"
+                android:drawableRight="?attr/design3_icon_clean"
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="@string/communication_search"
                 android:imeOptions="actionSearch"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="6dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="6dp"
                 android:singleLine="true"
-                android:textColor="?attr/text_color_e1"
-                android:textColorHint="@color/color_text_common_level_two"
-                android:textSize="14sp" />
+                android:textAppearance="@style/TextAppearance.M3.Fs04"
+                android:textColor="?attr/design3_color_te01"
+                android:textColorHint="?attr/design3_color_te04" />
         </RelativeLayout>
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/text_ll_color_nor">
+        android:background="?attr/design3_color_ne13">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,16 +92,18 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:paddingLeft="11dp"
-                android:paddingRight="11dp"
                 android:id="@+id/rl_channel_sub_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="10dp">
 
-                <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                <com.inspur.emmcloud.baselib.widget.ImageViewRound
                     android:id="@+id/iv_search_model_head"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp" />
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:ivr_type="1"
+                    app:ivr_radius="6dp"/>
 
                 <TextView
                     android:id="@+id/tv_search_model_name"
@@ -126,4 +126,29 @@
         </LinearLayout>
     </ScrollView>
 
+
+    <RelativeLayout
+        android:id="@+id/rl_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_no_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="?attr/design3_icon_search_empty" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_no_chat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:text="@string/no_search_content"
+            android:textAppearance="@style/TextAppearance.M3.Fs05"
+            android:textColor="?attr/design3_color_te02" />
+    </RelativeLayout>
 </LinearLayout>

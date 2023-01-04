@@ -1,9 +1,10 @@
 package com.inspur.emmcloud.ui.chat;
 
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -11,7 +12,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -33,7 +35,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements Compou
 
     public static final String EXTRA_CID = "cid";
     @BindView(R.id.img_photo)
-    CircleTextImageView robotIconImg;
+    ImageViewRound robotIconImg;
     @BindView(R.id.tv_name)
     TextView robotNameText;
     @BindView(R.id.function_introduction_text)
@@ -75,7 +77,8 @@ public class ConversationCastInfoActivity extends BaseActivity implements Compou
      * 展示机器人信息
      */
     private void showRobotInfo(Robot robotInfo) {
-        ImageDisplayUtils.getInstance().displayImage(robotIconImg, APIUri.getRobotIconUrl(robotInfo.getAvatar()), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(robotIconImg, APIUri.getRobotIconUrl(robotInfo.getAvatar())
+                , ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         robotNameText.setText(robotInfo.getName());
         introductionText.setText(robotInfo.getTitle());
         supportText.setText(robotInfo.getSupport());

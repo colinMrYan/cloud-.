@@ -132,8 +132,8 @@ public class ECMChatInputMenu extends LinearLayout {
     Button sendMsgBtn;
     @BindView(R.id.add_menu_layout)
     RelativeLayout addMenuLayout;
-    @BindView(R.id.viewpager_layout)
-    ECMChatInputMenuViewpageLayout viewpagerLayout;
+    @BindView(R.id.design3_viewpager_layout)
+    Design3ECMChatInputMenuViewpageLayout viewpagerLayout;
     @BindView(R.id.voice_input_layout)
     RelativeLayout voiceInputLayout;
     @BindView(R.id.voice_btn)
@@ -830,10 +830,10 @@ public class ECMChatInputMenu extends LinearLayout {
         } else {
             this.setVisibility(View.VISIBLE);
             //功能组的图标，名称
-            int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
-                    R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
-                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call, R.drawable.ic_chat_input_add_send_email,
-                    R.drawable.ic_chat_input_add_video, R.drawable.ic_chat_input_read_disppear, R.drawable.ic_chat_input_whisper};
+            int[] functionIconArray = {R.attr.design3_icon_chat_input_gallery,
+                    R.attr.design3_icon_chat_input_camera, R.attr.design3_icon_chat_input_file, R.attr.design3_icon_chat_input_voice_word,
+                    R.attr.design3_icon_chat_input_mention, R.attr.design3_icon_chat_input_call, R.attr.design3_icon_chat_input_mail,
+                    R.attr.design3_icon_chat_input_call, R.attr.design3_icon_chat_input_disappear, R.attr.design3_icon_chat_input_whisper};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file), getContext().getString(R.string.voice_input),
@@ -1277,7 +1277,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private void setVoiceInputStatus(int tag) {
         if (voiceBtn.getTag() == null || (int) voiceBtn.getTag() != tag) {
             voiceBtn.setTag(tag);
-            voiceBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), tag == 0 ? R.attr.ic_chat_voice_input : R.attr.ic_chat_input_keyboards));
+            voiceBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), tag == 0 ? R.attr.design3_icon_chat_voice_input : R.attr.design3_icon_chat_input_keyboards));
             inputEdit.setVisibility((tag == 0) ? VISIBLE : GONE);
             audioRecordBtn.setVisibility((tag == 0) ? GONE : VISIBLE);
             if (tag != 0) {
@@ -1444,8 +1444,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private void changeAddMenuLayoutContent(boolean isShowEmotion) {
         viewpagerLayout.setVisibility(isShowEmotion ? View.GONE : View.VISIBLE);
         emotionLayout.setVisibility(isShowEmotion ? View.VISIBLE : View.GONE);
-        emotionLayout.setBackgroundColor(DarkUtil.getTextContainerLevelTwoColor());
-        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), isShowEmotion ? R.attr.ic_chat_input_keyboards : R.attr.ic_chat_button_emotion));
+        emotionLayout.setBackgroundResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.design3_color_ne10));
+        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), isShowEmotion ? R.attr.design3_icon_chat_input_keyboards : R.attr.design3_icon_chat_button_emotion));
     }
 
     @OnTouch({R.id.voice_level_img})
@@ -1563,7 +1563,7 @@ public class ECMChatInputMenu extends LinearLayout {
         } else if (addMenuLayout.isShown()) {
             hideAddMenuLayout();
             InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
-            emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.ic_chat_button_emotion));
+            emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.design3_icon_chat_button_emotion));
         }
 
     }
@@ -1577,7 +1577,7 @@ public class ECMChatInputMenu extends LinearLayout {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0, 0);
         addMenuLayout.setLayoutParams(params);
         addMenuLayout.setVisibility(View.GONE);
-        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.ic_chat_button_emotion));
+        emotionBtn.setImageResource(ResourceUtils.getResValueOfAttr(getContext(), R.attr.design3_icon_chat_button_emotion));
     }
 
     public void hideVoiceInputLayout() {

@@ -1,17 +1,19 @@
 package com.inspur.emmcloud.ui.contact;
 
 import android.content.Intent;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -30,7 +32,7 @@ public class RobotInfoActivity extends BaseActivity implements CompoundButton.On
     private String id = "";
     private ContactAPIService apiService;
     private LoadingDialog loadingDialog;
-    private CircleTextImageView robotHeadImg;
+    private ImageViewRound robotHeadImg;
     private TextView robotNameText, functionIntroductionText, supportText;
     private SwitchCompat setTopSwitch;
     private String cid;
@@ -54,7 +56,7 @@ public class RobotInfoActivity extends BaseActivity implements CompoundButton.On
         apiService = new ContactAPIService(RobotInfoActivity.this);
         apiService.setAPIInterface(new WebService());
         loadingDialog = new LoadingDialog(RobotInfoActivity.this);
-        robotHeadImg = (CircleTextImageView) findViewById(R.id.img_photo);
+        robotHeadImg = (ImageViewRound) findViewById(R.id.img_photo);
         robotNameText = (TextView) findViewById(R.id.tv_name);
         supportText = (TextView) findViewById(R.id.support_text);
         functionIntroductionText = (TextView) findViewById(R.id.function_introduction_text);
@@ -102,7 +104,8 @@ public class RobotInfoActivity extends BaseActivity implements CompoundButton.On
      * 展示机器人信息
      */
     private void showRobotInfo(Robot robotInfo) {
-        ImageDisplayUtils.getInstance().displayImage(robotHeadImg, APIUri.getRobotIconUrl(robotInfo.getAvatar()), R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(robotHeadImg, APIUri.getRobotIconUrl(robotInfo.getAvatar()),
+                ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         robotNameText.setText(robotInfo.getName());
         functionIntroductionText.setText(robotInfo.getTitle());
         supportText.setText(robotInfo.getSupport());

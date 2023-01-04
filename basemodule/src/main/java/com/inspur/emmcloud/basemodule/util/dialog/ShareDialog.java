@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.baselib.R;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 
@@ -38,7 +38,7 @@ public class ShareDialog {
     public void show() {
         if (dialog == null) return;
         Button okBtn = dialog.findViewById(R.id.ok_btn);
-        CircleTextImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
+        ImageViewRound userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
         TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
         dialog.setCancelable(false);

@@ -2,12 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,15 +11,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -40,7 +39,6 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,13 +62,15 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @BindView(R.id.rv_group_message_search)
     RecyclerView messagesDetailRecycleView;
     @BindView(R.id.iv_search_model_head)
-    CircleTextImageView searchModelHeadImage;
+    ImageViewRound searchModelHeadImage;
     @BindView(R.id.tv_search_model_name)
     TextView searchModelNameText;
     @BindView(R.id.tv_static_name)
     TextView staticNameText;
     @BindView(R.id.rl_channel_sub_title)
     RelativeLayout channelSubRelativeLayout;
+    @BindView(R.id.rl_empty)
+    RelativeLayout emptyRl;
 
     private List<com.inspur.emmcloud.bean.chat.Message> searchMessagesList = new ArrayList<>(); // 群组搜索结果
     private ConversationWithMessageNum conversationFromChatContent;
@@ -95,8 +95,12 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        // 设置圆角矩形
+//        searchModelHeadImage.setType(ImageViewRound.TYPE_ROUND);
+//        searchModelHeadImage.setRoundRadius(searchModelHeadImage.dpTodx(6));
 //        ImmersionBar.with(this).statusBarColor(R.color.search_contact_header_bg).statusBarDarkFont(true, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         if (getIntent().hasExtra(SEARCH_ALL_FROM_CHAT)) {                      //直接傳 ConversationWithMessageNum
+            staticNameText.setVisibility(View.VISIBLE);
             conversationFromChatContent = (ConversationWithMessageNum) getIntent().getSerializableExtra(SEARCH_ALL_FROM_CHAT);
             if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_GROUP)) {
                 displayImg(conversationFromChatContent.getConversation().conversation2SearchModel(), searchModelHeadImage);
@@ -105,14 +109,14 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
                 staticNameText.setText(conversationFromChatContent.getConversation().getName());
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_DIRECT)) {
                 String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversationFromChatContent.getConversation().getName());
-                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, icon, R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, icon, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
                 String showData = getString(R.string.chat_search_related_messages, "“" + conversationFromChatContent.getConversation().getShowName() + "”");
                 searchModelNameText.setText(showData);
                 staticNameText.setText(conversationFromChatContent.getConversation().getShowName());
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_CAST)) {
                 UIConversation uiConversation = new UIConversation(conversationFromChatContent.getConversation());
                 staticNameText.setText(uiConversation.getTitle());
-                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, uiConversation.getIcon(), R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImage(searchModelHeadImage, uiConversation.getIcon(), ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
                 String showData = getString(R.string.chat_search_related_messages, "“" + uiConversation.getTitle() + "”");
                 searchModelNameText.setText(showData);
             } else if (conversationFromChatContent.getConversation().getType().equals(Conversation.TYPE_TRANSFER)) {
@@ -192,6 +196,11 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
 //                        }
 //                    }
                     searchMessagesList = MessageCacheUtil.getMessageListByKeywordAndId(CommunicationSearchMessagesActivity.this, keyWords, conversationFromChatContent.getConversation().getId());
+                    if (searchMessagesList.size() == 0) {
+                        emptyRl.setVisibility(View.VISIBLE);
+                    } else {
+                        emptyRl.setVisibility(View.GONE);
+                    }
                 }
                 groupMessageSearchAdapter.setAndRefreshAdapter(searchMessagesList, keyWords);
             }
@@ -237,7 +246,7 @@ public class CommunicationSearchMessagesActivity extends BaseActivity {
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+    private void displayImg(SearchModel searchModel, ImageViewRound photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();

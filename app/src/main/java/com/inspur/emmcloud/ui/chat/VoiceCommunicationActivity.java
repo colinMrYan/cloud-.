@@ -10,10 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MyApplication;
@@ -36,7 +37,7 @@ import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -117,13 +118,13 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
     @BindView(R.id.ll_voice_communication_invite)
     LinearLayout inviteeLinearLayout;
     @BindView(R.id.img_user_head)
-    CircleTextImageView userHeadImg;
+    ImageViewRound userHeadImg;
     @BindView(R.id.tv_user_name)
     TextView userNameTv;
     @BindView(R.id.ll_voice_communication_invite_members)
     LinearLayout inviteMembersGroupLinearLayout;
     @BindView(R.id.img_video_head)
-    CircleTextImageView videoCallUserHeadImg;
+    ImageViewRound videoCallUserHeadImg;
     @BindView(R.id.tv_video_name)
     TextView videoCallUserNameTv;
     @BindView(R.id.tv_video_state)
@@ -364,7 +365,7 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
     private void refreshCommunicationMembersAdapterWithoutState() {
         if (voiceCommunicationManager.isInviterPre() || voiceCommunicationManager.isInviteePre()) {
             List<VoiceCommunicationJoinChannelInfoBean> totalList = voiceCommunicationManager.getVoiceCommunicationMemberList();
-            ImageDisplayUtils.getInstance().displayImage(userHeadImg, totalList.get(0).getHeadImageUrl(), R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(userHeadImg, totalList.get(0).getHeadImageUrl(), ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
             userNameTv.setText(totalList.get(0).getUserName());
             if (totalList.size() <= 5) {
                 communicationMembersFirstRecyclerview.setAdapter(new VoiceCommunicationMemberAdapter(VoiceCommunicationActivity.this, totalList, 3));
@@ -808,6 +809,7 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
 
     /**
      * 如果加入频道的是自己
+     *
      * @param uid
      * @return
      */
@@ -985,6 +987,7 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
 
     /**
      * 修改Image选中状态和textView属性
+     *
      * @param imageView
      * @param textView
      */
@@ -997,6 +1000,7 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
     /**
      * 拒绝接听或者挂断电话的处理
      * 主动点击发socket消息，被动触发没发消息
+     *
      * @param type
      */
     private void refuseOrLeaveChannel(int type, boolean isMyClick) {
@@ -1052,11 +1056,11 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
                         startActivityForResult(intent, REQUEST_WINDOW_PERMISSION);
                     }
                 }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     /**
@@ -1077,11 +1081,11 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
                                 startActivityForResult(intent, REQUEST_BACKGROUND_WINDOWS);
                             }
                         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
             } else {
                 finish();
             }
@@ -1151,14 +1155,16 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
         if (voiceCommunicationManager.isInviteePre()) {
             VoiceCommunicationJoinChannelInfoBean infoBean = voiceCommunicationManager.getVoiceCommunicationMemberList().get(0);
             if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VOICE_CALL)) {
-                ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(),
+                        ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
                 userNameTv.setText(infoBean.getUserName());
             } else if (voiceCommunicationManager.getCommunicationType().equals(ECMChatInputMenu.VIDEO_CALL)) {
                 videoCallUserNameTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
                         ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
                 videoCallStateTv.setTextColor(voiceCommunicationManager.isInviterPre() ?
                         ContextCompat.getColor(this, R.color.white) : ContextCompat.getColor(this, R.color.header_text_black));
-                ImageDisplayUtils.getInstance().displayImage(videoCallUserHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImage(videoCallUserHeadImg, infoBean.getHeadImageUrl(),
+                        ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
                 videoCallUserNameTv.setText(infoBean.getUserName());
                 videoCallStateTv.setText(R.string.video_communication_invite_video_call);
             }
@@ -1208,6 +1214,7 @@ public class VoiceCommunicationActivity extends BaseActivity implements NotSuppo
 
     /**
      * 主叫方创建频道失败
+     *
      * @param error
      * @param errorCode
      */

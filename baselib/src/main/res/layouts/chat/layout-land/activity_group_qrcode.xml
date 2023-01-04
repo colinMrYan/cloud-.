@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,14 +45,16 @@
             android:layout_height="wrap_content">
 
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/iv_group_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:elevation="6dp"
-                android:src="@drawable/icon_channel_group_default" />
+                android:src="?attr/design3_icon_group_default"
+                app:ivr_radius="12dp"
+                app:ivr_type="1" />
 
             <TextView
                 android:id="@+id/tv_group_name"

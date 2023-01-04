@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.ConversationWithMessageNum;
@@ -95,7 +96,8 @@ public class ConversationFromChatContentAdapter extends BaseAdapter {
         if (conversation != null && (conversation.getType().equals(Conversation.TYPE_CAST))) {
             UIConversation uiConversation = new UIConversation(conversation);
             searchHolder.nameTextView.setText(uiConversation.getTitle());
-            ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, uiConversation.getIcon(), R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(searchHolder.headImageView, uiConversation.getIcon(),
+                    ResourceUtils.getResValueOfAttr(mContext, R.attr.design3_icon_person_default));
             String string = BaseApplication.getInstance().getString(R.string.chat_contact_related_message, conversationWithNumList.get(i).getMessageNum());
             searchHolder.detailTextView.setText(string);
             searchHolder.detailTextView.setVisibility(View.VISIBLE);
@@ -109,7 +111,8 @@ public class ConversationFromChatContentAdapter extends BaseAdapter {
         }
         if (conversation != null && conversation.getType().equals(Conversation.TYPE_DIRECT)) {
             String icon = DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), conversation.getName());
-            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon,
+                    ResourceUtils.getResValueOfAttr(mContext, R.attr.design3_icon_person_default));
             searchHolder.nameTextView.setText(conversation.getShowName());
             String string = BaseApplication.getInstance().getString(R.string.chat_contact_related_message, conversationWithNumList.get(i).getMessageNum());
             searchHolder.detailTextView.setText(string);

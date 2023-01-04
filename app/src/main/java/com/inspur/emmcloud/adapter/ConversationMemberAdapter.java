@@ -10,7 +10,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -58,7 +59,7 @@ public class ConversationMemberAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.channel_member_item_view, null);
-        CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.member_head_img);
+        ImageViewRound photoImg = (ImageViewRound) convertView.findViewById(R.id.member_head_img);
         TextView nameText = (TextView) convertView.findViewById(R.id.tv_name);
         String userPhotoUrl;
         String userName;
@@ -78,7 +79,8 @@ public class ConversationMemberAdapter extends BaseAdapter {
             userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
         }
         nameText.setText(userName);
-        ImageDisplayUtils.getInstance().displayImage(photoImg, userPhotoUrl, R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(photoImg, userPhotoUrl,
+                ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
         return convertView;
     }
 }

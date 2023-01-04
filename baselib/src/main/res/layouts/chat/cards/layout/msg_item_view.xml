@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selector_list"
     android:paddingLeft="16dp">
 
-    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+    <com.inspur.emmcloud.baselib.widget.ImageViewRound
         android:id="@+id/msg_img"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_centerVertical="true"
         android:layout_marginTop="9dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="9dp" />
+        android:layout_marginBottom="9dp"
+        app:ivr_radius="6dp"
+        app:ivr_type="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,9 +116,9 @@
                         android:id="@+id/msg_new_icon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
-                        android:visibility="gone"
                         android:background="@drawable/bg_tips_new_message"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:visibility="gone" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

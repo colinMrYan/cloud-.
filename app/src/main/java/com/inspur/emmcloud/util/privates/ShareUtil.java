@@ -31,7 +31,7 @@ public class ShareUtil {
 
     public static void share(Context context, final SearchModel searchModel, String shareContent, final boolean isWebShare, final int multiMessageType) {
         final BaseActivity activity = (BaseActivity) context;
-        int defaultIcon = CommunicationUtils.getDefaultHeadUrl(searchModel);
+        int defaultIcon = CommunicationUtils.getDefaultHeadUrl(context, searchModel);
         String headUrl = CommunicationUtils.getHeadUrl(searchModel);
         //分享到
         ShareDialog.Builder builder = new ShareDialog.Builder(context);
@@ -48,9 +48,9 @@ public class ShareUtil {
                 } else {
                     if (isWebShare && context instanceof ConversationSearchActivity) {
                         ((ConversationSearchActivity) activity).handleShareResult();
-                    } else if(isWebShare && context instanceof ConversationSendMultiActivity){
+                    } else if (isWebShare && context instanceof ConversationSendMultiActivity) {
                         ((ConversationSendMultiActivity) activity).handleShareResult();
-                    }else {
+                    } else {
                         Intent intent = new Intent();
                         intent.putExtra("searchModel", searchModel);
                         intent.putExtra(EXTRA_MULTI_MESSAGE_TYPE, multiMessageType);

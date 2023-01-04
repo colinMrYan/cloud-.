@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_multi_message_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingTop="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="4dp"
+            android:text="@string/find_search_chat_history"
+            android:textAppearance="@style/TextAppearance.M3.Fs04"
+            android:textColor="?attr/design3_color_te01" />
+
+        <TextView
+            android:id="@+id/tv_multi_message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:maxLines="4"
+            android:textAppearance="@style/TextAppearance.M3.Fs08"
+            android:textColor="?attr/design3_color_te04" />
+
+        <View
+            android:id="@+id/split_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="?attr/design3_color_ne07" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:lineSpacingMultiplier="1.2"
+            android:text="@string/find_search_chat_history"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:textAppearance="@style/TextAppearance.M3.Fs09"
+            android:textColor="?attr/design3_color_te02" />
+    </LinearLayout>
+
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
+
+
+

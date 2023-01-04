@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.webex.R;
 import com.inspur.emmcloud.webex.api.WebexAPIUri;
@@ -53,10 +53,12 @@ public class WebexAttendeesAdapter extends BaseAdapter {
         emailText.setText(webexAttendees.getEmail());
         personTypeText.setText(webexAttendees.getPersonType() == 0 ? R.string.webex_external_attendees : R.string.webex_internal_attendees);
         typeText.setText(webexAttendees.getType());
+        ImageViewRound photoImg = (ImageViewRound) convertView.findViewById(R.id.iv_photo);
+        photoImg.setType(ImageViewRound.TYPE_ROUND);
+        photoImg.setRoundRadius(photoImg.dpTodx(6));
         if (webexAttendees.getPersonType() == 1) {
-            CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
             String photoUrl = WebexAPIUri.getWebexPhotoUrl(webexAttendees.getEmail());
-            ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.design3_light_icon_person_default);
         }
         return convertView;
     }

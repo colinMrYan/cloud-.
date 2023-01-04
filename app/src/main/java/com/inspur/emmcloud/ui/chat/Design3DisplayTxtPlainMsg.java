@@ -41,18 +41,21 @@ public class Design3DisplayTxtPlainMsg {
                 MyApplication.getInstance().getUid());
         BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : ResourceUtils.getResValueOfAttr(context, R.attr.bubble_bg_color)));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? ResourceUtils.getResValueOfAttr(context, R.attr.design3_color_th06)
+                : ResourceUtils.getResValueOfAttr(context, R.attr.design3_color_ne15)));
         cardLayout.setStrokeWidth(0);
         final TextView contentText = cardContentView
                 .findViewById(R.id.tv_content);
-        contentText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : ResourceUtils.getResValueOfAttr(context, R.attr.text_color_e1)));
+        contentText.setTextColor(context.getResources().getColor(ResourceUtils.getResValueOfAttr(context, R.attr.design3_color_te01)));
         String msgType = message.getMsgContentTextPlain().getMsgType();
         String text = message.getMsgContentTextPlain().getText();
         if (msgType.equals(Message.MESSAGE_TYPE_TEXT_BURN) && !isMyMsg) {
             text = context.getString(R.string.click_to_burn);
             contentText.setTextColor(context.getResources().getColor(R.color.color_base_blue));
         }
+        // 文本为链接时，长按时链接为高亮，在暗黑时置为透明，解决长按复制时多层背景bug
+        contentText.setHighlightColor(context.getResources().getColor(isMyMsg ? R.color.transparent
+                : ResourceUtils.getResValueOfAttr(context, R.attr.design3_color_ne15)));
         contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
         contentText.setFocusable(false);
         contentText.setFocusableInTouchMode(false);
@@ -60,8 +63,7 @@ public class Design3DisplayTxtPlainMsg {
         Spannable span = EmotionUtil.getInstance(context).getSmiledText(spannableString, contentText.getTextSize());
         contentText.setText(span);
         TransHtmlToTextUtils.stripUnderlines(
-                contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
-                        : R.color.header_bg_blue));
+                contentText, context.getResources().getColor(R.color.color_te07));
         return cardContentView;
     }
 }

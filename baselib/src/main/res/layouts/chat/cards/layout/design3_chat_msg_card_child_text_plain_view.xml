@@ -6,9 +6,9 @@
     android:layout_height="wrap_content"
     app:bl_arrowDirection="right"
     app:bl_arrowHeight="10dp"
-    app:bl_arrowPosition="16dp"
-    app:bl_arrowWidth="4.5dp"
-    app:bl_cornersRadius="8dp">
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
 
     <com.inspur.emmcloud.widget.TextViewFixTouchConsume
         android:id="@+id/tv_content"
@@ -16,8 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:lineSpacingMultiplier="1.1"
-        android:padding="10dp"
-        android:textSize="16sp" />
+        android:paddingLeft="12dp"
+        android:paddingTop="8dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp"
+        android:textAppearance="@style/TextAppearance.M3.Fs04" />
 </com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
 
 

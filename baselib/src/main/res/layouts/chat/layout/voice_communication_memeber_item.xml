@@ -4,11 +4,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+    <com.inspur.emmcloud.baselib.widget.ImageViewRound
         android:id="@+id/img_voice_communication_member_head"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_app_default" />
+        android:src="@drawable/ic_app_default"
+        app:ivr_radius="8dp"
+        app:ivr_type="1" />
 
     <TextView
         android:id="@+id/tv_invite_voice_communication_member"
@@ -23,8 +25,8 @@
         android:id="@+id/img_voice_signal"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_alignBottom="@id/img_voice_communication_member_head"
-        android:layout_alignRight="@id/img_voice_communication_member_head" />
+        android:layout_alignRight="@id/img_voice_communication_member_head"
+        android:layout_alignBottom="@id/img_voice_communication_member_head" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi_voice_communication"

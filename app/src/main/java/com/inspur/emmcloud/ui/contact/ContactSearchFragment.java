@@ -1,12 +1,13 @@
 package com.inspur.emmcloud.ui.contact;
 
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -26,6 +27,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -35,8 +39,8 @@ import com.inspur.emmcloud.baselib.util.ListViewUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
@@ -89,9 +93,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by yufuchang on 2018/6/7.
@@ -1063,7 +1064,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         final MyDialog dialog = new MyDialog(getActivity(),
                 R.layout.chat_out_share_sure_dialog);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
-        CircleTextImageView userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
+        ImageViewRound userHeadImage = dialog.findViewById(R.id.iv_share_user_head);
         TextView fileNameText = dialog.findViewById(R.id.tv_share_file_name);
         TextView userNameText = dialog.findViewById(R.id.tv_share_user_name);
         dialog.setCancelable(false);
@@ -1291,25 +1292,25 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+    private void displayImg(SearchModel searchModel, ImageViewRound photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
         photoImg.setTag("");
         if (type.equals(SearchModel.TYPE_GROUP)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
+            defaultIcon = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_group_default);
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
             } else {
-                photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                photoImg.setImageResource(defaultIcon);
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            photoImg.setImageResource(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.contact_struct_icon));
+            photoImg.setImageResource(R.drawable.design3_icon_contact_struct);
         } else {
-            defaultIcon = R.drawable.icon_person_default;
+            defaultIcon = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.design3_icon_person_default);
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
@@ -1547,7 +1548,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     public static class ViewHolder {
         TextView nameText;
         TextView descTv;
-        CircleTextImageView photoImg;
+        ImageViewRound photoImg;
         ImageView rightArrowImg;
         ImageView selectedImg;
     }
@@ -1662,7 +1663,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
                 viewHolder.rightArrowImg = (ImageView) convertView.findViewById(R.id.arrow_img);
                 viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                viewHolder.photoImg = (ImageViewRound) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1740,7 +1741,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.nameText = (TextView) convertView.findViewById(R.id.tv_name);
                 viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
                 viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                viewHolder.photoImg = (ImageViewRound) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -1813,7 +1814,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder.nameText = (TextView) convertView.findViewById(R.id.tv_name);
                 viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
                 viewHolder.selectedImg = (ImageView) convertView.findViewById(R.id.selected_img);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                viewHolder.photoImg = (ImageViewRound) convertView.findViewById(R.id.img_photo);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

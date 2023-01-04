@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.baselib.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapShader;
@@ -16,6 +17,9 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
+import com.inspur.baselib.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+
 /**
  * classes : com.inspur.emmcloud.baselib.widget.ImageViewRound
  * 实现圆形，椭圆形，圆角矩形
@@ -27,7 +31,8 @@ public class ImageViewRound extends ImageView {
     public static final int TYPE_CIRCLE = 0;//圆形
     public static final int TYPE_ROUND = 1;//圆角矩形
     public static final int TYPE_OVAL = 2;//椭圆形
-    public static final int DEFAUT_ROUND_RADIUS = 10;//默认圆角大小
+    public static final int DEFAULT_ROUND_RADIUS = 8;//默认圆角大小
+    public int mUnReachedProgressBarHeight = dpTodx(DEFAULT_ROUND_RADIUS);
     private Paint mPaint;
     private int mWidth;
     private int mHeight;
@@ -50,6 +55,10 @@ public class ImageViewRound extends ImageView {
 
     public ImageViewRound(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageViewRound, defStyle, 0);
+        mRoundRadius = (int) a.getDimension(R.styleable.ImageViewRound_ivr_radius, mUnReachedProgressBarHeight);
+        mType = a.getInt(R.styleable.ImageViewRound_ivr_type, TYPE_ROUND);
+        a.recycle();
         initView();
     }
 
@@ -57,7 +66,6 @@ public class ImageViewRound extends ImageView {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mMatrix = new Matrix();
-        mRoundRadius = DEFAUT_ROUND_RADIUS;
     }
 
 

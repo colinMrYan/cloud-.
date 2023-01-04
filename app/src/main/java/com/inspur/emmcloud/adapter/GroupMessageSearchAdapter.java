@@ -1,10 +1,6 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,11 +9,15 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -59,7 +59,10 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     @Override
     public void onBindViewHolder(@NonNull GroupMessageHolder holder, int position) {
         final UIMessage uiMessage = groupUIMessageList.get(position);
-        ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
+        holder.headImg.setType(ImageViewRound.TYPE_ROUND);
+        holder.headImg.setRoundRadius(holder.headImg.dpTodx(6));
+        ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(),
+                ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
         showSenderName(uiMessage, holder);
         Spanned contentSpan = getContent(uiMessage.getMessage());
         if (contentSpan != null) {
@@ -156,7 +159,7 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     }
 
     public class GroupMessageHolder extends RecyclerView.ViewHolder {
-        CircleTextImageView headImg;
+        ImageViewRound headImg;
         TextView groupMessageUserNameText;
         TextView groupMessageContentText;
         TextView groupMessageTimeText;

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.webex.R;
@@ -165,6 +166,9 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
             convertView = LayoutInflater.from(WebexAddExternalAttendeesActivity.this).inflate(R.layout.webex_item_view_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
+            ImageViewRound photoImg = (ImageViewRound) convertView.findViewById(R.id.iv_photo);
+            photoImg.setType(ImageViewRound.TYPE_ROUND);
+            photoImg.setRoundRadius(photoImg.dpTodx(6));
             emailText.setText(webexAttendees.getEmail());
             deleteImg.setOnClickListener(new View.OnClickListener() {
                 @Override

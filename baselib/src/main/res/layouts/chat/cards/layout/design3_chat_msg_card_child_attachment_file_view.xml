@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:paddingRight="12dp">
+
+        <ImageView
+            android:id="@+id/iv_file_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/iv_file_icon">
+
+            <TextView
+                android:id="@+id/tv_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textAppearance="@style/TextAppearance.M3.Fs08"
+                android:textColor="?attr/design3_color_te01" />
+
+            <TextView
+                android:id="@+id/tv_file_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_file_name"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="10dp"
+                android:textAppearance="@style/TextAppearance.M3.Fs09"
+                android:textColor="?attr/design3_color_te04" />
+        </RelativeLayout>
+    </RelativeLayout>
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>

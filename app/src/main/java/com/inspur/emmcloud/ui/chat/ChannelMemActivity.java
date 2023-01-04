@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 public class ChannelMemActivity extends BaseActivity {
 
     private String[] memberArray;
+
     @Override
     public void onCreate() {
         String title = getIntent().getStringExtra("title");
@@ -53,7 +55,7 @@ public class ChannelMemActivity extends BaseActivity {
     }
 
     public static class ViewHolder {
-        CircleTextImageView memberHeadImg;
+        ImageViewRound memberHeadImg;
         TextView nameText;
     }
 
@@ -86,7 +88,7 @@ public class ChannelMemActivity extends BaseActivity {
                 LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.channel_member_item_view,
                         null);
-                viewHolder.memberHeadImg = (CircleTextImageView) convertView
+                viewHolder.memberHeadImg = (ImageViewRound) convertView
                         .findViewById(R.id.member_head_img);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.tv_name);
@@ -97,7 +99,8 @@ public class ChannelMemActivity extends BaseActivity {
 
             String uid = memberArray[position];
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                    APIUri.getUserIconUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
+                    APIUri.getUserIconUrl(ChannelMemActivity.this, uid),
+                    ResourceUtils.getResValueOfAttr(ChannelMemActivity.this, R.attr.design3_icon_person_default));
             viewHolder.nameText.setText("");
             return convertView;
         }

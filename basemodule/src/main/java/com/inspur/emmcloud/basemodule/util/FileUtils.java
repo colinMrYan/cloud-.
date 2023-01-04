@@ -1103,7 +1103,7 @@ public class FileUtils {
     }
 
     public static Integer getFileIconResIdByFormat(String format) {
-        Integer resId = R.drawable.baselib_file_type_unkown;
+        Integer resId = R.drawable.design3_baselib_file_type_unkown;
         switch (format) {
             case "application/zip":
             case "application/x-gtar":
@@ -1114,36 +1114,36 @@ public class FileUtils {
             case "application/x-compress":
             case "application/rar":
             case "application/x-7z-compressed":
-                resId = R.drawable.baselib_file_type_zip;
+                resId = R.drawable.design3_baselib_file_type_zip;
                 break;
             case "text/plain":
-                resId = R.drawable.baselib_file_type_txt;
+                resId = R.drawable.design3_baselib_file_type_txt;
                 break;
             case "application/pdf":
-                resId = R.drawable.baselib_file_type_pdf;
+                resId = R.drawable.design3_baselib_file_type_pdf;
                 break;
             case "application/msword":
-                resId = R.drawable.baselib_file_type_word;
+                resId = R.drawable.design3_baselib_file_type_word;
                 break;
             case "application/vnd.ms-excel":
-                resId = R.drawable.baselib_file_type_excel;
+                resId = R.drawable.design3_baselib_file_type_excel;
                 break;
             case "application/vnd.ms-powerpoint":
-                resId = R.drawable.baselib_file_type_ppt;
+                resId = R.drawable.design3_baselib_file_type_ppt;
                 break;
             default:
                 if (format.startsWith("image/")) {
-                    resId = R.drawable.baselib_file_type_img;
+                    resId = R.drawable.design3_baselib_file_type_img;
                 } else if (format.startsWith("video/")) {
-                    resId = R.drawable.baselib_file_type_video;
+                    resId = R.drawable.design3_baselib_file_type_video;
                 } else if (format.startsWith("audio/")) {
-                    resId = R.drawable.baselib_file_type_audio;
+                    resId = R.drawable.design3_baselib_file_type_audio;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml")) {
-                    resId = R.drawable.baselib_file_type_word;
+                    resId = R.drawable.design3_baselib_file_type_word;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.presentationml")) {
-                    resId = R.drawable.baselib_file_type_ppt;
+                    resId = R.drawable.design3_baselib_file_type_ppt;
                 } else if (format.startsWith("application/vnd.openxmlformats-officedocument.spreadsheetml")) {
-                    resId = R.drawable.baselib_file_type_excel;
+                    resId = R.drawable.design3_baselib_file_type_excel;
                 }
                 break;
         }

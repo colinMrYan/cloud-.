@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="8dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.M3.Fs09"
+            android:textColor="?attr/design3_color_te02" />
+
+        <RelativeLayout
+            android:id="@+id/rl_origin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/tv_origin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.M3.Fs09"
+                android:textColor="?attr/design3_color_te02"
+                android:visibility="gone" />
+
+            <com.itheima.roundedimageview.RoundedImageView
+                android:id="@+id/iv_origin"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="?attr/bg_chat_img"
+                android:visibility="gone"
+                app:riv_corner_radius="4dp"
+                app:riv_oval="false" />
+
+            <RelativeLayout
+                android:id="@+id/rl_video"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:visibility="gone">
+
+                <com.itheima.roundedimageview.RoundedImageView
+                    android:id="@+id/iv_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="?attr/bg_chat_img"
+                    app:riv_corner_radius="4dp"
+                    app:riv_oval="false" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_vod_play_normal" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/rl_origin"
+            android:layout_marginTop="8dp"
+            android:background="?attr/design3_color_ne05" />
+
+        <com.inspur.emmcloud.widget.TextViewWithSpan
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_divider"
+            android:layout_marginTop="8dp"
+            android:lineSpacingMultiplier="1.2"
+            android:textAppearance="@style/TextAppearance.M3.Fs04"
+            android:textColor="?attr/design3_color_te01" />
+    </RelativeLayout>
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>

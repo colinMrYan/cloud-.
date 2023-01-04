@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/dialog_common_bg_36"
     android:orientation="vertical"
-    android:id="@+id/ll_bg"
     android:paddingTop="22dp">
 
     <TextView
@@ -24,12 +25,14 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="22dp">
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.ImageViewRound
             android:id="@+id/iv_share_user_head"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            app:ivr_radius="6dp"
+            app:ivr_type="1" />
 
         <TextView
             android:id="@+id/tv_share_user_name"
@@ -54,10 +57,10 @@
         android:layout_marginRight="22dp"
         android:layout_marginBottom="30dp"
         android:background="?attr/content_bg_30"
-        android:textColor="?attr/text_color_e1"
         android:gravity="left"
         android:maxLines="3"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:textColor="?attr/text_color_e1" />
 
     <View
         android:id="@+id/view_X"

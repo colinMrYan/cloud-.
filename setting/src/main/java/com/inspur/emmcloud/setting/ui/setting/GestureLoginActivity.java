@@ -9,13 +9,11 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
@@ -146,9 +144,11 @@ public class GestureLoginActivity extends BaseActivity implements NotSupportLand
             }
         }
         String userHeadImgUri = BaseModuleApiUri.getUserPhoto(GestureLoginActivity.this, ((BaseApplication) getApplication()).getUid());
-        CircleTextImageView circleImageView = findViewById(R.id.gesture_login_user_head_img);
+        ImageViewRound circleImageView = findViewById(R.id.gesture_login_user_head_img);
+        circleImageView.setType(ImageViewRound.TYPE_ROUND);
+        circleImageView.setRoundRadius(circleImageView.dpTodx(12));
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
-                userHeadImgUri, R.drawable.icon_person_default);
+                userHeadImgUri, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         boolean isFingerPrintOpen = PreferencesByUserAndTanentUtils.getBoolean(this, Constant.SAFE_CENTER_FINGER_PRINT, false);
         boolean isLogin = getIntent() != null && getIntent().hasExtra(GESTURE_CODE_CHANGE) && getIntent().getStringExtra(GESTURE_CODE_CHANGE)
                 .equals("login");

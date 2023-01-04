@@ -24,7 +24,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -75,7 +75,7 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
         MultiMessageItem item = uiMessages.get(i);
 
         String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), item.sendUserId);
-        ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, R.drawable.icon_photo_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
 //        holder.nameText.setText(item.sendUserName);
         // 有群昵称则显示群昵称
         holder.nameText.setText(item.sendUserName);
@@ -250,7 +250,7 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
 
     static class MultiMessageItemViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        CircleTextImageView headerImage;
+        ImageViewRound headerImage;
         TextView nameText;
         RelativeLayout contentParent;
         TextView time;

@@ -14,7 +14,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="12dp">
 
-        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.ImageViewRound
             android:id="@+id/iv_group_message_search_head"
             android:layout_width="34dp"
             android:layout_height="34dp"

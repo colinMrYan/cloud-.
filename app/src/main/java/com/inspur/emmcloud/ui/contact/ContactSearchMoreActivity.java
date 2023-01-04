@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -23,6 +21,9 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -31,8 +32,8 @@ import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.MaxHeightScrollView;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
@@ -379,25 +380,25 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
      * @param searchModel
      * @param photoImg
      */
-    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+    private void displayImg(SearchModel searchModel, ImageViewRound photoImg) {
         Integer defaultIcon = null; // 默认显示图标
         String icon = null;
         String type = searchModel.getType();
         photoImg.setTag("");
         if (type.equals(SearchModel.TYPE_GROUP)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
+            defaultIcon = ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_group_default);
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
                     MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
             } else {
-                photoImg.setImageResource(R.drawable.icon_channel_group_default);
+                photoImg.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_group_default));
             }
         } else if (type.equals(SearchModel.TYPE_STRUCT)) {
             photoImg.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.contact_group_icon));
         } else {
-            defaultIcon = R.drawable.icon_person_default;
+            defaultIcon = ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default);
             if (!searchModel.getId().equals("null")) {
                 icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
             }
@@ -475,7 +476,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     public static class ViewHolder {
         TextView nameText;
         TextView descText;
-        CircleTextImageView photoImg;
+        ImageViewRound photoImg;
         ImageView selectedImg;
     }
 
@@ -600,7 +601,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.tv_name);
                 viewHolder.descText = convertView.findViewById(R.id.tv_desc);
-                viewHolder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.img_photo);
+                viewHolder.photoImg = (ImageViewRound) convertView.findViewById(R.id.img_photo);
                 viewHolder.selectedImg = (ImageView) convertView
                         .findViewById(R.id.selected_img);
                 convertView.setTag(viewHolder);

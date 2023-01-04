@@ -254,9 +254,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnLongClickLi
         } else {
             dutyText.setVisibility(View.GONE);
         }
-        photoImg.setType(ImageViewRound.TYPE_ROUND);
-        photoImg.setRoundRadius(photoImg.dpTodx(8));
-        ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
 //        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
         mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr)) ? View.GONE : View.VISIBLE);

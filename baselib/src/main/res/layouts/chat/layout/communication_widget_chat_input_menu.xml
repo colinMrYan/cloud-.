@@ -7,17 +7,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/text_ll_color_nor"
+        android:background="?attr/design3_color_ne10"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/rl_reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginRight="52dp"
             android:background="@drawable/shape_corner_eb_33"
             android:visibility="gone">
 
@@ -32,7 +31,7 @@
                 android:layout_toLeftOf="@+id/iv_reply_close"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="?attr/color_99_66"
+                android:textColor="?attr/design3_color_te02"
                 android:textSize="@dimen/content_moresmaller_textsize" />
 
             <ImageView
@@ -42,7 +41,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
-                android:paddingLeft="14dp"
+                android:paddingLeft="8dp"
                 android:paddingTop="2dp"
                 android:paddingRight="8dp"
                 android:paddingBottom="2dp"
@@ -52,19 +51,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/text_ll_color_nor"
-            android:paddingTop="6dp"
-            android:paddingBottom="7dp">
+            android:background="?attr/design3_color_ne10"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <ImageButton
                 android:id="@+id/voice_btn"
-                android:layout_width="37dp"
-                android:layout_height="27dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
                 android:background="@null"
-                android:paddingLeft="10dp"
-                android:scaleType="fitXY"
-                android:src="?attr/ic_chat_voice_input" />
+                android:src="?attr/design3_icon_chat_voice_input" />
 
             <LinearLayout
                 android:id="@+id/right_layout"
@@ -73,26 +71,24 @@
                 android:layout_alignTop="@+id/voice_btn"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="12dp"
                 android:gravity="center_vertical">
 
                 <ImageButton
                     android:id="@+id/emotion_btn"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
                     android:background="@null"
                     android:clickable="true"
                     android:onClick="onClick"
-                    android:padding="5dp"
-                    android:scaleType="fitXY"
-                    android:src="?attr/ic_chat_button_emotion" />
+                    android:src="?attr/design3_icon_chat_button_emotion" />
 
                 <Button
                     android:id="@+id/send_msg_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="12dp"
                     android:background="@drawable/bg_chat_input_send_btn_disable"
                     android:gravity="center"
                     android:minWidth="0dp"
@@ -106,26 +102,22 @@
 
                 <ImageButton
                     android:id="@+id/add_btn"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="12dp"
                     android:background="@null"
                     android:clickable="true"
                     android:onClick="onClick"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="5dp"
-                    android:scaleType="fitXY"
-                    android:src="?attr/ic_chat_button_add" />
+                    android:src="?attr/design3_icon_chat_button_add" />
 
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="12dp"
                 android:layout_toLeftOf="@id/right_layout"
                 android:layout_toRightOf="@id/voice_btn">
 
@@ -134,32 +126,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@drawable/bg_corner_fill_white_no_border_chat_30"
+                    android:background="@drawable/design3_bg_corner_ne15_6dp"
                     android:focusableInTouchMode="true"
                     android:gravity="center_vertical"
                     android:maxLines="5"
-                    android:padding="7.5dp"
-                    android:textColor="?attr/text_color_e1"
-                    android:textSize="16sp" />
+                    android:padding="8dp"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01" />
 
                 <com.inspur.emmcloud.widget.audiorecord.AudioRecordButton
                     android:id="@+id/bt_audio_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/bg_record_btn_normal"
+                    android:background="@drawable/design3_bg_corner_ne15_6dp"
                     android:minHeight="0dp"
-                    android:paddingTop="7dp"
-                    android:paddingBottom="7dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:stateListAnimator="@null"
                     android:text="@string/hold_to_talk"
                     android:textAllCaps="false"
-                    android:textColor="?attr/conversation_name_color"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.M3.Fs04"
+                    android:textColor="?attr/design3_color_te01"
                     android:visibility="gone" />
             </RelativeLayout>
         </RelativeLayout>
@@ -172,17 +160,15 @@
                 android:id="@+id/add_menu_layout"
                 android:layout_width="match_parent"
                 android:layout_height="274dp"
-                android:background="?attr/color_bg_common"
+                android:background="?attr/design3_color_ne10"
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
-                    android:id="@+id/viewpager_layout"
+                <com.inspur.emmcloud.widget.Design3ECMChatInputMenuViewpageLayout
+                    android:id="@+id/design3_viewpager_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginTop="20dp" />
 
                 <include layout="@layout/emotion_grid" />
             </RelativeLayout>

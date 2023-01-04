@@ -109,7 +109,7 @@ public class PhoneReceiver extends BroadcastReceiver {
                 }
             });
             String photoUri = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), contactUser.getId());
-            ImageDisplayUtils.getInstance().displayImage(((ImageView) phoneView.findViewById(R.id.user_header)), photoUri, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImage(((ImageView) phoneView.findViewById(R.id.user_header)), photoUri, R.drawable.design3_light_icon_person_default);
             windowManager.addView(phoneView, layoutParams);
         }
     }

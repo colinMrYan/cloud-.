@@ -21,6 +21,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -544,7 +545,8 @@ public class TaskAddActivity extends BaseActivity {
         }
         final String id = taskMangerList.get(0).getId();
         String ImageUrl = BaseModuleApiUri.getUserPhoto(this, id);
-        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.icon_person_default, this, 15);
+        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl,
+                ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default), this, 15);
         managerHeadImageView.setVisibility(View.VISIBLE);
         managerNumText.setText(1 + getString(R.string.schedule_task_a_person));
         managerNumText.setVisibility(View.VISIBLE);
@@ -582,7 +584,8 @@ public class TaskAddActivity extends BaseActivity {
             }
             final String participantId = taskParticipantList.get(i).getId();
             participantImageUrl.add(BaseModuleApiUri.getUserPhoto(this, participantId));
-            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i), R.drawable.icon_person_default, this, 15);
+            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], participantImageUrl.get(i),
+                    ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default), this, 15);
             ImageList[i].setVisibility(View.VISIBLE);
             ImageList[i].setOnClickListener(new View.OnClickListener() {
                 @Override

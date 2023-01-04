@@ -10,8 +10,9 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.webex.R;
@@ -112,7 +113,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.webex_item_view_meeting_child, null);
             holder = new ExpandViewHolder();
-            holder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
+            holder.photoImg = (ImageViewRound) convertView.findViewById(R.id.iv_photo);
             holder.timeText = (TextView) convertView
                     .findViewById(R.id.tv_time);
             holder.titleText = (TextView) convertView
@@ -151,7 +152,9 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         }
         holder.line.setVisibility(isLastChild ? View.INVISIBLE : View.VISIBLE);
         String photoUrl = WebexAPIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
-        ImageDisplayUtils.getInstance().displayImage(holder.photoImg, photoUrl, R.drawable.icon_person_default);
+        holder.photoImg.setType(ImageViewRound.TYPE_ROUND);
+        holder.photoImg.setRoundRadius(holder.photoImg.dpTodx(6));
+        ImageDisplayUtils.getInstance().displayImage(holder.photoImg, photoUrl, ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
         return convertView;
     }
 
@@ -169,7 +172,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
     }
 
     class ExpandViewHolder {
-        CircleTextImageView photoImg;
+        ImageViewRound photoImg;
         TextView timeText;
         TextView titleText;
         TextView ownerText;

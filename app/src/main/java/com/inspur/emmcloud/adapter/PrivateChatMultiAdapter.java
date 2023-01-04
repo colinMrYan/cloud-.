@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.BaseAdapter;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.bean.chat.SearchMultiHolder;
@@ -82,7 +85,8 @@ public class PrivateChatMultiAdapter extends BaseAdapter {
                     icon = "drawable://" + R.drawable.design3_icon_transfer;
                     break;
             }
-            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImageByTag(searchHolder.headImageView, icon,
+                    ResourceUtils.getResValueOfAttr(mContext, R.attr.design3_icon_person_default));
             searchHolder.nameTextView.setText(conversation.getShowName());
             CommunicationUtils.setUserDescText(conversation.conversation2SearchModel(), searchHolder.detailTextView);
             MessageForwardMultiBean bean = new MessageForwardMultiBean(conversation.getId(),

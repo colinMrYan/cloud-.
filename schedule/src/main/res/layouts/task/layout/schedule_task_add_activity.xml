@@ -54,8 +54,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/content_bg"
-        android:layout_below="@id/rl_header">
+        android:layout_below="@id/rl_header"
+        android:background="?attr/content_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,17 +66,17 @@
                 android:id="@+id/et_input_title"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:background="?attr/text_ll_color_nor"
                 android:gravity="top|left"
-                android:textColorHint="@color/color_text_tip"
-                android:textColor="?attr/text_color_e1"
                 android:hint="@string/schedule_task_content_hint"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:paddingTop="14dp"
+                android:paddingRight="16dp"
+                android:textColor="?attr/text_color_e1"
+                android:textColorHint="@color/color_text_tip"
                 android:textSize="16sp" />
 
             <RelativeLayout
@@ -100,12 +100,12 @@
                     android:layout_height="24dp"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="14dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="10dp"
+                    app:scv_BackgroundNormalColor="?attr/text_ll_color_nor"
                     app:scv_BackgroundSelectedColor="@color/color_base_blue"
                     app:scv_FrameColor="@color/color_base_blue"
-                    app:scv_BackgroundNormalColor="?attr/text_ll_color_nor"
                     app:scv_FrameCornerRadius="2dp"
                     app:scv_FrameWidth="0.5dp"
                     app:scv_Gradient="true"
@@ -136,12 +136,12 @@
                     android:id="@+id/tv_task_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_task_category"
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
@@ -214,20 +214,22 @@
                     android:id="@+id/tv_task_manager"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_task_manager"
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <ImageView
+                <com.inspur.emmcloud.baselib.widget.ImageViewRound
                     android:id="@+id/iv_manager_head"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/tv_manager_num"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:ivr_radius="4dp"
+                    app:ivr_type="1" />
 
                 <TextView
                     android:id="@+id/tv_manager_num"
@@ -268,13 +270,13 @@
                     android:id="@+id/tv_task_participant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/schedule_task_participant"
                     android:textColor="?attr/text_color_e1"
                     android:textSize="16sp" />
 
-                <ImageView
+                <com.inspur.emmcloud.baselib.widget.ImageViewRound
                     android:id="@+id/iv_participant_head_three"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -282,19 +284,22 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/iv_participant_head_two"
                     android:src="@drawable/default_image"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:ivr_radius="4dp"
+                    app:ivr_type="1" />
 
-                <ImageView
+                <com.inspur.emmcloud.baselib.widget.ImageViewRound
                     android:id="@+id/iv_participant_head_two"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/iv_participant_head_one"
-                    android:src="@drawable/default_image"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:ivr_radius="4dp"
+                    app:ivr_type="1" />
 
-                <ImageView
+                <com.inspur.emmcloud.baselib.widget.ImageViewRound
                     android:id="@+id/iv_participant_head_one"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -302,7 +307,9 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/tv_participant_num"
                     android:src="@drawable/default_image"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:ivr_radius="4dp"
+                    app:ivr_type="1" />
 
                 <TextView
                     android:id="@+id/tv_participant_num"
@@ -337,10 +344,10 @@
                 android:layout_marginTop="10dp"
                 android:background="?attr/text_ll_color_nor"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
+                android:paddingTop="11dp"
                 android:paddingRight="16dp"
-                android:paddingTop="11dp">
+                android:paddingBottom="11dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -380,10 +387,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/text_ll_color_nor"
-                android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:paddingTop="11dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="11dp"
                 android:visibility="gone">
 
                 <TextView
@@ -425,10 +432,10 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/text_ll_color_nor"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
+                android:paddingTop="11dp"
                 android:paddingRight="16dp"
-                android:paddingTop="11dp">
+                android:paddingBottom="11dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -470,10 +477,10 @@
                 android:layout_marginTop="10dp"
                 android:background="?attr/text_ll_color_nor"
                 android:onClick="onClick"
-                android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
+                android:paddingTop="11dp"
                 android:paddingRight="16dp"
-                android:paddingTop="11dp">
+                android:paddingBottom="11dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -510,10 +517,10 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/text_ll_color_nor"
                     android:onClick="onClick"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
                     android:paddingTop="11dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="11dp"
                     android:visibility="gone">
 
                     <TextView
@@ -552,10 +559,10 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/text_ll_color_nor"
                     android:onClick="onClick"
-                    android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
+                    android:paddingTop="11dp"
                     android:paddingRight="16dp"
-                    android:paddingTop="11dp">
+                    android:paddingBottom="11dp">
 
                     <TextView
                         android:layout_width="wrap_content"

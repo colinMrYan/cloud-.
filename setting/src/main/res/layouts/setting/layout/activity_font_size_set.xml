@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -49,51 +50,51 @@
 
     <com.inspur.emmcloud.setting.widget.TextRatingBar
         android:id="@+id/text_rating_bar"
-        android:paddingTop="24dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="50dp"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:layout_alignParentBottom="true"
         android:background="?attr/text_ll_color_nor"
-        />
+        android:paddingLeft="30dp"
+        android:paddingTop="24dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="50dp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
-        android:layout_above="@id/text_rating_bar">
+        android:layout_above="@id/text_rating_bar"
+        android:layout_below="@id/rl_header">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/font_set_head1"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="12dp"
                 android:layout_alignParentEnd="true"
-                 />
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                app:ivr_radius="6dp"
+                app:ivr_type="1" />
 
             <com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/bl_card1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
                 android:layout_marginTop="12dp"
+                android:layout_toLeftOf="@id/font_set_head1"
                 app:bl_arrowDirection="right"
                 app:bl_arrowHeight="10dp"
                 app:bl_arrowPosition="16dp"
                 app:bl_arrowWidth="4.5dp"
+                app:bl_bubbleColor="@color/bg_my_card"
                 app:bl_cornersRadius="8dp"
                 app:bl_strokeColor="?attr/color_stroke_46_aa"
-                app:bl_bubbleColor="@color/bg_my_card"
-                android:layout_toLeftOf="@id/font_set_head1"
-                android:layout_marginLeft="50dp"
                 app:bl_strokeWidth="0.5px">
 
                 <TextView
@@ -103,22 +104,23 @@
                     android:layout_centerVertical="true"
                     android:lineSpacingMultiplier="1.2"
                     android:padding="10dp"
-                    android:textSize="16sp"
+                    android:text="@string/setting_font_size_tip1"
                     android:textColor="#FFF"
-                    android:text="@string/setting_font_size_tip1"/>
+                    android:textSize="16sp" />
             </com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/font_set_head2"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="4dp"
                 android:layout_below="@id/bl_card1"
                 android:layout_alignParentStart="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="4dp"
                 android:src="@drawable/ic_launcher"
-                />
+                app:ivr_radius="6dp"
+                app:ivr_type="1" />
 
             <com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -128,14 +130,14 @@
                 android:layout_below="@id/bl_card1"
                 android:layout_marginTop="24dp"
                 android:layout_marginRight="50dp"
+                android:layout_toRightOf="@id/font_set_head2"
                 app:bl_arrowDirection="left"
                 app:bl_arrowHeight="10dp"
                 app:bl_arrowPosition="16dp"
                 app:bl_arrowWidth="4.5dp"
-                app:bl_cornersRadius="8dp"
                 app:bl_bubbleColor="?attr/bubble_bg_color"
+                app:bl_cornersRadius="8dp"
                 app:bl_strokeColor="?attr/color_stroke_46_aa"
-                android:layout_toRightOf="@id/font_set_head2"
                 app:bl_strokeWidth="0.5px">
 
                 <TextView
@@ -145,41 +147,42 @@
                     android:layout_centerVertical="true"
                     android:lineSpacingMultiplier="1.2"
                     android:padding="10dp"
-                    android:textSize="16sp"
+                    android:text="@string/setting_font_size_tip2"
                     android:textColor="?attr/text_color"
-                    android:text="@string/setting_font_size_tip2"/>
+                    android:textSize="16sp" />
             </com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/font_set_head3"
-                android:layout_below="@id/bl_card2"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="4dp"
+                android:layout_below="@id/bl_card2"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="4dp"
                 android:src="@drawable/ic_launcher"
-                />
+                app:ivr_radius="6dp"
+                app:ivr_type="1" />
 
             <com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/bl_card3"
-                android:layout_below="@id/bl_card2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/bl_card2"
                 android:layout_marginTop="24dp"
 
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="12dp"
+                android:layout_toRightOf="@id/font_set_head3"
                 app:bl_arrowDirection="left"
                 app:bl_arrowHeight="10dp"
                 app:bl_arrowPosition="16dp"
                 app:bl_arrowWidth="4.5dp"
+                app:bl_bubbleColor="?attr/bubble_bg_color"
                 app:bl_cornersRadius="8dp"
                 app:bl_strokeColor="?attr/color_stroke_46_aa"
-                app:bl_bubbleColor="?attr/bubble_bg_color"
-                android:layout_marginRight="50dp"
-                android:layout_marginBottom="12dp"
-                android:layout_toRightOf="@id/font_set_head3"
                 app:bl_strokeWidth="0.5px">
 
                 <TextView
@@ -189,9 +192,9 @@
                     android:layout_centerVertical="true"
                     android:lineSpacingMultiplier="1.2"
                     android:padding="10dp"
-                    android:textSize="16sp"
+                    android:text="@string/setting_font_size_tip3"
                     android:textColor="?attr/text_color"
-                    android:text="@string/setting_font_size_tip3"/>
+                    android:textSize="16sp" />
             </com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>
 
 

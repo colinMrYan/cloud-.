@@ -20,10 +20,12 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
@@ -734,15 +736,17 @@ public class ScheduleAddActivity extends BaseActivity implements CompoundButton.
                 if (i == 3) {
                     break;
                 }
-                ImageView imageView = new ImageView(this);
+                ImageViewRound imageView = new ImageViewRound(this);
                 int width = DensityUtil.dip2px(BaseApplication.getInstance(), 30);
                 int marginLeft = DensityUtil.dip2px(BaseApplication.getInstance(), 10);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, width);
                 layoutParams.setMargins(marginLeft, 0, 0, 0);
                 imageView.setLayoutParams(layoutParams);
+                imageView.setRoundRadius(imageView.dpTodx(4));
                 final String uid = searchModelList.get(i).getId();
                 String photoUrl = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), uid);
-                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl, R.drawable.icon_person_default, this, 15);
+                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl,
+                        ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default), this, 15);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -4,11 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -36,22 +33,21 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.Design3DisplayAttachmentCardMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayCommentNewMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayExtendedDecideMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayExtendedLinksMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayMediaImageMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayMediaVideoMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayMediaVoiceMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayMultiMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayRegularFileMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayResUnknownMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayServiceCommentTextPlainMsg;
+import com.inspur.emmcloud.ui.chat.Design3DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.Design3DisplayTxtPlainMsg;
-import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
-import com.inspur.emmcloud.ui.chat.DisplayCommentNewMsg;
-import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
-import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
-import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaVideoMsg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
-import com.inspur.emmcloud.ui.chat.DisplayMultiMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRecallMsg;
-import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
-import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
-import com.inspur.emmcloud.ui.chat.DisplayServiceCommentTextPlainMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.UnReadDetailActivity;
 import com.inspur.emmcloud.ui.chat.selectabletext.SelectableTextHelper;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -345,56 +341,56 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     cardContentView = Design3DisplayTxtPlainMsg.getView(context,
                             message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
                     mSelectableTextHelper = new SelectableTextHelper.Builder((TextView) cardContentView.findViewById(R.id.tv_content))
-                            .setSelectedColor(isMyMsg ? context.getResources().getColor(R.color.selected_send_msg_bg) : context.getResources().getColor(R.color.selected_receive_msg_bg))
+                            .setSelectedColor(context.getResources().getColor(R.color.color_au03))
                             .setCursorHandleSizeInDp(20)
                             .setCursorHandleColor(context.getResources().getColor(R.color.cursor_handle_color))
                             .build();
                     break;
                 case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                    cardContentView = DisplayTxtMarkdownMsg.getView(context,
+                    cardContentView = Design3DisplayTxtMarkdownMsg.getView(context,
                             message, uiMessage.getMarkDownLinkList());
                     break;
                 case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    cardContentView = DisplayRegularFileMsg.getView(context,
+                    cardContentView = Design3DisplayRegularFileMsg.getView(context,
                             message, uiMessage.getSendStatus(), false);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                    cardContentView = DisplayAttachmentCardMsg.getView(context,
+                    cardContentView = Design3DisplayAttachmentCardMsg.getView(context,
                             message);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                    cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                    cardContentView = Design3DisplayExtendedActionsMsg.getInstance(context).getView(message);
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
-                    cardContentView = DisplayExtendedDecideMsg.getView(message, context);
+                    cardContentView = Design3DisplayExtendedDecideMsg.getView(message, context);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VIDEO:
-                    cardContentView = DisplayMediaVideoMsg.getView(context, uiMessage);
+                    cardContentView = Design3DisplayMediaVideoMsg.getView(context, uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                    cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
+                    cardContentView = Design3DisplayMediaImageMsg.getView(context, uiMessage);
                     break;
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     if (serviceConversation) {
-                        cardContentView = DisplayServiceCommentTextPlainMsg.getView(context, message);
+                        cardContentView = Design3DisplayServiceCommentTextPlainMsg.getView(context, message);
                     } else {
                         // 老版
 //                        cardContentView = DisplayCommentTextPlainMsg.getView(context, message);
                         // 新版回复View
-                        cardContentView = DisplayCommentNewMsg.getView(context, message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
+                        cardContentView = Design3DisplayCommentNewMsg.getView(context, message, TextUtils.isEmpty(membersDetail) ? null : membersDetailArray);
                     }
                     break;
                 case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                    cardContentView = DisplayExtendedLinksMsg.getView(context, message);
+                    cardContentView = Design3DisplayExtendedLinksMsg.getView(context, message);
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                    cardContentView = DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
+                    cardContentView = Design3DisplayMediaVoiceMsg.getView(context, uiMessage, mItemClickListener);
                     break;
                 case Message.MESSAGE_TYPE_COMPLEX_MESSAGE:
-                    cardContentView = DisplayMultiMsg.getView(context, uiMessage);
+                    cardContentView = Design3DisplayMultiMsg.getView(context, uiMessage);
                     break;
                 default:
-                    cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
+                    cardContentView = Design3DisplayResUnknownMsg.getView(context, isMyMsg);
                     break;
             }
             final SelectableTextHelper finalMSelectableTextHelper = mSelectableTextHelper;

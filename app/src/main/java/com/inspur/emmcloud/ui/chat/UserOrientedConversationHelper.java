@@ -21,6 +21,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -299,7 +300,7 @@ public class UserOrientedConversationHelper implements View.OnClickListener {
             }
             holder.nameTv.setText(userName);
             holder.selectImg.setVisibility(selectedUser.contains(uid) ? View.VISIBLE : View.GONE);
-            ImageDisplayUtils.getInstance().displayImageByTag(holder.headerImg, userPhotoUrl, R.drawable.icon_person_default);
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.headerImg, userPhotoUrl, ResourceUtils.getResValueOfAttr(mContext, R.attr.design3_icon_person_default));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

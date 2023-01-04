@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="@dimen/design3_chat_arrow_position_height"
+    app:bl_arrowWidth="5dp"
+    app:bl_cornersRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/poster_img"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_name_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/description_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_name_tips"
+                android:gravity="center_vertical"
+                android:lineSpacingMultiplier="1.2"
+                android:textColor="?attr/text_color_e1"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/single_action_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="?attr/color_list_divider" />
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_right" />
+
+            <TextView
+                android:id="@+id/action_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@id/arrow"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="1"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="?attr/color_list_divider" />
+
+        <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+            android:id="@+id/action_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="1dp"
+            android:listSelector="@android:color/transparent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="0.5dp" />
+    </LinearLayout>
+</com.inspur.emmcloud.basemodule.widget.bubble.BubbleLayout>

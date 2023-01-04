@@ -71,7 +71,8 @@
                 android:layout_marginTop="10dp"
                 android:elevation="10dp"
                 android:onClick="onClick"
-                android:src="@drawable/icon_photo_default" />
+                app:ivr_radius="12dp"
+                app:ivr_type="1" />
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -252,14 +253,14 @@
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
 
-                        <TextView
-                            android:id="@+id/tv_user_mail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_mail"
-                            android:paddingBottom="7dp"
-                            android:textColor="@color/app_font_color"
-                            android:textSize="@dimen/content_title_textsize" />
+                    <TextView
+                        android:id="@+id/tv_user_mail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_mail"
+                        android:paddingBottom="7dp"
+                        android:textColor="@color/app_font_color"
+                        android:textSize="@dimen/content_title_textsize" />
 
                     <View
                         android:layout_width="fill_parent"
@@ -287,14 +288,14 @@
                     android:textColor="#999999"
                     android:textSize="@dimen/content_normal_textsize" />
 
-                    <TextView
-                        android:id="@+id/tv_user_phone_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_phone"
-                        android:paddingBottom="7dp"
-                        android:textColor="@color/app_font_color"
-                        android:textSize="@dimen/content_title_textsize" />
+                <TextView
+                    android:id="@+id/tv_user_phone_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_phone"
+                    android:paddingBottom="7dp"
+                    android:textColor="@color/app_font_color"
+                    android:textSize="@dimen/content_title_textsize" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -326,14 +327,14 @@
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
 
-                        <TextView
-                            android:id="@+id/tv_user_telephone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tv_telephone"
-                            android:paddingBottom="7dp"
-                            android:textColor="@color/app_font_color"
-                            android:textSize="@dimen/content_title_textsize" />
+                    <TextView
+                        android:id="@+id/tv_user_telephone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_telephone"
+                        android:paddingBottom="7dp"
+                        android:textColor="@color/app_font_color"
+                        android:textSize="@dimen/content_title_textsize" />
 
                     <View
                         android:layout_width="fill_parent"

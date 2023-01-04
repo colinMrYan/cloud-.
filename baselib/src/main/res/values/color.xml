@@ -261,7 +261,7 @@
     <color name="color_ne07">#E6E6E6</color>
     <color name="color_ne07_dark">#3D3D3D</color>
     <color name="color_ne08">#EBEBEB</color>
-    <color name="color_ne08_dark">#383838</color>
+    <color name="color_ne08_dark">#292929</color>
     <color name="color_ne09">#F5F5F5</color>
     <color name="color_ne09_dark">#292929</color>
     <color name="color_ne10">#F2F5F5F5</color>
@@ -334,4 +334,6 @@
     <color name="color_overlay01">#991A1A1A</color>
     <color name="color_overlay01_dark">#991A1A1A</color>
     <color name="color_mine_department_blue">#a6ffffff</color>
+    <color name="color_au03">#4D2A87FF</color>
+
 </resources>

@@ -7,6 +7,7 @@
     <dimen name="search_header_height">52dp</dimen>
     <dimen name="home_header_height">48dp</dimen>
     <dimen name="design3_common_header_height">44dp</dimen>
+    <dimen name="design3_chat_arrow_position_height">14dp</dimen>
 
     <dimen name="header_padding_top_bottom">18dp</dimen>
 

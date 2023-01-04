@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiUri;
@@ -278,7 +279,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             attendeeNameText.setText(participant.getName());
             final String uid = participant.getId();
             String photoUrl = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), uid);
-            ImageDisplayUtils.getInstance().displayRoundedImage(attendeeHeadImage, photoUrl, R.drawable.icon_person_default, context, 15);
+            ImageDisplayUtils.getInstance().displayRoundedImage(attendeeHeadImage, photoUrl,
+                    ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default), context, 15);
             for (int num = 0; num < recordParticipants.size(); num++) {
                 if (participant.getId().equals(recordParticipants.get(num).getId()) && participant.getName().equals(recordParticipants.get(num).getName())) {
                     attendeeType.setText(R.string.schedule_meeting_detail_record_title);

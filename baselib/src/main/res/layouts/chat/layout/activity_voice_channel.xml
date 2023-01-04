@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,11 +39,13 @@
             android:layout_centerHorizontal="true"
             android:orientation="vertical">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/img_user_head"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="36dp" />
+                android:layout_marginTop="36dp"
+                app:ivr_radius="12dp"
+                app:ivr_type="1" />
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -452,11 +455,13 @@
             android:layout_marginRight="10dp"
             android:visibility="gone">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/img_video_head"
                 android:layout_width="66dp"
                 android:layout_height="66dp"
-                android:src="@drawable/icon_person_default" />
+                android:src="?attr/design3_icon_person_default"
+                app:ivr_radius="10dp"
+                app:ivr_type="1" />
 
             <TextView
                 android:id="@+id/tv_video_name"

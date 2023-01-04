@@ -65,14 +65,16 @@
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
 
-                        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                        <com.inspur.emmcloud.baselib.widget.ImageViewRound
                             android:id="@+id/iv_group_photo"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:layout_gravity="center_horizontal"
                             android:elevation="10dp"
                             android:onClick="onClick"
-                            android:src="@drawable/icon_photo_default" />
+                            android:src="?attr/design3_icon_group_default"
+                            app:ivr_radius="12dp"
+                            app:ivr_type="1" />
 
                         <TextView
                             android:id="@+id/tv_group_members"

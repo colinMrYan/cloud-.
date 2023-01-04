@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/commment_content_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -21,12 +22,14 @@
             android:paddingRight="20dp"
             android:paddingBottom="10dp">
 
-            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.ImageViewRound
                 android:id="@+id/sender_photo_img"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                app:ivr_radius="6dp"
+                app:ivr_type="1" />
 
             <TextView
                 android:id="@+id/sender_name_text"

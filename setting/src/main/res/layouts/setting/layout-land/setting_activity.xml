@@ -7,12 +7,15 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/include_common_header_layout" />
+    <com.inspur.emmcloud.baselib.widget.common.CommonHeaderView
+        android:id="@+id/hv_common"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/design3_common_header_height"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
+        android:layout_below="@id/hv_common"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="0dp">

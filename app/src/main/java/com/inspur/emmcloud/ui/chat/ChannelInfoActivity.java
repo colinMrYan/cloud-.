@@ -3,8 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -23,8 +24,9 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
@@ -74,7 +76,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private Adapter adapter;
     private TextView channelMemberNumText;
     private boolean isNoInterruption = false;
-    private CircleTextImageView groupPhotoImg;
+    private ImageViewRound groupPhotoImg;
     private TextView groupMembersText;
     private TextView groupMemberSizeText;
     private TextView nameText;
@@ -220,7 +222,7 @@ public class ChannelInfoActivity extends BaseActivity {
             if (file.exists()) {
                 groupPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
             } else {
-                groupPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
+                groupPhotoImg.setImageResource(ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_group_default));
             }
         }
     }
@@ -418,7 +420,7 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     public static class ViewHolder {
-        CircleTextImageView memberHeadImg;
+        ImageViewRound memberHeadImg;
         TextView nameText;
     }
 
@@ -453,7 +455,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.channel_member_item_view,
                         null);
-                viewHolder.memberHeadImg = (CircleTextImageView) convertView
+                viewHolder.memberHeadImg = (ImageViewRound) convertView
                         .findViewById(R.id.member_head_img);
                 viewHolder.nameText = (TextView) convertView
                         .findViewById(R.id.tv_name);
@@ -481,7 +483,8 @@ public class ChannelInfoActivity extends BaseActivity {
                 userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
             }
             viewHolder.nameText.setText(userName);
-            ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl,
+                    ResourceUtils.getResValueOfAttr(ChannelInfoActivity.this, R.attr.design3_icon_person_default));
             return convertView;
         }
     }

@@ -414,18 +414,18 @@ public class AudioRecordButton extends Button {
             switch (mCurrentState) {
                 case STATE_NORMAL:
 
-                    setBackgroundResource(R.drawable.bg_record_btn_normal);
+                    setBackgroundResource(R.drawable.design3_bg_corner_ne15_6dp);
                     setText(R.string.hold_to_talk);
                     break;
                 case STATE_RECORDING:
-                    setBackgroundResource(R.drawable.bg_record_btn_recording);
+                    setBackgroundResource(R.drawable.design3_bg_corner_ne07_6dp);
                     setText(R.string.release_to_send);
                     if (isRecording) {
                         mDialogManager.recording();
                     }
                     break;
                 case STATE_WANT_TO_CANCEL:
-                    setBackgroundResource(R.drawable.bg_record_btn_recording);
+                    setBackgroundResource(R.drawable.design3_bg_corner_ne07_6dp);
                     setText(R.string.release_to_cancel);
                     mDialogManager.wantToCancel();
                     break;

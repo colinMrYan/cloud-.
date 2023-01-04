@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.collection.ArrayMap;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -574,7 +576,7 @@ public class ImagePagerNewActivity extends BaseFragmentActivity {
         currentMessage = imgTypeMessageList.get(pagerPosition);
         final SearchModel searchModel = conversation.conversation2SearchModel();
         String shareContent = getString(R.string.baselib_share_image) + " " + currentMessage.getMsgContentMediaImage().getName();
-        int defaultIcon = CommunicationUtils.getDefaultHeadUrl(searchModel);
+        int defaultIcon = CommunicationUtils.getDefaultHeadUrl(this, searchModel);
         String headUrl = CommunicationUtils.getHeadUrl(searchModel);
         //分享到
         ShareDialogForDark.Builder builder = new ShareDialogForDark.Builder(ImagePagerNewActivity.this);

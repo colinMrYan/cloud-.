@@ -4,12 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +13,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -35,10 +31,8 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
-import com.inspur.emmcloud.ui.chat.ConversationCastInfoActivity;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import java.io.File;

@@ -1,14 +1,17 @@
 package com.inspur.emmcloud.ui.chat.mvp.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
@@ -78,7 +81,8 @@ public class ConversationSendMultiAdapter extends RecyclerView.Adapter<RecyclerV
             }
         } else {
             int defaultIcon = conversation.getType().equals(Conversation.TYPE_GROUP) ?
-                    R.drawable.icon_channel_group_default : R.drawable.icon_person_default;
+                    ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_group_default) :
+                    ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default);
             String imageUrl = CommunicationUtils.getHeadUrl(conversation);
             ((ContentViewHolder) holder).headImage.setTag(imageUrl);
             ImageDisplayUtils.getInstance().displayImageByTag(((ContentViewHolder) holder).headImage, imageUrl, defaultIcon);

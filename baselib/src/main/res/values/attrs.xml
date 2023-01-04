@@ -215,6 +215,24 @@
     <attr name="design3_icon_add_member" format="reference" />
     <attr name="design3_icon_delete_member" format="reference" />
     <attr name="design3_icon_send_fail" format="reference" />
+    <attr name="design3_icon_chat_voice" format="reference" />
+    <attr name="design3_icon_chat_voice_mine" format="reference" />
+    <attr name="design3_anim_chat_voice" format="reference" />
+    <attr name="design3_anim_chat_voice_mine" format="reference" />
+    <attr name="design3_icon_chat_voice_input" format="reference" />
+    <attr name="design3_icon_chat_button_emotion" format="reference" />
+    <attr name="design3_icon_chat_input_keyboards" format="reference" />
+    <attr name="design3_icon_chat_button_add" format="reference" />
+    <attr name="design3_icon_chat_input_gallery" format="reference" />
+    <attr name="design3_icon_chat_input_camera" format="reference" />
+    <attr name="design3_icon_chat_input_file" format="reference" />
+    <attr name="design3_icon_chat_input_voice_word" format="reference" />
+    <attr name="design3_icon_chat_input_mention" format="reference" />
+    <attr name="design3_icon_chat_input_call" format="reference" />
+    <attr name="design3_icon_chat_input_mail" format="reference" />
+    <attr name="design3_icon_chat_input_disappear" format="reference" />
+    <attr name="design3_icon_chat_input_whisper" format="reference" />
+    <attr name="design3_selector_chat_menu_item" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
@@ -610,6 +628,12 @@
         <attr name="circle_progress_reached_bar_height" format="dimension" />
         <attr name="circle_progress_unreached_bar_height" format="dimension" />
         <attr name="circle_progress_radius" format="dimension" />
+    </declare-styleable>
+
+    <!--圆角矩形-->
+    <declare-styleable name="ImageViewRound">
+        <attr name="ivr_type" format="integer" />
+        <attr name="ivr_radius" format="dimension" />
     </declare-styleable>
 
 </resources>

@@ -6,20 +6,22 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.popmenu.DropPopMenu;
@@ -73,7 +75,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @BindView(R2.id.bt_function)
     Button functionBtn;
     @BindView(R2.id.iv_photo)
-    CircleTextImageView photoImg;
+    ImageViewRound photoImg;
     @BindView(R2.id.tv_name_tips)
     TextView titleText;
     @BindView(R2.id.tv_owner)
@@ -139,7 +141,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         meetingPasswordText.setText(webexMeeting.getMeetingPassword());
         meetingIdText.setText(formatMeetingID(webexMeeting.getMeetingID()));
         String photoUrl = WebexAPIUri.getWebexPhotoUrl(webexMeeting.getHostWebExID());
-        ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, ResourceUtils.getResValueOfAttr(this, R.attr.design3_icon_person_default));
         String myInfo = PreferencesUtils.getString(this, "myInfo", "");
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         String myEmail = getMyInfoResult.getMail();

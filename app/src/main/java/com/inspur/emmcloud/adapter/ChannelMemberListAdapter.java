@@ -15,10 +15,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.ArrayList;
@@ -90,7 +93,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.items_person_list, null);
             holder = new ViewHolder();
-            holder.userHeadImg = (ImageView) convertView.findViewById(R.id.iv_user_head);
+            holder.userHeadImg = (ImageViewRound) convertView.findViewById(R.id.iv_user_head);
             holder.userNameTv = (TextView) convertView.findViewById(R.id.tv_user_name);
             holder.userDescTv = convertView.findViewById(R.id.tv_user_desc);
             holder.sideBarLetterTv = (TextView) convertView.findViewById(R.id.tv_member_slidebar);
@@ -118,16 +121,17 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             }
 //            holder.userNameTv.setText(dto.getName());
             // 有昵称也显示昵称
-            holder.userNameTv.setText(TextUtils.isEmpty(dto.getNickname()) ? dto.getName():dto.getName()+" ("+dto.getNickname()+") ");
+            holder.userNameTv.setText(TextUtils.isEmpty(dto.getNickname()) ? dto.getName() : dto.getName() + " (" + dto.getNickname() + ") ");
             holder.ownerImg.setVisibility(TextUtils.equals(dto.getUid(), mChatOwner) ? View.VISIBLE : View.GONE);
             setUserDesc(dto, holder.userDescTv);
             String photoUrl;
             holder.userHeadImg.setTag("");
             if (dto.getUid().equals("10")) {
-                holder.userHeadImg.setImageResource(R.drawable.ic_mention_all);
+                holder.userHeadImg.setImageResource(R.drawable.design3_icon_mention_all);
             } else {
                 photoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), dto.getUid());
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.userHeadImg, photoUrl, R.drawable.icon_person_default);
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.userHeadImg, photoUrl,
+                        ResourceUtils.getResValueOfAttr(mActivity, R.attr.design3_icon_person_default));
             }
         }
         if (selectedUserList.contains(dto)) {
@@ -186,7 +190,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
     }
 
     class ViewHolder {
-        ImageView userHeadImg;
+        ImageViewRound userHeadImg;
         TextView sideBarLetterTv;
         TextView userNameTv;
         TextView userDescTv;
