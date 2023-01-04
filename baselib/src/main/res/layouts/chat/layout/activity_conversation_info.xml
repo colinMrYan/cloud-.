@@ -71,8 +71,6 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <View
-                style="@style/divide_style" />
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_name"
@@ -81,9 +79,6 @@
                 android:layout_marginTop="8dp"
                 android:background="?attr/design3_selector_list"
                 android:onClick="onClick">
-                <View
-                    style="@style/divide_style"
-                    android:layout_alignParentTop="true"/>
 
                 <TextView
                     android:paddingStart="16dp"
@@ -206,20 +201,20 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="4dp"
                     android:src="?attr/design3_icon_arrow" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_conversation_member_manager"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:paddingStart="16dp"
                 android:background="?attr/design3_selector_list"
                 android:onClick="onClick">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/design3_color_ne06" />
 
                 <TextView
                     android:id="@+id/tv_member_manager_title_transfer"
@@ -229,7 +224,6 @@
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.M3.Fs04"
                     android:textColor="?attr/design3_color_te01"
-                    android:paddingStart="16dp"
                     android:text="@string/channel_group_member_manager" />
 
                 <ImageView
@@ -240,18 +234,9 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="4dp"
                     android:src="?attr/design3_icon_arrow"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="8dp"
-                android:background="?attr/design3_color_ne06" />
             <RelativeLayout
+                android:layout_marginTop="8dp"
                 android:id="@+id/rl_conversation_images"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -381,18 +366,9 @@
                     android:layout_marginStart="4dp"
                     android:src="?attr/design3_icon_arrow" />
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="?attr/design3_color_ne06" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="8dp"
-                android:background="?attr/design3_color_ne06" />
 
             <RelativeLayout
+                android:layout_marginTop="8dp"
                 android:id="@+id/rl_conversation_sticky"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -433,6 +409,7 @@
                 android:id="@+id/rl_conversation_mute_notification"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:paddingStart="16dp"
                 android:background="?attr/design3_selector_list"
                 android:onClick="onClick">
 
@@ -441,7 +418,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingStart="16dp"
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.M3.Fs04"
                     android:textColor="?attr/design3_color_te01"
@@ -460,11 +436,7 @@
                     app:thumbTint="@color/white"
                     app:track="@drawable/selector_switch_track" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -475,6 +447,11 @@
                 android:paddingStart="16dp"
                 android:onClick="onClick"
                 android:visibility="gone">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/design3_color_ne06" />
 
                 <TextView
                     android:id="@+id/tv_conversation_show_title"
@@ -499,19 +476,10 @@
                     app:thumbTint="@color/white"
                     app:track="@drawable/selector_switch_track" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="8dp"
-                android:background="?attr/design3_color_ne06" />
             <RelativeLayout
+                android:layout_marginTop="8dp"
                 android:id="@+id/rl_conversation_report"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -537,12 +505,6 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="4dp"
                     android:src="?attr/design3_icon_arrow" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
             </RelativeLayout>
 
 
@@ -557,11 +519,6 @@
                 android:layout_marginBottom="34dp"
                 >
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_height="1px"
-                    android:background="?attr/design3_color_ne06" />
                 <TextView
                     android:id="@+id/tv_conversation_quit_title"
                     android:singleLine="true"
@@ -575,12 +532,6 @@
                     android:text="@string/quit_dismiss_group"
                     android:textColor="@color/color_text_red"
                     />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="?attr/design3_color_ne06" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
