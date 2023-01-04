@@ -335,5 +335,7 @@
     <color name="color_overlay01_dark">#991A1A1A</color>
     <color name="color_mine_department_blue">#a6ffffff</color>
     <color name="color_au03">#4D2A87FF</color>
+    <color name="color_E6F1FF">#E6F1FF</color>
+    <color name="color_141087FF">#141087FF</color>
 
 </resources>

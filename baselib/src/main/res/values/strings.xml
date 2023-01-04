@@ -367,6 +367,7 @@
     <string name="dismiss_group">解散群组</string>
     <string name="quit_dismiss_group">删除并退出</string>
     <string name="transfer_group">群主转让</string>
+    <string name="chat_owner">群主</string>
     <string name="transfer_group_tip">确定将群主转让给%1$s？</string>
     <string name="quit_group_warning_text">确定要退出群组？</string>
     <string name="dismiss_group_warning_text">确定要解散群组？</string>

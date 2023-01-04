@@ -195,6 +195,7 @@
         <item name="design3_color_mine_card">@color/color_bg_content_white</item>
         <item name="design3_color_mine_name">@color/color_te09</item>
         <item name="design3_color_mine_department">@color/color_te02</item>
+        <item name="design3_color_inner_member_tag">@color/color_E6F1FF</item>
         <item name="design3_color_th01">@color/color_th01</item>
         <item name="design3_color_th02">@color/color_th02</item>
         <item name="design3_color_th06">@color/color_th06</item>
@@ -430,6 +431,8 @@
         <item name="design3_color_mine_card">@color/color_bg_content_white</item>
         <item name="design3_color_mine_name">@color/color_te09</item>
         <item name="design3_color_mine_department">@color/color_te02</item>
+        <item name="design3_color_inner_member_tag">@color/color_E6F1FF</item>
+
 
         <item name="design3_color_th01">@color/color_th01</item>
         <item name="design3_color_th02">@color/color_th02</item>
@@ -664,6 +667,8 @@
         <item name="design3_color_mine_card">@color/header_bg_blue</item>
         <item name="design3_color_mine_name">@color/color_te09_blue</item>
         <item name="design3_color_mine_department">@color/color_mine_department_blue</item>
+        <item name="design3_color_inner_member_tag">@color/color_E6F1FF</item>
+
 
         <item name="design3_color_th01">@color/color_th01</item>
         <item name="design3_color_th02">@color/color_th02</item>
@@ -899,6 +904,8 @@
         <item name="design3_color_mine_card">@color/footer_bg_dark</item>
         <item name="design3_color_mine_name">@color/color_te09_dark</item>
         <item name="design3_color_mine_department">@color/color_te02_dark</item>
+        <item name="design3_color_inner_member_tag">@color/color_141087FF</item>
+
 
         <item name="design3_color_th01">@color/color_th01_dark</item>
         <item name="design3_color_th02">@color/color_th02_dark</item>

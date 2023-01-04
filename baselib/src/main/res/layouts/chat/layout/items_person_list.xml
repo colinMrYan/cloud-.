@@ -51,14 +51,21 @@
                 android:textColor="?attr/text_color_e1"
                 android:textSize="16sp" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/chat_member_list_owner"
-                android:layout_width="30dp"
-                android:layout_height="16dp"
-                android:layout_marginLeft="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="2dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:layout_toRightOf="@id/tv_user_name"
-                android:src="@drawable/icon_chat_owner"
+                android:text="@string/chat_owner"
+                android:textColor="?attr/design3_color_te07"
+                android:textAppearance="@style/TextAppearance.M3.Fs10"
+                android:background="@drawable/design3_bg_corner_inner_tag"
                 android:visibility="gone" />
 
             <TextView

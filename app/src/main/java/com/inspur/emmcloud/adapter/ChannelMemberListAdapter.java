@@ -99,7 +99,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             holder.sideBarLetterTv = (TextView) convertView.findViewById(R.id.tv_member_slidebar);
 //            holder.line = convertView.findViewById(R.id.v_line);
             holder.selectedImg = (ImageView) convertView.findViewById(R.id.img_member_selected);
-            holder.ownerImg = (ImageView) convertView.findViewById(R.id.chat_member_list_owner);
+            holder.ownerImg = (TextView) convertView.findViewById(R.id.chat_member_list_owner);
             holder.contentRl = (RelativeLayout) convertView.findViewById(R.id.rl_content);
             convertView.setTag(holder);
         } else {
@@ -197,7 +197,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
         //        View line;
         ImageView selectedImg;
         RelativeLayout contentRl;
-        ImageView ownerImg;
+        TextView ownerImg;
     }
 
 }
