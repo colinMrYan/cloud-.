@@ -19,6 +19,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
@@ -49,6 +50,7 @@ public class BlueToothService extends ImpPlugin {
                 if (device.getName() != null && discoveryDevicesMap.get(device.getName()) == null) {
                     discoveryDevicesMap.put(device.getName(), device.getAddress());
                 }
+                if (discoveryDevicesMap.isEmpty()) return;
                 try {
                     JSONObject jsonObject = JSONUtils.map2Json(discoveryDevicesMap);
                     JSONObject json = new JSONObject();
@@ -194,22 +196,33 @@ public class BlueToothService extends ImpPlugin {
         }
     }
 
-    private void initBlueToothService(JSONObject paramsObject,boolean needUpdate) {
-        if (needUpdate) {
-            updateCal = JSONUtils.getString(paramsObject, "success", "");
-        } else {
-            successCal = JSONUtils.getString(paramsObject, "success", "");
-        }
-        failCal = JSONUtils.getString(paramsObject, "fail", "");
-        if (mChatService == null) mChatService = new BluetoothChatService(getActivity(), mHandler);
-        if (mBluetoothAdapter == null) mBluetoothAdapter = mChatService.getBluetoothAdapter();
-        // Register for broadcasts when a device is discovered
-        IntentFilter intent = new IntentFilter();
-        intent.addAction(BluetoothDevice.ACTION_FOUND);
-        intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        intent.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        getActivity().registerReceiver(mReceiver, intent);
+    private void initBlueToothService(final JSONObject paramsObject,final boolean needUpdate) {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.BLUETOOTH_SCAN_CONNECT,new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                if (needUpdate) {
+                    updateCal = JSONUtils.getString(paramsObject, "success", "");
+                } else {
+                    successCal = JSONUtils.getString(paramsObject, "success", "");
+                }
+                failCal = JSONUtils.getString(paramsObject, "fail", "");
+                if (mChatService == null) mChatService = new BluetoothChatService(getActivity(), mHandler);
+                if (mBluetoothAdapter == null) mBluetoothAdapter = mChatService.getBluetoothAdapter();
+                // Register for broadcasts when a device is discovered
+                IntentFilter intent = new IntentFilter();
+                intent.addAction(BluetoothDevice.ACTION_FOUND);
+                intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+                intent.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+                intent.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+                getActivity().registerReceiver(mReceiver, intent);
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                ToastUtils.show(BaseApplication.getInstance(), PermissionRequestManagerUtils.getInstance().getPermissionToast(BaseApplication.getInstance(), permissions));
+            }
+        });
+
     }
 
     private void closeBluetooth() {
@@ -270,41 +283,41 @@ public class BlueToothService extends ImpPlugin {
     }
 
     private void scanBluetooth() {
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.BLUETOOTH, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.BLUETOOTH_SCAN, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                if (AppUtils.isLocationEnabled(getActivity())) {
-                    if (isDiscovering()) {
-                        return;
-                    }
-                    discoveryDevicesMap.clear();
-                    Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-                    for (BluetoothDevice bluetoothDevice : pairedDevices) {
-                        discoveryDevicesMap.put(bluetoothDevice.getName(), bluetoothDevice.getAddress());
-                    }
-                    if (!isDiscovering()) {
-                        startDiscovery();
-                    }
-                } else {
-                    new CustomDialog.MessageDialogBuilder(getActivity())
-                            .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
-                            .setCancelable(false)
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setPositiveButton(R.string.go_setting, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    AppUtils.openLocationSetting(getActivity());
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                }
+        if (AppUtils.isLocationEnabled(getActivity())) {
+            if (isDiscovering()) {
+                return;
             }
+            discoveryDevicesMap.clear();
+            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+            for (BluetoothDevice bluetoothDevice : pairedDevices) {
+                discoveryDevicesMap.put(bluetoothDevice.getName(), bluetoothDevice.getAddress());
+            }
+            if (!isDiscovering()) {
+                startDiscovery();
+            }
+        } else {
+            new CustomDialog.MessageDialogBuilder(getActivity())
+                    .setMessage(getActivity().getString(R.string.imp_location_enable, AppUtils.getAppName(getFragmentContext())))
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton(R.string.go_setting, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppUtils.openLocationSetting(getActivity());
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+    }
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {

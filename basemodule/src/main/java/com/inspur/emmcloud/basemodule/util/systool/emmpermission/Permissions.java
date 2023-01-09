@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.basemodule.util.systool.emmpermission;
 
 
+import android.Manifest;
 import android.content.Context;
 
 import com.inspur.emmcloud.basemodule.R;
@@ -44,7 +45,12 @@ public final class Permissions {
     public static final String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
     public static final String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
 
+    public static final String BLUETOOTH_CONNECT = "android.permission.BLUETOOTH_CONNECT";
+
     public static final String BLUE_TOOTH = "android.permission.BLUETOOTH";
+    public static final String BLUE_TOOTH_SCAN = "android.permission.BLUETOOTH_SCAN";
+    public static final String BLUE_TOOTH_ADMIN = "android.permission.BLUETOOTH_ADMIN";
+    public static final String BLUE_TOOTH_PRIVILEGE = "android.permission.BLUETOOTH_PRIVILEGED";
     public static final String[] CONTACTS = new String[]{
             Permissions.READ_CONTACTS,
             Permissions.WRITE_CONTACTS,
@@ -76,9 +82,16 @@ public final class Permissions {
     public static final String[] CALENDAR = new String[]{
             Permissions.READ_CALENDAR, Permissions.WRITE_CALENDAR
     };
-    public static final String[] BLUETOOTH = new String[]{
+    public static final String[] BLUETOOTH_SCAN = new String[]{
             Permissions.ACCESS_FINE_LOCATION,
             Permissions.ACCESS_COARSE_LOCATION};
+
+    public static final String[] BLUETOOTH_SCAN_CONNECT = new String[]{
+            BLUE_TOOTH,
+            BLUETOOTH_CONNECT,
+            BLUE_TOOTH_SCAN,
+            BLUE_TOOTH_ADMIN
+    };
 
     /**
      * Turn permissions into text.
