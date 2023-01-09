@@ -10,8 +10,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
 import android.text.TextUtils;
-import android.util.Base64;
-import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -27,6 +25,7 @@ import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.ui.ImpFragment;
+import com.tencent.smtt.sdk.MimeTypeMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;

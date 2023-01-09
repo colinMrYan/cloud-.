@@ -8,8 +8,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import androidx.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.zafarkhaja.semver.Version;
@@ -42,6 +40,8 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.tencent.mmkv.MMKV;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.ugc.TXUGCBase;
 import com.xiaomi.mipush.sdk.MiPushClient;
 

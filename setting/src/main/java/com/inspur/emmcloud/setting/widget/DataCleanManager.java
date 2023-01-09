@@ -2,11 +2,11 @@ package com.inspur.emmcloud.setting.widget;
 
 import android.content.Context;
 import android.os.Environment;
-import android.webkit.WebView;
 
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.tencent.smtt.sdk.WebView;
 
 import java.io.File;
 import java.math.BigDecimal;

@@ -2,7 +2,8 @@ package com.inspur.emmcloud.baselib.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.webkit.WebView;
+
+import com.tencent.smtt.sdk.WebView;
 
 /**
  * Created by chenmch on 2018/12/28.

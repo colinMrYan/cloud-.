@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.basemodule.media.selector.app.PictureAppMaster;
 import com.inspur.emmcloud.basemodule.media.selector.basic.PictureContentResolver;
@@ -22,6 +21,7 @@ import com.inspur.emmcloud.basemodule.media.selector.config.PictureMimeType;
 import com.inspur.emmcloud.basemodule.media.selector.entity.MediaExtraInfo;
 import com.inspur.emmcloud.basemodule.media.selector.interfaces.OnCallbackListener;
 import com.inspur.emmcloud.basemodule.media.selector.thread.PictureThreadUtils;
+import com.tencent.smtt.sdk.MimeTypeMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

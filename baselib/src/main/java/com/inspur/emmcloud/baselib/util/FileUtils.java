@@ -12,10 +12,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.webkit.MimeTypeMap;
-
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.tencent.smtt.sdk.MimeTypeMap;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

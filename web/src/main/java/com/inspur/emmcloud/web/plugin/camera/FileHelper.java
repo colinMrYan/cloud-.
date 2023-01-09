@@ -3,10 +3,10 @@ package com.inspur.emmcloud.web.plugin.camera;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.ui.iLog;
+import com.tencent.smtt.sdk.MimeTypeMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;

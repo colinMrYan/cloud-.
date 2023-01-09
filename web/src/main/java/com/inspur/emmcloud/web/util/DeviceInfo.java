@@ -2,7 +2,8 @@ package com.inspur.emmcloud.web.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.webkit.WebSettings;
+
+import com.tencent.smtt.sdk.WebSettings;
 
 /**
  * 获取屏幕有关信息的类

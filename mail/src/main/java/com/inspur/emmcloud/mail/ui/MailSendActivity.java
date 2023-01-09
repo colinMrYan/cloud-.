@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -46,6 +45,7 @@ import com.inspur.emmcloud.mail.bean.MailRecipient;
 import com.inspur.emmcloud.mail.bean.MailRecipientModel;
 import com.inspur.emmcloud.mail.bean.MailSend;
 import com.inspur.emmcloud.mail.util.MailCacheUtils;
+import com.tencent.smtt.sdk.WebSettings;
 
 import java.util.ArrayList;
 import java.util.List;

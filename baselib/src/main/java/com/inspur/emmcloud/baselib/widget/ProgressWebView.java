@@ -3,11 +3,13 @@ package com.inspur.emmcloud.baselib.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.webkit.WebView;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.inspur.baselib.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
 
 public class ProgressWebView extends WebView {
 
@@ -17,14 +19,14 @@ public class ProgressWebView extends WebView {
         super(context, attrs);
         progressbar = new ProgressBar(context, null,
                 android.R.attr.progressBarStyleHorizontal);
-        progressbar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                DensityUtil.dip2px(context, 3), 0, 0));
+        progressbar.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
+                DensityUtil.dip2px(context, 3)));
 
         Drawable drawable = context.getResources().getDrawable(
                 R.drawable.widget_progress_bar_states);
         progressbar.setProgressDrawable(drawable);
         addView(progressbar);
-        setWebChromeClient(new android.webkit.WebChromeClient() {
+        setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (newProgress == 100) {
@@ -49,8 +51,8 @@ public class ProgressWebView extends WebView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         LayoutParams lp = (LayoutParams) progressbar.getLayoutParams();
-        lp.x = l;
-        lp.y = t;
+        lp.width = l;
+        lp.height = t;
         progressbar.setLayoutParams(lp);
         super.onScrollChanged(l, t, oldl, oldt);
     }
