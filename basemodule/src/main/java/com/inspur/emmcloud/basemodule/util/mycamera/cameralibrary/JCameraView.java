@@ -699,6 +699,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         return true;
     }
 
+    // 支持音量键控制拍照
+    public void onVolumeChanged(int event) {
+        mSwitchCamera.setVisibility(INVISIBLE);
+        mFocusView.setVisibility(INVISIBLE);
+        machine.capture();
+    }
+
     public void setLeftClickListener(ClickListener clickListener) {
         this.leftClickListener = clickListener;
     }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Environment;
+import android.view.KeyEvent;
 
 import com.gyf.barlibrary.BarHide;
 import com.gyf.barlibrary.ImmersionBar;
@@ -195,6 +196,21 @@ public class MyCameraActivity extends BaseFragmentActivity implements JCameraLis
         intent.putExtra(OUT_FILE_PATH, photoFilePath);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP: // 音量上键
+            case KeyEvent.KEYCODE_VOLUME_DOWN: // 音量下键
+            case KeyEvent.KEYCODE_MEDIA_NEXT: // 耳机下键
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS: // 耳机上键
+                jCameraView.onVolumeChanged(keyCode);
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
 
