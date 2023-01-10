@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.setting.ui.setting;
 
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -78,7 +79,9 @@ public class GuideActivity extends BaseActivity implements NotSupportLand {
         List<Integer> splashResIdList = new ArrayList<>();
         boolean darkTheme = DarkUtil.isDarkTheme();
         //刚安装App初次进入
-        if (PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard()) {
+        if ((PreferencesUtils.getBoolean(getApplicationContext(), "isFirst", true) && AppUtils.isAppVersionStandard())
+                // 最新逻辑：关于页打开，显示引导图与首次安装一样
+                || (getIntent().getExtras() != null && getIntent().getExtras().getString("from", "").equals("about"))) {
             splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_1 : R.drawable.guide_page_first_light_1);
             splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_2 : R.drawable.guide_page_first_light_2);
             splashResIdList.add(darkTheme ? R.drawable.guide_page_first_dark_3 : R.drawable.guide_page_first_light_3);

@@ -78,6 +78,8 @@ public class MainActivity extends BaseActivity implements IMainActivity {
     GifImageView splashAdImg;
     private Handler handler;
     private Timer timer;
+    // 重要！每次发包需手动设置true/false！安装升级后，有升级引导图则显示引导页(true)，否则不显示引导页(false)。默认升级时不显示引导页
+    boolean mCurrentShowGuide = false;
 
     @Override
     public void onCreate() {
@@ -291,12 +293,10 @@ public class MainActivity extends BaseActivity implements IMainActivity {
             skipText.setEnabled(false);
             Boolean isFirst = PreferencesUtils.getBoolean(
                     MainActivity.this, "isFirst", true);
-            if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
+            if ((AppUtils.isAppHasUpgraded(getApplicationContext()) && mCurrentShowGuide) || isFirst) {
                 ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_GUIDE).navigation(MainActivity.this);
                 finish();
             } else {
-//                String accessToken = PreferencesUtils.getString(MainActivity.this,
-//                        "accessToken", "");
                 MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
                 String accessToken = kv.decodeString("accessToken", "");
                 MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

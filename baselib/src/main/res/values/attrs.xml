@@ -235,6 +235,7 @@
     <attr name="design3_icon_chat_input_whisper" format="reference" />
     <attr name="design3_selector_chat_menu_item" format="reference" />
     <attr name="design3_icon_contact_department" format="reference" />
+    <attr name="design3_icon_header_location" format="reference" />
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

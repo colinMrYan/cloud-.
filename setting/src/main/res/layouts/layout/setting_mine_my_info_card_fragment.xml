@@ -20,9 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/iv_photo"
-        android:layout_alignBottom="@+id/iv_photo"
         android:layout_toEndOf="@+id/iv_photo"
         android:gravity="center_vertical"
+        android:minHeight="64dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -59,7 +59,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:paddingStart="16dp"
-            android:paddingTop="6dp"
+            android:paddingTop="4dp"
             android:paddingEnd="16dp"
             android:textAppearance="@style/TextAppearance.M3.Fs05"
             android:textColor="?attr/design3_color_mine_department" />

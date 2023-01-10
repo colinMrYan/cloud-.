@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/text_ll_color_nor"
+    android:background="?attr/design3_color_ne13"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingTop="10dp"
@@ -30,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="12dp"
-                android:textColor="?attr/color_4d_b3"
-                android:textSize="@dimen/content_moresmaller_textsize" />
+                android:textAppearance="@style/TextAppearance.M3.Fs09"
+                android:textColor="?attr/design3_color_te05" />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -40,8 +40,8 @@
                 android:layout_toLeftOf="@+id/commentdetail_time_text"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/color_80"
-                android:textSize="@dimen/content_moresmaller_textsize" />
+                android:textAppearance="@style/TextAppearance.M3.Fs09"
+                android:textColor="?attr/design3_color_te03" />
         </RelativeLayout>
 
         <TextView
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout"
             android:layout_marginTop="2dp"
-            android:textColor="?attr/color_e6_1a"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textColor="?attr/design3_color_te01"
+            android:textAppearance="@style/TextAppearance.M3.Fs06" />
 
         <View
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
             android:layout_below="@id/comment_text"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="0.5px"
-            android:background="?attr/color_list_divider" />
+            android:background="?attr/design3_color_ne06" />
     </RelativeLayout>
 
 </LinearLayout>

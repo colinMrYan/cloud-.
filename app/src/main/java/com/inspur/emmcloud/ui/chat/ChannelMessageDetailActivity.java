@@ -42,6 +42,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.ImageViewRound;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.DownloadFileCategory;
@@ -141,6 +142,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void initView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+        CommonHeaderView commonHv = (CommonHeaderView) findViewById(R.id.hv_common);
+        commonHv.setTitle(getString(R.string.detail));
+        commonHv.setRightAttr(R.attr.design3_icon_header_location);
         commentList = new ArrayList<>();
         commentScrollView = (ScrollView) findViewById(R.id.scrollview);
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -409,10 +413,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      **/
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibt_back:
+            case R.id.iv_back:
                 onBackPressed();
                 break;
-            case R.id.iv_location:
+            case R.id.iv_more:
                 // 定位到聊天
                 Bundle bundle = new Bundle();
                 bundle.putString(ConversationActivity.EXTRA_CID, cid);

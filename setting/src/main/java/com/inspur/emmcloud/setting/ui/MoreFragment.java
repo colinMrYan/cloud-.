@@ -341,14 +341,9 @@ public class MoreFragment extends BaseFragment {
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
                 convertView.findViewById(R.id.rl_content).setOnClickListener(myClickListener);
-//                Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
                     enterpriseText.setOnClickListener(myClickListener);
-//                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
-//                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), drawableId);
-//                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
-//                enterpriseText.setCompoundDrawables(null, null, drawable, null);
             } else {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.setting_mine_common_item_view_fragment, null);
                 View lineView = convertView.findViewById(R.id.line);
