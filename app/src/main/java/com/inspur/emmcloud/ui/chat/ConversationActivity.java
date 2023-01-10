@@ -312,26 +312,29 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     private void initOrientedHelper() {
-        if (userOrientedConversationHelper == null) {
-            userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
-                @Override
-                public void closeFunction() {
-                    chatInputMenu.updateVoiceAndMoreLayout(true);
-                }
-
-                @Override
-                public void showFunction() {
-                    // 阅后即焚、悄悄话设置可见后需要立即刷新界面，等待布局可见后切换软键盘
-                    swipeRefreshLayout.requestLayout();
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            chatInputMenu.updateVoiceAndMoreLayout(false);
-                        }
-                    }, 100);
-                }
-            });
+        // 聊天室重复进入，移除原始数据，创建新的悄悄话/阅后即焚
+        if (userOrientedConversationHelper != null && userOrientedConversationHelper.isDisplayingUI()) {
+            userOrientedConversationHelper.closeUserOrientedLayout();
+            userOrientedConversationHelper = null;
         }
+        userOrientedConversationHelper = new UserOrientedConversationHelper((View) findViewById(R.id.main_layout), conversation.getType(), this, new UserOrientedConversationHelper.OnWhisperEventListener() {
+            @Override
+            public void closeFunction() {
+                chatInputMenu.updateVoiceAndMoreLayout(true);
+            }
+
+            @Override
+            public void showFunction() {
+                // 阅后即焚、悄悄话设置可见后需要立即刷新界面，等待布局可见后切换软键盘
+                swipeRefreshLayout.requestLayout();
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatInputMenu.updateVoiceAndMoreLayout(false);
+                    }
+                }, 100);
+            }
+        });
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
