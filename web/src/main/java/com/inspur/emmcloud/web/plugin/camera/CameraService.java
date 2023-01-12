@@ -451,7 +451,29 @@ public class CameraService extends ImpPlugin {
             // 调用系统拍照
         }  else if (requestCode == ImpFragment.CAMERA_SERVICE_SYSTEM_REQUEST) {
             if (resultCode == RESULT_OK) {
-                requestImageCrop();
+//                requestImageCrop();
+                File originImageFile = new File(systemCameraPathMap.get(imageUri));
+                if (originImageFile.exists()) {
+                    try {
+                        String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), encodingType);
+                        String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), 0, encodingType);
+                        LogUtils.jasonDebug("mOriginHeightSize=" + mOriginHeightSize);
+                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
+                                .setCompressFormat(format).compressToFile(originImageFile, originImgFileName);
+                        String originImgPath = originImgFile.getAbsolutePath();
+                        if (!StringUtils.isBlank(watermarkContent)) {
+                            ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
+                        }
+                        File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
+                                .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
+                        String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
+                        callbackData(originImgPath, thumbnailImgPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        saveNetException("CameraService.camera", e.toString());
+                        this.failPicture(Res.getString("camera_error"));
+                    }
+                }
             } else if (resultCode == RESULT_CANCELED) {
                 this.failPicture(Res.getString("camera_cancel"));
             }
