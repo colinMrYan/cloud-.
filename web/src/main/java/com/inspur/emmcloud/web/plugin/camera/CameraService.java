@@ -1,14 +1,20 @@
 package com.inspur.emmcloud.web.plugin.camera;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
+
+import androidx.core.content.FileProvider;
 
 import com.inspur.emmcloud.baselib.util.BitmapUtils;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
@@ -16,16 +22,21 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
+import com.inspur.emmcloud.basemodule.util.imageedit.IMGEditActivity;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.CropImageView;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.filetransfer.FilePathUtils;
 import com.inspur.emmcloud.web.plugin.photo.PhotoNameUtils;
@@ -34,12 +45,17 @@ import com.inspur.emmcloud.web.ui.ImpFragment;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import butterknife.ButterKnife;
 
 
 /**
@@ -88,6 +104,7 @@ public class CameraService extends ImpPlugin {
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
     private String watermarkContent, color, background, align, valign;
     private int fontSize;
+    private HashMap<Uri, String> systemCameraPathMap = new HashMap<>();
     /**
      * 读取图片属性：旋转的角度
      *
@@ -201,16 +218,29 @@ public class CameraService extends ImpPlugin {
         destoryImage();
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            File cameraFile = createCaptureFile(encodingType);
-            Intent intent = new Intent();
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, cameraFile.getParent());
-            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, cameraFile.getName());
-            intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE, encodingType);
-            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON, jsonObject.toString());
-            intent.setClass(getFragmentContext(), MyCameraActivity.class);
-            if (getImpCallBackInterface() != null) {
-                getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
-            }
+//            File cameraFile = createCaptureFile(encodingType);
+//            Intent intent = new Intent();
+//            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_DIRECTORY_PATH, cameraFile.getParent());
+//            intent.putExtra(MyCameraActivity.EXTRA_PHOTO_NAME, cameraFile.getName());
+//            intent.putExtra(MyCameraActivity.EXTRA_ENCODING_TYPE, encodingType);
+//            intent.putExtra(MyCameraActivity.EXTRA_RECT_SCALE_JSON, jsonObject.toString());
+//            intent.setClass(getFragmentContext(), MyCameraActivity.class);
+//            if (getImpCallBackInterface() != null) {
+//                getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
+//            }
+            String[] permissions = new String[]{Permissions.CAMERA, Permissions.READ_EXTERNAL_STORAGE,
+                    Permissions.WRITE_EXTERNAL_STORAGE, Permissions.FLASHLIGHT};
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), permissions, new PermissionRequestCallback() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    requestSystemCamera();
+                }
+
+                @Override
+                public void onPermissionRequestFail(List<String> permissions) {
+                    ToastUtils.show(getActivity(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getActivity(), permissions));
+                }
+            });
         } else {
             ToastUtils.show(getFragmentContext(), Res.getString("invalidSD"));
         }
@@ -342,7 +372,7 @@ public class CameraService extends ImpPlugin {
         Bitmap.CompressFormat format = (encodingType == JPEG) ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG;
         // 照相取得图片
         if (requestCode == ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 String originImagePath = intent.getStringExtra(MyCameraActivity.OUT_FILE_PATH);
                 File originImageFile = new File(originImagePath);
                 if (originImageFile != null && originImageFile.exists()) {
@@ -411,16 +441,46 @@ public class CameraService extends ImpPlugin {
                         saveNetException("CameraService.gallery", e.toString());
                         this.failPicture(Res.getString("capture_error"));
                     }
-
-
                 }
-
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 this.failPicture(Res.getString("cancel_select"));
             } else {
                 this.failPicture(Res.getString("select_error"));
                 saveNetException("CameraService.gallery", "system_gallry_error");
+            }
+            // 调用系统拍照
+        }  else if (requestCode == ImpFragment.CAMERA_SERVICE_SYSTEM_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                requestImageCrop();
+            } else if (resultCode == RESULT_CANCELED) {
+                this.failPicture(Res.getString("camera_cancel"));
+            }
+            // 裁剪
+        } else if (requestCode == ImpFragment.CROP_SERVICE_SYSTEM_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String cropPhotoFilePath = intent.getStringExtra(IMGEditActivity.OUT_FILE_PATH);
+                File originImageFile = new File(cropPhotoFilePath);
+                if (originImageFile.exists()) {
+                    try {
+                        String originImgFileName = PhotoNameUtils.getFileName(getFragmentContext(), encodingType);
+                        String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(getFragmentContext(), 0, encodingType);
+                        LogUtils.jasonDebug("mOriginHeightSize=" + mOriginHeightSize);
+                        File originImgFile = new Compressor(getFragmentContext()).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
+                                .setCompressFormat(format).compressToFile(originImageFile, originImgFileName);
+                        String originImgPath = originImgFile.getAbsolutePath();
+                        if (!StringUtils.isBlank(watermarkContent)) {
+                            ImageUtils.createWaterMask(getFragmentContext(), originImgPath, watermarkContent, color, background, align, valign, fontSize);
+                        }
+                        File thumbnailImgFile = new Compressor(getFragmentContext()).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(FilePathUtils.LOCAL_IMP_USER_OPERATE_INTERNAL_IMAGE_DIC)
+                                .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
+                        String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
+                        callbackData(originImgPath, thumbnailImgPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        saveNetException("CameraService.camera", e.toString());
+                        this.failPicture(Res.getString("camera_error"));
+                    }
+                }
             }
         }
     }
@@ -605,6 +665,46 @@ public class CameraService extends ImpPlugin {
         if (photo != null) {
             photo.recycle();
             photo = null;
+        }
+    }
+
+
+    private void requestSystemCamera() {
+        File outputImage = createCaptureFile(encodingType);
+        try//判断图片是否存在，存在则删除在创建，不存在则直接创建
+        {
+            if (!outputImage.getParentFile().exists()) {
+                outputImage.getParentFile().mkdirs();
+            }
+            if (outputImage.exists()) {
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+            if (Build.VERSION.SDK_INT >= 24) {
+                imageUri = FileProvider.getUriForFile(BaseApplication.getInstance(),
+                        BaseApplication.getInstance().getPackageName() + ".fileprovider", outputImage);
+            } else {
+                imageUri = Uri.fromFile(outputImage);
+            }
+            //使用隐示的Intent，系统会找到与它对应的活动，即调用摄像头，并把它存储
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            if (getImpCallBackInterface() != null) {
+                systemCameraPathMap.put(imageUri, outputImage.getAbsolutePath());
+                getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_SYSTEM_REQUEST);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestImageCrop() {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), IMGEditActivity.class);
+        intent.putExtra(IMGEditActivity.EXTRA_IMAGE_PATH, systemCameraPathMap.get(imageUri));
+        intent.putExtra(IMGEditActivity.EXTRA_ENCODING_TYPE, encodingType);
+        if (getImpCallBackInterface() != null) {
+            getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CROP_SERVICE_SYSTEM_REQUEST);
         }
     }
 

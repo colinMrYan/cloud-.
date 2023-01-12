@@ -105,6 +105,8 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
     public static final int CAMERA_SERVICE_CAMERA_REQUEST = 1;
     public static final int CAMERA_SERVICE_GALLERY_REQUEST = 2;
     public static final int PHOTO_SERVICE_CAMERA_REQUEST = 3;
+    public static final int CAMERA_SERVICE_SYSTEM_REQUEST = 17;
+    public static final int CROP_SERVICE_SYSTEM_REQUEST = 18;
     public static final int PHOTO_SERVICE_GALLERY_REQUEST = 4;
     public static final int SELECT_STAFF_SERVICE_REQUEST = 5;
     public static final int FILE_SERVICE_REQUEST = 6;
@@ -932,6 +934,8 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
                 switch (requestCode) {
                     case CAMERA_SERVICE_CAMERA_REQUEST:
                     case CAMERA_SERVICE_GALLERY_REQUEST:
+                    case CAMERA_SERVICE_SYSTEM_REQUEST:
+                    case CROP_SERVICE_SYSTEM_REQUEST:
                         serviceName = CameraService.class.getCanonicalName().trim();
                         break;
                     case PHOTO_SERVICE_CAMERA_REQUEST:

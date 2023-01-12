@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.view.KeyEvent;
@@ -124,6 +125,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         registerNetWorkListenerAccordingSysLevel();
         registerScreenReceiver();
         initTabs();
+        // sdk >= 28，修复部分设备报错崩溃
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            webviewSetPath(this);
+        }
     }
 
     @Override
@@ -859,6 +864,17 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     public void updateNaviTabbar() {
         mTabHost.clearAllTabs(); // 更新tabbar
         initTabs();
+    }
+
+    // 修复部分设备崩溃问题
+    @RequiresApi(api = 28)
+    public void webviewSetPath(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            String processName = AppUtils.getProcessName(context);
+            if (!context.getApplicationInfo().packageName.equals(processName)) {//判断不等于默认进程名称
+                WebView.setDataDirectorySuffix(processName);
+            }
+        }
     }
 
     @Override

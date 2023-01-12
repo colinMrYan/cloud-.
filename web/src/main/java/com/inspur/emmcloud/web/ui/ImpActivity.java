@@ -1,22 +1,24 @@
 package com.inspur.emmcloud.web.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+
+import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
+import com.tencent.smtt.sdk.WebView;
 import com.umeng.socialize.UMShareAPI;
-import com.tencent.smtt.export.external.TbsCoreSettings;
-import com.tencent.smtt.sdk.QbSdk;
-
-import java.util.HashMap;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
 public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
@@ -40,6 +42,9 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
         setContentView(Res.getLayoutID("web_activity_imp"));
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            webviewSetPath(this);
+        }
         fragment = new ImpFragment();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
@@ -80,5 +85,16 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     public ImpFragment getFragment() {
         if (fragment != null) return fragment;
         return null;
+    }
+
+    // 修复部分设备崩溃问题
+    @RequiresApi(api = 28)
+    public void webviewSetPath(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            String processName = AppUtils.getProcessName(context);
+            if (!context.getApplicationInfo().packageName.equals(processName)) {//判断不等于默认进程名称
+                WebView.setDataDirectorySuffix(processName);
+            }
+        }
     }
 }
