@@ -194,6 +194,9 @@ public class ScheduleDetailActivity extends BaseActivity {
             ContactUser myInfo;
             if (contactService != null) {
                 myInfo = contactService.getContactUserByUid(scheduleEvent.getOwner());
+                if (myInfo == null) {
+                    myInfo = new ContactUser();
+                }
             } else {
                 myInfo = new ContactUser();
             }
