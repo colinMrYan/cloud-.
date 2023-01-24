@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.componentservice.contact;
 
+import androidx.annotation.Nullable;
+
 import com.inspur.emmcloud.componentservice.CoreService;
 
 import java.util.List;
@@ -13,8 +15,10 @@ public interface ContactService extends CoreService {
 
     List<ContactUser> getSortUserList(List<String> uidList);
 
+    @Nullable
     ContactUser getContactUserByUid(String uid);
 
+    @Nullable
     ContactUser getContactUserByMail(String mail);
 
     void saveContactUser(ContactUser contactUser);
