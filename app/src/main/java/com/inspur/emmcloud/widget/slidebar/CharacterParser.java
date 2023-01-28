@@ -153,7 +153,8 @@ public class CharacterParser {
      * 词组解析 * * @param chs * @return
      */
     public String getSelling(String chs) {
-        String key, value;
+        String value;
+        String key;
         buffer = new StringBuilder();
         for (int i = 0; i < chs.length(); i++) {
             key = chs.substring(i, i + 1);

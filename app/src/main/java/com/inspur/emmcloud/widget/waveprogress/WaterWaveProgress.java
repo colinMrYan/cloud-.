@@ -24,20 +24,29 @@ import java.lang.ref.WeakReference;
 public class WaterWaveProgress extends View {
     // 进度 //浪峰个数
     float crestCount = 1.5f;
-    int mProgress = 10, mMaxProgress = 100;
+    int mProgress = 10;
+    int mMaxProgress = 100;
     WaterWaveAttrInit attrInit;
     // 水的画笔 // 画圆环的画笔// 进度百分比的画笔
-    private Paint mPaintWater = null, mRingPaint = null, mTextPaint = null;
+    private Paint mPaintWater = null;
+    private Paint mRingPaint = null;
+    private Paint  mTextPaint = null;
     // 圆环颜色 // 圆环背景颜色 // 当前进度 //水波颜色 // 水波背景色 //进度条和水波之间的距离 //进度百分比字体大小
     // //进度百分比字体颜色
-    private int mRingColor, mRingBgColor, mWaterColor, mWaterBgColor,
-            mFontSize, mTextColor;
+    private int mRingColor;
+    private int mRingBgColor;
+    private int mWaterColor;
+    private int  mWaterBgColor;
+    private int mFontSize;
+    private int mTextColor;
     // 画布中心点
     private Point mCenterPoint;
     // 圆环宽度
-    private float mRingWidth, mProgress2WaterWidth;
+    private float mRingWidth;
+    private float mProgress2WaterWidth;
     // 是否显示进度条 //是否显示进度百分比
-    private boolean mShowProgress = false, mShowNumerical = true;
+    private boolean mShowProgress = false;
+    private boolean  mShowNumerical = true;
     /**
      * 产生波浪效果的因子
      */

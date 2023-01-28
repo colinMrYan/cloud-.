@@ -33,7 +33,9 @@ public class RobotInfoActivity extends BaseActivity implements CompoundButton.On
     private ContactAPIService apiService;
     private LoadingDialog loadingDialog;
     private ImageViewRound robotHeadImg;
-    private TextView robotNameText, functionIntroductionText, supportText;
+    private TextView robotNameText;
+    private TextView supportText;
+    private TextView functionIntroductionText;
     private SwitchCompat setTopSwitch;
     private String cid;
 

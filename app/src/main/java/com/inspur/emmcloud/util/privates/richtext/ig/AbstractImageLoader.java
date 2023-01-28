@@ -158,7 +158,8 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         Drawable drawable = imageWrapper.getDrawable(textView.getResources());
         drawableWrapper.setDrawable(drawable);
 
-        int imageWidth = imageWrapper.getWidth(), imageHeight = imageWrapper.getHeight();
+        int imageWidth = imageWrapper.getWidth();
+        int imageHeight = imageWrapper.getHeight();
         if (config.imageFixCallback != null) {
             config.imageFixCallback.onImageReady(this.holder, imageWidth, imageHeight);
         }

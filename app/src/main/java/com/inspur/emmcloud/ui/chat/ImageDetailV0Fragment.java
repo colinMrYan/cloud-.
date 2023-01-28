@@ -53,7 +53,10 @@ public class ImageDetailV0Fragment extends Fragment {
     private ProgressBar progressBar;
     private PhotoViewAttacher mAttacher;
 
-    private int locationW, locationH, locationX, locationY;
+    private int locationW;
+    private int locationH;
+    private int locationX;
+    private int locationY;
     private boolean isNeedTransformOut;
     private boolean isNeedTransformIn;
 
