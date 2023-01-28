@@ -90,14 +90,12 @@ public class NumberCircleProgressBar extends View {
     private static final String INSTANCE_SUFFIX = "suffix";
     private static final String INSTANCE_PREFIX = "prefix";
     private static final int PROGRESS_TEXT_VISIBLE = 0;
-    private static final int PROGRESS_TEXT_INVISIBLE = 1;
     private final int DEFAULT_TEXT_COLOR = Color.rgb(255, 255, 255);
     private final int DEFAULT_REACHED_COLOR = Color.rgb(66, 145, 241);
     private final int DEFAULT_UNREACHED_COLOR = Color.rgb(204, 204, 204);
     private final int DEFAULT_FILL_MODE;
     private final float DEFAULT_TEXT_SIZE;
     private final float DEFAULT_CIRCLE_RADIUS;
-    private Context mContext;
     /**
      * The max progress, default is 100
      */
@@ -209,8 +207,6 @@ public class NumberCircleProgressBar extends View {
     public NumberCircleProgressBar(Context context, AttributeSet attrs,
                                    int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        mContext = context;
 
         DEFAULT_CIRCLE_RADIUS = dp2px(40.5f);
         DEFAULT_TEXT_SIZE = sp2px(15);

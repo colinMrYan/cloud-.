@@ -18,7 +18,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
  */
 public class CrashHandler implements UncaughtExceptionHandler {
 
-    private static final String TAG = "CrashHandler";
     private static CrashHandler mInstance;
     private UncaughtExceptionHandler mDefaultHandler;
     private Context mContext;

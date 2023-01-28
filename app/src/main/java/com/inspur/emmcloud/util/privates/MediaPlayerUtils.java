@@ -10,8 +10,6 @@ import com.inspur.emmcloud.R;
  */
 
 public class MediaPlayerUtils {
-    private static final int VOICE_ON = 1;
-    private static final int VOICE_OFF = 2;
 
     private MediaPlayer mediaPlayerVoiceOn;
     private MediaPlayer mediaPlayerVoiceOff;

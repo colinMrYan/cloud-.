@@ -54,7 +54,6 @@ public class TagHandlerImpl implements TagHandler {
     private static final Pattern patternAutoLink = Pattern.compile("((https|http|ftp|rtsp|mms)?://)[^\\s]+");
 
     private static final Pattern patternEndSpace = Pattern.compile("(.*?) {2} *$");
-    private static final Pattern patternInlineSpace = Pattern.compile("\\S*(\\s+)\\S+");
 
     private static final Pattern patternCodeBlock = Pattern.compile("^( {4}|\\t)(.*)");
     private static final Pattern patternCodeBlock2 = Pattern.compile("^\\s*```");

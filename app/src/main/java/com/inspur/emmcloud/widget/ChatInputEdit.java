@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
  */
 public class ChatInputEdit extends EditText {
 
-    private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
     private int size;
     private int maxLength = 2000;
     private List<InsertModel> insertModelList = new ArrayList<>();

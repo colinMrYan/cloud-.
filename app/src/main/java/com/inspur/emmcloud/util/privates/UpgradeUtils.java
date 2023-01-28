@@ -49,7 +49,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
-    private static final String TAG = "UpgradeUtils";
     private static double MBDATA = 1048576.0;
     private static double KBDATA = 1024.0;
     private static String DOWNLOAD_PATH = Environment
