@@ -161,6 +161,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
 
 import java.io.File;
 import java.io.Serializable;
@@ -906,8 +907,30 @@ public class ConversationActivity extends ConversationBaseActivity {
             MediaPlayerManagerUtils.getManager().stop();
         }
         String mp3FileSavePath = MyAppConfig.getCacheVoiceFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
-        //如果原文件不存在，不进行重新识别
+        //如果原文件不存在，下载源文件重新识别
         if (!FileUtils.isFileExist(mp3FileSavePath)) {
+            String source = APIUri.getChatVoiceFileResouceUrl(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getMsgContentMediaVoice().getMedia());
+            new DownLoaderUtils().startDownLoad(source, mp3FileSavePath, new Callback.CommonCallback<File>() {
+                @Override
+                public void onSuccess(File file) {
+                    recognizerMediaVoiceMessage(uiMessage, messageView);
+                }
+
+                @Override
+                public void onError(Throwable throwable, boolean b) {
+
+                }
+
+                @Override
+                public void onCancelled(CancelledException e) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
             return;
         }
         final String pcmFileSavePath = MyAppConfig.getCacheVoicePCMFilePath(uiMessage.getMessage().getChannel(), uiMessage.getMessage().getId());
