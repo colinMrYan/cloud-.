@@ -147,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/caring_switch"
+                    android:text="@string/setting_font_size"
                     android:textAppearance="@style/TextAppearance.M3.Fs04"
                     android:textColor="?attr/design3_color_te01" />
 

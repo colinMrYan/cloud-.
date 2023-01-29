@@ -372,7 +372,7 @@ public class SettingActivity extends BaseActivity {
         } else if (i == R.id.phone_recognize_layout) {
             IntentUtils.startActivity(SettingActivity.this, PhoneRecognizeActivity.class);
         } else if (i == R.id.font_size_layout) {
-            IntentUtils.startActivity(SettingActivity.this, TextSizeSettingActivity.class);
+            IntentUtils.startActivity(SettingActivity.this, TextSizeActivity.class);
         } else if (i == R.id.rl_setting_notification_layout) {
             IntentUtils.startActivity(SettingActivity.this, NotificationSettingActivity.class);
         }  else if (i == R.id.use_webkit) {

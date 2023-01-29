@@ -39,7 +39,8 @@
 
 
     <string name="setting_about_text">About</string>
-    <string name="setting_font_size_set">Font Size</string>
+    <string name="setting_font_size">Font Size</string>
+    <string name="setting_font_size_set">Font size adjustment</string>
     <string name="setting_font_size_tip1">Adjust font size.</string>
     <string name="setting_font_size_tip2">Slide the slider below to set the font size.</string>
     <string name="setting_font_size_tip3">After setting, the font size in chat text messages will be changed. If there are problems or comments in the use process, you can give feedback in the cloud+.</string>

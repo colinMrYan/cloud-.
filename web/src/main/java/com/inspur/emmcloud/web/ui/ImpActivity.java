@@ -7,19 +7,19 @@ import android.view.WindowManager;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.IIgnoreFontScaleActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
+import com.inspur.emmcloud.basemodule.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
 import com.umeng.socialize.UMShareAPI;
-import com.tencent.smtt.export.external.TbsCoreSettings;
-import com.tencent.smtt.sdk.QbSdk;
-
-import java.util.HashMap;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
-public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
+public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand, IIgnoreFontScaleActivity {
 
     public static final int DO_NOTHING_RESULTCODE = 5;
     private ImpFragment fragment;
@@ -80,5 +80,10 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
     public ImpFragment getFragment() {
         if (fragment != null) return fragment;
         return null;
+    }
+
+    @Override
+    public boolean followSystemScale() {
+        return PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_APP_OPEN_WEB_SCALE_SWITCH, false);
     }
 }
