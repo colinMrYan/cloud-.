@@ -180,6 +180,7 @@ public class CameraService extends ImpPlugin {
     private void open(JSONObject jsonObject) {
         try {
             if (!jsonObject.isNull("options")) {
+                withCrop = 0;
                 JSONObject optionsObj = jsonObject.getJSONObject("options");
                 destType = optionsObj.getInt(
                         "destinationType");
@@ -191,8 +192,10 @@ public class CameraService extends ImpPlugin {
                         "targetHeight");
                 encodingType = optionsObj.getInt(
                         "encodingType");
-                withCrop = optionsObj.getInt(
-                        "withCrop");
+                if (optionsObj.has("withCrop")) {
+                    withCrop = optionsObj.getInt(
+                            "withCrop");
+                }
                 if (!optionsObj.isNull("watermark")) {
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj, "content", "");
