@@ -93,10 +93,6 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
         int keepAlive = getLoginResult.getKeepAlive();
         String tokenType = getLoginResult.getTokenType();
         int expiresIn = getLoginResult.getExpiresIn();
-//            PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", accessToken);
-//            boolean refreshTokenSuc = PreferencesUtils.putString(BaseApplication.getInstance(), "refreshToken", refreshToken);
-//        PreferencesProvider.save(BaseApplication.getInstance(), "accessToken", accessToken);
-//        PreferencesProvider.save(BaseApplication.getInstance(), "refreshToken", refreshToken);
         // MMKV 替换 SharedPreferences
         MMKV kv = MMKV.mmkvWithID("InterProcessKV", MMKV.MULTI_PROCESS_MODE);
         kv.encode("accessToken", accessToken);
@@ -107,13 +103,6 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
         PreferencesUtils.putLong(BaseApplication.getInstance(), "token_get_time", System.currentTimeMillis());
         BaseApplication.getInstance().setAccessToken(accessToken);
         BaseApplication.getInstance().setRefreshToken(refreshToken);
-        // 郑总token刷新失败分析日志
-        if ("11487".equals(BaseApplication.getInstance().getUid())) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                String processName = BaseApplication.getProcessName();
-                PVCollectModelCacheUtils.saveCollectModel("returnRefreshTokenSuccess-saveSuc", "---at---" + accessToken + "---rt---" + refreshToken + "---processName---" + processName);
-            }
-        }
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);

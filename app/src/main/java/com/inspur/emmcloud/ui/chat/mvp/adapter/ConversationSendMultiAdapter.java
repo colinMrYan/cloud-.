@@ -14,6 +14,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.MessageForwardMultiBean;
+import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.componentservice.communication.Conversation;
 import com.inspur.emmcloud.componentservice.communication.SearchModel;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -39,6 +40,13 @@ public class ConversationSendMultiAdapter extends RecyclerView.Adapter<RecyclerV
     public ConversationSendMultiAdapter(Context context, List<Conversation> list) {
         this.context = context;
         this.list = list;
+    }
+
+    public void setData(List<Conversation> conversationList) {
+        synchronized (this) {
+            this.list.clear();
+            this.list.addAll(conversationList);
+        }
     }
 
     @NonNull

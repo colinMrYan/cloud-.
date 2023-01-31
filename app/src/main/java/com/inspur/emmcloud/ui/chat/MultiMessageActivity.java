@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
+import com.inspur.emmcloud.baselib.widget.common.CommonHeaderView;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.MultiMessageItem;
 
@@ -37,10 +38,9 @@ public class MultiMessageActivity extends BaseActivity {
     }
 
     private void initView() {
-        TextView tv_top_title = findViewById(R.id.header_text);
-        tv_top_title.setVisibility(View.VISIBLE);
-        tv_top_title.setText(getResources().getString(R.string.find_search_chat_history));
-        View ll_top_back = findViewById(R.id.ibt_back);
+        CommonHeaderView commonHv = findViewById(R.id.hv_common);
+        commonHv.setTitle(getResources().getString(R.string.find_search_chat_history));
+        View ll_top_back = findViewById(R.id.iv_back);
         ll_top_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -52,9 +52,6 @@ public class MultiMessageActivity extends BaseActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(ResourceUtils.getResValueOfAttr(this, R.attr.drawable_list_divider)));
-        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     private void initData() {

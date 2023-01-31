@@ -19,6 +19,6 @@ public interface ConversionSearchContract {
     interface Presenter {
         List<Conversation> getConversationData();
 
-        List<Conversation> getTransmitConversationData();
+        void getTransmitConversationData();
     }
 }

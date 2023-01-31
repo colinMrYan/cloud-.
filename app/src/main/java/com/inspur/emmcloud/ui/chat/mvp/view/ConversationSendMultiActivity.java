@@ -143,13 +143,6 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
 
         // 获取最近转发
         recentList = ConversationCacheUtils.getRecentTransmitIdList(this);
-        if (recentList.size() > 0) {
-            // null代表标题 最近转发
-            list.add(0, null);
-            list.addAll(0, recentList);
-            // 添加标题，最近聊天
-            list.add(0, null);
-        }
 
         sendMoreAdapter = new ConversationSendMultiAdapter(getActivity(), list);
         sendMoreAdapter.setAdapterListener(new ConversationSendMultiAdapter.AdapterListener() {
@@ -226,6 +219,15 @@ public class ConversationSendMultiActivity extends BaseMvpActivity<ConversationS
     @Override
     public void showConversationData(final List<Conversation> conversationList) {
         list = conversationList;
+        if (recentList.size() > 0) {
+            // null代表标题 最近转发
+            list.add(0, null);
+            list.addAll(0, recentList);
+            // 添加标题，最近聊天
+            list.add(0, null);
+        }
+        sendMoreAdapter.setData(list);
+        sendMoreAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.ibt_back)
