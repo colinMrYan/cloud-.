@@ -152,6 +152,7 @@
         <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
         <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
         <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
+        <item name="bg_tab_cloud">@drawable/design3_selector_tab_cloud_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact</item>
         <item name="ic_add">@drawable/ic_add</item>
         <item name="ic_config">@drawable/ic_config</item>
@@ -390,6 +391,7 @@
         <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
         <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
         <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
+        <item name="bg_tab_cloud">@drawable/design3_selector_tab_cloud_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_grey</item>
         <item name="ic_add">@drawable/ic_add_grey</item>
         <item name="ic_config">@drawable/ic_config_grey</item>
@@ -627,6 +629,7 @@
         <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn</item>
         <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn</item>
         <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn</item>
+        <item name="bg_tab_cloud">@drawable/design3_selector_tab_cloud_btn</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
         <item name="ic_add">@drawable/ic_add_blue</item>
         <item name="ic_config">@drawable/ic_config_blue</item>
@@ -866,6 +869,7 @@
         <item name="bg_tab_mine">@drawable/design3_selector_tab_more_btn_grey</item>
         <item name="bg_tab_unknown">@drawable/design3_selector_tab_unknown_btn_grey</item>
         <item name="bg_tab_work">@drawable/design3_selector_tab_work_btn_grey</item>
+        <item name="bg_tab_cloud">@drawable/design3_selector_tab_cloud_btn_grey</item>
         <item name="ic_message_header_contact">@drawable/ic_message_header_contact_dark</item>
         <item name="ic_add">@drawable/ic_add_dark</item>
         <item name="ic_config">@drawable/ic_config_blue</item>

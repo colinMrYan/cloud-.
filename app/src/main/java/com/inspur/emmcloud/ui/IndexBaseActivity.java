@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import com.inspur.emmcloud.componentservice.volume.VolumeService;
 import com.tencent.smtt.sdk.WebView;
 
 import android.widget.ImageView;
@@ -252,6 +253,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                                 mainTabResult);
                                     }
                                     break;
+                                case Constant.APP_TAB_BAR_CLOUD:
+                                    Router routerCloud = Router.getInstance();
+                                    if (routerCloud.getService(VolumeService.class) != null) {
+                                        VolumeService service = routerCloud.getService(VolumeService.class);
+                                        tabBean = new TabBean(getString(R.string.application), service.getImpFragmentClass(), mainTabResult);
+                                    }
+                                    break;
                             }
                             break;
                         // 隐藏RN支持
@@ -310,6 +318,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 break;
             case Constant.APP_TAB_BAR_DISCOVER_NAME:
                 localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
+                break;
+            case Constant.APP_TAB_BAR_CLOUD_NAME:
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud);
                 break;
             default:
                 localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);

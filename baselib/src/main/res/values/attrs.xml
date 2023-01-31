@@ -49,6 +49,7 @@
     <attr name="bg_tab_mine" format="reference" />
     <attr name="bg_tab_unknown" format="reference" />
     <attr name="bg_tab_work" format="reference" />
+    <attr name="bg_tab_cloud" format="reference" />
     <attr name="ic_message_header_contact" format="reference" />
     <attr name="ic_add" format="reference" />
     <attr name="ic_config" format="reference" />

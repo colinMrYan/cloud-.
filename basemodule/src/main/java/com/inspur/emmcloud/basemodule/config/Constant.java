@@ -226,6 +226,7 @@ public class Constant {
     public static final String APP_TAB_BAR_APPLICATION = "native://application";
     public static final String APP_TAB_BAR_PROFILE = "native://me";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
+    public static final String APP_TAB_BAR_CLOUD = "native://cloud";
     public static final String APP_TAB_BAR_NOSUPPORT = "native://nosupport"; //lbc
 
     public static final String APP_TAB_BAR_COMMUNACATE_NAME = "communicate";
@@ -234,6 +235,7 @@ public class Constant {
     public static final String APP_TAB_BAR_MOMENT_NAME = "moment";
     public static final String APP_TAB_BAR_ME_NAME = "me";
     public static final String APP_TAB_BAR_CONTACT_NAME = "contact";
+    public static final String APP_TAB_BAR_CLOUD_NAME = "cloud";
     public static final String APP_TAB_BAR_DISCOVER_NAME = "discover";
 
     public static final String SHARE_LINK = "shareLink";
