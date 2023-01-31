@@ -11,6 +11,7 @@ import com.inspur.emmcloud.volume.api.VolumeAPIInterfaceInstance;
 import com.inspur.emmcloud.volume.api.VolumeAPIService;
 import com.inspur.emmcloud.volume.bean.GetVolumeFileListResult;
 import com.inspur.emmcloud.volume.bean.GetVolumeListResult;
+import com.inspur.emmcloud.volume.ui.VolumeHomePageFragment;
 import com.inspur.emmcloud.volume.util.VolumeFileUploadManager;
 
 import java.util.ArrayList;
@@ -25,6 +26,11 @@ public class VolumeServiceImpl implements VolumeService {
     public VolumeServiceImpl() {
         apiService = new VolumeAPIService(BaseApplication.getInstance());
         apiService.setAPIInterface(new WebService());
+    }
+
+    @Override
+    public Class getImpFragmentClass() {
+        return VolumeHomePageFragment.class;
     }
 
     @Override

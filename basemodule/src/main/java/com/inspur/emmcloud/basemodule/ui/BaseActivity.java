@@ -177,7 +177,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         float fontScale = PreferencesUtils.getFloat(newBase, Constant.CARING_SWITCH_FLAG, 1);
         if (0 != Float.compare(1.0f, fontScale)) {
             Configuration config = newBase.getResources().getConfiguration();
-            config.fontScale = this instanceof IIgnoreFontScaleActivity ? 1.0f : fontScale;
+            config.fontScale = (this instanceof IIgnoreFontScaleActivity) && !((IIgnoreFontScaleActivity) this).followSystemScale() ? 1.0f : fontScale;
             newBase = newBase.createConfigurationContext(config);
         }
         super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));

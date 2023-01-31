@@ -11,7 +11,10 @@ import androidx.annotation.RequiresApi;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.IIgnoreFontScaleActivity;
 import com.inspur.emmcloud.basemodule.ui.NotSupportLand;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
@@ -21,9 +24,7 @@ import com.tencent.smtt.sdk.WebView;
 import com.umeng.socialize.UMShareAPI;
 
 @Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
-public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand {
-
-    public static final int DO_NOTHING_RESULTCODE = 5;
+public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLand, IIgnoreFontScaleActivity {
     private ImpFragment fragment;
     boolean isWebAutoRotate = false;
 
@@ -87,7 +88,7 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
         return null;
     }
 
-    // 修复部分设备崩溃问题
+    // 修复部分设备webview多进程导致的崩溃问题
     @RequiresApi(api = 28)
     public void webviewSetPath(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -96,5 +97,10 @@ public class ImpActivity extends ImpFragmentBaseActivity implements NotSupportLa
                 WebView.setDataDirectorySuffix(processName);
             }
         }
+    }
+
+    @Override
+    public boolean followSystemScale() {
+        return PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_APP_OPEN_WEB_SCALE_SWITCH, false);
     }
 }

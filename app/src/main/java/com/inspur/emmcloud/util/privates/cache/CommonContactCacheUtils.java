@@ -16,7 +16,6 @@ import java.util.List;
 public class CommonContactCacheUtils {
     private static final int SEARCH_ALL = 0;
     private static final int SEARCH_CONTACT = 2;
-    private static final int SEARCH_CHANNELGROUP = 1;
     private static final int SEARCH_NOTHIING = 4;
 
     /**

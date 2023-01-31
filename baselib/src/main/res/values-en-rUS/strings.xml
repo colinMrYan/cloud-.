@@ -586,6 +586,7 @@
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
+    <string name="web_app_follow_sys_scale">The web application follows the text size adjustment</string>
     <string name="native_page_auto_rotate">Native Page Rotation</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
 
@@ -1065,7 +1066,7 @@
     <string name="notification_system_notification_title">Can not receive a message notification or is the notification delayed?</string>
     <string name="notification_system_guide">Due to phone system limitations, you may not be able to receive timely message notifications, please complete this setting to resolve the issue</string>
     <string name="notification_system_setting_title">Message notification system settings</string>
-    <string name="caring_switch">Font Size</string>
+    <string name="caring_switch">Font Size adjustment</string>
     <string name="caring_switch_tip">It will not take effect until Cloud + is restarted</string>
     <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
     <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
@@ -1126,6 +1127,7 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="recall_reedit">Re edit</string>
+    <string name="setting_font_switch_description">When opened, the text in the web application will change according to the text size adjustment</string>
 
     <string name="user_call">Call</string>
     <string name="cloud_plus_update">%1$s Update</string>

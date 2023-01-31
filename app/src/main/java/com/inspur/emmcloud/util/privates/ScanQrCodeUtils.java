@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 
 /**
@@ -17,11 +16,9 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 public class ScanQrCodeUtils {
     private static ScanQrCodeUtils scanQrCodeUtils;
     private Context context;
-    private LoadingDialog loadingDialog;
 
     private ScanQrCodeUtils(Context context) {
         this.context = context;
-        loadingDialog = new LoadingDialog(context);
     }
 
     public static ScanQrCodeUtils getScanQrCodeUtilsInstance(Context context) {

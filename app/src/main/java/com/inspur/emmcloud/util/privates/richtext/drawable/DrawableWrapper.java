@@ -122,7 +122,8 @@ public class DrawableWrapper extends Drawable {
     }
 
     public void calculate() {
-        int imageWidth, imageHeight;
+        int imageWidth;
+        int imageHeight;
         if (drawable instanceof BitmapDrawable) {
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             if (bitmap == null || bitmap.isRecycled()) {

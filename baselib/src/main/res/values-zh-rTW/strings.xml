@@ -603,6 +603,7 @@
 
     <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
+    <string name="web_app_follow_sys_scale">Web應用跟隨文字大小調節</string>
     <string name="native_page_auto_rotate">原生界面支持旋轉</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
 
@@ -1076,7 +1077,7 @@
     <string name="notification_system_notification_title">收不到消息通知或通知延遲？</string>
     <string name="notification_system_guide">由於手機系統限制，你可能無法及時收到消息通知，請完成此項設置以解決該問題</string>
     <string name="notification_system_setting_title">消息通知系統設置</string>
-    <string name="caring_switch">字體大小</string>
+    <string name="caring_switch">字體大小調節</string>
     <string name="caring_switch_tip">需要雲+重啟後才能生效</string>
 
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
@@ -1130,6 +1131,7 @@
     <string name="welcome_to">歡迎使用</string>
 
     <string name="recall_reedit">重新編輯</string>
+    <string name="setting_font_switch_description">打開后，Web應用內文字將跟隨文字大小調節進行變化</string>
 
     <string name="user_call">呼叫</string>
     <string name="cloud_plus_update">%1$s更新</string>

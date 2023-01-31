@@ -22,8 +22,8 @@ public class AndroidMp3ConvertUtils {
     private static final int OUT_BIT_RATE = 32;//输入比特率
     private static final int QUALITY = 5;//音频质量0~9,0质量最好体积最大，9质量最差体积最小
     Handler handler = new Handler();
-    private Context context;
-    private String rawPath = "", mp3Path = "";
+    private String mp3Path = "";
+    private String rawPath = "";
     private long rawFileSize = 0;
     private AndroidMp3ConvertCallback callback;
     Runnable runnable = new Runnable() {
@@ -45,7 +45,6 @@ public class AndroidMp3ConvertUtils {
     };
 
     private AndroidMp3ConvertUtils(Context context) {
-        this.context = context;
         Mp3Converter.init(SIMPLE_RATE, CHANNEL, MODE, SIMPLE_RATE, OUT_BIT_RATE, QUALITY);
     }
 

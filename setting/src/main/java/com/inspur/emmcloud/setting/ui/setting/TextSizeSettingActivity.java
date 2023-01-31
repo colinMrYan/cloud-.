@@ -138,4 +138,9 @@ public class TextSizeSettingActivity extends BaseActivity implements IIgnoreFont
     public int getLayoutResId() {
         return R.layout.activity_font_size_set;
     }
+
+    @Override
+    public boolean followSystemScale() {
+        return false;
+    }
 }

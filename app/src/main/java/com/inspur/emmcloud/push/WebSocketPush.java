@@ -3,7 +3,9 @@ package com.inspur.emmcloud.push;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
@@ -13,6 +15,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.bean.SimpleEventMessage;
 import com.inspur.emmcloud.basemodule.bean.badge.BadgeBodyModel;
@@ -23,6 +26,7 @@ import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.WSCommandBatch;
@@ -158,10 +162,16 @@ public class WebSocketPush {
 
                     @Override
                     public void getClientIdFail() {
+                        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                            PVCollectModelCacheUtils.saveCollectModel("socket连接失败getClientIdFail", "------" + "connect_error");
+                        }
                         sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                     }
                 }).getClientId();
             } else {
+                if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                    PVCollectModelCacheUtils.saveCollectModel("socket连接失败NetworkDisconnected", "------" + "connect_error");
+                }
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
             }
         }
@@ -238,6 +248,9 @@ public class WebSocketPush {
                 // TODO Auto-generated catch block
                 isWebsocketConnecting = false;
                 e.printStackTrace();
+                if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                    PVCollectModelCacheUtils.saveCollectModel("socket连接失败WebSocketConnect", "------" + "connect_error");
+                }
                 sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
                 Log.d(TAG, "e=" + e.toString());
                 if (mSocket != null) {
@@ -319,6 +332,9 @@ public class WebSocketPush {
             setRequestEventMessageTimeout(eventMessage, "socket_force_close");
         }
         requestEventMessageList.clear();
+        if ("11487".equals(BaseApplication.getInstance().getUid())) {
+            PVCollectModelCacheUtils.saveCollectModel("closeWebsocket断开连接", "------" + "ws_disconnect_exception");
+        }
         sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
     }
 
@@ -349,7 +365,9 @@ public class WebSocketPush {
                     }
                 }
                 sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
-
+                if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                    PVCollectModelCacheUtils.saveCollectModel("socket连接失败", "------" + arg0[0].toString());
+                }
             }
         });
 
@@ -367,6 +385,9 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("v0版本socket连接成功", "------");
+                    }
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
@@ -383,18 +404,29 @@ public class WebSocketPush {
                 LogUtils.debug(TAG, "连接成功");
                 int code = JSONUtils.getInt(arg0[0].toString(), "code", 0);
                 if (code == 100) {
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("socket连接成功100", "------" + code);
+                    }
                     isWebsocketConnected = true;
                     isWSStatusConnectedV1 = true;
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息
                     sendAppStatus();
                 } else if (code == 401) {
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("socket连接成功401", "------" + code);
+                    }
                     closeWebsocket();
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
                     Router router = Router.getInstance();
                     if (router.getService(LoginService.class) != null) {
                         LoginService service = router.getService(LoginService.class);
                         service.refreshToken(null, System.currentTimeMillis());
+                    }
+                } else {
+                    // 打印code，是否存在其他状态码
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("socket连接成功其他状态码", "------" + code);
                     }
                 }
                 isWebsocketConnecting = false;
@@ -545,6 +577,9 @@ public class WebSocketPush {
             public void call(Object... arg0) {
                 isWSStatusConnectedV1 = false;
                 isWebsocketConnecting = false;
+                if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                    PVCollectModelCacheUtils.saveCollectModel("socket断开连接", "------" + "line581");
+                }
                 sendWebSocketStatusBroadcast(Socket.EVENT_DISCONNECT);
                 LogUtils.debug(TAG, "断开连接");
                 String error = "";
@@ -563,6 +598,9 @@ public class WebSocketPush {
                         error = "";
                     }
                     isWebsocketConnected = false;
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("socket断开连接异常", "------" + "ws_disconnect_exception");
+                    }
                     saveWSSendMessageException("ws_disconnect_exception", 2, error, 100111);
                 }
             }

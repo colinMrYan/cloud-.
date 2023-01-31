@@ -185,7 +185,8 @@ public class AppCenterActivity extends BaseActivity {
                 if (action.equals(ACTION_NAME)) {
                     App addApp = (App) intent.getExtras()
                             .getSerializable("app");
-                    int recommendAppIndex = -1, groupIndex = 0;
+                    int recommendAppIndex = -1;
+                    int groupIndex = 0;
                     Iterator<List<App>> appItemList = appList.listIterator();
                     while (appItemList.hasNext()) {
                         recommendAppIndex = appItemList.next().indexOf(addApp);

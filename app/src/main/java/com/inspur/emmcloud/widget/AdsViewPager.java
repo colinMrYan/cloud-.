@@ -25,10 +25,6 @@ public class AdsViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int x = (int) ev.getRawX();
-        int y = (int) ev.getRawY();
-        int dealtX = 0;
-        int dealtY = 0;
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:

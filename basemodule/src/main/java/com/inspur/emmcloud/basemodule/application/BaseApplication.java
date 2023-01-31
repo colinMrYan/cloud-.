@@ -168,13 +168,6 @@ public abstract class BaseApplication extends MultiDexApplication {
                 PreferencesUtils.putString(getInstance(), "refreshToken", "");
             }
         }
-        if ("11487".equals(uid)) {
-            // 郑总token刷新失败分析日志
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                String processName = getProcessName();
-                PVCollectModelCacheUtils.saveCollectModel("BaseApplication: initToken", "---at---" + this.accessToken + "---rt---" + this.refreshToken + "---processName---" + processName);
-            }
-        }
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         //置为0，调起解锁界面 (强杀进程后)

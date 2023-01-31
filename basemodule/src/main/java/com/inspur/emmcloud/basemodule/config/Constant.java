@@ -43,6 +43,7 @@ public class Constant {
     public static final String PREF_APP_LOAD_ALIAS = "app_load_alias";
     public static final String PREF_APP_OPEN_VOICE_WORD_SWITCH = "voice_2_word_switch_default_false";
     public static final String PREF_APP_OPEN_NATIVE_ROTATE_SWITCH = "native_rotate_switch_default_false";
+    public static final String PREF_APP_OPEN_WEB_SCALE_SWITCH = "web_scale_switch_default_true";
     public static final String PREF_WEBEX_DOWNLOAD_URL = "webex_download_url";
     public static final String PREF_WEBEX_FIRST_ENTER = "webex_first_enter";
     public static final String PREF_GET_OFFLINE_LAST_MID = "get_offline_last_mid";
@@ -225,6 +226,7 @@ public class Constant {
     public static final String APP_TAB_BAR_APPLICATION = "native://application";
     public static final String APP_TAB_BAR_PROFILE = "native://me";
     public static final String APP_TAB_BAR_CONTACT = "native://contact";
+    public static final String APP_TAB_BAR_CLOUD = "native://cloud";
     public static final String APP_TAB_BAR_NOSUPPORT = "native://nosupport"; //lbc
 
     public static final String APP_TAB_BAR_COMMUNACATE_NAME = "communicate";
@@ -233,6 +235,7 @@ public class Constant {
     public static final String APP_TAB_BAR_MOMENT_NAME = "moment";
     public static final String APP_TAB_BAR_ME_NAME = "me";
     public static final String APP_TAB_BAR_CONTACT_NAME = "contact";
+    public static final String APP_TAB_BAR_CLOUD_NAME = "cloud";
     public static final String APP_TAB_BAR_DISCOVER_NAME = "discover";
 
     public static final String SHARE_LINK = "shareLink";

@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.privates.richtext.ig.DefaultImageGetter;
 import com.inspur.emmcloud.util.privates.richtext.ig.ImageDownloader;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 
 /**
  * Created by zhou on 2016/12/3.
@@ -56,9 +55,9 @@ public final class RichTextConfig {
     public final boolean singleLoad;
     public final boolean syncParse;
     public final ImageDownloader imageDownloader;// 图片加载器
-    public final DrawableGetter placeHolderDrawableGetter, errorImageDrawableGetter;
+    public final DrawableGetter errorImageDrawableGetter;
+    public final DrawableGetter placeHolderDrawableGetter;
     final ImageGetter imageGetter; // 图片加载器，默认为GlideImageGetter
-    private final HashMap<String, Object> argsPool;
     private WeakReference<RichText> richTextInstanceWeakReference;
 
     private RichTextConfig(RichTextConfigBuild config) {
@@ -109,7 +108,6 @@ public final class RichTextConfig {
         }
         this.clickable = clickable;
 
-        argsPool = new HashMap<>();
     }
 
     public RichText getRichTextInstance() {

@@ -23,7 +23,8 @@ public class ImageHolder {
     private final int position; // 图片在在某个富文本中的位置
     private String source; // 图片URL
     private String key;
-    private int width, height; // 和scale属性共同决定holder宽高，开发者设置，内部获取值然后进行相应的设置
+    private int width;
+    private int height; // 和scale属性共同决定holder宽高，开发者设置，内部获取值然后进行相应的设置
     private ScaleType scaleType;
     @ImageState
     private int imageState; // 图片加载的状态
@@ -32,7 +33,8 @@ public class ImageHolder {
     private boolean show;
     private boolean isGif;
     private DrawableBorderHolder borderHolder;
-    private Drawable placeHolder, errorImage;
+    private Drawable errorImage;
+    private Drawable placeHolder;
     private String prefixCode;
     private int configHashcode;
     public ImageHolder(String source, int position, RichTextConfig config, TextView textView) {

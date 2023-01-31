@@ -42,7 +42,8 @@
     <string name="setting_user_company_info">企业信息</string>
 
     <string name="setting_about_text">关于</string>
-    <string name="setting_font_size_set">字体大小</string>
+    <string name="setting_font_size">字体大小</string>
+    <string name="setting_font_size_set">字体大小调节</string>
     <string name="setting_font_size_tip1">调整字体大小。</string>
     <string name="setting_font_size_tip2">滑动下面的滑块，可设置字体大小。</string>
     <string name="setting_font_size_tip3">设置后，会改变聊天文本消息中的字体大小。如果在使用过程中存在问题或意见，可以在&appname;反馈。</string>

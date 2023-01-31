@@ -276,7 +276,8 @@ public class ResolutionUtils {
             Display display = windowManager.getDefaultDisplay();
             Point point = new Point();
             display.getRealSize(point);
-            float width, height;
+            float width;
+            float height;
             if (point.x < point.y) {
                 width = point.x;
                 height = point.y;

@@ -12,7 +12,6 @@ public class AudioManager {
 
     //采用频率
     //44100是目前的标准，但是某些设备仍然支持22050，16000，11025
-    private final static int AUDIO_SAMPLE_RATE = 44100;  //44.1KHz,普遍使用的频率
     /**
      * 单例化这个类
      */

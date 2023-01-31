@@ -36,7 +36,8 @@ public class StyleBuilderImpl implements StyleBuilder {
     private static final float scale_h2 = 2.0f;
     private static final float scale_h3 = 1.75f;
     private static final float scale_h4 = 1.5f;
-    private static final float scale_h5 = 1.25F, scale_h6 = 1;
+    private static final float scale_h5 = 1.25F;
+    private static final float scale_h6 = 1;
     private static final float scale_normal = 1;
     private static int h1_color = Color.parseColor("#333333");
     private static int h6_color = Color.parseColor("#777777");

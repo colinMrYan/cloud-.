@@ -112,7 +112,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
     public static final String VOICE_CALL = "voice_call";
     public static final String VIDEO_CALL = "video_call";
-    public final static int AUDIO_SAMPLE_RATE = 16000;  //44.1KHz,普遍使用的频率
     private static final int GELLARY_RESULT = 2;
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
@@ -120,7 +119,6 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final long MENTIONS_BASE_TIME = 1515513600000L;
     private static final int TAG_KEYBOARD_INPUT = 0;
     private static final int TAG_VOICE_INPUT = 1;
-    private static final int TOPDELY_TIMES = 17;
     private static final int VOICE_INPUT_STATUS_NORMAL = 1;
     private static final int VOICE_INPUT_STATUS_STOP = 2;
     private static final int VOICE_INPUT_STATUS_SPEAKING = 5;
@@ -192,7 +190,6 @@ public class ECMChatInputMenu extends LinearLayout {
     private String inputs = "";
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private int lastVolumeLevel = 0;
-    private int delayTimes = 0;
     private List<VoiceResult> voiceResultList = new ArrayList<>();
     private List<String> mp3FilePathList = new ArrayList<>();
     private Map<String, Boolean> voiceBooleanMap = new HashMap<>();

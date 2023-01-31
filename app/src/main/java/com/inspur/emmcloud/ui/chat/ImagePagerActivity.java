@@ -81,7 +81,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private List<Message> imgTypeMessageList = new ArrayList<>();
     private ArrayList<String> urlList = new ArrayList<>();
     private String cid;
-    private int locationX, locationY, locationW, locationH;
+    private int locationW;
+    private int locationH;
+    private int locationX;
+    private int locationY;
     private ImagePagerAdapter mAdapter;
     private RelativeLayout functionLayout;
     private TextView commentCountText;

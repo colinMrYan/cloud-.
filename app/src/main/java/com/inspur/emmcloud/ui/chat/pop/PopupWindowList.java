@@ -41,7 +41,8 @@ public class PopupWindowList {
     private AdapterView.OnItemClickListener mItemClickListener;
     private boolean mModal;
     private ListView mPopView;
-    private int mDeviceWidth, mDeviceHeight;
+    private int mDeviceWidth;
+    private int mDeviceHeight;
 
     public PopupWindowList(Context mContext) {
         if (mContext == null) {

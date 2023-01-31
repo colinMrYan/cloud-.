@@ -188,7 +188,7 @@
                         android:layout_centerVertical="true"
                         android:paddingTop="11dp"
                         android:paddingBottom="11dp"
-                        android:text="@string/setting_font_size_set"
+                        android:text="@string/setting_font_size"
                         android:textColor="?attr/text_color_e1"
                         android:textSize="16sp" />
 
@@ -432,6 +432,7 @@
                         android:layout_below="@id/tv_setting_web_rotate"
                         android:background="?attr/color_list_divider" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/use_webkit"
                     android:layout_width="match_parent"

@@ -202,6 +202,22 @@ public class CommunicationFragment extends BaseFragment {
         super.onResume();
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, (new NetUtils()).getHttpUrls());
         checkingNetStateUtils.getNetStateResult(5);
+        showCorrectTitleIfSocketConnect();
+    }
+
+    // 未知异常情况：沟通页显示"已断开"，实际可以发送socket消息，且退回桌面再打开仍显示"已断开"
+    // 此处判断title为已断开，且socket连接正常，则更改标题，从结果上解决title问题
+    // 显示"已断开"根本原因正在添加日志排查
+    private void showCorrectTitleIfSocketConnect() {
+        if ("已断开".equals(titleText.getText().toString()) &&
+                Socket.EVENT_CONNECT.equals(WebSocketPush.getInstance().getWebsocketStatus())) {
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+            if (!StringUtils.isBlank(appTabs)) {
+                titleText.setText(AppTabUtils.getTabHeadTitle(getActivity(), getClass().getSimpleName()));
+            } else {
+                titleText.setText(R.string.communicate);
+            }
+        }
     }
 
     @Override
@@ -221,6 +237,7 @@ public class CommunicationFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                showCorrectTitleIfSocketConnect();
                 WebSocketPush.getInstance().startWebSocket();
                 getConversationList();
                 getMessage();
@@ -724,6 +741,10 @@ public class CommunicationFragment extends BaseFragment {
                 getConversationList();
             }
             isFirstConnectWebsocket = false;
+            // 添加郑总日志，可以发消息，标题显示已断开
+            if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                PVCollectModelCacheUtils.saveCollectModel("showSocketStatusInTitle", "------" + socketStatus);
+            }
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTabUtils.getTabHeadTitle(getActivity(), getClass().getSimpleName()));
@@ -731,6 +752,10 @@ public class CommunicationFragment extends BaseFragment {
                 titleText.setText(R.string.communicate);
             }
         } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
+            // 添加郑总日志，可以发消息，标题显示已断开
+            if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                PVCollectModelCacheUtils.saveCollectModel("showSocketStatusInTitle", "------" + socketStatus);
+            }
             setLastMessageId();
             titleText.setText(R.string.socket_close);
         }
@@ -1457,7 +1482,11 @@ public class CommunicationFragment extends BaseFragment {
                     setAllConversationRead();
                     break;
                 case "websocket_status":
+                    // 添加郑总日志，可以发消息，标题显示已断开
                     String socketStatus = intent.getExtras().getString("status");
+                    if ("11487".equals(BaseApplication.getInstance().getUid())) {
+                        PVCollectModelCacheUtils.saveCollectModel("onReceive", "------" + socketStatus);
+                    }
                     showSocketStatusInTitle(socketStatus);
                     break;
                 default:
