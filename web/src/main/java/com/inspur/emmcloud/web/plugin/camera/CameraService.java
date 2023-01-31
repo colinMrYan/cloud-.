@@ -90,6 +90,7 @@ public class CameraService extends ImpPlugin {
     private static int targetHeight; // desired height of the image
     private static Uri imageUri; // Uri of captured image
     private static int encodingType = 0; // Type of encoding to use
+    private static int withCrop = 0; // 0:默认使用剪切、1：不使用剪切
     private static boolean saveToPhotoAlbum = false; // Should the picture be
     // saved to the
     // device's photo album
@@ -190,6 +191,8 @@ public class CameraService extends ImpPlugin {
                         "targetHeight");
                 encodingType = optionsObj.getInt(
                         "encodingType");
+                withCrop = optionsObj.getInt(
+                        "withCrop");
                 if (!optionsObj.isNull("watermark")) {
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj, "content", "");
@@ -451,7 +454,10 @@ public class CameraService extends ImpPlugin {
             // 调用系统拍照
         }  else if (requestCode == ImpFragment.CAMERA_SERVICE_SYSTEM_REQUEST) {
             if (resultCode == RESULT_OK) {
-//                requestImageCrop();
+                if (withCrop == 0) {
+                    requestImageCrop();
+                    return;
+                }
                 File originImageFile = new File(systemCameraPathMap.get(imageUri));
                 if (originImageFile.exists()) {
                     try {
