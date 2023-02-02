@@ -374,8 +374,22 @@ public class ImpWebChromeClient extends WebChromeClient {
                                      FileChooserParams fileChooserParams) {
         mUploadCallbackAboveL = filePathCallback;
         Enterprise currentEnterprise = BaseApplication.getInstance().getCurrentEnterprise();
-        if (currentEnterprise != null && "919455".equals(currentEnterprise.getId())) {
-            // 针对广水添加相机和相册选项
+        String[] types =new String[10];
+        String buf = "";
+        if (fileChooserParams != null
+                && fileChooserParams.getAcceptTypes() != null
+                && fileChooserParams.getAcceptTypes().length > 0) {
+            if (!TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
+                types = fileChooserParams.getAcceptTypes();
+            }
+            if (types.length > 0){
+                for (String type : types) {
+                    buf = buf + type;
+                }
+            }
+        }
+        if (buf.contains("image/*")) {
+            // 针对添加相机和相册选项
             showFileChooser();
         } else {
             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
