@@ -74,8 +74,14 @@ public class MultiMessageAdapter extends RecyclerView.Adapter {
         MultiMessageItemViewHolder holder = (MultiMessageItemViewHolder) viewHolder;
         MultiMessageItem item = uiMessages.get(i);
 
-        String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), item.sendUserId);
-        ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem, ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
+        if (i != 0 && uiMessages.get(i - 1).sendUserId.equals(item.sendUserId)) {
+            holder.headerImage.setVisibility(View.INVISIBLE);
+        } else {
+            holder.headerImage.setVisibility(View.VISIBLE);
+            String photoUriItem = BaseModuleApiUri.getUserPhoto(BaseApplication.getInstance(), item.sendUserId);
+            ImageDisplayUtils.getInstance().displayImage(holder.headerImage, photoUriItem,
+                    ResourceUtils.getResValueOfAttr(context, R.attr.design3_icon_person_default));
+        }
 //        holder.nameText.setText(item.sendUserName);
         // 有群昵称则显示群昵称
         holder.nameText.setText(item.sendUserName);

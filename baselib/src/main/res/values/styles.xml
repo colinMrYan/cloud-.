@@ -121,6 +121,7 @@
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="design3_drawable_list_divider">@drawable/design3_rv_divider</item>
+        <item name="design3_multi_message_divider">@drawable/multi_message_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
@@ -359,6 +360,7 @@
         <item name="textColorAlertDialogListItem">@color/color_text_common_level_one</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="design3_drawable_list_divider">@drawable/design3_rv_divider</item>
+        <item name="design3_multi_message_divider">@drawable/multi_message_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
@@ -597,6 +599,7 @@
         <item name="selector_list_top">@drawable/selector_set_top_msg_list</item>
         <item name="drawable_list_divider">@drawable/rv_divider</item>
         <item name="design3_drawable_list_divider">@drawable/design3_rv_divider</item>
+        <item name="design3_multi_message_divider">@drawable/multi_message_divider</item>
         <item name="delete_input_icon">@drawable/icon_delete_input</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete</item>
@@ -836,6 +839,7 @@
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="drawable_list_divider">@drawable/rv_divider_dark</item>
         <item name="design3_drawable_list_divider">@drawable/design3_rv_divider_dark</item>
+        <item name="design3_multi_message_divider">@drawable/multi_message_divider_dark</item>
         <item name="delete_input_icon">@drawable/icon_delete_input_dark</item>
         <item name="icon_chat_burn">@drawable/icon_chat_burn</item>
         <item name="delete_emotion_icon">@drawable/emotion_delete_dark</item>

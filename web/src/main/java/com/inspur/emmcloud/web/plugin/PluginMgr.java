@@ -28,6 +28,7 @@ import com.inspur.emmcloud.web.plugin.map.MapService;
 import com.inspur.emmcloud.web.plugin.network.NetworkService;
 import com.inspur.emmcloud.web.plugin.nfc.NFCService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
+import com.inspur.emmcloud.web.plugin.scaner.PDAService;
 import com.inspur.emmcloud.web.plugin.screenshot.ScreenshotService;
 import com.inspur.emmcloud.web.plugin.share.ShareSocialService;
 import com.inspur.emmcloud.web.plugin.sms.SmsService;
@@ -266,6 +267,8 @@ public class PluginMgr {
                 serviceName = IMPAudioService.class.getCanonicalName();
             } else if (serviceName.endsWith("BlueToothService")) {
                 serviceName = BlueToothService.class.getCanonicalName();
+            } else if (serviceName.endsWith("PDAService")) {
+                serviceName = PDAService.class.getCanonicalName();
             }
             LogUtils.jasonDebug("serviceName==" + serviceName);
         }

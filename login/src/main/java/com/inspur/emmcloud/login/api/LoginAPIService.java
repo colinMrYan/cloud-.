@@ -204,9 +204,6 @@ public class LoginAPIService {
     public void refreshToken() {
         String completeUrl = LoginAPIUri.getOauthSigninUrl();
         String refreshToken = BaseApplication.getInstance().getRefreshToken();
-        if ("11487".equals(BaseApplication.getInstance().getUid())) {
-            PVCollectModelCacheUtils.saveCollectModel("refreshToken",  "---rt---" + refreshToken);
-        }
         RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setConnectTimeout(3000);
         params.addParameter("client_id", "com.inspur.ecm.client.android");

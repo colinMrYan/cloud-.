@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/design3_color_ne13"
     android:fitsSystemWindows="true"
-    android:background="?attr/content_bg">
-    <include layout="@layout/include_common_header_layout" />
+    android:orientation="vertical">
+
+    <com.inspur.emmcloud.baselib.widget.common.CommonHeaderView
+        android:id="@+id/hv_common"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/design3_common_header_height" />
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginTop="7dp"
         android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-        <View
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="2dp"
-            android:layout_height="1px"
-            android:layout_width="0px"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            />
-        <TextView android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textSize="10sp"
-            android:text="2022-6-14 ～ 2022-6-15"/>
+        android:visibility="gone">
 
         <View
+            android:layout_width="0px"
+            android:layout_height="1px"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2022-6-14 ～ 2022-6-15"
+            android:textSize="10sp" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="1px"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="16dp"
-            android:layout_height="1px"
-            android:layout_width="0px"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            />
+            android:layout_weight="1" />
     </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multi_message_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

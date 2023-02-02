@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <com.inspur.emmcloud.baselib.widget.ImageViewRound
         android:id="@+id/multi_message_item_header"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:ivr_radius="6dp"
         app:ivr_type="1" />
 
@@ -21,22 +20,23 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/multi_message_item_time"
         android:layout_toRightOf="@id/multi_message_item_header"
-        android:textColor="?attr/text_color_33_66"
-        android:textSize="13sp" />
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.M3.Fs09"
+        android:textColor="?attr/design3_color_te03" />
 
     <TextView
         android:id="@+id/multi_message_item_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/multi_message_item_name"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
-        android:textColor="#999999"
-        android:textSize="13sp" />
+        android:textAppearance="@style/TextAppearance.M3.Fs09"
+        android:textColor="?attr/design3_color_te05" />
 
     <RelativeLayout
         android:id="@+id/multi_message_item_content_parent"
@@ -45,7 +45,17 @@
         android:layout_below="@id/multi_message_item_name"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:layout_toRightOf="@id/multi_message_item_header" />
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/multi_message_item_content_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toRightOf="@id/multi_message_item_header"
+        android:background="?attr/design3_color_ne06" />
 </RelativeLayout>
