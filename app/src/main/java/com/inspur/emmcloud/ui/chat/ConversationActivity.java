@@ -1786,6 +1786,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                         conversation.setType(newConversation.getType());
                         initChatInputMenu();
                     }
+                    // 悄悄话更新用户列表信息
+                    if (userOrientedConversationHelper != null && userOrientedConversationHelper.isDisplayingUI()) {
+                        userOrientedConversationHelper.showUserOrientedLayout(conversation.getMemberList(), conversation.getMembersDetail());
+                    }
                     adapter.updateMemberList(conversation.getMemberList());
                 }
                 break;

@@ -621,9 +621,9 @@ public class ConversationInfoActivity extends BaseMvpActivity<ConversationInfoPr
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveConversationNameUpdate(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME)) {
-            Conversation conversation = ((Conversation) eventMessage.getMessageObj());
-            if (uiConversation.getId().equals(conversation.getId())) {
-                uiConversation = mPresenter.getConversation(conversation.getId());
+            Conversation changeConversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), uiConversation.getId());
+            if (changeConversation != null) {
+                uiConversation = changeConversation;
                 init();
             }
         } else if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_GROUP_CONVERSATION_DISSOLVE)) {
