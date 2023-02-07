@@ -482,7 +482,7 @@ public class ImpFragment extends ImpBaseFragment implements View.OnClickListener
             @Override
             public void onSetTitle(String title) {
                 if (!isStaticWebTitle && !isTitlePriorityFirst) {
-                    headerText.setText(webView.canGoBack() ? title : StringUtils.isBlank(appName) ? title : appName);
+                    setTitle(title);
                 }
             }
 
